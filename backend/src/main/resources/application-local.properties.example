@@ -1,0 +1,22 @@
+#  MODELO DE CONFIGURACAO LOCAL
+#
+#  Copie este arquivo para application-local.properties na mesma pasta
+#  e preencha com as credenciais da sua maquina:
+#
+#      cp application-local.properties.example application-local.properties
+#
+#  O application-local.properties esta no .gitignore e nunca deve ser commitado.
+#  Este .example fica versionado apenas para documentar quais chaves existem.
+
+# --- BANCO DE DADOS ---
+spring.datasource.username=sa
+spring.datasource.password=TROQUE_PELA_SUA_SENHA
+
+# --- JWT ---
+# Gere um valor aleatorio, por exemplo:
+#   openssl rand -base64 48
+security.jwt.secret=TROQUE_POR_UM_SEGREDO_ALEATORIO
+
+# --- E-MAIL (OPCIONAL) ---
+spring.mail.username=
+spring.mail.password=
