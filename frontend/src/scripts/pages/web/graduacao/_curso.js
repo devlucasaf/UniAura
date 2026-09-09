@@ -32,7 +32,7 @@ export function montarPaginaDeCurso(raiz) {
 
 // --- INDICA AO CSS QUE O SCRIPT ESTÁ ATIVO ---
 function ligarAnimacoes(raiz) {
-    raiz.querySelector(".cc-page")?.classList.add("cc-anima");
+    raiz.querySelector(".grad-page")?.classList.add("grad-anima");
 }
 
 // --- O USUÁRIO PEDIU MENOS MOVIMENTO NO SISTEMA OPERACIONAL? ---
@@ -181,7 +181,7 @@ function fecharTodosSubmenus(submenus) {
 
 // --- ABRE/FECHA CADA SEMESTRE DA MATRIZ CURRICULAR ---
 function configurarAcordeaoMatriz(raiz) {
-    raiz.querySelectorAll(".cc-semester").forEach((semestre) => {
+    raiz.querySelectorAll(".grad-semester").forEach((semestre) => {
         const botao = semestre.querySelector("button");
 
         botao?.addEventListener("click", () => {
@@ -197,7 +197,7 @@ function configurarAcordeaoMatriz(raiz) {
 function configurarRolagemSuave(raiz, menu, burger) {
     const comportamento = preferemMenosMovimento() ? "auto" : "smooth";
 
-    raiz.querySelectorAll('a[href^="#cc-"]').forEach((link) => {
+    raiz.querySelectorAll('a[href^="#grad-"]').forEach((link) => {
         link.addEventListener("click", (evento) => {
             const alvo = raiz.querySelector(link.getAttribute("href"));
 
@@ -346,11 +346,11 @@ function configurarBrilhoDosCartoes(raiz) {
         return;
     }
 
-    raiz.querySelectorAll(".cc-card").forEach((cartao) => {
+    raiz.querySelectorAll(".grad-card").forEach((cartao) => {
         cartao.addEventListener("pointermove", (evento) => {
             const area = cartao.getBoundingClientRect();
-            cartao.style.setProperty("--cc-x", `${evento.clientX - area.left}px`);
-            cartao.style.setProperty("--cc-y", `${evento.clientY - area.top}px`);
+            cartao.style.setProperty("--grad-x", `${evento.clientX - area.left}px`);
+            cartao.style.setProperty("--grad-y", `${evento.clientY - area.top}px`);
         });
     });
 }
@@ -397,13 +397,13 @@ function configurarOndaNosBotoes(raiz) {
         return;
     }
 
-    raiz.querySelectorAll(".cc-btn").forEach((botao) => {
+    raiz.querySelectorAll(".grad-btn").forEach((botao) => {
         botao.addEventListener("pointerdown", (evento) => {
             const area = botao.getBoundingClientRect();
             const tamanho = Math.max(area.width, area.height) * 2.2;
 
             const onda = document.createElement("span");
-            onda.className = "cc-onda";
+            onda.className = "grad-onda";
             onda.style.width = `${tamanho}px`;
             onda.style.height = `${tamanho}px`;
             onda.style.left = `${evento.clientX - area.left}px`;
@@ -419,9 +419,9 @@ function configurarOndaNosBotoes(raiz) {
 function configurarEfeitosDeScroll(raiz) {
     const cabecalho = raiz.querySelector("#siteHeader");
     const barra = raiz.querySelector("[data-progresso]");
-    const hero = raiz.querySelector(".cc-hero");
+    const hero = raiz.querySelector(".grad-hero");
     const secoes = Array.from(raiz.querySelectorAll("main section[id]"));
-    const links = Array.from(raiz.querySelectorAll(".cc-subnav-link"));
+    const links = Array.from(raiz.querySelectorAll(".grad-subnav-link"));
     const comParalaxe = !preferemMenosMovimento();
 
     let agendado = false;
@@ -443,7 +443,7 @@ function configurarEfeitosDeScroll(raiz) {
         }
 
         if (hero && comParalaxe) {
-            hero.style.setProperty("--cc-parallax", `${Math.min(window.scrollY, 800) * 0.18}px`);
+            hero.style.setProperty("--grad-parallax", `${Math.min(window.scrollY, 800) * 0.18}px`);
         }
 
         destacarSecaoAtiva(secoes, links);

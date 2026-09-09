@@ -71,7 +71,7 @@ const ROTAS = {
         modulo: () => import("./pages/web/graduacao/cursos.js"),
         publico: true,
         modo: "limpo",
-        classe: "cc-screen",
+        classe: "grad-screen",
         titulo: "Cursos de Graduação — Universidade Aura"
     },
 
@@ -80,7 +80,7 @@ const ROTAS = {
         modulo: () => import("./pages/web/graduacao/tecnologia/ciencia-da-computacao.js"),
         publico: true,
         modo: "limpo",
-        classe: "cc-screen",
+        classe: "grad-screen",
         titulo: "Ciência da Computação — Universidade Aura"
     },
 
@@ -89,7 +89,7 @@ const ROTAS = {
         modulo: () => import("./pages/web/graduacao/tecnologia/analise-e-desenvolvimento-de-sistemas.js"),
         publico: true,
         modo: "limpo",
-        classe: "cc-screen",
+        classe: "grad-screen",
         titulo: "Análise e Desenvolvimento de Sistemas — Universidade Aura"
     },
 
@@ -98,7 +98,7 @@ const ROTAS = {
         modulo: () => import("./pages/web/graduacao/tecnologia/engenharia-de-software.js"),
         publico: true,
         modo: "limpo",
-        classe: "cc-screen",
+        classe: "grad-screen",
         titulo: "Engenharia de Software — Universidade Aura"
     },
 
@@ -107,7 +107,7 @@ const ROTAS = {
         modulo: () => import("./pages/web/graduacao/tecnologia/ciencia-de-dados.js"),
         publico: true,
         modo: "limpo",
-        classe: "cc-screen",
+        classe: "grad-screen",
         titulo: "Ciência de Dados — Universidade Aura"
     },
 
@@ -116,7 +116,7 @@ const ROTAS = {
         modulo: () => import("./pages/web/graduacao/engenharia/engenharia-mecatronica.js"),
         publico: true,
         modo: "limpo",
-        classe: "cc-screen",
+        classe: "grad-screen",
         titulo: "Engenharia Mecatrônica — Universidade Aura"
     },
 
@@ -125,8 +125,215 @@ const ROTAS = {
         modulo: () => import("./pages/web/graduacao/engenharia/engenharia-civil.js"),
         publico: true,
         modo: "limpo",
-        classe: "cc-screen",
+        classe: "grad-screen",
         titulo: "Engenharia Civil — Universidade Aura"
+    },
+
+    "/graduacao/ciencias-aeronauticas": {
+        modelo: "web/graduacao/engenharia/ciencias-aeronauticas.html",
+        modulo: () => import("./pages/web/graduacao/engenharia/ciencias-aeronauticas.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Ciências Aeronáuticas — Universidade Aura"
+    },
+
+    "/graduacao/engenharia-eletrica": {
+        modelo: "web/graduacao/engenharia/engenharia-eletrica.html",
+        modulo: () => import("./pages/web/graduacao/engenharia/engenharia-eletrica.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Engenharia Elétrica — Universidade Aura"
+    },
+
+    "/graduacao/engenharia-florestal": {
+        modelo: "web/graduacao/engenharia/engenharia-florestal.html",
+        modulo: () => import("./pages/web/graduacao/engenharia/engenharia-florestal.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Engenharia Florestal — Universidade Aura"
+    },
+
+    "/graduacao/engenharia-mecanica": {
+        modelo: "web/graduacao/engenharia/engenharia-mecanica.html",
+        modulo: () => import("./pages/web/graduacao/engenharia/engenharia-mecanica.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Engenharia Mecânica — Universidade Aura"
+    },
+
+    "/graduacao/engenharia-producao": {
+        modelo: "web/graduacao/engenharia/engenharia-producao.html",
+        modulo: () => import("./pages/web/graduacao/engenharia/engenharia-producao.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Engenharia de Produção — Universidade Aura"
+    },
+
+    "/graduacao/engenharia-quimica": {
+        modelo: "web/graduacao/engenharia/engenharia-quimica.html",
+        modulo: () => import("./pages/web/graduacao/engenharia/engenharia-quimica.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Engenharia Química — Universidade Aura"
+    },
+
+    "/graduacao/artes-cenicas": {
+        modelo: "web/graduacao/arte/artes-cenicas.html",
+        modulo: () => import("./pages/web/graduacao/arte/artes-cenicas.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Artes Cênicas — Universidade Aura"
+    },
+
+    "/graduacao/artes-visuais": {
+        modelo: "web/graduacao/arte/artes-visuais.html",
+        modulo: () => import("./pages/web/graduacao/arte/artes-visuais.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Artes Visuais — Universidade Aura"
+    },
+
+    "/graduacao/design": {
+        modelo: "web/graduacao/arte/design.html",
+        modulo: () => import("./pages/web/graduacao/arte/design.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Design — Universidade Aura"
+    },
+
+    "/graduacao/fotografia": {
+        modelo: "web/graduacao/arte/fotografia.html",
+        modulo: () => import("./pages/web/graduacao/arte/fotografia.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Fotografia — Universidade Aura"
+    },
+
+    "/graduacao/moda": {
+        modelo: "web/graduacao/arte/moda.html",
+        modulo: () => import("./pages/web/graduacao/arte/moda.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Design de Moda — Universidade Aura"
+    },
+
+    "/graduacao/publicidade-propaganda": {
+        modelo: "web/graduacao/arte/publicidade-propaganda.html",
+        modulo: () => import("./pages/web/graduacao/arte/publicidade-propaganda.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Publicidade e Propaganda — Universidade Aura"
+    },
+
+    "/graduacao/medicina": {
+        modelo: "web/graduacao/saude/medicina.html",
+        modulo: () => import("./pages/web/graduacao/saude/medicina.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Medicina — Universidade Aura"
+    },
+
+    "/graduacao/odontologia": {
+        modelo: "web/graduacao/saude/odontologia.html",
+        modulo: () => import("./pages/web/graduacao/saude/odontologia.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Odontologia — Universidade Aura"
+    },
+
+    "/graduacao/farmacia": {
+        modelo: "web/graduacao/saude/farmacia.html",
+        modulo: () => import("./pages/web/graduacao/saude/farmacia.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Farmácia — Universidade Aura"
+    },
+
+    "/graduacao/fisioterapia": {
+        modelo: "web/graduacao/saude/fisioterapia.html",
+        modulo: () => import("./pages/web/graduacao/saude/fisioterapia.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Fisioterapia — Universidade Aura"
+    },
+
+    "/graduacao/nutricao": {
+        modelo: "web/graduacao/saude/nutricao.html",
+        modulo: () => import("./pages/web/graduacao/saude/nutricao.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Nutrição — Universidade Aura"
+    },
+
+    "/graduacao/biomedicina": {
+        modelo: "web/graduacao/saude/biomedicina.html",
+        modulo: () => import("./pages/web/graduacao/saude/biomedicina.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Biomedicina — Universidade Aura"
+    },
+
+    "/graduacao/biologia": {
+        modelo: "web/graduacao/saude/biologia.html",
+        modulo: () => import("./pages/web/graduacao/saude/biologia.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Ciências Biológicas — Universidade Aura"
+    },
+
+    "/graduacao/educacao-fisica": {
+        modelo: "web/graduacao/saude/educacao-fisica.html",
+        modulo: () => import("./pages/web/graduacao/saude/educacao-fisica.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Educação Física — Universidade Aura"
+    },
+
+    "/graduacao/fonoaudiologia": {
+        modelo: "web/graduacao/saude/fonoaudiologia.html",
+        modulo: () => import("./pages/web/graduacao/saude/fonoaudiologia.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Fonoaudiologia — Universidade Aura"
+    },
+
+    "/graduacao/terapia-ocupacional": {
+        modelo: "web/graduacao/saude/terapia-ocupacional.html",
+        modulo: () => import("./pages/web/graduacao/saude/terapia-ocupacional.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Terapia Ocupacional — Universidade Aura"
+    },
+
+    "/graduacao/medicina-veterinaria": {
+        modelo: "web/graduacao/saude/medicina-veterinaria.html",
+        modulo: () => import("./pages/web/graduacao/saude/medicina-veterinaria.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "grad-screen",
+        titulo: "Medicina Veterinária — Universidade Aura"
     },
 
     "/graduacao/administracao": {
@@ -134,7 +341,7 @@ const ROTAS = {
         modulo: () => import("./pages/web/graduacao/negocio/administracao.js"),
         publico: true,
         modo: "limpo",
-        classe: "cc-screen",
+        classe: "grad-screen",
         titulo: "Administração — Universidade Aura"
     },
 
@@ -143,7 +350,7 @@ const ROTAS = {
         modulo: () => import("./pages/web/graduacao/humanas/direito.js"),
         publico: true,
         modo: "limpo",
-        classe: "cc-screen",
+        classe: "grad-screen",
         titulo: "Direito — Universidade Aura"
     },
 
@@ -152,7 +359,7 @@ const ROTAS = {
         modulo: () => import("./pages/web/matriculas.js"),
         publico: true,
         modo: "limpo",
-        classe: "cc-screen",
+        classe: "grad-screen",
         titulo: "Matrículas — Universidade Aura"
     },
 
