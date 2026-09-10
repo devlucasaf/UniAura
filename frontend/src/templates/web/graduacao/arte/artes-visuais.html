@@ -4,7 +4,7 @@
 
             <a href="#/home" class="site-brand" aria-label="UniAura - Página inicial">
                 <img
-                        src="../../../../img/uniaura.png"
+                        src="/img/uniaura.png"
                         alt=""
                         class="site-brand-logo"
                 />
@@ -14,10 +14,12 @@
             </a>
 
             <nav id="siteMenu" class="site-menu" aria-label="Navegação principal">
+
                 <div class="site-menu-item" data-mega>
                     <a class="site-link site-link-com-mega" href="#/home" aria-haspopup="true" aria-expanded="false">
                         A Universidade
-                        <svg class="site-link-seta" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <svg class="site-link-seta" viewBox="0 0 24 24" width="14" height="14" fill="none"
+                             stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </a>
@@ -28,11 +30,10 @@
                                 <strong>Nossa História</strong>
                                 <span>35 anos de excelência acadêmica</span>
                             </a>
-                            <a href="#/home" class="site-mega-link" role="menuitem">
-                                <strong>Missão, Visão e Valores</strong>
-                                <span>O que nos move</span>
+                            <a href="#/web/sobre/equipe" class="site-mega-link" role="menuitem">
+                                <strong>Nossa Equipe</strong>
+                                <span>Quem faz a universidade</span>
                             </a>
-
                             <a href="#/home" class="site-mega-link" role="menuitem">
                                 <strong>Estrutura Física</strong>
                                 <span>Salas, laboratórios e biblioteca</span>
@@ -59,7 +60,8 @@
                 <div class="site-menu-item" data-mega>
                     <a class="site-link site-link-com-mega" href="#/graduacao/cursos" aria-haspopup="true" aria-expanded="false">
                         Cursos
-                        <svg class="site-link-seta" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <svg class="site-link-seta" viewBox="0 0 24 24" width="14" height="14" fill="none"
+                             stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </a>
@@ -72,7 +74,8 @@
                                         <strong>Graduação</strong>
                                         <span>Bacharelados e tecnólogos</span>
                                     </span>
-                                    <svg class="site-mega-seta-submenu" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <svg class="site-mega-seta-submenu" viewBox="0 0 24 24" width="16" height="16" fill="none"
+                                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                         <polyline points="9 6 15 12 9 18"></polyline>
                                     </svg>
                                 </button>
@@ -148,15 +151,23 @@
 
             <div class="site-actions">
 
-                <button id="btnTemaSite" class="site-tema-toggle" type="button" aria-label="Alternar tema claro e escuro" title="Alternar tema">
+                <button
+                        id="btnTemaSite"
+                        class="site-tema-toggle"
+                        type="button"
+                        aria-label="Alternar tema claro e escuro"
+                        title="Alternar tema"
+                >
                     <span class="site-tema-icone site-tema-sol" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="4"></circle>
                             <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
                         </svg>
                     </span>
                     <span class="site-tema-icone site-tema-lua" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                         </svg>
                     </span>
@@ -175,17 +186,20 @@
         </div>
     </header>
 
-    <div class="grad-page">
+    <div class="grad-page" style="--grad-primary: #c026d3; --grad-primary-hover: #a21caf; --grad-primary-soft: rgba(192, 38, 211, 0.12);">
 
         <nav class="grad-subnav" id="gradSubnav" aria-label="Seções do curso">
             <div class="grad-container grad-subnav-inner">
                 <span class="grad-subnav-curso">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
                          stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <polyline points="16 18 22 12 16 6"></polyline>
-                        <polyline points="8 6 2 12 8 18"></polyline>
+                        <circle cx="13.5" cy="6.5" r="1"></circle>
+                        <circle cx="17.5" cy="10.5" r="1"></circle>
+                        <circle cx="8.5" cy="7.5" r="1"></circle>
+                        <circle cx="6.5" cy="12.5" r="1"></circle>
+                        <path d="M12 2a10 10 0 1 0 0 20c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.5-1.1-.3-.3-.5-.7-.5-1.1 0-.9.7-1.6 1.6-1.6H16a6 6 0 0 0 6-6c0-5-4.5-8.6-10-8.6Z"></path>
                     </svg>
-                    Ciência da Computação
+                    Artes Visuais
                 </span>
 
                 <div class="grad-subnav-links">
@@ -211,18 +225,22 @@
                         <span class="grad-eyebrow" data-entrada style="--atraso: 60ms">
                             <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
                                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <polyline points="16 18 22 12 16 6"></polyline>
-                                <polyline points="8 6 2 12 8 18"></polyline>
+                                <circle cx="13.5" cy="6.5" r="1"></circle>
+                                <circle cx="17.5" cy="10.5" r="1"></circle>
+                                <circle cx="8.5" cy="7.5" r="1"></circle>
+                                <circle cx="6.5" cy="12.5" r="1"></circle>
+                                <path d="M12 2a10 10 0 1 0 0 20c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.5-1.1-.3-.3-.5-.7-.5-1.1 0-.9.7-1.6 1.6-1.6H16a6 6 0 0 0 6-6c0-5-4.5-8.6-10-8.6Z"></path>
                             </svg>
                             Graduação · Bacharelado
                         </span>
 
-                        <h1 data-entrada style="--atraso: 160ms">Ciência da <span>Computação</span></h1>
+                        <h1 data-entrada style="--atraso: 160ms">Artes <span>Visuais</span></h1>
 
                         <p data-entrada style="--atraso: 260ms">
-                            Aprenda a projetar software, resolver problemas complexos e transformar ideias
-                            em soluções digitais. Uma formação completa que combina fundamentos da computação,
-                            programação, engenharia de software, dados e inovação.
+                            Do desenho à pintura, da gravura à escultura, do ateliê às novas mídias.
+                            Desenvolva poética própria com domínio técnico em arte digital, fotografia
+                            e processos gráficos contemporâneos.
+                            Forme-se também para a curadoria, a crítica e a pesquisa em artes.
                         </p>
 
                         <div class="grad-actions" data-entrada style="--atraso: 360ms">
@@ -231,26 +249,24 @@
                         </div>
                     </div>
 
-                    <div class="grad-hero-card" data-entrada data-inclinar style="--atraso: 460ms" aria-label="Destaque do curso">
+                    <div class="grad-hero-card" data-entrada data-inclinar style="--atraso: 460ms" aria-label="Ficha técnica de obra">
                         <div class="grad-janela">
                             <div class="grad-janela-topo">
                                 <span class="grad-janela-ponto"></span>
                                 <span class="grad-janela-ponto"></span>
                                 <span class="grad-janela-ponto"></span>
-                                <span class="grad-janela-titulo">CienciaDaComputacaoUniAura.java</span>
+                                <span class="grad-janela-titulo">ficha-da-obra.txt</span>
                             </div>
 
                             <div class="grad-janela-corpo">
-                                <span class="grad-janela-linha"><span class="blue">public class</span> <span class="green">CienciaDaComputacaoUniAura</span> {</span>
-                                <span class="grad-janela-linha">    <span class="blue">public static void</span> <span class="yellow">main</span>(String[] args) {</span>
-                                <span class="grad-janela-linha">        <span class="blue">String</span> conhecimento = <span class="green">"Ciência da Computação"</span>;</span>
-                                <span class="grad-janela-linha">        <span class="blue">String</span> carreira = <span class="green">"sem limites"</span>;</span>
-                                <span class="grad-janela-linha"> </span>
-                                <span class="grad-janela-linha">        System.out.println(</span>
-                                <span class="grad-janela-linha">            conhecimento + <span class="muted">" → "</span> + carreira</span>
-                                <span class="grad-janela-linha">        );</span>
-                                <span class="grad-janela-linha">    }</span>
-                                <span class="grad-janela-linha">}<span class="grad-janela-cursor" aria-hidden="true"></span></span>
+                                <span class="grad-janela-linha"><span class="blue">TÍTULO:</span> <span class="green">Horizonte Interrompido</span></span>
+                                <span class="grad-janela-linha"><span class="blue">ARTISTA:</span> <span class="green">Helena Vasques</span></span>
+                                <span class="grad-janela-linha"><span class="blue">TÉCNICA:</span> <span class="green">acrílica sobre tela</span></span>
+                                <span class="grad-janela-linha"><span class="blue">DIMENSÕES:</span> <span class="yellow">120 x 90 cm</span></span>
+                                <span class="grad-janela-linha"><span class="blue">ANO:</span> <span class="yellow">2024</span></span>
+                                <span class="grad-janela-linha"><span class="blue">ACERVO:</span> <span class="green">Galeria UniAura</span></span>
+                                <span class="grad-janela-linha"><span class="blue">EXPOSIÇÃO:</span> <span class="green">Salão de Artes Visuais</span> &lt;<span class="yellow">sala 3</span>&gt;</span>
+                                <span class="grad-janela-linha"><span class="blue">STATUS:</span> <span class="green">em exibição</span><span class="grad-janela-cursor" aria-hidden="true"></span></span>
                             </div>
                         </div>
                     </div>
@@ -265,7 +281,7 @@
                             <span>semestres</span>
                         </div>
                         <div class="grad-stat">
-                            <strong data-contador="3200" data-sufixo="h">0</strong>
+                            <strong data-contador="3000" data-sufixo="h">0</strong>
                             <span>carga horária</span>
                         </div>
                         <div class="grad-stat">
@@ -286,8 +302,9 @@
                         <span class="grad-eyebrow">Formação</span>
                         <h2>O que você vai aprender</h2>
                         <p>
-                            Uma trilha progressiva: dos fundamentos matemáticos e computacionais até
-                            projetos aplicados e desenvolvimento de soluções completas.
+                            Uma formação artística completa: domínio das linguagens tradicionais do
+                            ateliê, experimentação em meios digitais e repertório teórico para pensar,
+                            escrever e expor arte.
                         </p>
                     </div>
 
@@ -296,77 +313,81 @@
                             <div class="grad-card-icon">
                                 <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor"
                                      stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M8 9l3 3-3 3"></path>
-                                    <path d="M13 15h3"></path>
-                                    <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                                    <path d="M12 19l7-7 3 3-7 7-3-3Z"></path>
+                                    <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5Z"></path>
+                                    <path d="M2 2l7.586 7.586"></path>
+                                    <circle cx="11" cy="11" r="2"></circle>
                                 </svg>
                             </div>
-                            <h3>Programação</h3>
-                            <p>Estruturas de dados, algoritmos, orientação a objetos, paradigmas e desenvolvimento de aplicações.</p>
+                            <h3>Desenho e Linguagem Visual</h3>
+                            <p>Observação, proporção, perspectiva e os elementos da composição visual.</p>
                         </article>
 
                         <article class="grad-card" data-revelar style="--atraso: 90ms">
                             <div class="grad-card-icon">
                                 <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor"
                                      stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                    <ellipse cx="12" cy="6" rx="8" ry="3"></ellipse>
-                                    <path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6"></path>
-                                    <path d="M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"></path>
+                                    <circle cx="13.5" cy="6.5" r="1"></circle>
+                                    <circle cx="17.5" cy="10.5" r="1"></circle>
+                                    <circle cx="8.5" cy="7.5" r="1"></circle>
+                                    <circle cx="6.5" cy="12.5" r="1"></circle>
+                                    <path d="M12 2a10 10 0 1 0 0 20c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.5-1.1-.3-.3-.5-.7-.5-1.1 0-.9.7-1.6 1.6-1.6H16a6 6 0 0 0 6-6c0-5-4.5-8.6-10-8.6Z"></path>
                                 </svg>
                             </div>
-                            <h3>Dados e IA</h3>
-                            <p>Banco de dados, estatística, inteligência artificial, aprendizado de máquina e análise de informações.</p>
+                            <h3>Pintura e Cor</h3>
+                            <p>Teoria da cor, materiais, suportes e poéticas do óleo, acrílica e aquarela.</p>
                         </article>
 
                         <article class="grad-card" data-revelar style="--atraso: 180ms">
                             <div class="grad-card-icon">
                                 <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor"
                                      stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3Z"></path>
-                                    <path d="M12 12l8-4.5"></path>
-                                    <path d="M12 12v9"></path>
-                                    <path d="M12 12L4 7.5"></path>
+                                    <rect x="3" y="4" width="18" height="7" rx="1"></rect>
+                                    <path d="M7 11v3h10v-3"></path>
+                                    <rect x="6" y="17" width="12" height="4" rx="1"></rect>
                                 </svg>
                             </div>
-                            <h3>Engenharia de Software</h3>
-                            <p>Arquitetura, testes, versionamento, métodos ágeis, requisitos e construção de sistemas escaláveis.</p>
+                            <h3>Gravura e Processos Gráficos</h3>
+                            <p>Xilogravura, gravura em metal, serigrafia e a lógica da imagem multiplicada.</p>
                         </article>
 
                         <article class="grad-card" data-revelar style="--atraso: 270ms">
                             <div class="grad-card-icon">
                                 <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor"
                                      stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="3" y="4" width="18" height="16" rx="2"></rect>
-                                    <path d="M7 8h10M7 12h6M7 16h4"></path>
+                                    <path d="M12 2l9 5v10l-9 5-9-5V7l9-5Z"></path>
+                                    <path d="M3 7l9 5 9-5"></path>
+                                    <path d="M12 12v10"></path>
                                 </svg>
                             </div>
-                            <h3>Sistemas e Redes</h3>
-                            <p>Arquitetura de computadores, sistemas operacionais, redes, computação em nuvem e infraestrutura.</p>
+                            <h3>Escultura e Tridimensionalidade</h3>
+                            <p>Modelagem, talha, moldes, instalação e ocupação poética do espaço.</p>
                         </article>
 
                         <article class="grad-card" data-revelar style="--atraso: 360ms">
                             <div class="grad-card-icon">
                                 <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor"
                                      stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M12 2l2.4 6.1L21 10l-5 4.1 1.5 6.4L12 17l-5.5 3.5L8 14.1 3 10l6.6-1.9L12 2Z"></path>
+                                    <rect x="2" y="4" width="20" height="14" rx="2"></rect>
+                                    <path d="M8 21h8M12 18v3"></path>
+                                    <path d="M6 13l3-3 2.5 2.5L15 8l3 4"></path>
                                 </svg>
                             </div>
-                            <h3>Inovação</h3>
-                            <p>Projetos práticos, resolução de problemas e desenvolvimento de produtos usando tecnologia.</p>
+                            <h3>Arte Digital e Novas Mídias</h3>
+                            <p>Imagem digital, fotografia, vídeo, animação e criação com meios computacionais.</p>
                         </article>
 
                         <article class="grad-card" data-revelar style="--atraso: 450ms">
                             <div class="grad-card-icon">
                                 <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor"
                                      stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M12 3v18"></path>
-                                    <path d="M5 8h14"></path>
-                                    <path d="M7 8l-3 5h6l-3-5Z"></path>
-                                    <path d="M17 8l-3 5h6l-3-5Z"></path>
+                                    <path d="M3 21h18"></path>
+                                    <path d="M5 21V9l7-5 7 5v12"></path>
+                                    <path d="M9 21v-6h6v6"></path>
                                 </svg>
                             </div>
-                            <h3>Fundamentos</h3>
-                            <p>Matemática, lógica, teoria da computação e fundamentos que sustentam a evolução profissional.</p>
+                            <h3>História da Arte e Curadoria</h3>
+                            <p>Da arte antiga ao contemporâneo, crítica, pesquisa e montagem de exposições.</p>
                         </article>
                     </div>
                 </div>
@@ -393,18 +414,18 @@
                             </button>
                             <div class="grad-semester-corpo">
                                 <div class="grad-semester-list">
-                                    <span class="grad-subject">Algoritmos e Programação I</span>
-                                    <span class="grad-subject">Matemática Discreta</span>
-                                    <span class="grad-subject">Introdução à Computação</span>
-                                    <span class="grad-subject">Cálculo Diferencial e Integral I</span>
-                                    <span class="grad-subject">Comunicação e Expressão</span>
+                                    <span class="grad-subject">Desenho I — Observação</span>
+                                    <span class="grad-subject">Teoria da Cor</span>
+                                    <span class="grad-subject">História da Arte I — Antiga e Medieval</span>
+                                    <span class="grad-subject">Introdução às Artes Visuais</span>
+                                    <span class="grad-subject">Linguagem Visual e Composição</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="grad-semester" data-revelar style="--atraso: 60ms">
                             <button type="button" aria-expanded="false">
-                                <span>2º semestre · Programação</span>
+                                <span>2º semestre · Ateliê inicial</span>
                                 <span class="grad-semester-seta" aria-hidden="true">
                                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
                                          stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -414,18 +435,18 @@
                             </button>
                             <div class="grad-semester-corpo">
                                 <div class="grad-semester-list">
-                                    <span class="grad-subject">Algoritmos e Programação II</span>
-                                    <span class="grad-subject">Estruturas de Dados I</span>
-                                    <span class="grad-subject">Álgebra Linear</span>
-                                    <span class="grad-subject">Arquitetura de Computadores</span>
-                                    <span class="grad-subject">Cálculo Diferencial e Integral II</span>
+                                    <span class="grad-subject">Desenho II — Figura Humana</span>
+                                    <span class="grad-subject">Pintura I</span>
+                                    <span class="grad-subject">História da Arte II — Renascimento ao Barroco</span>
+                                    <span class="grad-subject">Estética</span>
+                                    <span class="grad-subject">Fotografia I</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="grad-semester" data-revelar style="--atraso: 120ms">
                             <button type="button" aria-expanded="false">
-                                <span>3º semestre · Sistemas</span>
+                                <span>3º semestre · Linguagens</span>
                                 <span class="grad-semester-seta" aria-hidden="true">
                                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
                                          stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -435,18 +456,18 @@
                             </button>
                             <div class="grad-semester-corpo">
                                 <div class="grad-semester-list">
-                                    <span class="grad-subject">Programação Orientada a Objetos</span>
-                                    <span class="grad-subject">Estruturas de Dados II</span>
-                                    <span class="grad-subject">Sistemas Operacionais</span>
-                                    <span class="grad-subject">Banco de Dados I</span>
-                                    <span class="grad-subject">Probabilidade e Estatística</span>
+                                    <span class="grad-subject">Desenho III — Experimentação</span>
+                                    <span class="grad-subject">Gravura I — Xilogravura</span>
+                                    <span class="grad-subject">História da Arte III — Moderna</span>
+                                    <span class="grad-subject">Pintura II</span>
+                                    <span class="grad-subject">Antropologia da Arte</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="grad-semester" data-revelar style="--atraso: 180ms">
                             <button type="button" aria-expanded="false">
-                                <span>4º semestre · Engenharia</span>
+                                <span>4º semestre · Tridimensional</span>
                                 <span class="grad-semester-seta" aria-hidden="true">
                                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
                                          stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -456,18 +477,18 @@
                             </button>
                             <div class="grad-semester-corpo">
                                 <div class="grad-semester-list">
-                                    <span class="grad-subject">Engenharia de Software I</span>
-                                    <span class="grad-subject">Banco de Dados II</span>
-                                    <span class="grad-subject">Redes de Computadores</span>
-                                    <span class="grad-subject">Desenvolvimento Web</span>
-                                    <span class="grad-subject">Análise e Projeto de Sistemas</span>
+                                    <span class="grad-subject">Escultura I</span>
+                                    <span class="grad-subject">Gravura II — Metal e Serigrafia</span>
+                                    <span class="grad-subject">Arte Digital I</span>
+                                    <span class="grad-subject">Fotografia II</span>
+                                    <span class="grad-subject">Arte Contemporânea</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="grad-semester" data-revelar style="--atraso: 240ms">
                             <button type="button" aria-expanded="false">
-                                <span>5º semestre · Desenvolvimento</span>
+                                <span>5º semestre · Novas mídias</span>
                                 <span class="grad-semester-seta" aria-hidden="true">
                                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
                                          stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -477,18 +498,18 @@
                             </button>
                             <div class="grad-semester-corpo">
                                 <div class="grad-semester-list">
-                                    <span class="grad-subject">Engenharia de Software II</span>
-                                    <span class="grad-subject">Desenvolvimento de Aplicações</span>
-                                    <span class="grad-subject">Computação em Nuvem</span>
-                                    <span class="grad-subject">Segurança da Informação</span>
-                                    <span class="grad-subject">Interação Humano-Computador</span>
+                                    <span class="grad-subject">Arte Digital II — Vídeo e Animação</span>
+                                    <span class="grad-subject">Escultura II — Instalação</span>
+                                    <span class="grad-subject">Crítica de Arte</span>
+                                    <span class="grad-subject">Ateliê de Projeto I</span>
+                                    <span class="grad-subject">Arte e Tecnologia</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="grad-semester" data-revelar style="--atraso: 300ms">
                             <button type="button" aria-expanded="false">
-                                <span>6º semestre · Inteligência</span>
+                                <span>6º semestre · Curadoria</span>
                                 <span class="grad-semester-seta" aria-hidden="true">
                                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
                                          stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -498,18 +519,18 @@
                             </button>
                             <div class="grad-semester-corpo">
                                 <div class="grad-semester-list">
-                                    <span class="grad-subject">Inteligência Artificial</span>
-                                    <span class="grad-subject">Aprendizado de Máquina</span>
-                                    <span class="grad-subject">Computação Distribuída</span>
-                                    <span class="grad-subject">DevOps e Integração Contínua</span>
-                                    <span class="grad-subject">Empreendedorismo e Inovação</span>
+                                    <span class="grad-subject">Curadoria e Montagem de Exposições</span>
+                                    <span class="grad-subject">Conservação e Restauro</span>
+                                    <span class="grad-subject">Ateliê de Projeto II</span>
+                                    <span class="grad-subject">Arte Brasileira</span>
+                                    <span class="grad-subject">Pesquisa em Artes Visuais</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="grad-semester" data-revelar style="--atraso: 360ms">
                             <button type="button" aria-expanded="false">
-                                <span>7º semestre · Especialização</span>
+                                <span>7º semestre · Poética própria</span>
                                 <span class="grad-semester-seta" aria-hidden="true">
                                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
                                          stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -519,12 +540,11 @@
                             </button>
                             <div class="grad-semester-corpo">
                                 <div class="grad-semester-list">
-                                    <span class="grad-subject">Computação Gráfica</span>
-                                    <span class="grad-subject">Sistemas Inteligentes</span>
-                                    <span class="grad-subject">Tópicos Avançados em Computação</span>
-                                    <span class="grad-subject">Auditoria e Governança de TI</span>
-                                    <span class="grad-subject">Optativa I</span>
-                                    <span class="grad-subject">Projeto de Conclusão I</span>
+                                    <span class="grad-subject">Ateliê de Projeto III</span>
+                                    <span class="grad-subject">Produção e Gestão Cultural</span>
+                                    <span class="grad-subject">Arte-Educação</span>
+                                    <span class="grad-subject">Estágio Supervisionado</span>
+                                    <span class="grad-subject">Trabalho de Conclusão I</span>
                                 </div>
                             </div>
                         </div>
@@ -541,12 +561,11 @@
                             </button>
                             <div class="grad-semester-corpo">
                                 <div class="grad-semester-list">
-                                    <span class="grad-subject">Arquitetura de Software</span>
-                                    <span class="grad-subject">Segurança de Sistemas</span>
-                                    <span class="grad-subject">Optativa II</span>
+                                    <span class="grad-subject">Ateliê de Projeto IV</span>
+                                    <span class="grad-subject">Mercado de Arte e Portfólio</span>
+                                    <span class="grad-subject">Optativa em Artes Visuais</span>
                                     <span class="grad-subject">Atividades Complementares</span>
-                                    <span class="grad-subject">Estágio Supervisionado</span>
-                                    <span class="grad-subject">Projeto de Conclusão II</span>
+                                    <span class="grad-subject">Trabalho de Conclusão II</span>
                                 </div>
                             </div>
                         </div>
@@ -561,22 +580,23 @@
                             <span class="grad-eyebrow">Mercado de trabalho</span>
                             <h2 class="grad-career-titulo">Onde você pode chegar</h2>
                             <p class="muted">
-                                A formação em Ciência da Computação abre portas para diferentes áreas da tecnologia,
-                                em empresas de software, bancos, indústrias, startups, órgãos públicos e centros de pesquisa.
+                                O artista visual atua muito além do ateliê: circuitos de galerias e museus,
+                                editoras, estúdios de animação e games, escolas, centros culturais, ateliês
+                                de restauro e projetos independentes de pesquisa e criação.
                             </p>
                         </div>
 
                         <div class="grad-card" data-revelar style="--atraso: 120ms">
                             <strong>Possíveis áreas de atuação</strong>
                             <div class="grad-career-list">
-                                <div class="grad-career-item" style="--atraso: 200ms">Desenvolvimento de Software</div>
-                                <div class="grad-career-item" style="--atraso: 250ms">Engenharia de Dados</div>
-                                <div class="grad-career-item" style="--atraso: 300ms">Cibersegurança</div>
-                                <div class="grad-career-item" style="--atraso: 350ms">Cloud Computing</div>
-                                <div class="grad-career-item" style="--atraso: 400ms">Inteligência Artificial</div>
-                                <div class="grad-career-item" style="--atraso: 450ms">DevOps</div>
-                                <div class="grad-career-item" style="--atraso: 500ms">Arquitetura de Software</div>
-                                <div class="grad-career-item" style="--atraso: 550ms">Pesquisa e Inovação</div>
+                                <div class="grad-career-item" style="--atraso: 200ms">Artista Visual</div>
+                                <div class="grad-career-item" style="--atraso: 250ms">Ilustração</div>
+                                <div class="grad-career-item" style="--atraso: 300ms">Curadoria</div>
+                                <div class="grad-career-item" style="--atraso: 350ms">Produção Cultural</div>
+                                <div class="grad-career-item" style="--atraso: 400ms">Arte-Educação</div>
+                                <div class="grad-career-item" style="--atraso: 450ms">Restauro e Conservação</div>
+                                <div class="grad-career-item" style="--atraso: 500ms">Arte Digital e Concept Art</div>
+                                <div class="grad-career-item" style="--atraso: 550ms">Galerias e Museus</div>
                             </div>
                         </div>
                     </div>
@@ -585,12 +605,12 @@
 
             <section class="grad-section">
                 <div class="grad-container">
-                    <div class="grad-cta" data-revelar>
+                    <div class="grad-cta" data-revelar style="background: linear-gradient(135deg, rgba(162,28,175,0.97), rgba(232,121,249,0.90));">
                         <div>
                             <h2>Pronto para começar sua jornada?</h2>
                             <p>
                                 As inscrições para o próximo semestre estão abertas. Faça sua matrícula
-                                on-line e garanta sua vaga em Ciência da Computação.
+                                on-line e garanta sua vaga em Artes Visuais.
                             </p>
                         </div>
                         <a class="grad-btn grad-cta-btn" href="#/matriculas">
@@ -630,7 +650,7 @@
 
             <div class="site-footer-col">
                 <h4>Redes sociais</h4>
-                <a href="#" rel="noopener" aria-label="Linkedin">
+                <a href="#" rel="noopener" aria-label="Facebook">
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
                          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3Z"></path>
