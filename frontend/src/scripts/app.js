@@ -354,6 +354,15 @@ const ROTAS = {
         titulo: "Direito — Universidade Aura"
     },
 
+    "/contato": {
+        modelo: "web/contato.html",
+        modulo: () => import("./pages/web/contato.js"),
+        publico: true,
+        modo: "limpo",
+        classe: "cc-screen",
+        titulo: "Contato — Universidade Aura"
+    },
+
     "/matriculas": {
         modelo: "web/matriculas.html",
         modulo: () => import("./pages/web/matriculas.js"),

@@ -1,9 +1,13 @@
 import { navegarPara } from "../../../navegacao.js";
+import { montarChromeDoSite } from "../../../componentes/chrome-site.js";
 
 const CHAVE_TEMA = "theme";
 
 // --- COMPORTAMENTO COMPARTILHADO PELAS PÁGINAS DE CURSO ---
 export function montarPaginaDeCurso(raiz) {
+    // --- PRIMEIRO O CABEÇALHO E O RODAPÉ: O RESTO DEPENDE DOS ELEMENTOS QUE ELES CRIAM ---
+    montarChromeDoSite(raiz);
+
     const menu = raiz.querySelector("#siteMenu");
     const burger = raiz.querySelector("#siteBurger");
 

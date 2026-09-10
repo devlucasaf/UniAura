@@ -1,4 +1,4 @@
-import { montarPaginaDeCurso } from "./graduacao/tecnologia/_curso.js";
+import { montarPaginaDeCurso } from "./graduacao/_curso.js";
 
 // --- ALFABETO SEM VOGAIS E SEM CARACTERES AMBÍGUOS, IGUAL AO GERADOR DE PROTOCOLO DO BACKEND ---
 const ALFABETO_PROTOCOLO = "23456789BCDFGHJKLMNPQRSTVWXZ";
@@ -7,7 +7,6 @@ const TAMANHO_SUFIXO = 8;
 
 // --- MONTA A PÁGINA PÚBLICA DE MATRÍCULAS ---
 export function montar(raiz) {
-    // --- REAPROVEITA O CABEÇALHO, O TEMA E AS ANIMAÇÕES DAS PÁGINAS DE CURSO ---
     montarPaginaDeCurso(raiz);
 
     aplicarMascaras(raiz);
@@ -54,7 +53,6 @@ function configurarFormulario(raiz) {
         botao.disabled = true;
         botao.textContent = "Enviando...";
 
-        // --- AINDA NÃO HÁ ENDPOINT DE INSCRIÇÃO NO BACKEND: O PROTOCOLO É GERADO NO NAVEGADOR ---
         const protocolo = gerarProtocolo();
 
         mostrar(mensagem,

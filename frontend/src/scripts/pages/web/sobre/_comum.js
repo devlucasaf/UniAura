@@ -1,9 +1,13 @@
 import { navegarPara } from "../../../navegacao.js";
+import { montarChromeDoSite } from "../../../componentes/chrome-site.js";
 
 const CHAVE_TEMA = "theme";
 
 // --- CONFIGURA O TEMA E A SOMBRA DO CABECALHO ---
 export function configurarNavbarPagina(raiz) {
+    // --- PRIMEIRO O CABEÇALHO E O RODAPÉ: O RESTO DEPENDE DOS ELEMENTOS QUE ELES CRIAM ---
+    montarChromeDoSite(raiz);
+
     aplicarTemaNoBotao(raiz);
     configurarBotaoTema(raiz);
     configurarSombraCabecalho(raiz);

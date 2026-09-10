@@ -1,10 +1,14 @@
 import { notificar } from "../../util.js";
 import { navegarPara } from "../../navegacao.js";
+import { montarChromeDoSite } from "../../componentes/chrome-site.js";
 
 const CHAVE_TEMA = "theme";
 
 // --- MONTA A LANDING PAGE DO SITE INSTITUCIONAL ---
 export function montar(raiz) {
+    // --- ancoras: na home os dois itens principais rolam para as seções da própria página ---
+    montarChromeDoSite(raiz, { ancoras: true });
+
     const cabecalho = raiz.querySelector("#siteHeader");
     const menu = raiz.querySelector("#siteMenu");
     const burger = raiz.querySelector("#siteBurger");
