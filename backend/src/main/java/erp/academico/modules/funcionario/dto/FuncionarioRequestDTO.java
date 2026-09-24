@@ -22,7 +22,6 @@ import java.time.LocalDate;
 @Builder
 public class FuncionarioRequestDTO {
 
-    // --- Dados do usuário associado (criado automaticamente) ---
     @NotBlank(message = "O nome é obrigatório.")
     @Size(max = 150)
     private String nome;
@@ -32,7 +31,6 @@ public class FuncionarioRequestDTO {
     @Size(max = 150)
     private String email;
 
-    // --- SENHA OPCIONAL: SE VAZIA, O SISTEMA GERA UMA TEMPORÁRIA E ENVIA POR E-MAIL ---
     @Size(min = 6, max = 100)
     private String senha;
 
@@ -44,7 +42,6 @@ public class FuncionarioRequestDTO {
 
     private LocalDate dataNascimento;
 
-    // --- Dados profissionais ---
     @NotNull(message = "O cargo é obrigatório.")
     private CargoFuncionario cargo;
 

@@ -902,6 +902,29 @@
     color: var(--color-primary);
 }
 
+/* --- CABEÇALHO DE GRUPO DENTRO DA LISTA (EX.: "Tecnologia da Informação") --- */
+.site-dropdown-grupo + .site-dropdown-grupo {
+    margin-top: .35rem;
+    padding-top: .35rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.site-dropdown-grupo-titulo {
+    display: block;
+    padding: .3rem .7rem;
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--text-muted);
+}
+
+.site-dropdown-grupo ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .site-dropdown-lista {
         animation: none;
@@ -979,7 +1002,7 @@
 }
 
 /* --- O ÍCONE HERDA A COR DA MARCA DO CANAL --- */
-.site-canal .cc-card-icon {
+.site-canal .grad-card-icon {
     color: var(--site-canal-cor, var(--color-primary));
     background: color-mix(in srgb, var(--site-canal-cor, var(--color-primary)) 12%, transparent);
 }
@@ -1852,5 +1875,281 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* --- PORTAL DO ALUNO: TELA DE LOGIN --- */
+.site-auth-section {
+    display: grid;
+    place-items: center;
+    min-height: 60vh;
+}
+
+.site-auth-wrap {
+    display: grid;
+    place-items: center;
+}
+
+.site-auth-card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: var(--space-xl, 2.5rem) var(--space-lg);
+    text-align: center;
+}
+
+.site-auth-card h1 {
+    margin: .4rem 0 .6rem;
+    font-size: 1.7rem;
+}
+
+.site-auth-card .site-form {
+    box-shadow: none;
+    border: 0;
+    padding: 0;
+    margin-top: var(--space-lg);
+    text-align: left;
+}
+
+.site-auth-btn {
+    width: 100%;
+    justify-content: center;
+}
+
+.site-auth-rodape {
+    margin-top: var(--space-md);
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+}
+
+.site-auth-rodape a {
+    font-weight: 600;
+}
+
+/* --- LINK EM DESTAQUE (EX.: "CRIE SUA MATRÍCULA"): SUBLINHADO QUE DESLIZA AO PASSAR O MOUSE --- */
+.site-link-destaque {
+    position: relative;
+    color: var(--color-primary);
+}
+
+.site-link-destaque::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+    border-radius: 1px;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform .25s cubic-bezier(.22, 1, .36, 1);
+}
+
+.site-link-destaque:hover::after,
+.site-link-destaque:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* --- LINK "VOLTAR AO SITE": A SETA DESLIZA E PULSA SUAVEMENTE AO PASSAR O MOUSE --- */
+.site-link-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    color: inherit;
+    transition: color .2s ease;
+}
+
+.site-link-voltar:hover,
+.site-link-voltar:focus-visible {
+    color: var(--color-primary);
+}
+
+.site-seta-voltar {
+    display: inline-block;
+    transition: transform .25s cubic-bezier(.22, 1, .36, 1);
+}
+
+.site-link-voltar:hover .site-seta-voltar,
+.site-link-voltar:focus-visible .site-seta-voltar {
+    animation: setaVoltarPulso 1s ease-in-out infinite;
+}
+
+@keyframes setaVoltarPulso {
+    0%, 100% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(-5px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .site-link-destaque::after,
+    .site-seta-voltar {
+        transition: none;
+    }
+
+    .site-link-voltar:hover .site-seta-voltar,
+    .site-link-voltar:focus-visible .site-seta-voltar {
+        animation: none;
+        transform: translateX(-3px);
+    }
+}
+
+/* --- PORTAL DO ALUNO: CADASTRO EM ETAPAS (WIZARD) --- */
+.site-wizard {
+    display: grid;
+    gap: var(--space-lg);
+}
+
+/* --- TRILHA DE ETAPAS NO TOPO DO FORMULÁRIO --- */
+.site-wizard-passos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm) var(--space-md);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.site-wizard-passo {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+}
+
+.site-wizard-numero {
+    display: grid;
+    place-items: center;
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: var(--bg-surface);
+    font-size: .85rem;
+    transition: background .2s ease, border-color .2s ease, color .2s ease;
+}
+
+.site-wizard-passo.ativo {
+    color: var(--color-primary);
+}
+
+.site-wizard-passo.ativo .site-wizard-numero {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+}
+
+.site-wizard-passo.concluida .site-wizard-numero {
+    background: color-mix(in srgb, var(--color-primary) 16%, transparent);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+/* --- ÍCONE TEMÁTICO DE CADA ETAPA, AO LADO DO NÚMERO ---*/
+.site-wizard-icone {
+    display: inline-flex;
+    color: inherit;
+}
+
+@media (max-width: 780px) {
+    .site-wizard-nome {
+        display: none;
+    }
+}
+
+/* --- CADA ETAPA REAPROVEITA OS CAMPOS DO .site-form, SÓ AGRUPADOS EM FIELDSETS --- */
+.site-wizard-etapa {
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.site-wizard-etapa legend {
+    padding: 0;
+    margin-bottom: var(--space-md);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+/* --- NAVEGAÇÃO ENTRE ETAPAS ---*/
+.site-wizard-acoes {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--border-color);
+}
+
+.site-wizard-contador {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    order: -1;
+    flex: 1 1 100%;
+    text-align: center;
+}
+
+@media (min-width: 620px) {
+    .site-wizard-contador {
+        order: 0;
+        flex: 0 1 auto;
+    }
+}
+
+/* --- BOTÃO DE INFORMAÇÃO (TOOLTIP) AO LADO DE UM CAMPO ---*/
+.site-info-btn {
+    display: inline-grid;
+    place-items: center;
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-left: .3rem;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    vertical-align: -3px;
+    transition: color .15s ease;
+}
+
+.site-info-btn:hover,
+.site-info-btn:focus-visible {
+    color: var(--color-primary);
+}
+
+.site-info-texto {
+    margin-top: -.4rem;
+    padding: .75rem 1rem;
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--color-primary) 8%, transparent);
+    color: var(--text-primary);
+    font-size: var(--fs-sm);
+}
+
+/* --- TEXTO DO TERMO DE CONSENTIMENTO ---*/
+.site-consentimento {
+    display: grid;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+    padding: var(--space-md);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    max-height: 220px;
+    overflow-y: auto;
 }
 

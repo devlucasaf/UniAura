@@ -2,11 +2,13 @@ package erp.academico.modules.aluno.service;
 
 import erp.academico.exception.BusinessException;
 import erp.academico.exception.ResourceNotFoundException;
+import erp.academico.infra.security.UsuarioDetails;
 import erp.academico.modules.aluno.dto.AlunoRequestDTO;
 import erp.academico.modules.aluno.dto.AlunoResponseDTO;
 import erp.academico.modules.aluno.model.Aluno;
 import erp.academico.modules.aluno.model.StatusAluno;
 import erp.academico.modules.aluno.repository.AlunoRepository;
+import erp.academico.modules.auditoria.service.AuditoriaService;
 import erp.academico.modules.usuario.dto.UsuarioRequestDTO;
 import erp.academico.modules.usuario.dto.UsuarioResponseDTO;
 import erp.academico.modules.usuario.model.TipoUsuario;
@@ -17,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +32,7 @@ public class AlunoService {
 
     private final AlunoRepository alunoRepository;
     private final UsuarioService usuarioService;
+    private final AuditoriaService auditoriaService;
 
     // --- LISTA ALUNOS ---
     @Transactional(readOnly = true)
@@ -116,7 +121,15 @@ public class AlunoService {
     @Transactional
     public void deletar(UUID id) {
         Aluno aluno = buscarEntidade(id);
+        String nomeAluno = aluno.getUsuario() == null ? null : aluno.getUsuario().getNome();
         alunoRepository.delete(aluno);
+        auditoriaService.registrar(usuarioAutenticadoOuNulo(), "EXCLUSAO", "Aluno", id, "Aluno removido: " + nomeAluno);
+    }
+
+    // --- RECUPERA O USUÁRIO AUTENTICADO, OU NULO QUANDO NÃO HÁ CONTEXTO DE SEGURANÇA DISPONÍVEL ---
+    private Usuario usuarioAutenticadoOuNulo() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return (auth != null && auth.getPrincipal() instanceof UsuarioDetails ud) ? ud.getUsuario() : null;
     }
 
     // --- BUSCA A ENTIDADE ---

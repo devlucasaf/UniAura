@@ -224,6 +224,35 @@ th {
     background: var(--color-primary);
 }
 
+.badge.DISPONIVEL,
+.badge.ATIVO,
+.badge.AGUARDANDO,
+.badge.PENDENTE {
+    background: #2563eb;
+}
+
+.badge.EMPRESTADO,
+.badge.RESERVADO {
+    background: #f59e0b;
+}
+
+.badge.DEVOLVIDO,
+.badge.ATENDIDA,
+.badge.PAGA {
+    background: #16a34a;
+}
+
+.badge.ATRASADO,
+.badge.PERDIDO,
+.badge.EXPIRADA,
+.badge.CANCELADA {
+    background: #b91c1c;
+}
+
+.badge.MANUTENCAO {
+    background: #6b7280;
+}
+
 /* --- BARRA DE FERRAMENTAS / FILTROS --- */
 .toolbar {
     display: flex;
