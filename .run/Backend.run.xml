@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Backend" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <module name="ERP-Academic-School-System" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="erp.academico.ErpAcademicoApplication" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="erp.uniaura.UniAuraApplication" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
