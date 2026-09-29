@@ -1,6 +1,6 @@
-// --- SISTEMA DE NOTIFICAÇÕES ---
 let raizNotificacoes;
 
+// --- GARANTE QUE A RAIZ DAS NOTIFICAÇÕES EXISTE ---
 function garantirRaizNotificacoes() {
     if (!raizNotificacoes) {
         raizNotificacoes = document.createElement("div");
@@ -10,6 +10,7 @@ function garantirRaizNotificacoes() {
     return raizNotificacoes;
 }
 
+// --- EXIBE UMA NOTIFICAÇÃO ---
 export function notificar(mensagem, tipo = "info", tempo = 3500) {
     if (typeof document === "undefined") {
         return;

@@ -1,17 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import AppShell from "@/components/interno/AppShell";
+import { useEffect, useState }  from "react";
+import AppShell                 from "@/components/interno/AppShell";
 import { livroApi, reservaApi } from "@/lib/api/biblioteca";
 
 const FILTRO_VAZIO = { titulo: "", autor: "", categoria: "", isbn: "" };
 
+// --- PÁGINA DE CONSULTA DE LIVROS DO ACERVO DA BIBLIOTECA ---
 export default function AlunoBibliotecaConsultarPage() {
-    const [filtro, setFiltro] = useState(FILTRO_VAZIO);
+    const [filtro,      setFiltro]      = useState(FILTRO_VAZIO);
     const [filtroAtivo, setFiltroAtivo] = useState({});
-    const [pagina, setPagina] = useState(0);
-    const [page, setPage] = useState(null);
+    const [pagina,      setPagina]      = useState(0);
+    const [page,        setPage]        = useState(null);
 
+    // --- BUSCA DE LIVROS COM FILTRO E PAGINAÇÃO ---
     async function buscar(paginaAlvo = pagina, filtroAlvo = filtroAtivo) {
         const resultado = await livroApi.buscar({ ...filtroAlvo, page: paginaAlvo, size: 10 });
         setPage(resultado);
@@ -19,6 +21,7 @@ export default function AlunoBibliotecaConsultarPage() {
 
     useEffect(() => { buscar(0, {}); }, []);
 
+    // --- RESERVA DE LIVRO ---
     async function reservar(livroId) {
         try {
             const r = await reservaApi.reservar({ livroId });
@@ -28,6 +31,7 @@ export default function AlunoBibliotecaConsultarPage() {
         }
     }
 
+    // --- APLICAÇÃO DE FILTRO E PAGINAÇÃO ---
     function aplicarFiltro(evento) {
         evento.preventDefault();
         const proximo = {};
@@ -37,6 +41,7 @@ export default function AlunoBibliotecaConsultarPage() {
         buscar(0, proximo);
     }
 
+    // --- NAVEGAÇÃO ENTRE PÁGINAS ---
     function irPagina(delta) {
         const novaPagina = pagina + delta;
         setPagina(novaPagina);
@@ -50,10 +55,34 @@ export default function AlunoBibliotecaConsultarPage() {
             <section className="card">
                 <h2>Consultar acervo</h2>
                 <form className="toolbar" onSubmit={aplicarFiltro}>
-                    <label className="field">Título<input value={filtro.titulo} onChange={(e) => setFiltro({ ...filtro, titulo: e.target.value })} /></label>
-                    <label className="field">Autor<input value={filtro.autor} onChange={(e) => setFiltro({ ...filtro, autor: e.target.value })} /></label>
-                    <label className="field">Categoria<input value={filtro.categoria} onChange={(e) => setFiltro({ ...filtro, categoria: e.target.value })} /></label>
-                    <label className="field">ISBN<input value={filtro.isbn} onChange={(e) => setFiltro({ ...filtro, isbn: e.target.value })} /></label>
+                    <label className="field">
+                        Título
+                        <input 
+                            value={filtro.titulo} 
+                            onChange={(e) => setFiltro({ ...filtro, titulo: e.target.value })} 
+                        />
+                    </label>
+                    <label className="field">
+                        Autor
+                        <input 
+                            value={filtro.autor} 
+                            onChange={(e) => setFiltro({ ...filtro, autor: e.target.value })} 
+                        />
+                    </label>
+                    <label className="field">
+                        Categoria
+                        <input 
+                            value={filtro.categoria} 
+                            onChange={(e) => setFiltro({ ...filtro, categoria: e.target.value })} 
+                        />
+                    </label>
+                    <label className="field">
+                        ISBN
+                        <input 
+                            value={filtro.isbn} 
+                            onChange={(e) => setFiltro({ ...filtro, isbn: e.target.value })} 
+                        />
+                    </label>
                     <button type="submit" className="btn">Buscar</button>
                 </form>
             </section>
@@ -61,7 +90,13 @@ export default function AlunoBibliotecaConsultarPage() {
             <section className="card">
                 <table>
                     <thead>
-                        <tr><th>Título</th><th>Autor</th><th>Categoria</th><th>Disponíveis</th><th></th></tr>
+                        <tr>
+                            <th>Título</th>
+                            <th>Autor</th>
+                            <th>Categoria</th>
+                            <th>Disponíveis</th>
+                            <th></th>
+                        </tr>
                     </thead>
                     <tbody>
                         {livros.length === 0 && <tr><td colSpan={5}>Nada encontrado.</td></tr>}

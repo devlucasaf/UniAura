@@ -1,18 +1,52 @@
 "use client";
 
-import AppShell from "@/components/interno/AppShell";
-import CrudEntityPage from "@/components/interno/crud/CrudEntityPage";
-import { responsaveisApi } from "@/lib/api/responsaveis";
+import AppShell             from "@/components/interno/AppShell";
+import CrudEntityPage       from "@/components/interno/crud/CrudEntityPage";
+import { responsaveisApi }  from "@/lib/api/responsaveis";
 
+// -- CAMPOS DO FORMULÁRIO DE RESPONSÁVEIS ---
 const CAMPOS = [
-    { name: "nome", label: "Nome", origem: "usuario", required: true },
-    { name: "email", label: "E-mail", origem: "usuario", type: "email", required: true },
-    { name: "cpf", label: "CPF", origem: "usuario" },
-    { name: "telefone", label: "Telefone", origem: "usuario" },
-    { name: "dataNascimento", label: "Nascimento", origem: "usuario", type: "date" },
-    { name: "parentesco", label: "Parentesco", origem: "entidade", type: "select", required: true, options: ["PAI", "MAE", "TUTOR", "OUTRO"], default: "PAI" }
+    { 
+        name: "nome", 
+        label: "Nome", 
+        origem: "usuario", 
+        required: true 
+    },
+    { 
+        name: "email", 
+        label: "E-mail", 
+        origem: "usuario", 
+        type: "email", 
+        required: true 
+    },
+    { 
+        name: "cpf", 
+        label: "CPF", 
+        origem: "usuario" 
+    },
+    { 
+        name: "telefone", 
+        label: "Telefone", 
+        origem: "usuario" 
+    },
+    { 
+        name: "dataNascimento", 
+        label: "Nascimento", 
+        origem: "usuario", 
+        type: "date" 
+    },
+    { 
+        name: "parentesco", 
+        label: "Parentesco", 
+        origem: "entidade", 
+        type: "select", 
+        required: true, 
+        options: ["PAI", "MAE", "TUTOR", "OUTRO"], 
+        default: "PAI" 
+    }
 ];
 
+// --- COLUNAS DA TABELA DE RESPONSÁVEIS ---
 const COLUNAS = [
     { header: "Nome", render: (item) => item.usuario?.nome || "-" },
     { header: "E-mail", render: (item) => item.usuario?.email || "-" },
@@ -20,6 +54,7 @@ const COLUNAS = [
     { header: "Parentesco", render: (item) => item.parentesco }
 ];
 
+// --- PÁGINA DE LISTAGEM DE RESPONSÁVEIS ---
 export default function SecretariaResponsaveisPage() {
     return (
         <AppShell titulo="Responsáveis" perfis={["SECRETARIA", "COORDENADOR", "ADMIN"]}>

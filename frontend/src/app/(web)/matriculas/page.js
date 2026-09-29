@@ -1,33 +1,69 @@
 "use client";
 
-import { useState } from "react";
-import SiteChrome from "@/components/site/SiteChrome";
-import Dropdown from "@/components/ui/Dropdown";
-import { useEfeitosDePagina } from "@/hooks/useEfeitosDePagina";
-import { mascararCpf, mascararTelefone } from "@/lib/mascaras";
+import { useState }                         from "react";
+import SiteChrome                           from "@/components/web/SiteChrome";
+import Dropdown                             from "@/components/ui/Dropdown";
+import { useEfeitosDePagina }               from "@/hooks/useEfeitosDePagina";
+import { mascararCpf, mascararTelefone }    from "@/lib/mascaras";
 
 const ALFABETO_PROTOCOLO = "23456789BCDFGHJKLMNPQRSTVWXZ";
 const TAMANHO_SUFIXO = 8;
 
 const CURSOS = [
-    { value: "ciencia-da-computacao", label: "Ciência da Computação" },
-    { value: "analise-e-desenvolvimento-de-sistemas", label: "Análise e Desenvolvimento de Sistemas" },
-    { value: "engenharia-de-software", label: "Engenharia de Software" },
-    { value: "ciencia-de-dados", label: "Ciência de Dados" },
-    { value: "engenharia-mecatronica", label: "Engenharia Mecatrônica" }
+    { 
+        value: "ciencia-da-computacao", 
+        label: "Ciência da Computação" 
+    },
+    { 
+        value: "analise-e-desenvolvimento-de-sistemas", 
+        label: "Análise e Desenvolvimento de Sistemas" 
+    },
+    { 
+        value: "engenharia-de-software", 
+        label: "Engenharia de Software" 
+    },
+    { 
+        value: "ciencia-de-dados", 
+        label: "Ciência de Dados" 
+    },
+    { 
+        value: "engenharia-mecatronica", 
+        label: "Engenharia Mecatrônica" 
+    }
 ];
 
 const TURNOS = [
-    { value: "MATUTINO", label: "Matutino" },
-    { value: "VESPERTINO", label: "Vespertino" },
-    { value: "NOTURNO", label: "Noturno" }
+    { 
+        value: "MATUTINO", 
+        label: "Matutino" 
+    },
+    { 
+        value: "VESPERTINO", 
+        label: "Vespertino" 
+    },
+    { 
+        value: "NOTURNO",
+        label: "Noturno" 
+    }
 ];
 
 const FORMAS_INGRESSO = [
-    { value: "VESTIBULAR", label: "Vestibular" },
-    { value: "ENEM", label: "Nota do ENEM" },
-    { value: "TRANSFERENCIA", label: "Transferência de outra instituição" },
-    { value: "SEGUNDA_GRADUACAO", label: "Segunda graduação" }
+    { 
+        value: "VESTIBULAR", 
+        label: "Vestibular" 
+    },
+    { 
+        value: "ENEM", 
+        label: "Nota do ENEM" 
+    },
+    { 
+        value: "TRANSFERENCIA", 
+        label: "Transferência de outra instituição" 
+    },
+    { 
+        value: "SEGUNDA_GRADUACAO", 
+        label: "Segunda graduação" 
+    }
 ];
 
 const ETAPAS = [
@@ -74,6 +110,7 @@ const DOCUMENTOS = [
     "Foto 3x4 recente"
 ];
 
+// --- GERA O NÚMERO DE PROTOCOLO DA INSCRIÇÃO ---
 function gerarProtocolo() {
     let sufixo = "";
     for (let i = 0; i < TAMANHO_SUFIXO; i++) {
@@ -82,10 +119,12 @@ function gerarProtocolo() {
     return `MAT-${new Date().getFullYear()}-${sufixo}`;
 }
 
+// --- VERIFICA SE A DATA DE NASCIMENTO INFORMADA RESULTA EM UMA IDADE VÁLIDA ---
 function idadeValida(valor) {
     if (!valor) {
         return false;
     }
+
     const nascimento = new Date(valor);
     if (Number.isNaN(nascimento.getTime())) {
         return false;
@@ -94,18 +133,20 @@ function idadeValida(valor) {
     return anos > 14 && anos < 120;
 }
 
+// --- COMPONENTE DA PÁGINA DE MATRÍCULAS ---
 export default function MatriculasPage() {
     const raizRef = useEfeitosDePagina();
-    const [cpf, setCpf] = useState("");
-    const [telefone, setTelefone] = useState("");
-    const [curso, setCurso] = useState("");
-    const [turno, setTurno] = useState("");
-    const [formaIngresso, setFormaIngresso] = useState("");
+    const [cpf,             setCpf]             = useState("");
+    const [telefone,        setTelefone]        = useState("");
+    const [curso,           setCurso]           = useState("");
+    const [turno,           setTurno]           = useState("");
+    const [formaIngresso,   setFormaIngresso]   = useState("");
     const [camposInvalidos, setCamposInvalidos] = useState({});
-    const [mensagem, setMensagem] = useState("");
-    const [erro, setErro] = useState("");
-    const [enviando, setEnviando] = useState(false);
+    const [mensagem,        setMensagem]        = useState("");
+    const [erro,            setErro]            = useState("");
+    const [enviando,        setEnviando]        = useState(false);
 
+    // --- VALIDA E PROCESSA O ENVIO DA INSCRIÇÃO DE MATRÍCULA ---
     const aoEnviar = (evento) => {
         evento.preventDefault();
         const formulario = evento.target;
@@ -173,7 +214,7 @@ export default function MatriculasPage() {
                             <div className="grad-hero-texto">
                                 <span className="grad-eyebrow" data-entrada style={{ "--atraso": "60ms" }}>
                                     <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
-                                         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                         <rect x="3" y="4" width="18" height="17" rx="2"></rect>
                                         <path d="M16 2v4M8 2v4M3 10h18"></path>
                                     </svg>
@@ -203,15 +244,35 @@ export default function MatriculasPage() {
                                         <span className="grad-janela-titulo">calendario-2027-1</span>
                                     </div>
                                     <div className="grad-janela-corpo">
-                                        <span className="grad-janela-linha"><span className="muted">{"// Calendário do processo seletivo"}</span></span>
+                                        <span className="grad-janela-linha">
+                                            <span className="muted">{"// Calendário do processo seletivo"}</span>
+                                        </span>
                                         <span className="grad-janela-linha"> </span>
-                                        <span className="grad-janela-linha"><span className="blue">Inscrições</span>      <span className="green">05/01 a 28/02</span></span>
-                                        <span className="grad-janela-linha"><span className="blue">Prova on-line</span>   <span className="green">07/03</span></span>
-                                        <span className="grad-janela-linha"><span className="blue">Resultado</span>       <span className="green">14/03</span></span>
-                                        <span className="grad-janela-linha"><span className="blue">Documentação</span>    <span className="green">15/03 a 22/03</span></span>
-                                        <span className="grad-janela-linha"><span className="blue">Início das aulas</span> <span className="green">01/04</span></span>
+                                        <span className="grad-janela-linha">
+                                            <span className="blue">Inscrições</span>      
+                                            <span className="green">05/01 a 28/02</span>
+                                        </span>
+                                        <span className="grad-janela-linha">
+                                            <span className="blue">Prova on-line</span>   
+                                            <span className="green">07/03</span>
+                                        </span>
+                                        <span className="grad-janela-linha">
+                                            <span className="blue">Resultado</span>       
+                                            <span className="green">14/03</span>
+                                        </span>
+                                        <span className="grad-janela-linha">
+                                            <span className="blue">Documentação</span>    
+                                            <span className="green">15/03 a 22/03</span>
+                                        </span>
+                                        <span className="grad-janela-linha">
+                                            <span className="blue">Início das aulas</span> 
+                                            <span className="green">01/04</span>
+                                        </span>
                                         <span className="grad-janela-linha"> </span>
-                                        <span className="grad-janela-linha"><span className="muted">{"// Vagas limitadas por turma"}</span><span className="grad-janela-cursor" aria-hidden="true"></span></span>
+                                        <span className="grad-janela-linha">
+                                            <span className="muted">{"// Vagas limitadas por turma"}</span>
+                                            <span className="grad-janela-cursor" aria-hidden="true"></span>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -231,7 +292,7 @@ export default function MatriculasPage() {
                                     <article key={etapa.titulo} className="grad-card" data-revelar style={{ "--atraso": `${indice * 90}ms` }}>
                                         <div className="grad-card-icon">
                                             <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor"
-                                                 strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                                    strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                                                 {etapa.icone}
                                             </svg>
                                         </div>
@@ -291,7 +352,13 @@ export default function MatriculasPage() {
 
                                     <div className="field">
                                         <label htmlFor="matEmail">E-mail *</label>
-                                        <input id="matEmail" name="email" type="email" required autoComplete="email" />
+                                        <input
+                                            id="matEmail"
+                                            name="email"
+                                            type="email"
+                                            required
+                                            autoComplete="email"
+                                        />
                                     </div>
 
                                     <div className="field">
@@ -312,51 +379,85 @@ export default function MatriculasPage() {
                                     <div className="field">
                                         <label htmlFor="matTelefone">Telefone *</label>
                                         <input
-                                            id="matTelefone" name="telefone" type="tel" required maxLength={15}
-                                            placeholder="(00) 00000-0000" autoComplete="tel" value={telefone}
+                                            id="matTelefone"
+                                            name="telefone"
+                                            type="tel"
+                                            required
+                                            maxLength={15}
+                                            placeholder="(00) 00000-0000"
+                                            autoComplete="tel"
+                                            value={telefone}
                                             onChange={(e) => setTelefone(mascararTelefone(e.target.value))}
                                         />
                                     </div>
 
                                     <div className="field">
                                         <label htmlFor="matNascimento">Data de nascimento *</label>
-                                        <input id="matNascimento" name="dataNascimento" type="date" required />
+                                        <input 
+                                            id="matNascimento" 
+                                            name="dataNascimento" 
+                                            type="date" 
+                                            required 
+                                        />
                                     </div>
 
                                     <div className="field">
                                         <label htmlFor="matCurso">Curso pretendido *</label>
                                         <Dropdown
-                                            id="matCurso" name="curso" options={CURSOS} value={curso} onChange={setCurso}
-                                            placeholder="Selecione o curso" invalid={camposInvalidos.curso}
+                                            id="matCurso" 
+                                            name="curso" 
+                                            options={CURSOS} 
+                                            value={curso} 
+                                            onChange={setCurso}
+                                            placeholder="Selecione o curso" 
+                                            invalid={camposInvalidos.curso}
                                         />
                                     </div>
 
                                     <div className="field">
                                         <label htmlFor="matTurno">Turno *</label>
                                         <Dropdown
-                                            id="matTurno" name="turno" options={TURNOS} value={turno} onChange={setTurno}
-                                            placeholder="Selecione o turno" invalid={camposInvalidos.turno}
+                                            id="matTurno" 
+                                            name="turno" 
+                                            options={TURNOS} 
+                                            value={turno} 
+                                            onChange={setTurno}
+                                            placeholder="Selecione o turno" 
+                                            invalid={camposInvalidos.turno}
                                         />
                                     </div>
 
                                     <div className="field">
                                         <label htmlFor="matIngresso">Forma de ingresso *</label>
                                         <Dropdown
-                                            id="matIngresso" name="formaIngresso" options={FORMAS_INGRESSO}
-                                            value={formaIngresso} onChange={setFormaIngresso}
-                                            placeholder="Selecione a forma de ingresso" invalid={camposInvalidos.formaIngresso}
+                                            id="matIngresso" 
+                                            name="formaIngresso" 
+                                            options={FORMAS_INGRESSO}
+                                            value={formaIngresso} 
+                                            onChange={setFormaIngresso}
+                                            placeholder="Selecione a forma de ingresso" 
+                                            invalid={camposInvalidos.formaIngresso}
                                         />
                                     </div>
                                 </div>
 
                                 <div className="field">
                                     <label htmlFor="matObservacoes">Observações</label>
-                                    <textarea id="matObservacoes" name="observacoes" rows={4}
-                                              placeholder="Conte se você precisa de algum atendimento específico."></textarea>
+                                    <textarea 
+                                        id="matObservacoes" 
+                                        name="observacoes" 
+                                        rows={4}
+                                        placeholder="Conte se você precisa de algum atendimento específico."
+                                    ></textarea>
                                 </div>
 
                                 <label className="site-form-termos">
-                                    <input id="matTermos" name="termos" type="checkbox" required />
+                                    <input 
+                                        id="matTermos" 
+                                        name="termos" 
+                                        type="checkbox" 
+                                        required 
+                                    />
                                     <span>Li e aceito os termos do processo seletivo e a política de privacidade. *</span>
                                 </label>
 

@@ -1,16 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import AppShell from "@/components/interno/AppShell";
-import Badge from "@/components/interno/Badge";
-import { emprestimoApi, multaApi } from "@/lib/api/biblioteca";
-import { formatarData, formatarMoeda } from "@/lib/formato";
-import { obterUsuario } from "@/lib/auth";
+import { useEffect, useState }          from "react";
+import AppShell                         from "@/components/interno/AppShell";
+import Badge                            from "@/components/interno/Badge";
+import { emprestimoApi, multaApi }      from "@/lib/api/biblioteca";
+import { formatarData, formatarMoeda }  from "@/lib/formato";
+import { obterUsuario }                 from "@/lib/auth";
 
+// --- PÁGINA DE CONSULTA DE EMPRÉSTIMOS E MULTAS DO ALUNO ---
 export default function AlunoMeusEmprestimosPage() {
     const [emprestimos, setEmprestimos] = useState([]);
-    const [multas, setMultas] = useState([]);
+    const [multas,      setMultas]      = useState([]);
 
+    // --- CARREGAMENTO DE EMPRÉSTIMOS E MULTAS DO USUÁRIO LOGADO ---
     async function carregar() {
         const usuario = obterUsuario();
         if (!usuario?.id) {
@@ -24,6 +26,7 @@ export default function AlunoMeusEmprestimosPage() {
 
     useEffect(() => { carregar(); }, []);
 
+    // --- RENOVAÇÃO DE EMPRÉSTIMO ---
     async function renovar(id) {
         try {
             await emprestimoApi.renovar(id);
@@ -40,8 +43,13 @@ export default function AlunoMeusEmprestimosPage() {
                 <table>
                     <thead>
                         <tr>
-                            <th>Livro</th><th>Empréstimo</th><th>Devolução prevista</th>
-                            <th>Devolvido em</th><th>Status</th><th>Renovações</th><th></th>
+                            <th>Livro</th>
+                            <th>Empréstimo</th>
+                            <th>Devolução prevista</th>
+                            <th>Devolvido em</th>
+                            <th>Status</th>
+                            <th>Renovações</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -65,7 +73,12 @@ export default function AlunoMeusEmprestimosPage() {
                 <h2>Minhas multas pendentes</h2>
                 <table>
                     <thead>
-                        <tr><th>Livro</th><th>Dias atraso</th><th>Valor</th><th>Gerada em</th></tr>
+                        <tr>
+                            <th>Livro</th>
+                            <th>Dias atraso</th>
+                            <th>Valor</th>
+                            <th>Gerada em</th>
+                        </tr>
                     </thead>
                     <tbody>
                         {multas.length === 0 && <tr><td colSpan={4}>Sem multas pendentes.</td></tr>}

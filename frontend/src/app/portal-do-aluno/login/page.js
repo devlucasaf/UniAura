@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import SiteChrome from "@/components/site/SiteChrome";
-import { autenticar, dashboardDoPerfil } from "@/lib/auth";
-import { notificar } from "@/lib/notificar";
+import { useState }                         from "react";
+import Link                                 from "next/link";
+import SiteChrome                           from "@/components/web/SiteChrome";
+import { autenticar, dashboardDoPerfil }    from "@/lib/auth";
+import { notificar }                        from "@/lib/notificar";
 
 export default function PortalAlunoLoginPage() {
-    const [mensagem, setMensagem] = useState("");
-    const [carregando, setCarregando] = useState(false);
+    const [mensagem,    setMensagem]    = useState("");
+    const [carregando,  setCarregando]  = useState(false);
 
     const aoEnviar = async (evento) => {
         evento.preventDefault();

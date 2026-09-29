@@ -1,15 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import AppShell from "@/components/interno/AppShell";
-import Badge from "@/components/interno/Badge";
-import { reservaApi } from "@/lib/api/biblioteca";
-import { formatarData } from "@/lib/formato";
-import { obterUsuario } from "@/lib/auth";
+import { useEffect, useState }  from "react";
+import AppShell                 from "@/components/interno/AppShell";
+import Badge                    from "@/components/interno/Badge";
+import { reservaApi }           from "@/lib/api/biblioteca";
+import { formatarData }         from "@/lib/formato";
+import { obterUsuario }         from "@/lib/auth";
 
+// --- PÁGINA DE CONSULTA DE RESERVAS DO ALUNO ---
 export default function AlunoMinhasReservasPage() {
     const [reservas, setReservas] = useState([]);
 
+    // --- CARREGAMENTO DE RESERVAS DO USUÁRIO LOGADO ---
     async function carregar() {
         const usuario = obterUsuario();
         if (!usuario?.id) {
@@ -21,6 +23,7 @@ export default function AlunoMinhasReservasPage() {
 
     useEffect(() => { carregar(); }, []);
 
+    // --- CANCELAMENTO DE RESERVA ---
     async function cancelar(id) {
         if (!confirm("Cancelar reserva?")) {
             return;
@@ -33,13 +36,20 @@ export default function AlunoMinhasReservasPage() {
         }
     }
 
+    // --- RENDERIZAÇÃO DA PÁGINA ---
     return (
         <AppShell titulo="Portal do Aluno — Minhas reservas" perfis={["ALUNO"]}>
             <section className="card">
                 <h2>Minhas reservas</h2>
                 <table>
                     <thead>
-                        <tr><th>Livro</th><th>Data</th><th>Status</th><th>Posição fila</th><th></th></tr>
+                        <tr>
+                            <th>Livro</th>
+                            <th>Data</th>
+                            <th>Status</th>
+                            <th>Posição fila</th>
+                            <th></th>
+                        </tr>
                     </thead>
                     <tbody>
                         {reservas.length === 0 && <tr><td colSpan={5}>Nenhuma reserva.</td></tr>}

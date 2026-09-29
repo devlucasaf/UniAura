@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-// --- COMPATIBILIDADE COM LINKS ANTIGOS (#/home): A HOME AGORA VIVE NA RAIZ "/" ---
+// --- COMPATIBILIDADE COM LINKS ANTIGOS ---
 export default function HomeRedirect() {
     redirect("/");
 }

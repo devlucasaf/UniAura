@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import SiteChrome from "@/components/site/SiteChrome";
-import Dropdown from "@/components/ui/Dropdown";
-import { useEfeitosDePagina } from "@/hooks/useEfeitosDePagina";
-import { mascararCpf, mascararTelefone, mascararCep } from "@/lib/mascaras";
-import { notificar } from "@/lib/notificar";
-import { api } from "@/lib/api";
+import { useEffect, useRef, useState }                  from "react";
+import { useRouter }                                    from "next/navigation";
+import SiteChrome                                       from "@/components/web/SiteChrome";
+import Dropdown                                         from "@/components/ui/Dropdown";
+import { useEfeitosDePagina }                           from "@/hooks/useEfeitosDePagina";
+import { mascararCpf, mascararTelefone, mascararCep }   from "@/lib/mascaras";
+import { notificar }                                    from "@/lib/notificar";
+import { api }                                          from "@/lib/api";
 
 const TOTAL_ETAPAS = 7;
 
-// --- ESTADOS BRASILEIROS, USADOS EM TODOS OS SELECTS DE UF DO FORMULÁRIO ---
+// --- ESTADOS BRASILEIROS ---
 const ESTADOS_BRASIL = [
     ["AC", "Acre"], ["AL", "Alagoas"], ["AP", "Amapá"], ["AM", "Amazonas"],
     ["BA", "Bahia"], ["CE", "Ceará"], ["DF", "Distrito Federal"], ["ES", "Espírito Santo"],
@@ -24,7 +24,7 @@ const ESTADOS_BRASIL = [
 
 const OPCOES_UF = ESTADOS_BRASIL.map(([sigla, nome]) => ({ value: sigla, label: `${sigla} — ${nome}` }));
 
-// --- CURSOS AGRUPADOS POR ÁREA, EXATAMENTE COMO NO FORMULÁRIO ORIGINAL ---
+// --- CURSOS AGRUPADOS POR ÁREA ---
 const OPCOES_CURSO = [
     {
         group: "Tecnologia da Informação",
@@ -82,56 +82,156 @@ const OPCOES_CURSO = [
     }
 ];
 
+// --- OPÇÕES DE SEXO ---
 const OPCOES_SEXO = [
-    { value: "FEMININO", label: "Feminino" },
-    { value: "MASCULINO", label: "Masculino" },
-    { value: "OUTRO", label: "Outro" },
-    { value: "PREFIRO_NAO_INFORMAR", label: "Prefiro não informar" }
+    { 
+        value: "FEMININO", 
+        label: "Feminino" 
+    },
+    { 
+        value: "MASCULINO", 
+        label: "Masculino" 
+    },
+    { 
+        value: "OUTRO", 
+        label: "Outro" 
+    },
+    { 
+        value: "PREFIRO_NAO_INFORMAR", 
+        label: "Prefiro não informar" 
+    }
 ];
 
+// --- OPÇÕES DE ESTADO CÍVIL ---
 const OPCOES_ESTADO_CIVIL = [
-    { value: "SOLTEIRO", label: "Solteiro(a)" },
-    { value: "CASADO", label: "Casado(a)" },
-    { value: "DIVORCIADO", label: "Divorciado(a)" },
-    { value: "VIUVO", label: "Viúvo(a)" },
-    { value: "UNIAO_ESTAVEL", label: "União estável" }
+    { 
+        value: "SOLTEIRO", 
+        label: "Solteiro(a)" 
+    },
+    { 
+        value: "CASADO", 
+        label: "Casado(a)" 
+    },
+    { 
+        value: "DIVORCIADO", 
+        label: "Divorciado(a)" 
+    },
+    { 
+        value: "VIUVO", 
+        label: "Viúvo(a)" 
+    },
+    { 
+        value: "UNIAO_ESTAVEL", 
+        label: "União estável" 
+    }
 ];
 
+// -- OPÇÕES DE TIPO DE ENDEREÇO ---
 const OPCOES_TIPO_ENDERECO = [
-    { value: "RESIDENCIAL", label: "Residencial" },
-    { value: "PROFISSIONAL", label: "Profissional" }
+    { 
+        value: "RESIDENCIAL", 
+        label: "Residencial" 
+    },
+    { 
+        value: "PROFISSIONAL", 
+        label: "Profissional" 
+    }
 ];
 
+// -- OPÇÕES DE TIPO SANGUÍNEO ---
 const OPCOES_TIPO_SANGUINEO = [
-    { value: "A_POSITIVO", label: "A+" },
-    { value: "A_NEGATIVO", label: "A-" },
-    { value: "B_POSITIVO", label: "B+" },
-    { value: "B_NEGATIVO", label: "B-" },
-    { value: "AB_POSITIVO", label: "AB+" },
-    { value: "AB_NEGATIVO", label: "AB-" },
-    { value: "O_POSITIVO", label: "O+" },
-    { value: "O_NEGATIVO", label: "O-" }
+    { 
+        value: "A_POSITIVO", 
+        label: "A+" 
+    },
+    { 
+        value: "A_NEGATIVO", 
+        label: "A-" 
+    },
+    { 
+        value: "B_POSITIVO", 
+        label: "B+" 
+    },
+    { 
+        value: "B_NEGATIVO", 
+        label: "B-" 
+    },
+    { 
+        value: "AB_POSITIVO", 
+        label: "AB+" 
+    },
+    { 
+        value: "AB_NEGATIVO", 
+        label: "AB-" 
+    },
+    { 
+        value: "O_POSITIVO", 
+        label: "O+" 
+    },
+    { 
+        value: "O_NEGATIVO", 
+        label: "O-" 
+    }
 ];
 
+// -- OPÇÕES DE TIPO DE ESCOLA DE ENSINO MÉDIO ---
 const OPCOES_TIPO_ESCOLA = [
-    { value: "PUBLICA", label: "Pública" },
-    { value: "PARTICULAR", label: "Particular" }
+    { 
+        value: "PUBLICA", 
+        label: "Pública" 
+    },
+    { 
+        value: "PARTICULAR", 
+        label: "Particular" 
+    }
 ];
 
+// -- OPÇÕES DE MESES ---
 const OPCOES_MES = [
-    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+    "Janeiro", 
+    "Fevereiro", 
+    "Março", 
+    "Abril", 
+    "Maio", 
+    "Junho",
+    "Julho", 
+    "Agosto", 
+    "Setembro", 
+    "Outubro", 
+    "Novembro", 
+    "Dezembro"
 ].map((nome, indice) => ({ value: String(indice + 1), label: nome }));
 
+// -- OPÇÕES DE RAÇA/ETNIA ---
 const OPCOES_RACA_ETNIA = [
-    { value: "BRANCA", label: "Branca" },
-    { value: "PRETA", label: "Preta" },
-    { value: "PARDA", label: "Parda" },
-    { value: "AMARELA", label: "Amarela" },
-    { value: "INDIGENA", label: "Indígena" },
-    { value: "NAO_DECLARADA", label: "Prefiro não declarar" }
+    { 
+        value: "BRANCA", 
+        label: "Branca" 
+    },
+    { 
+        value: "PRETA", 
+        
+        label: "Preta" 
+    },
+    { 
+        value: "PARDA", 
+        label: "Parda" 
+    },
+    { 
+        value: "AMARELA", 
+        label: "Amarela" 
+    },
+    { 
+        value: "INDIGENA", 
+        label: "Indígena" 
+    },
+    { 
+        value: "NAO_DECLARADA", 
+        label: "Prefiro não declarar" 
+    }
 ];
 
+// --- PASSOS DO FORMULÁRIO DE CADASTRO ---
 const PASSOS = [
     {
         nome: "Dados pessoais",
@@ -195,6 +295,7 @@ const PASSOS = [
     }
 ];
 
+// --- CAMPOS CONTROLADOS PADRÃO, USADOS PARA INICIALIZAR O STATE DE CAMPOS ---
 const CAMPOS_CONTROLADOS_PADRAO = {
     cpf: "",
     telefone: "",
@@ -231,25 +332,28 @@ function idadeMinimaValida(valor) {
     return anos >= 14 && anos < 120;
 }
 
+// --- PÁGINA DE CADASTRO DO PORTAL DO ALUNO ---
 export default function CadastroPortalDoAlunoPage() {
     const raizRef = useEfeitosDePagina();
     const router = useRouter();
     const formularioRef = useRef(null);
 
-    const [etapaAtual, setEtapaAtual] = useState(1);
-    const [campos, setCampos] = useState(CAMPOS_CONTROLADOS_PADRAO);
-    const [cursoInvalido, setCursoInvalido] = useState(false);
-    const [mostrarInfoAcompanhamento, setMostrarInfoAcompanhamento] = useState(false);
-    const [mensagem, setMensagem] = useState("");
-    const [erro, setErro] = useState("");
-    const [enviando, setEnviando] = useState(false);
+    const [etapaAtual,                  setEtapaAtual]                  = useState(1);
+    const [campos,                      setCampos]                      = useState(CAMPOS_CONTROLADOS_PADRAO);
+    const [cursoInvalido,               setCursoInvalido]               = useState(false);
+    const [mostrarInfoAcompanhamento,   setMostrarInfoAcompanhamento]   = useState(false);
+    const [mensagem,                    setMensagem]                    = useState("");
+    const [erro,                        setErro]                        = useState("");
+    const [enviando,                    setEnviando]                    = useState(false);
 
+    // -- SCROLLA PARA A ETAPA ATUAL, QUANDO O USUÁRIO AVANÇA OU VOLTA ---
     useEffect(() => {
         formularioRef.current
             ?.querySelector(`.site-wizard-etapa[data-etapa="${etapaAtual}"]`)
             ?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, [etapaAtual]);
 
+    // -- ATUALIZA O STATE DE CAMPOS CONTROLADOS, USADO PARA VALIDAR E MONTAR O PAYLOAD ---
     const atualizarCampo = (nome, valor) => {
         setCampos((atual) => ({ ...atual, [nome]: valor }));
     };
@@ -291,6 +395,7 @@ export default function CadastroPortalDoAlunoPage() {
 
     const exibirEtapa = (numero) => setEtapaAtual(numero);
 
+    // --- AVANÇA PARA A PRÓXIMA ETAPA, SE A ATUAL ESTIVER VÁLIDA ---
     const aoAvancar = () => {
         setErro("");
         if (etapaValida(etapaAtual) && etapaAtual < TOTAL_ETAPAS) {
@@ -298,6 +403,7 @@ export default function CadastroPortalDoAlunoPage() {
         }
     };
 
+    // --- VOLTA PARA A ETAPA ANTERIOR, SE NÃO ESTIVER NA PRIMEIRA ---
     const aoVoltar = () => {
         if (etapaAtual > 1) {
             exibirEtapa(etapaAtual - 1);
@@ -380,6 +486,7 @@ export default function CadastroPortalDoAlunoPage() {
         };
     };
 
+    // -- ENVIA O FORMULÁRIO PARA O ENDPOINT PÚBLICO DE PRÉ-MATRÍCULA, SE TUDO ESTIVER VÁLIDO ---
     const aoSubmeter = async (evento) => {
         evento.preventDefault();
 
@@ -441,7 +548,7 @@ export default function CadastroPortalDoAlunoPage() {
                             <div className="grad-hero-texto">
                                 <span className="grad-eyebrow" data-entrada style={{ "--atraso": "60ms" }}>
                                     <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
-                                         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                         <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
                                         <circle cx="9" cy="7" r="4"></circle>
                                         <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path>
@@ -473,15 +580,12 @@ export default function CadastroPortalDoAlunoPage() {
                                     {PASSOS.map((passo, indice) => {
                                         const numero = indice + 1;
                                         return (
-                                            <li
-                                                key={passo.nome}
-                                                className={`site-wizard-passo${numero === etapaAtual ? " ativo" : ""}${numero < etapaAtual ? " concluida" : ""}`}
-                                                onClick={() => aoClicarPasso(numero)}
-                                            >
+                                            <li key={passo.nome} className={`site-wizard-passo${numero === etapaAtual ? " ativo" : ""}${numero < etapaAtual ? " concluida" : ""}`}
+                                                    onClick={() => aoClicarPasso(numero)}>
                                                 <span className="site-wizard-numero">{numero}</span>
                                                 <span className="site-wizard-icone" aria-hidden="true">
                                                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
-                                                         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                                         {passo.icone}
                                                     </svg>
                                                 </span>
@@ -499,33 +603,56 @@ export default function CadastroPortalDoAlunoPage() {
                                         <div className="site-form-grid">
                                             <div className="field field-full">
                                                 <label htmlFor="cadNome">Nome completo *</label>
-                                                <input id="cadNome" name="nome" type="text" required minLength={5} autoComplete="name" />
+                                                <input 
+                                                    id="cadNome" n
+                                                    ame="nome" 
+                                                    type="text" 
+                                                    required 
+                                                    minLength={5} 
+                                                    autoComplete="name" 
+                                                />
                                             </div>
 
                                             <div className="field field-full">
                                                 <label htmlFor="cadCurso">Curso pretendido *</label>
                                                 <Dropdown
-                                                    id="cadCurso" name="curso" options={OPCOES_CURSO}
-                                                    value={campos.curso} onChange={(v) => atualizarCampo("curso", v)}
-                                                    placeholder="Selecione o curso" invalid={cursoInvalido} required
+                                                    id="cadCurso" 
+                                                    name="curso" 
+                                                    options={OPCOES_CURSO}
+                                                    value={campos.curso} 
+                                                    onChange={(v) => atualizarCampo("curso", v)}
+                                                    placeholder="Selecione o curso" 
+                                                    invalid={cursoInvalido} 
+                                                    required
                                                 />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadNomePai">Nome do pai</label>
-                                                <input id="cadNomePai" name="nomePai" type="text" />
+                                                <input 
+                                                    id="cadNomePai" 
+                                                    name="nomePai" 
+                                                    type="text" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadNomeMae">Nome da mãe</label>
-                                                <input id="cadNomeMae" name="nomeMae" type="text" />
+                                                <input 
+                                                    id="cadNomeMae" 
+                                                    name="nomeMae" 
+                                                    type="text" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadSexo">Sexo</label>
                                                 <Dropdown
-                                                    id="cadSexo" name="sexo" options={OPCOES_SEXO}
-                                                    value={campos.sexo} onChange={(v) => atualizarCampo("sexo", v)}
+                                                    id="cadSexo" 
+                                                    name="sexo" 
+                                                    options={OPCOES_SEXO}
+                                                    value={campos.sexo} 
+                                                    onChange={(v) => atualizarCampo("sexo", v)}
                                                     placeholder="Selecione"
                                                 />
                                             </div>
@@ -533,8 +660,11 @@ export default function CadastroPortalDoAlunoPage() {
                                             <div className="field">
                                                 <label htmlFor="cadEstadoCivil">Estado civil</label>
                                                 <Dropdown
-                                                    id="cadEstadoCivil" name="estadoCivil" options={OPCOES_ESTADO_CIVIL}
-                                                    value={campos.estadoCivil} onChange={(v) => atualizarCampo("estadoCivil", v)}
+                                                    id="cadEstadoCivil" 
+                                                    name="estadoCivil" 
+                                                    options={OPCOES_ESTADO_CIVIL}
+                                                    value={campos.estadoCivil} 
+                                                    onChange={(v) => atualizarCampo("estadoCivil", v)}
                                                     placeholder="Selecione"
                                                 />
                                             </div>
@@ -547,31 +677,52 @@ export default function CadastroPortalDoAlunoPage() {
                                         <div className="site-form-grid">
                                             <div className="field">
                                                 <label htmlFor="cadNascimento">Data de nascimento *</label>
-                                                <input id="cadNascimento" name="dataNascimento" type="date" required />
+                                                <input 
+                                                    id="cadNascimento" 
+                                                    name="dataNascimento" 
+                                                    type="date" 
+                                                    required 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadMunicipioNascimento">Município de nascimento</label>
-                                                <input id="cadMunicipioNascimento" name="municipioNascimento" type="text" />
+                                                <input 
+                                                    id="cadMunicipioNascimento" 
+                                                    name="municipioNascimento" 
+                                                    type="text" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadCidade">Cidade</label>
-                                                <input id="cadCidade" name="cidade" type="text" />
+                                                <input 
+                                                    id="cadCidade" 
+                                                    name="cidade" 
+                                                    type="text" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadEstado">Estado</label>
                                                 <Dropdown
-                                                    id="cadEstado" name="estado" options={OPCOES_UF}
-                                                    value={campos.estado} onChange={(v) => atualizarCampo("estado", v)}
+                                                    id="cadEstado" 
+                                                    name="estado" 
+                                                    options={OPCOES_UF}
+                                                    value={campos.estado} 
+                                                    onChange={(v) => atualizarCampo("estado", v)}
                                                     placeholder="Selecione"
                                                 />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadNacionalidade">Nacionalidade</label>
-                                                <input id="cadNacionalidade" name="nacionalidade" type="text" defaultValue="Brasileira" />
+                                                <input 
+                                                    id="cadNacionalidade" 
+                                                    name="nacionalidade" 
+                                                    type="text" 
+                                                    defaultValue="Brasileira" 
+                                                />
                                             </div>
                                         </div>
                                     </fieldset>
@@ -583,26 +734,43 @@ export default function CadastroPortalDoAlunoPage() {
                                             <div className="field">
                                                 <label htmlFor="cadCpf">CPF *</label>
                                                 <input
-                                                    id="cadCpf" name="cpf" type="text" required inputMode="numeric"
-                                                    maxLength={14} placeholder="000.000.000-00"
-                                                    value={campos.cpf} onChange={(e) => atualizarCampo("cpf", mascararCpf(e.target.value))}
+                                                    id="cadCpf" 
+                                                    name="cpf" 
+                                                    type="text" 
+                                                    required 
+                                                    inputMode="numeric"
+                                                    maxLength={14} 
+                                                    placeholder="000.000.000-00"
+                                                    value={campos.cpf} 
+                                                    onChange={(e) => atualizarCampo("cpf", mascararCpf(e.target.value))}
                                                 />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadNumeroIdentidade">Número da identidade (RG)</label>
-                                                <input id="cadNumeroIdentidade" name="documentoNumero" type="text" />
+                                                <input 
+                                                    id="cadNumeroIdentidade" 
+                                                    name="documentoNumero" 
+                                                    type="text" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadOrgaoEmissor">Órgão emissor da identidade</label>
-                                                <input id="cadOrgaoEmissor" name="documentoOrgaoEmissor" type="text" placeholder="SSP" />
+                                                <input 
+                                                    id="cadOrgaoEmissor" 
+                                                    name="documentoOrgaoEmissor" 
+                                                    type="text" 
+                                                    placeholder="SSP" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadUfExpedicao">UF de expedição da identidade</label>
                                                 <Dropdown
-                                                    id="cadUfExpedicao" name="ufExpedicaoIdentidade" options={OPCOES_UF}
+                                                    id="cadUfExpedicao" 
+                                                    name="ufExpedicaoIdentidade" 
+                                                    options={OPCOES_UF}
                                                     value={campos.ufExpedicaoIdentidade}
                                                     onChange={(v) => atualizarCampo("ufExpedicaoIdentidade", v)}
                                                     placeholder="Selecione"
@@ -611,23 +779,39 @@ export default function CadastroPortalDoAlunoPage() {
 
                                             <div className="field">
                                                 <label htmlFor="cadDataExpedicao">Data de expedição da identidade</label>
-                                                <input id="cadDataExpedicao" name="dataExpedicaoIdentidade" type="date" />
+                                                <input 
+                                                    id="cadDataExpedicao" 
+                                                    name="dataExpedicaoIdentidade" 
+                                                    type="date" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadTituloEleitor">Número do título de eleitor</label>
-                                                <input id="cadTituloEleitor" name="numeroTituloEleitor" type="text" inputMode="numeric" />
+                                                <input 
+                                                    id="cadTituloEleitor" 
+                                                    name="numeroTituloEleitor" 
+                                                    type="text" 
+                                                    inputMode="numeric" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadZonaEleitoral">Número da zona eleitoral</label>
-                                                <input id="cadZonaEleitoral" name="numeroZonaEleitoral" type="text" inputMode="numeric" />
+                                                <input 
+                                                    id="cadZonaEleitoral" 
+                                                    name="numeroZonaEleitoral" 
+                                                    type="text" 
+                                                    inputMode="numeric" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadUfZonaEleitoral">UF da zona eleitoral</label>
                                                 <Dropdown
-                                                    id="cadUfZonaEleitoral" name="ufZonaEleitoral" options={OPCOES_UF}
+                                                    id="cadUfZonaEleitoral" 
+                                                    name="ufZonaEleitoral" 
+                                                    options={OPCOES_UF}
                                                     value={campos.ufZonaEleitoral}
                                                     onChange={(v) => atualizarCampo("ufZonaEleitoral", v)}
                                                     placeholder="Selecione"
@@ -636,18 +820,28 @@ export default function CadastroPortalDoAlunoPage() {
 
                                             <div className="field">
                                                 <label htmlFor="cadCertificadoReservista">Número do certificado de reservista (opcional)</label>
-                                                <input id="cadCertificadoReservista" name="numeroCertificadoReservista" type="text" />
+                                                <input 
+                                                    id="cadCertificadoReservista" 
+                                                    name="numeroCertificadoReservista" 
+                                                    type="text" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadOrgaoReservista">Órgão emissor do certificado de reservista (opcional)</label>
-                                                <input id="cadOrgaoReservista" name="orgaoEmissorCertificadoReservista" type="text" />
+                                                <input 
+                                                    id="cadOrgaoReservista" 
+                                                    name="orgaoEmissorCertificadoReservista" 
+                                                    type="text" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadUfReservista">UF do certificado de reservista (opcional)</label>
                                                 <Dropdown
-                                                    id="cadUfReservista" name="ufReservista" options={OPCOES_UF}
+                                                    id="cadUfReservista" 
+                                                    name="ufReservista" 
+                                                    options={OPCOES_UF}
                                                     value={campos.ufReservista}
                                                     onChange={(v) => atualizarCampo("ufReservista", v)}
                                                     placeholder="Selecione"
@@ -663,8 +857,11 @@ export default function CadastroPortalDoAlunoPage() {
                                             <div className="field">
                                                 <label htmlFor="cadTipoEndereco">Tipo de endereço</label>
                                                 <Dropdown
-                                                    id="cadTipoEndereco" name="tipoEndereco" options={OPCOES_TIPO_ENDERECO}
-                                                    value={campos.tipoEndereco} onChange={(v) => atualizarCampo("tipoEndereco", v)}
+                                                    id="cadTipoEndereco" 
+                                                    name="tipoEndereco" 
+                                                    options={OPCOES_TIPO_ENDERECO}
+                                                    value={campos.tipoEndereco} 
+                                                    onChange={(v) => atualizarCampo("tipoEndereco", v)}
                                                     placeholder="Selecione"
                                                 />
                                             </div>
@@ -672,8 +869,12 @@ export default function CadastroPortalDoAlunoPage() {
                                             <div className="field">
                                                 <label htmlFor="cadCep">CEP</label>
                                                 <input
-                                                    id="cadCep" name="enderecoCep" type="text" inputMode="numeric"
-                                                    maxLength={9} placeholder="00000-000"
+                                                    id="cadCep" 
+                                                    name="enderecoCep" 
+                                                    type="text" 
+                                                    inputMode="numeric"
+                                                    maxLength={9} 
+                                                    placeholder="00000-000"
                                                     value={campos.enderecoCep}
                                                     onChange={(e) => atualizarCampo("enderecoCep", mascararCep(e.target.value))}
                                                 />
@@ -681,43 +882,74 @@ export default function CadastroPortalDoAlunoPage() {
 
                                             <div className="field">
                                                 <label htmlFor="cadRua">Rua</label>
-                                                <input id="cadRua" name="enderecoLogradouro" type="text" />
+                                                <input 
+                                                    id="cadRua" 
+                                                    name="enderecoLogradouro" 
+                                                    type="text" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadNumeroEndereco">Número</label>
-                                                <input id="cadNumeroEndereco" name="enderecoNumero" type="text" />
+                                                <input 
+                                                    id="cadNumeroEndereco" 
+                                                    name="enderecoNumero" 
+                                                    type="text" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadComplemento">Complemento</label>
-                                                <input id="cadComplemento" name="enderecoComplemento" type="text" placeholder="Apto, bloco..." />
+                                                <input 
+                                                    id="cadComplemento" 
+                                                    name="enderecoComplemento" 
+                                                    type="text" 
+                                                    placeholder="Apto, bloco..." 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadBairro">Bairro</label>
-                                                <input id="cadBairro" name="enderecoBairro" type="text" />
+                                                <input 
+                                                    id="cadBairro" 
+                                                    name="enderecoBairro" 
+                                                    type="text" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadUfEndereco">UF de endereço</label>
                                                 <Dropdown
-                                                    id="cadUfEndereco" name="enderecoUf" options={OPCOES_UF}
-                                                    value={campos.enderecoUf} onChange={(v) => atualizarCampo("enderecoUf", v)}
+                                                    id="cadUfEndereco" 
+                                                    name="enderecoUf" 
+                                                    options={OPCOES_UF}
+                                                    value={campos.enderecoUf} 
+                                                    onChange={(v) => atualizarCampo("enderecoUf", v)}
                                                     placeholder="Selecione"
                                                 />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadEmail">E-mail *</label>
-                                                <input id="cadEmail" name="email" type="email" required autoComplete="email" />
+                                                <input 
+                                                    id="cadEmail" 
+                                                    name="email" 
+                                                    type="email" 
+                                                    required 
+                                                    autoComplete="email" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadTelefone">Telefone *</label>
                                                 <input
-                                                    id="cadTelefone" name="telefone" type="tel" required
-                                                    maxLength={15} placeholder="(00) 00000-0000" autoComplete="tel"
+                                                    id="cadTelefone" 
+                                                    name="telefone" 
+                                                    type="tel" 
+                                                    required
+                                                    maxLength={15} 
+                                                    placeholder="(00) 00000-0000" 
+                                                    autoComplete="tel"
                                                     value={campos.telefone}
                                                     onChange={(e) => atualizarCampo("telefone", mascararTelefone(e.target.value))}
                                                 />
@@ -726,8 +958,11 @@ export default function CadastroPortalDoAlunoPage() {
                                             <div className="field">
                                                 <label htmlFor="cadTelefoneEmergencia">Telefone de emergência</label>
                                                 <input
-                                                    id="cadTelefoneEmergencia" name="telefoneEmergencia" type="tel"
-                                                    maxLength={15} placeholder="(00) 00000-0000"
+                                                    id="cadTelefoneEmergencia" 
+                                                    name="telefoneEmergencia" 
+                                                    type="tel"
+                                                    maxLength={15} 
+                                                    placeholder="(00) 00000-0000"
                                                     value={campos.telefoneEmergencia}
                                                     onChange={(e) => atualizarCampo("telefoneEmergencia", mascararTelefone(e.target.value))}
                                                 />
@@ -735,12 +970,26 @@ export default function CadastroPortalDoAlunoPage() {
 
                                             <div className="field">
                                                 <label htmlFor="cadSenha">Senha de acesso *</label>
-                                                <input id="cadSenha" name="senha" type="password" required minLength={6} autoComplete="new-password" />
+                                                <input 
+                                                    id="cadSenha" 
+                                                    name="senha" 
+                                                    type="password" 
+                                                    required 
+                                                    minLength={6} 
+                                                    autoComplete="new-password" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadConfirmarSenha">Confirmar senha *</label>
-                                                <input id="cadConfirmarSenha" name="confirmarSenha" type="password" required minLength={6} autoComplete="new-password" />
+                                                <input 
+                                                    id="cadConfirmarSenha" 
+                                                    name="confirmarSenha" 
+                                                    type="password" 
+                                                    required 
+                                                    minLength={6} 
+                                                    autoComplete="new-password" 
+                                                />
                                             </div>
                                         </div>
                                     </fieldset>
@@ -752,34 +1001,46 @@ export default function CadastroPortalDoAlunoPage() {
                                             <div className="field">
                                                 <label htmlFor="cadTipoSanguineo">Tipo sanguíneo</label>
                                                 <Dropdown
-                                                    id="cadTipoSanguineo" name="tipoSanguineo" options={OPCOES_TIPO_SANGUINEO}
-                                                    value={campos.tipoSanguineo} onChange={(v) => atualizarCampo("tipoSanguineo", v)}
+                                                    id="cadTipoSanguineo" 
+                                                    name="tipoSanguineo" 
+                                                    options={OPCOES_TIPO_SANGUINEO}
+                                                    value={campos.tipoSanguineo} 
+                                                    onChange={(v) => atualizarCampo("tipoSanguineo", v)}
                                                     placeholder="Selecione"
                                                 />
                                             </div>
                                         </div>
 
                                         <label className="site-form-termos">
-                                            <input id="cadEducacaoEspecial" name="publicoAlvoEducacaoEspecial" type="checkbox" />
+                                            <input 
+                                                id="cadEducacaoEspecial" 
+                                                name="publicoAlvoEducacaoEspecial" 
+                                                type="checkbox" 
+                                            />
                                             <span>Sou aluno público-alvo da Educação Especial.</span>
                                         </label>
 
                                         <label className="site-form-termos">
-                                            <input id="cadCanhoto" name="canhoto" type="checkbox" />
+                                            <input 
+                                                id="cadCanhoto" 
+                                                name="canhoto" 
+                                                type="checkbox" 
+                                            />
                                             <span>Sou canhoto(a).</span>
                                         </label>
 
                                         <label className="site-form-termos">
-                                            <input id="cadAcompanhamento" name="necessitaAcompanhamentoInstitucional" type="checkbox" />
+                                            <input 
+                                                id="cadAcompanhamento" 
+                                                name="necessitaAcompanhamentoInstitucional" 
+                                                type="checkbox" 
+                                            />
                                             <span>
                                                 Necessito de acompanhamento institucional.
-                                                <button
-                                                    type="button" className="site-info-btn" id="btnInfoAcompanhamento"
-                                                    aria-label="O que é acompanhamento institucional?"
-                                                    onClick={() => setMostrarInfoAcompanhamento((atual) => !atual)}
-                                                >
+                                                <button type="button" className="site-info-btn" id="btnInfoAcompanhamento" aria-label="O que é acompanhamento institucional?"
+                                                        onClick={() => setMostrarInfoAcompanhamento((atual) => !atual)}>
                                                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
-                                                         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                                            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                                         <circle cx="12" cy="12" r="10"></circle>
                                                         <line x1="12" y1="16" x2="12" y2="12"></line>
                                                         <line x1="12" y1="8" x2="12.01" y2="8"></line>
@@ -808,7 +1069,9 @@ export default function CadastroPortalDoAlunoPage() {
                                             <div className="field">
                                                 <label htmlFor="cadTipoEscola">Tipo de escola do ensino médio</label>
                                                 <Dropdown
-                                                    id="cadTipoEscola" name="tipoEscolaEnsinoMedio" options={OPCOES_TIPO_ESCOLA}
+                                                    id="cadTipoEscola" 
+                                                    name="tipoEscolaEnsinoMedio" 
+                                                    options={OPCOES_TIPO_ESCOLA}
                                                     value={campos.tipoEscolaEnsinoMedio}
                                                     onChange={(v) => atualizarCampo("tipoEscolaEnsinoMedio", v)}
                                                     placeholder="Selecione"
@@ -817,13 +1080,19 @@ export default function CadastroPortalDoAlunoPage() {
 
                                             <div className="field">
                                                 <label htmlFor="cadNomeInstituicao">Nome da instituição (conclusão do ensino médio)</label>
-                                                <input id="cadNomeInstituicao" name="nomeInstituicaoConclusao" type="text" />
+                                                <input 
+                                                    id="cadNomeInstituicao" 
+                                                    name="nomeInstituicaoConclusao" 
+                                                    type="text" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadMesConclusao">Mês de conclusão do ensino médio</label>
                                                 <Dropdown
-                                                    id="cadMesConclusao" name="mesConclusaoEnsinoMedio" options={OPCOES_MES}
+                                                    id="cadMesConclusao" 
+                                                    name="mesConclusaoEnsinoMedio" 
+                                                    options={OPCOES_MES}
                                                     value={campos.mesConclusaoEnsinoMedio}
                                                     onChange={(v) => atualizarCampo("mesConclusaoEnsinoMedio", v)}
                                                     placeholder="Selecione"
@@ -833,16 +1102,24 @@ export default function CadastroPortalDoAlunoPage() {
                                             <div className="field">
                                                 <label htmlFor="cadAnoConclusao">Ano de conclusão</label>
                                                 <input
-                                                    id="cadAnoConclusao" name="anoConclusaoEnsinoMedio" type="number"
-                                                    inputMode="numeric" min={1950} max={2100} placeholder="2024"
+                                                    id="cadAnoConclusao" 
+                                                    name="anoConclusaoEnsinoMedio" 
+                                                    type="number"
+                                                    inputMode="numeric" 
+                                                    min={1950} 
+                                                    max={2100} 
+                                                    placeholder="2024"
                                                 />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadRacaEtnia">Raça/Etnia</label>
                                                 <Dropdown
-                                                    id="cadRacaEtnia" name="racaEtnia" options={OPCOES_RACA_ETNIA}
-                                                    value={campos.racaEtnia} onChange={(v) => atualizarCampo("racaEtnia", v)}
+                                                    id="cadRacaEtnia" 
+                                                    name="racaEtnia" 
+                                                    options={OPCOES_RACA_ETNIA}
+                                                    value={campos.racaEtnia} 
+                                                    onChange={(v) => atualizarCampo("racaEtnia", v)}
                                                     placeholder="Selecione"
                                                 />
                                             </div>
@@ -868,31 +1145,31 @@ export default function CadastroPortalDoAlunoPage() {
                                         </div>
 
                                         <label className="site-form-termos">
-                                            <input id="cadTermos" name="termoConsentimento" type="checkbox" required />
+                                            <input 
+                                                id="cadTermos" 
+                                                name="termoConsentimento" 
+                                                type="checkbox" 
+                                                required 
+                                            />
                                             <span>Li e aceito o termo de consentimento para uso dos meus dados pessoais. *</span>
                                         </label>
                                     </fieldset>
 
                                     <div className="site-wizard-acoes">
-                                        <button
-                                            type="button" id="btnVoltarEtapa" className="grad-btn grad-btn-outline"
-                                            hidden={etapaAtual === 1} onClick={aoVoltar}
-                                        >
+                                        <button type="button" id="btnVoltarEtapa" className="grad-btn grad-btn-outline" hidden={etapaAtual === 1} onClick={aoVoltar}>
                                             ← Voltar
                                         </button>
+
                                         <span className="site-wizard-contador">
                                             Etapa <span id="wizardEtapaAtual">{etapaAtual}</span> de {TOTAL_ETAPAS}
                                         </span>
-                                        <button
-                                            type="button" id="btnAvancarEtapa" className="grad-btn grad-btn-primary"
-                                            hidden={etapaAtual === TOTAL_ETAPAS} onClick={aoAvancar}
-                                        >
+
+                                        <button type="button" id="btnAvancarEtapa" className="grad-btn grad-btn-primary" hidden={etapaAtual === TOTAL_ETAPAS} onClick={aoAvancar}>
                                             Próxima etapa →
                                         </button>
-                                        <button
-                                            type="submit" id="btnConcluirCadastro" className="grad-btn grad-btn-primary"
-                                            hidden={etapaAtual !== TOTAL_ETAPAS} disabled={enviando}
-                                        >
+
+                                        <button type="submit" id="btnConcluirCadastro" className="grad-btn grad-btn-primary" 
+                                                hidden={etapaAtual !== TOTAL_ETAPAS} disabled={enviando}>
                                             {enviando ? "Enviando..." : "Concluir matrícula"}
                                         </button>
                                     </div>

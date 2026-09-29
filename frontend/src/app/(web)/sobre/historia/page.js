@@ -1,5 +1,5 @@
 import Link from "next/link";
-import SiteChrome from "@/components/site/SiteChrome";
+import SiteChrome from "@/components/web/SiteChrome";
 
 const MARCOS = [
     {
@@ -46,10 +46,22 @@ const MARCOS = [
 ];
 
 const NUMEROS = [
-    { valor: "30+", rotulo: "Anos de tradição" },
-    { valor: "2.500", rotulo: "Alunos matriculados" },
-    { valor: "98%", rotulo: "Aprovação em universidades" },
-    { valor: "120+", rotulo: "Profissionais na equipe" }
+    { 
+        valor: "30+", 
+        rotulo: "Anos de tradição" 
+    },
+    { 
+        valor: "2.500", 
+        rotulo: "Alunos matriculados" 
+    },
+    { 
+        valor: "98%", 
+        rotulo: "Aprovação em universidades" 
+    },
+    { 
+        valor: "120+", 
+        rotulo: "Profissionais na equipe" 
+    }
 ];
 
 export default function HistoriaPage() {

@@ -1,6 +1,6 @@
 "use client";
 
-// --- BARRA DE PAGINAÇÃO PARA PÁGINAS SPRING (Page<T>) ---
+// --- BARRA DE PAGINAÇÃO PARA PÁGINAS SPRING ---
 export default function Paginacao({ page, aoIr }) {
     if (!page) {
         return null;

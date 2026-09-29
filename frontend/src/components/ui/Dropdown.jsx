@@ -18,19 +18,21 @@ function achatarOpcoes(options) {
 // --- DROPDOWN CUSTOMIZADO ---
 export default function Dropdown({id, name, value, onChange, options, placeholder = "Selecione",
     required = false, invalid = false, disabled = false}) {
-    const [aberto, setAberto] = useState(false);
+    const [aberto,      setAberto]      = useState(false);
     const [indiceAtivo, setIndiceAtivo] = useState(0);
     const caixaRef = useRef(null);
     const listaId = useId();
 
     const planas = achatarOpcoes(options);
     const escolhida = planas.find((o) => o.value === value);
-
+    
+    // --- FECHA O DROPDOWN AO CLICAR FORA ---
     useEffect(() => {
         if (!aberto) {
             return undefined;
         }
-
+        
+        // --- FECHA O DROPDOWN AO CLICAR FORA ---
         const aoClicarFora = (evento) => {
             if (caixaRef.current && !caixaRef.current.contains(evento.target)) {
                 setAberto(false);
@@ -40,17 +42,20 @@ export default function Dropdown({id, name, value, onChange, options, placeholde
         return () => document.removeEventListener("click", aoClicarFora);
     }, [aberto]);
 
+    // --- ABRE O DROPDOWN E SELECIONA O ÍNDICE ATIVO ---
     const abrir = () => {
         const indiceSelecionado = planas.findIndex((o) => o.value === value);
         setIndiceAtivo(Math.max(0, indiceSelecionado));
         setAberto(true);
     };
 
+    // --- ESCOLHE UMA OPÇÃO E FECHA O DROPDOWN ---
     const escolher = (opcao) => {
         onChange?.(opcao.value);
         setAberto(false);
     };
 
+    // --- MANIPULA TECLAS PARA NAVEGAÇÃO E SELEÇÃO ---
     const aoTeclar = (evento) => {
         if (disabled) {
             return;
@@ -102,7 +107,8 @@ export default function Dropdown({id, name, value, onChange, options, placeholde
 
     return (
         <div ref={caixaRef} className={`site-select${aberto ? " aberto" : ""}${invalid ? " invalido" : ""}`}>
-            <select id={id} name={name} value={value || ""} required={required} hidden tabIndex={-1} onChange={() => {}} aria-hidden="true">
+            <select id={id} name={name} value={value || ""} required={required} 
+                    hidden tabIndex={-1} onChange={() => {}} aria-hidden="true">
                 <option value="">{placeholder}</option>
                 {options.map((item) =>
                     item.options ? (
@@ -122,13 +128,12 @@ export default function Dropdown({id, name, value, onChange, options, placeholde
             </select>
 
             <button type="button" className="site-dropdown-gatilho" role="combobox" aria-haspopup="listbox" aria-expanded={aberto}
-                aria-controls={listaId} disabled={disabled} onClick={() => (aberto ? setAberto(false) : abrir())} onKeyDown={aoTeclar}>
+                        aria-controls={listaId} disabled={disabled} onClick={() => (aberto ? setAberto(false) : abrir())} onKeyDown={aoTeclar}>
                 <span className={`site-dropdown-valor${escolhida ? "" : " placeholder"}`}>
                     {escolhida ? escolhida.label : placeholder}
                 </span>
                 <span className="site-dropdown-seta" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
-                         strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </span>
@@ -144,7 +149,7 @@ export default function Dropdown({id, name, value, onChange, options, placeholde
                                     const indice = planas.indexOf(opcao);
                                     return (
                                         <li key={opcao.value} role="option" aria-selected={opcao.value === value} className={`site-dropdown-opcao${indice === indiceAtivo ? " ativo" : ""}`}
-                                            onMouseEnter={() => setIndiceAtivo(indice)} onClick={() => escolher(opcao)}>
+                                                onMouseEnter={() => setIndiceAtivo(indice)} onClick={() => escolher(opcao)}>
                                             {opcao.label}
                                         </li>
                                     );
@@ -152,14 +157,8 @@ export default function Dropdown({id, name, value, onChange, options, placeholde
                             </ul>
                         </li>
                     ) : (
-                        <li
-                            key={item.value || `vazio-${indiceGrupo}`}
-                            role="option"
-                            aria-selected={item.value === value}
-                            className={`site-dropdown-opcao${!item.value ? " placeholder" : ""}${planas.indexOf(item) === indiceAtivo ? " ativo" : ""}`}
-                            onMouseEnter={() => setIndiceAtivo(planas.indexOf(item))}
-                            onClick={() => escolher(item)}
-                        >
+                        <li key={item.value || `vazio-${indiceGrupo}`} role="option" aria-selected={item.value === value} className={`site-dropdown-opcao${!item.value ? " placeholder" : ""}${planas.indexOf(item) === indiceAtivo ? " ativo" : ""}`}
+                                onMouseEnter={() => setIndiceAtivo(planas.indexOf(item))} onClick={() => escolher(item)}>
                             {item.label}
                         </li>
                     )

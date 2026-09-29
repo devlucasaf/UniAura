@@ -1,4 +1,4 @@
-// --- SELO DE STATUS (EX.: DISPONIVEL, EMPRESTADO, PENDENTE...) ---
+// --- SELO DE STATUS ---
 export default function Badge({ status }) {
     return <span className={`badge ${status}`}>{status}</span>;
 }

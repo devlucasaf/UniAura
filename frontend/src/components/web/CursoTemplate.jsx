@@ -2,7 +2,7 @@
 
 import { useEfeitosDePagina } from "@/hooks/useEfeitosDePagina";
 
-// --- ESTRUTURA COMPARTILHADA DE UMA PAGINA DE CURSO (SOBRE, FORMACAO, MATRIZ, CARREIRA, CTA) ---
+// --- ESTRUTURA COMPARTILHADA DE UMA PAGINA DE CURSO ---
 export default function CursoTemplate({ curso }) {
     const raizRef = useEfeitosDePagina();
 
@@ -11,8 +11,7 @@ export default function CursoTemplate({ curso }) {
             <nav className="grad-subnav" aria-label="Seções do curso">
                 <div className="grad-container grad-subnav-inner">
                     <span className="grad-subnav-curso">
-                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
-                             strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                             <polyline points="16 18 22 12 16 6"></polyline>
                             <polyline points="8 6 2 12 8 18"></polyline>
                         </svg>
@@ -41,7 +40,7 @@ export default function CursoTemplate({ curso }) {
                         <div className="grad-hero-texto">
                             <span className="grad-eyebrow" data-entrada style={{ "--atraso": "60ms" }}>
                                 <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
-                                     strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                     <polyline points="16 18 22 12 16 6"></polyline>
                                     <polyline points="8 6 2 12 8 18"></polyline>
                                 </svg>
@@ -54,11 +53,7 @@ export default function CursoTemplate({ curso }) {
 
                             <div className="grad-actions" data-entrada style={{ "--atraso": "360ms" }}>
                                 {curso.acoes.map((acao) => (
-                                    <a
-                                        key={acao.texto}
-                                        className={`grad-btn ${acao === curso.acoes[0] ? "grad-btn-primary" : "grad-btn-outline"}`}
-                                        href={acao.href}
-                                    >
+                                    <a key={acao.texto} className={`grad-btn ${acao === curso.acoes[0] ? "grad-btn-primary" : "grad-btn-outline"}`} href={acao.href}>
                                         {acao.texto}
                                     </a>
                                 ))}
@@ -111,9 +106,17 @@ export default function CursoTemplate({ curso }) {
                             {curso.formacaoCards.map((card, indice) => (
                                 <article className="grad-card" data-revelar style={{ "--atraso": `${indice * 90}ms` }} key={card.titulo}>
                                     <div className="grad-card-icon">
-                                        <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor"
-                                             strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
-                                             dangerouslySetInnerHTML={{ __html: card.iconeSvg }} />
+                                        <svg 
+                                            viewBox="0 0 24 24" 
+                                            width="23" 
+                                            height="23" 
+                                            fill="none" 
+                                            stroke="currentColor"
+                                            strokeWidth="1.8" 
+                                            strokeLinecap="round" 
+                                            strokeLinejoin="round"
+                                            dangerouslySetInnerHTML={{ __html: card.iconeSvg }} 
+                                        />
                                     </div>
                                     <h3>{card.titulo}</h3>
                                     <p>{card.texto}</p>
@@ -133,17 +136,11 @@ export default function CursoTemplate({ curso }) {
 
                         <div className="grad-curriculum">
                             {curso.semestres.map((semestre, indice) => (
-                                <div
-                                    className={`grad-semester${indice === 0 ? " aberto" : ""}`}
-                                    data-revelar
-                                    style={{ "--atraso": `${indice * 60}ms` }}
-                                    key={semestre.titulo}
-                                >
+                                <div className={`grad-semester${indice === 0 ? " aberto" : ""}`} data-revelar style={{ "--atraso": `${indice * 60}ms` }} key={semestre.titulo}>
                                     <button type="button" aria-expanded={indice === 0}>
                                         <span>{semestre.titulo}</span>
                                         <span className="grad-semester-seta" aria-hidden="true">
-                                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
-                                                 strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                                                 <polyline points="6 9 12 15 18 9"></polyline>
                                             </svg>
                                         </span>

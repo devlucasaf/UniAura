@@ -761,9 +761,7 @@
     box-shadow: 0 0 0 3px rgba(30, 64, 175, .18);
 }
 
-/* --- DROPDOWN: SELECT NATIVO COM APARÊNCIA PRÓPRIA --- */
-/* --- O <select> SEGUE NATIVO, ENTÃO VALIDAÇÃO, TECLADO E O SELETOR DO --- */
-/* --- CELULAR CONTINUAM FUNCIONANDO; TROCAMOS APENAS A CASCA --- */
+/* --- DROPDOWN --- */
 .site-select {
     position: relative;
     display: block;
@@ -891,7 +889,7 @@
     color: var(--text-muted);
 }
 
-/* --- .ativo ACOMPANHA MOUSE E TECLADO, ENTÃO A NAVEGAÇÃO FICA VISÍVEL --- */
+/* --- ACOMPANHA MOUSE E TECLADO, ENTÃO A NAVEGAÇÃO FICA VISÍVEL --- */
 .site-dropdown-opcao.ativo {
     background: color-mix(in srgb, var(--color-primary) 14%, transparent);
     color: var(--color-primary);
@@ -902,7 +900,7 @@
     color: var(--color-primary);
 }
 
-/* --- CABEÇALHO DE GRUPO DENTRO DA LISTA (EX.: "Tecnologia da Informação") --- */
+/* --- CABEÇALHO DE GRUPO DENTRO DA LISTA --- */
 .site-dropdown-grupo + .site-dropdown-grupo {
     margin-top: .35rem;
     padding-top: .35rem;
@@ -1928,7 +1926,7 @@
     font-weight: 600;
 }
 
-/* --- LINK EM DESTAQUE (EX.: "CRIE SUA MATRÍCULA"): SUBLINHADO QUE DESLIZA AO PASSAR O MOUSE --- */
+/* --- SUBLINHADO QUE DESLIZA AO PASSAR O MOUSE --- */
 .site-link-destaque {
     position: relative;
     color: var(--color-primary);
@@ -1954,7 +1952,7 @@
     transform-origin: left;
 }
 
-/* --- LINK "VOLTAR AO SITE": A SETA DESLIZA E PULSA SUAVEMENTE AO PASSAR O MOUSE --- */
+/* --- A SETA DESLIZA E PULSA SUAVEMENTE AO PASSAR O MOUSE --- */
 .site-link-voltar {
     display: inline-flex;
     align-items: center;
@@ -2001,7 +1999,7 @@
     }
 }
 
-/* --- PORTAL DO ALUNO: CADASTRO EM ETAPAS (WIZARD) --- */
+/* --- CADASTRO EM ETAPAS --- */
 .site-wizard {
     display: grid;
     gap: var(--space-lg);
@@ -2108,7 +2106,7 @@
     }
 }
 
-/* --- BOTÃO DE INFORMAÇÃO (TOOLTIP) AO LADO DE UM CAMPO ---*/
+/* --- BOTÃO DE INFORMAÇÃO AO LADO DE UM CAMPO ---*/
 .site-info-btn {
     display: inline-grid;
     place-items: center;

@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { autenticar, dashboardDoPerfil } from "@/lib/auth";
-import { notificar } from "@/lib/notificar";
+import { useState }                         from "react";
+import Link                                 from "next/link";
+import { autenticar, dashboardDoPerfil }    from "@/lib/auth";
+import { notificar }                        from "@/lib/notificar";
 
-// --- LOGIN INTERNO DO SISTEMA: USADO POR TODOS OS PERFIS (SECRETARIA, PROFESSOR, ADMIN ETC.) ---
+// --- LOGIN INTERNO DO SISTEMA: USADO POR TODOS OS PERFIS ---
 export default function LoginPage() {
     const [mensagem, setMensagem] = useState("");
     const [carregando, setCarregando] = useState(false);

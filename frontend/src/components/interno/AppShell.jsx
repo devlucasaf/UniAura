@@ -1,15 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
-import Link from "next/link";
-import { estaAutenticado, obterUsuario, possuiPerfil, dashboardDoPerfil, encerrarSessao } from "@/lib/auth";
-import { notificar } from "@/lib/notificar";
-import { GRUPOS_MENU } from "./menu";
+import { useEffect, useState }                                                              from "react";
+import { useRouter, usePathname }                                                           from "next/navigation";
+import Link                                                                                 from "next/link";
+import { estaAutenticado, obterUsuario, possuiPerfil, dashboardDoPerfil, encerrarSessao }   from "@/lib/auth";
+import { notificar }                                                                        from "@/lib/notificar";
+import { GRUPOS_MENU }                                                                      from "./menu";
 
 const CHAVE_TEMA = "theme";
 
-// --- SHELL DA ÁREA INTERNA (SIDEBAR + TOPO), COM GUARDA DE AUTENTICAÇÃO E PERFIL ---
+// --- SHELL DA ÁREA INTERNA, COM GUARDA DE AUTENTICAÇÃO E PERFIL ---
 export default function AppShell({ titulo, perfis, children }) {
     const router = useRouter();
     const pathname = usePathname();
@@ -36,7 +36,6 @@ export default function AppShell({ titulo, perfis, children }) {
 
         setUsuario(usuarioAtual);
         setPronto(true);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pathname]);
 
     const alternarTema = () => {
@@ -64,6 +63,7 @@ export default function AppShell({ titulo, perfis, children }) {
                         if (grupo.perfis && !possuiPerfil(grupo.perfis)) {
                             return null;
                         }
+
                         const itens = grupo.itens.filter((item) => possuiPerfil(item.perfis));
                         if (!itens.length) {
                             return null;
@@ -72,12 +72,7 @@ export default function AppShell({ titulo, perfis, children }) {
                             <div key={`${grupo.secao || "dash"}-${indice}`}>
                                 {grupo.secao && <span className="nav-section">{grupo.secao}</span>}
                                 {itens.map((item) => (
-                                    <Link
-                                        key={item.rota}
-                                        href={item.rota}
-                                        className={`nav-link${pathname === item.rota ? " active" : ""}`}
-                                        onClick={() => setMenuAberto(false)}
-                                    >
+                                    <Link key={item.rota} href={item.rota} className={`nav-link${pathname === item.rota ? " active" : ""}`} onClick={() => setMenuAberto(false)}>
                                         {item.label}
                                     </Link>
                                 ))}

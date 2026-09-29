@@ -1,15 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { notificar } from "@/lib/notificar";
-import Modal from "./Modal";
-import Paginacao from "./Paginacao";
+import { useEffect, useState }  from "react";
+import { notificar }            from "@/lib/notificar";
+import Modal                    from "./Modal";
+import Paginacao                from "./Paginacao";
 
-// --- LÊ O VALOR INICIAL DE UM CAMPO A PARTIR DO ITEM (ORIGEM "usuario" OU "entidade") ---
+// --- LÊ O VALOR INICIAL DE UM CAMPO A PARTIR DO ITEM ---
 function valorInicial(campo, item) {
     if (!item) {
         return campo.type === "checkbox" ? campo.default ?? false : campo.default ?? "";
     }
+
     const bruto = campo.origem === "usuario" ? item.usuario?.[campo.name] : item[campo.name];
     if (campo.type === "checkbox") {
         return bruto !== false;
@@ -17,28 +18,21 @@ function valorInicial(campo, item) {
     return bruto ?? "";
 }
 
-// --- PÁGINA GENÉRICA DE CRUD (TABELA + FILTRO + MODAL), USADA PELOS CADASTROS DA SECRETARIA ---
-export default function CrudEntityPage({
-    titulo,
-    tituloSingular,
-    api,
-    sort,
-    colunas,
-    campos,
-    filtroSelect,
-    mensagemColunaVazia
-}) {
-    const [itens, setItens] = useState([]);
-    const [page, setPage] = useState(null);
+// --- PÁGINA GENÉRICA DE CRUD, USADA PELOS CADASTROS DA SECRETARIA ---
+export default function CrudEntityPage({titulo, tituloSingular, api, sort,
+        colunas, campos, filtroSelect, mensagemColunaVazia}) {
+    const [itens,       setItens]       = useState([]);
+    const [page,        setPage]        = useState(null);
     const [paginaAtual, setPaginaAtual] = useState(0);
-    const [busca, setBusca] = useState("");
+    const [busca,       setBusca]       = useState("");
     const [filtroValor, setFiltroValor] = useState("");
     const [modalAberto, setModalAberto] = useState(false);
-    const [editando, setEditando] = useState(null);
-    const [valores, setValores] = useState({});
-    const [erroModal, setErroModal] = useState("");
-    const [salvando, setSalvando] = useState(false);
+    const [editando,    setEditando]    = useState(null);
+    const [valores,     setValores]     = useState({});
+    const [erroModal,   setErroModal]   = useState("");
+    const [salvando,    setSalvando]    = useState(false);
 
+    // --- CARREGA OS ITENS DA PÁGINA ---
     async function carregar(pagina = 0, filtro = filtroValor) {
         setPaginaAtual(pagina);
         try {
@@ -56,9 +50,9 @@ export default function CrudEntityPage({
 
     useEffect(() => {
         carregar(0, "");
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    // --- FILTRA OS ITENS VISÍVEIS NA PÁGINA ---
     const linhasVisiveis = itens.filter((item) => {
         if (!busca.trim()) {
             return true;
@@ -67,6 +61,7 @@ export default function CrudEntityPage({
         return colunas.some((coluna) => String(coluna.render(item) ?? "").toLowerCase().includes(termo));
     });
 
+    // --- ABRE O MODAL PARA CRIAR UM NOVO ITEM ---
     function abrirNovo() {
         setEditando(null);
         setErroModal("");
@@ -76,6 +71,7 @@ export default function CrudEntityPage({
         setModalAberto(true);
     }
 
+    // --- ABRE O MODAL PARA EDITAR UM ITEM EXISTENTE ---
     function abrirEdicao(item) {
         setEditando(item);
         setErroModal("");
@@ -85,6 +81,7 @@ export default function CrudEntityPage({
         setModalAberto(true);
     }
 
+    // --- EXCLUI UM ITEM ---
     async function excluir(item) {
         if (!confirm(`Excluir ${tituloSingular.toLowerCase()} "${item.usuario?.nome || item.nome}"?`)) {
             return;
@@ -98,10 +95,12 @@ export default function CrudEntityPage({
         }
     }
 
+    // --- ATUALIZA O VALOR DE UM CAMPO NO FORMULÁRIO ---
     function atualizarValor(nome, valor) {
         setValores((atual) => ({ ...atual, [nome]: valor }));
     }
 
+    // --- SALVA O ITEM ---
     async function salvar(evento) {
         evento.preventDefault();
         setErroModal("");
@@ -136,6 +135,7 @@ export default function CrudEntityPage({
         }
     }
 
+    // --- RENDERIZA A PÁGINA ---
     return (
         <section className="card">
             <div className="toolbar toolbar-between">
@@ -143,9 +143,7 @@ export default function CrudEntityPage({
                 <button className="btn" onClick={abrirNovo}>+ Novo {tituloSingular.toLowerCase()}</button>
             </div>
 
-            <form
-                className="toolbar"
-                onSubmit={(evento) => {
+            <form className="toolbar" onSubmit={(evento) => {
                     evento.preventDefault();
                     if (filtroSelect) {
                         carregar(0, filtroValor);
@@ -165,7 +163,11 @@ export default function CrudEntityPage({
                 )}
                 <label className="field">
                     Filtrar na página
-                    <input value={busca} onChange={(e) => setBusca(e.target.value)} placeholder="nome, e-mail..." />
+                    <input 
+                        value={busca} 
+                        onChange={(e) => setBusca(e.target.value)} 
+                        placeholder="nome, e-mail..." 
+                    />
                 </label>
                 <button type="submit" className="btn">Aplicar</button>
             </form>
@@ -179,7 +181,9 @@ export default function CrudEntityPage({
                 </thead>
                 <tbody>
                     {linhasVisiveis.length === 0 && (
-                        <tr><td colSpan={colunas.length + 1}>{mensagemColunaVazia}</td></tr>
+                        <tr>
+                            <td colSpan={colunas.length + 1}>{mensagemColunaVazia}</td>
+                        </tr>
                     )}
                     {linhasVisiveis.map((item) => (
                         <tr key={item.id}>
@@ -192,9 +196,11 @@ export default function CrudEntityPage({
                     ))}
                 </tbody>
             </table>
-
+            
+            {/* --- PAGINAÇÃO --- */}
             <Paginacao page={page} aoIr={(pagina) => carregar(pagina)} />
 
+            {/* --- MODAL DE EDIÇÃO/CRIAÇÃO DE ITEM ---  */}
             <Modal titulo={`${editando ? "Editar" : "Novo"} ${tituloSingular.toLowerCase()}`} aberto={modalAberto} onFechar={() => setModalAberto(false)}>
                 <form className="form-grid" onSubmit={salvar}>
                     {campos.map((campo) => {
@@ -215,19 +221,12 @@ export default function CrudEntityPage({
                             <div key={campo.name} className={`field${campo.full ? " field-full" : ""}`}>
                                 {campo.label}
                                 {campo.type === "select" && (
-                                    <select
-                                        value={valores[campo.name] ?? ""}
-                                        required={campo.required}
-                                        onChange={(e) => atualizarValor(campo.name, e.target.value)}
-                                    >
+                                    <select value={valores[campo.name] ?? ""} required={campo.required} onChange={(e) => atualizarValor(campo.name, e.target.value)}>
                                         {campo.options.map((opcao) => <option key={opcao} value={opcao}>{opcao}</option>)}
                                     </select>
                                 )}
                                 {campo.type === "textarea" && (
-                                    <textarea
-                                        value={valores[campo.name] ?? ""}
-                                        onChange={(e) => atualizarValor(campo.name, e.target.value)}
-                                    />
+                                    <textarea value={valores[campo.name] ?? ""} onChange={(e) => atualizarValor(campo.name, e.target.value)}/>
                                 )}
                                 {(!campo.type || ["text", "email", "date", "number"].includes(campo.type)) && (
                                     <input

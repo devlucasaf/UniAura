@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import SiteChrome from "@/components/site/SiteChrome";
-import { notificar } from "@/lib/notificar";
+import { useEffect, useRef, useState }  from "react";
+import { useRouter }                    from "next/navigation";
+import Link                             from "next/link";
+import SiteChrome                       from "@/components/web/SiteChrome";
+import { notificar }                    from "@/lib/notificar";
 
+// --- SLIDES DE NOTÍCIAS ---
 const SLIDES = [
     {
         tag: "Vestibular 2027",
@@ -27,7 +28,7 @@ const SLIDES = [
         texto: "Palestras, workshops e feira de projetos com alunos de graduação e pós. Participe e compartilhe conhecimento.",
         icone: (
             <svg viewBox="0 0 24 24" width="72" height="72" fill="none" stroke="currentColor"
-                 strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M9 2v6L3.5 18a2.5 2.5 0 0 0 2.2 3.5h12.6A2.5 2.5 0 0 0 20.5 18L15 8V2"></path>
                 <path d="M8 2h8"></path>
                 <path d="M7 14h10"></path>
@@ -41,7 +42,7 @@ const SLIDES = [
         texto: "Pelo segundo ano consecutivo, nossa universidade é destaque nacional em pesquisa aplicada e parcerias com o setor produtivo.",
         icone: (
             <svg viewBox="0 0 24 24" width="72" height="72" fill="none" stroke="currentColor"
-                 strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M6 9H4a2 2 0 0 1-2-2V5h4"></path>
                 <path d="M18 9h2a2 2 0 0 0 2-2V5h-4"></path>
                 <path d="M6 5h12v5a6 6 0 0 1-12 0V5Z"></path>
@@ -52,16 +53,19 @@ const SLIDES = [
     }
 ];
 
+// --- RENDERIZAÇÃO DA PÁGINA ---
 export default function HomePage() {
     const router = useRouter();
     const [slideAtual, setSlideAtual] = useState(0);
     const [mensagemEnviada, setMensagemEnviada] = useState(false);
     const temporizadorRef = useRef(null);
 
+    // --- FUNÇÕES DE NAVEGAÇÃO ENTRE SLIDES ---
     const irPara = (indice) => {
         setSlideAtual((indice + SLIDES.length) % SLIDES.length);
     };
 
+    // --- FUNÇÕES DE ROTACIONAMENTO AUTOMÁTICO DOS SLIDES ---
     const iniciarRotacao = () => {
         pararRotacao();
         temporizadorRef.current = setInterval(() => {
@@ -69,6 +73,7 @@ export default function HomePage() {
         }, 6000);
     };
 
+    // --- FUNÇÃO PARA PARAR A ROTACIONAMENTO AUTOMÁTICO DOS SLIDES ---
     const pararRotacao = () => {
         if (temporizadorRef.current) {
             clearInterval(temporizadorRef.current);
@@ -76,19 +81,22 @@ export default function HomePage() {
         }
     };
 
+    // --- INICIA A ROTACIONAMENTO AUTOMÁTICO QUANDO O COMPONENTE É MONTADO ---
     useEffect(() => {
         iniciarRotacao();
         return pararRotacao;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    // --- FUNÇÕES DE NAVEGAÇÃO E ENVIO DE FORMULÁRIO ---
     const rolarPara = (id) => (evento) => {
         evento.preventDefault();
         document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
     };
 
+    // -- FUNÇÃO PARA REDIRECIONAR PARA O PORTAL DO ALUNO ---
     const irParaPortal = () => router.push("/portal-do-aluno/login");
 
+    // --- FUNÇÃO DE ENVIO DE FORMULÁRIO DE CONTATO ---
     const enviarContato = (evento) => {
         evento.preventDefault();
         const formulario = evento.target;
@@ -103,21 +111,14 @@ export default function HomePage() {
         notificar("Mensagem enviada com sucesso!", "success");
     };
 
+    // --- RENDERIZAÇÃO DA PÁGINA ---
     return (
         <SiteChrome ancoras>
             <section id="noticias" className="site-noticias-hero">
                 <div className="site-container">
-                    <div
-                        className="site-noticias-slider"
-                        onMouseEnter={pararRotacao}
-                        onMouseLeave={iniciarRotacao}
-                    >
+                    <div className="site-noticias-slider" onMouseEnter={pararRotacao} onMouseLeave={iniciarRotacao}>
                         {SLIDES.map((slide, indice) => (
-                            <article
-                                key={slide.titulo}
-                                className={`site-noticia-slide${indice === slideAtual ? " ativo" : ""}`}
-                                data-slide={indice}
-                            >
+                            <article key={slide.titulo} className={`site-noticia-slide${indice === slideAtual ? " ativo" : ""}`} data-slide={indice}>
                                 <div className="site-noticia-conteudo">
                                     <span className={`site-noticia-tag ${slide.classeTag}`}>{slide.tag}</span>
                                     <h1>{slide.titulo}</h1>
@@ -139,13 +140,12 @@ export default function HomePage() {
                     </div>
 
                     <div className="site-slider-controles">
-                        <button className="site-slider-btn" type="button" aria-label="Notícia anterior"
-                                onClick={() => { irPara(slideAtual - 1); iniciarRotacao(); }}>
+                        <button className="site-slider-btn" type="button" aria-label="Notícia anterior" onClick={() => { irPara(slideAtual - 1); iniciarRotacao(); }}>
                             ‹
                         </button>
                         <div className="site-slider-pontos" role="tablist">
                             {SLIDES.map((slide, indice) => (
-                                <button
+                                <button 
                                     key={slide.titulo}
                                     className={`site-slider-ponto${indice === slideAtual ? " ativo" : ""}`}
                                     type="button"
@@ -154,8 +154,7 @@ export default function HomePage() {
                                 />
                             ))}
                         </div>
-                        <button className="site-slider-btn" type="button" aria-label="Próxima notícia"
-                                onClick={() => { irPara(slideAtual + 1); iniciarRotacao(); }}>
+                        <button className="site-slider-btn" type="button" aria-label="Próxima notícia" onClick={() => { irPara(slideAtual + 1); iniciarRotacao(); }}>
                             ›
                         </button>
                     </div>
@@ -178,7 +177,7 @@ export default function HomePage() {
                         <div className="site-sobre-item">
                             <div className="site-sobre-icone" data-cor="azul">
                                 <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor"
-                                     strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <circle cx="12" cy="12" r="6"></circle>
                                     <circle cx="12" cy="12" r="2"></circle>
@@ -194,7 +193,7 @@ export default function HomePage() {
                         <div className="site-sobre-item">
                             <div className="site-sobre-icone" data-cor="vermelho">
                                 <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor"
-                                     strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                     <path d="M9 18h6"></path>
                                     <path d="M10 22h4"></path>
                                     <path d="M12 2a7 7 0 0 0-4 12.7c.7.6 1 1.5 1 2.3v1h6v-1c0-.8.3-1.7 1-2.3A7 7 0 0 0 12 2Z"></path>
@@ -210,7 +209,7 @@ export default function HomePage() {
                         <div className="site-sobre-item">
                             <div className="site-sobre-icone" data-cor="amarelo">
                                 <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor"
-                                     strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                     <path d="M12 2l3 6.5 7 1-5 4.8 1.2 7L12 17.8 5.8 21.3 7 14.3 2 9.5l7-1L12 2Z"></path>
                                 </svg>
                             </div>
@@ -236,7 +235,7 @@ export default function HomePage() {
                         <article className="site-card site-card-level" data-cor="azul">
                             <div className="site-card-icon">
                                 <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor"
-                                     strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                        strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                     <path d="M12 2L2 7l10 5 10-5-10-5Z"></path>
                                     <path d="M2 17l10 5 10-5"></path>
                                     <path d="M2 12l10 5 10-5"></path>
@@ -252,7 +251,7 @@ export default function HomePage() {
                         <article className="site-card site-card-level" data-cor="vermelho">
                             <div className="site-card-icon">
                                 <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor"
-                                     strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                        strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                     <rect x="3" y="3" width="18" height="18" rx="2"></rect>
                                     <path d="M3 9h18"></path>
                                     <path d="M3 15h18"></path>
@@ -269,7 +268,7 @@ export default function HomePage() {
                         <article className="site-card site-card-level" data-cor="amarelo">
                             <div className="site-card-icon">
                                 <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor"
-                                     strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                        strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                     <path d="M4 4h16v16H4z"></path>
                                     <path d="M9 8h6"></path>
                                     <path d="M9 12h10"></path>
@@ -341,8 +340,7 @@ export default function HomePage() {
                             <ul className="site-contact">
                                 <li>
                                     <span className="site-contact-icone" aria-hidden="true">
-                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                                             strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
                                             <circle cx="12" cy="10" r="3"></circle>
                                         </svg>
@@ -354,8 +352,7 @@ export default function HomePage() {
                                 </li>
                                 <li>
                                     <span className="site-contact-icone" aria-hidden="true">
-                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                                             strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2Z"></path>
                                         </svg>
                                     </span>
@@ -366,8 +363,7 @@ export default function HomePage() {
                                 </li>
                                 <li>
                                     <span className="site-contact-icone" aria-hidden="true">
-                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                                             strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <rect x="2" y="4" width="20" height="16" rx="2"></rect>
                                             <path d="m2 7 10 6 10-6"></path>
                                         </svg>
@@ -379,8 +375,7 @@ export default function HomePage() {
                                 </li>
                                 <li>
                                     <span className="site-contact-icone" aria-hidden="true">
-                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                                             strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <circle cx="12" cy="12" r="10"></circle>
                                             <path d="M12 6v6l4 2"></path>
                                         </svg>
@@ -396,17 +391,34 @@ export default function HomePage() {
                         <form id="siteForm" className="site-form" noValidate onSubmit={enviarContato}>
                             <div className="field">
                                 <label htmlFor="siteNome">Nome completo</label>
-                                <input type="text" id="siteNome" name="nome" required autoComplete="name" />
+                                <input 
+                                    type="text" 
+                                    id="siteNome" 
+                                    name="nome" 
+                                    required 
+                                    autoComplete="name" 
+                                />
                             </div>
 
                             <div className="field">
                                 <label htmlFor="siteEmail">E-mail</label>
-                                <input type="email" id="siteEmail" name="email" required autoComplete="email" />
+                                <input 
+                                    type="email" 
+                                    id="siteEmail" 
+                                    name="email" 
+                                    required 
+                                    autoComplete="email" 
+                                />
                             </div>
 
                             <div className="field">
                                 <label htmlFor="siteTel">Telefone</label>
-                                <input type="tel" id="siteTel" name="telefone" autoComplete="tel" />
+                                <input 
+                                    type="tel" 
+                                    id="siteTel" 
+                                    name="telefone" 
+                                    autoComplete="tel" 
+                                />
                             </div>
 
                             <div className="field">

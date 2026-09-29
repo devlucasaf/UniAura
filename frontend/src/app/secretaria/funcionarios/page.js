@@ -1,23 +1,68 @@
 "use client";
 
-import AppShell from "@/components/interno/AppShell";
-import CrudEntityPage from "@/components/interno/crud/CrudEntityPage";
-import { funcionariosApi } from "@/lib/api/funcionarios";
-import { formatarData } from "@/lib/formato";
+import AppShell             from "@/components/interno/AppShell";
+import CrudEntityPage       from "@/components/interno/crud/CrudEntityPage";
+import { funcionariosApi }  from "@/lib/api/funcionarios";
+import { formatarData }     from "@/lib/formato";
 
+// --- CARGOS PARA FUNCIONÁRIOS ---
 const CARGOS = ["COORDENADOR", "SECRETARIA", "BIBLIOTECARIO", "FINANCEIRO", "ADMIN"];
 
+// --- CAMPOS DO FORMULÁRIO DE FUNCIONÁRIOS ---
 const CAMPOS = [
-    { name: "nome", label: "Nome", origem: "usuario", required: true },
-    { name: "email", label: "E-mail", origem: "usuario", type: "email", required: true },
-    { name: "cpf", label: "CPF", origem: "usuario" },
-    { name: "telefone", label: "Telefone", origem: "usuario" },
-    { name: "dataNascimento", label: "Nascimento", origem: "usuario", type: "date" },
-    { name: "cargo", label: "Cargo", origem: "entidade", type: "select", required: true, options: CARGOS, default: "SECRETARIA" },
-    { name: "dataAdmissao", label: "Data de admissão", origem: "entidade", type: "date", required: true },
-    { name: "departamento", label: "Departamento", origem: "entidade" }
+    { 
+        name: "nome", 
+        label: "Nome", 
+        origem: "usuario", 
+        required: true 
+    },
+    { 
+        name: "email", 
+        label: "E-mail", 
+        origem: "usuario", 
+        type: "email", 
+        required: true 
+    },
+    { 
+        name: "cpf", 
+        label: "CPF", 
+        origem: "usuario" 
+    },
+    { 
+        name: "telefone", 
+        label: "Telefone", 
+        origem: "usuario" 
+    },
+    { 
+        name: "dataNascimento", 
+        label: "Nascimento", 
+        origem: "usuario", 
+        type: "date" 
+    },
+    { 
+        name: "cargo", 
+        label: "Cargo", 
+        origem: "entidade", 
+        type: "select", 
+        required: true, 
+        options: CARGOS, 
+        default: "SECRETARIA" 
+    },
+    { 
+        name: "dataAdmissao", 
+        label: "Data de admissão", 
+        origem: "entidade", 
+        type: "date", 
+        required: true 
+    },
+    { 
+        name: "departamento", 
+        label: "Departamento", 
+        origem: "entidade" 
+    }
 ];
 
+// --- COLUNAS DA TABELA DE FUNCIONÁRIOS ---
 const COLUNAS = [
     { header: "Nome", render: (item) => item.usuario?.nome || "-" },
     { header: "E-mail", render: (item) => item.usuario?.email || "-" },
@@ -26,6 +71,7 @@ const COLUNAS = [
     { header: "Admissão", render: (item) => formatarData(item.dataAdmissao) }
 ];
 
+// --- PÁGINA DE LISTAGEM DE FUNCIONÁRIOS ---
 export default function SecretariaFuncionariosPage() {
     return (
         <AppShell titulo="Funcionários" perfis={["SECRETARIA", "COORDENADOR", "ADMIN"]}>
@@ -36,7 +82,11 @@ export default function SecretariaFuncionariosPage() {
                 sort="dataAdmissao,desc"
                 colunas={COLUNAS}
                 campos={CAMPOS}
-                filtroSelect={{ name: "cargo", label: "Cargo", options: CARGOS }}
+                filtroSelect={{ 
+                    name: "cargo", 
+                    label: "Cargo", 
+                    options: CARGOS 
+                }}
                 mensagemColunaVazia="Nenhum funcionário encontrado."
             />
         </AppShell>

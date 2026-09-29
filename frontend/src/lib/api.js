@@ -1,6 +1,7 @@
 const BASE_API = "/api";
 const CHAVE_TOKEN = "token";
 
+// --- CHAVE PARA O REFRESH TOKEN ---
 export async function api(caminho, { metodo = "GET", corpo, cabecalhos = {}, multipart = false } = {}) {
     const opcoes = {
         method: metodo,
@@ -54,7 +55,7 @@ export function query(parametros) {
     return texto ? `?${texto}` : "";
 }
 
-// --- MONTA O FORMDATA MULTIPART (DADOS JSON + ARQUIVO OPCIONAL) ---
+// --- MONTA O FORMDATA MULTIPART ---
 export function corpoMultipart(dadosObjeto, arquivo, campoArquivo = "arquivo", campoDados = "dados") {
     const formData = new FormData();
     formData.append(campoDados, new Blob([JSON.stringify(dadosObjeto)], { type: "application/json" }));

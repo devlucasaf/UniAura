@@ -2,7 +2,7 @@
 
 import { obterUsuario } from "@/lib/auth";
 
-// --- PAINEL INICIAL (PLACEHOLDER) DE UM PERFIL ---
+// --- PAINEL INICIAL DE UM PERFIL ---
 export default function Dashboard({ titulo }) {
     const usuario = obterUsuario();
 

@@ -1,15 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import AppShell from "@/components/interno/AppShell";
-import Badge from "@/components/interno/Badge";
-import { multaApi } from "@/lib/api/biblioteca";
-import { formatarData, formatarMoeda } from "@/lib/formato";
+import { useEffect, useState }          from "react";
+import AppShell                         from "@/components/interno/AppShell";
+import Badge                            from "@/components/interno/Badge";
+import { multaApi }                     from "@/lib/api/biblioteca";
+import { formatarData, formatarMoeda }  from "@/lib/formato";
 
+// --- COMPONENTE DE GESTÃO DE MULTAS DA BIBLIOTECA ---
 export default function BibliotecaMultasPage() {
     const [status, setStatus] = useState("PENDENTE");
     const [multas, setMultas] = useState([]);
 
+    // --- LISTA AS MULTAS DE ACORDO COM O STATUS SELECIONADO ---
     async function listar(statusAtual = status) {
         const page = await multaApi.listar({ status: statusAtual, size: 50 });
         setMultas(page.content || []);
@@ -17,6 +19,7 @@ export default function BibliotecaMultasPage() {
 
     useEffect(() => { listar(); }, []);
 
+    // --- REGISTRA O PAGAMENTO DE UMA MULTA ---
     async function pagar(id) {
         try {
             await multaApi.pagar(id);
@@ -26,6 +29,7 @@ export default function BibliotecaMultasPage() {
         }
     }
 
+    // --- CANCELA UMA MULTA APÓS CONFIRMAÇÃO DO USUÁRIO ---
     async function cancelar(id) {
         if (!confirm("Cancelar multa?")) {
             return;
@@ -55,12 +59,20 @@ export default function BibliotecaMultasPage() {
                 <table>
                     <thead>
                         <tr>
-                            <th>Usuário</th><th>Livro</th><th>Dias atraso</th><th>Valor</th>
-                            <th>Gerada</th><th>Paga</th><th>Status</th><th></th>
+                            <th>Usuário</th>
+                            <th>Livro</th>
+                            <th>Dias atraso</th>
+                            <th>Valor</th>
+                            <th>Gerada</th>
+                            <th>Paga</th>
+                            <th>Status</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {multas.length === 0 && <tr><td colSpan={8}>Nenhuma multa.</td></tr>}
+                        {multas.length === 0 && <tr>
+                            <td colSpan={8}>Nenhuma multa.</td>
+                        </tr>}
                         {multas.map((m) => (
                             <tr key={m.id}>
                                 <td>{m.usuarioNome}</td>

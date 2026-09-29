@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import SiteChrome from "@/components/site/SiteChrome";
-import { tituloPagina, subtituloPagina, filtros, cards } from "@/data/cursosCatalogo";
+import { useState }                                         from "react";
+import Link                                                 from "next/link";
+import SiteChrome                                           from "@/components/web/SiteChrome";
+import { tituloPagina, subtituloPagina, filtros, cards }    from "@/data/cursosCatalogo";
+import { AREA_URL_POR_VALOR }                               from "@/data/areasCursos";
 
+// --- COMPONENTE DA PÁGINA DE LISTAGEM DE CURSOS COM FILTRO POR ÁREA ---
 export default function CursosPage() {
     const [filtroAtivo, setFiltroAtivo] = useState("todos");
 
@@ -21,14 +23,8 @@ export default function CursosPage() {
 
                     <div className="cursos-filtros" role="tablist" aria-label="Filtrar cursos por área de atuação">
                         {filtros.map((filtro) => (
-                            <button
-                                key={filtro.valor}
-                                className={`site-filtro-btn${filtroAtivo === filtro.valor ? " ativo" : ""}`}
-                                type="button"
-                                role="tab"
-                                aria-selected={filtroAtivo === filtro.valor}
-                                onClick={() => setFiltroAtivo(filtro.valor)}
-                            >
+                            <button key={filtro.valor} className={`site-filtro-btn${filtroAtivo === filtro.valor ? " ativo" : ""}`}
+                                    type="button" role="tab" aria-selected={filtroAtivo === filtro.valor} onClick={() => setFiltroAtivo(filtro.valor)}>
                                 {filtro.label}
                             </button>
                         ))}
@@ -43,9 +39,17 @@ export default function CursosPage() {
                             const conteudo = (
                                 <>
                                     <div className="curso-card-icon" aria-hidden="true">
-                                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor"
-                                             strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
-                                             dangerouslySetInnerHTML={{ __html: card.iconeSvg }} />
+                                        <svg 
+                                            viewBox="0 0 24 24" 
+                                            width="24" 
+                                            height="24" 
+                                            fill="none" 
+                                            stroke="currentColor"
+                                            strokeWidth="1.8" 
+                                            strokeLinecap="round" 
+                                            strokeLinejoin="round"
+                                            dangerouslySetInnerHTML={{ __html: card.iconeSvg }} 
+                                        />
                                     </div>
                                     <h2>{card.titulo}</h2>
                                     <p>{card.descricao}</p>
@@ -55,8 +59,10 @@ export default function CursosPage() {
 
                             const estilo = { "--curso-cor": card.cor };
 
+                            const areaUrl = AREA_URL_POR_VALOR[card.area] || card.area;
+
                             return card.slug ? (
-                                <Link key={card.titulo} href={`/graduacao/${card.slug}`} className="curso-card" style={estilo}>
+                                <Link key={card.titulo} href={`/${areaUrl}/${card.slug}`} className="curso-card" style={estilo}>
                                     {conteudo}
                                 </Link>
                             ) : (

@@ -1,5 +1,4 @@
-// --- ANIMAÇÕES COMPARTILHADAS PELAS PÁGINAS "grad-*" (CONTATO, MATRÍCULAS, CURSOS) ---
-// --- PORTADO QUASE VERBATIM DO _curso.js ANTIGO: SÓ REMOVE O QUE JÁ VIROU REACT (HEADER) ---
+// --- ANIMAÇÕES COMPARTILHADAS PELAS PÁGINAS ---
 function preferemMenosMovimento() {
     return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
@@ -27,7 +26,7 @@ export function montarEfeitosDePagina(raiz) {
     return () => limpezas.forEach((limpar) => limpar());
 }
 
-// --- ABRE/FECHA CADA SEMESTRE DA MATRIZ CURRICULAR (SÓ UM ABERTO POR VEZ) ---
+// --- ABRE/FECHA CADA SEMESTRE DA MATRIZ CURRICULAR ---
 function configurarAcordeaoMatriz(raiz) {
     const remocoes = [];
     const semestres = Array.from(raiz.querySelectorAll(".grad-semester, .cc-semester"));
@@ -111,6 +110,7 @@ function configurarRevelacaoNoScroll(raiz) {
     return () => observador.disconnect();
 }
 
+// --- APLICA UMA CLASSE DE ANIMAÇÃO E A TROCA PELA CLASSE FINAL AO TERMINAR ---
 function aplicarAnimacaoUnica(elemento, classeEmCurso, classeFinal, limite) {
     elemento.classList.add(classeEmCurso);
 
@@ -157,6 +157,7 @@ function configurarContadores(raiz) {
     return () => observador.disconnect();
 }
 
+// --- ANIMA A CONTAGEM DE UM ELEMENTO ATÉ SEU VALOR FINAL ---
 function animarContador(elemento) {
     const destino = Number(elemento.dataset.contador);
     const sufixo = elemento.dataset.sufixo || "";
@@ -268,7 +269,6 @@ function configurarOndaNosBotoes(raiz) {
 }
 
 // --- BARRA DE PROGRESSO, PARALAXE DO HERO E SEÇÃO ATIVA NA SUBNAVEGAÇÃO ---
-// --- (A SOMBRA DO CABEÇALHO JÁ É CONTROLADA PELO PRÓPRIO SiteHeader EM REACT) ---
 function configurarEfeitosDeScroll(raiz) {
     const barra = raiz.querySelector("[data-progresso]");
     const hero = raiz.querySelector(".grad-hero");
@@ -315,6 +315,7 @@ function configurarEfeitosDeScroll(raiz) {
     };
 }
 
+// --- MARCA COMO ATIVO O LINK DA SUBNAVEGAÇÃO CORRESPONDENTE À SEÇÃO VISÍVEL ---
 function destacarSecaoAtiva(secoes, links) {
     if (secoes.length === 0 || links.length === 0) {
         return;

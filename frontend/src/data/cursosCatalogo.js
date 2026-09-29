@@ -1,4 +1,3 @@
-// --- CATALOGO EXTRAIDO FIELMENTE DE frontend/src/templates/web/graduacao/cursos.html ---
 export const tituloPagina = "Nossos Cursos";
 export const subtituloPagina = "Escolha a graduação que vai impulsionar sua carreira";
 export const filtros = [

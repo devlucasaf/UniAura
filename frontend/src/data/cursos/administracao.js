@@ -1,4 +1,4 @@
-// --- CONTEUDO EXTRAIDO FIELMENTE DO TEMPLATE ORIGINAL frontend/src/templates/web/graduacao/negocio/administracao.html ---
+// --- CONTEUDO EXTRAIDO FIELMENTE DO TEMPLATE ORIGINAL ---
 const dados = {
     "slug": "administracao",
     "subnavLabel": "Administração",

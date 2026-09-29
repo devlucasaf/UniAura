@@ -1,21 +1,23 @@
 "use client";
 
-import { useState } from "react";
-import AppShell from "@/components/interno/AppShell";
-import Badge from "@/components/interno/Badge";
-import { livroApi, exemplarApi } from "@/lib/api/biblioteca";
-import { formatarData } from "@/lib/formato";
+import { useState }                 from "react";
+import AppShell                     from "@/components/interno/AppShell";
+import Badge                        from "@/components/interno/Badge";
+import { livroApi, exemplarApi }    from "@/lib/api/biblioteca";
+import { formatarData }             from "@/lib/formato";
 
+// --- COMPONENTE DE GESTÃO DE EXEMPLARES DA BIBLIOTECA ---
 export default function BibliotecaExemplaresPage() {
-    const [tituloBusca, setTituloBusca] = useState("");
-    const [resultados, setResultados] = useState(null);
-    const [erroBusca, setErroBusca] = useState("");
-    const [livroSelecionado, setLivroSelecionado] = useState(null);
-    const [exemplares, setExemplares] = useState([]);
-    const [codigoBarras, setCodigoBarras] = useState("");
-    const [localizacao, setLocalizacao] = useState("");
-    const [msgExemplar, setMsgExemplar] = useState({ texto: "", tipo: "" });
+    const [tituloBusca,         setTituloBusca]         = useState("");
+    const [resultados,          setResultados]          = useState(null);
+    const [erroBusca,           setErroBusca]           = useState("");
+    const [livroSelecionado,    setLivroSelecionado]    = useState(null);
+    const [exemplares,          setExemplares]          = useState([]);
+    const [codigoBarras,        setCodigoBarras]        = useState("");
+    const [localizacao,         setLocalizacao]         = useState("");
+    const [mensagemExemplar,    setMensagemExemplar]    = useState({ texto: "", tipo: "" });
 
+    // --- BUSCA LIVROS PELO TÍTULO INFORMADO ---
     async function buscarLivros(evento) {
         evento.preventDefault();
         setErroBusca("");
@@ -28,21 +30,25 @@ export default function BibliotecaExemplaresPage() {
         }
     }
 
+    // --- SELECIONA O LIVRO E CARREGA SEUS EXEMPLARES ---
     async function selecionarLivro(livro) {
         setLivroSelecionado({ id: livro.id, titulo: livro.titulo });
         await listarExemplares(livro.id);
     }
 
+    // --- LISTA OS EXEMPLARES DE UM LIVRO ---
     async function listarExemplares(livroId) {
         const page = await exemplarApi.listarPorLivro(livroId, { size: 50 });
         setExemplares(page.content || []);
     }
 
+    // --- GERA UM CÓDIGO DE BARRAS PARA O NOVO EXEMPLAR ---
     async function gerarCodigo() {
         const r = await exemplarApi.gerarCodigoBarras();
         setCodigoBarras(r.codigoBarras);
     }
 
+    // --- ADICIONA UM NOVO EXEMPLAR AO LIVRO SELECIONADO ---
     async function adicionarExemplar(evento) {
         evento.preventDefault();
         try {
@@ -53,17 +59,19 @@ export default function BibliotecaExemplaresPage() {
             });
             setCodigoBarras("");
             setLocalizacao("");
-            setMsgExemplar({ texto: "Exemplar criado.", tipo: "ok" });
+            setMensagemExemplar({ texto: "Exemplar criado.", tipo: "ok" });
             listarExemplares(livroSelecionado.id);
         } catch (erro) {
-            setMsgExemplar({ texto: erro.message, tipo: "error" });
+            setMensagemExemplar({ texto: erro.message, tipo: "error" });
         }
     }
 
+    // --- EXCLUI UM EXEMPLAR APÓS CONFIRMAÇÃO DO USUÁRIO ---
     async function excluirExemplar(id) {
         if (!confirm("Excluir exemplar?")) {
             return;
         }
+
         try {
             await exemplarApi.deletar(id);
             listarExemplares(livroSelecionado.id);
@@ -77,7 +85,14 @@ export default function BibliotecaExemplaresPage() {
             <section className="card">
                 <h2>Selecionar livro</h2>
                 <form className="toolbar" onSubmit={buscarLivros}>
-                    <label className="field">Título<input value={tituloBusca} required onChange={(e) => setTituloBusca(e.target.value)} /></label>
+                    <label className="field">
+                        Título
+                        <input 
+                            value={tituloBusca} 
+                            required 
+                            onChange={(e) => setTituloBusca(e.target.value)} 
+                        />
+                    </label>
                     <button type="submit" className="btn">Buscar</button>
                 </form>
                 {erroBusca && <p className="msg-error">{erroBusca}</p>}
@@ -100,18 +115,32 @@ export default function BibliotecaExemplaresPage() {
                     <h2>Exemplares de {livroSelecionado.titulo}</h2>
                     <form className="toolbar" onSubmit={adicionarExemplar}>
                         <label className="field">Código de barras
-                            <input placeholder="deixe vazio para gerar" value={codigoBarras} onChange={(e) => setCodigoBarras(e.target.value)} />
+                            <input 
+                                placeholder="deixe vazio para gerar" 
+                                value={codigoBarras} 
+                                onChange={(e) => setCodigoBarras(e.target.value)} 
+                            />
                         </label>
                         <label className="field">Localização
-                            <input placeholder="ex.: Estante A3" value={localizacao} onChange={(e) => setLocalizacao(e.target.value)} />
+                            <input 
+                                placeholder="ex.: Estante A3" 
+                                value={localizacao} 
+                                onChange={(e) => setLocalizacao(e.target.value)} 
+                            />
                         </label>
                         <button type="button" className="btn secondary" onClick={gerarCodigo}>Gerar código</button>
                         <button type="submit" className="btn">Adicionar exemplar</button>
-                        {msgExemplar.texto && <span className={msgExemplar.tipo === "error" ? "msg-error" : "msg-ok"}>{msgExemplar.texto}</span>}
+                        {mensagemExemplar.texto && <span className={mensagemExemplar.tipo === "error" ? "msg-error" : "msg-ok"}>{mensagemExemplar.texto}</span>}
                     </form>
                     <table>
                         <thead>
-                            <tr><th>Código</th><th>Localização</th><th>Status</th><th>Criado</th><th></th></tr>
+                            <tr>
+                                <th>Código</th>
+                                <th>Localização</th>
+                                <th>Status</th>
+                                <th>Criado</th>
+                                <th></th>
+                            </tr>
                         </thead>
                         <tbody>
                             {exemplares.length === 0 && <tr><td colSpan={5}>Sem exemplares.</td></tr>}

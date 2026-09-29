@@ -1,8 +1,9 @@
 "use client";
 
-import AppShell from "@/components/interno/AppShell";
-import Dashboard from "@/components/interno/Dashboard";
+import AppShell     from "@/components/interno/AppShell";
+import Dashboard    from "@/components/interno/Dashboard";
 
+// --- COMPONENTE DE DASHBOARD DA BIBLIOTECA ---
 export default function BibliotecaDashboardPage() {
     return (
         <AppShell titulo="Painel da Biblioteca" perfis={["BIBLIOTECARIO"]}>

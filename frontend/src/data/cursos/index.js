@@ -1,37 +1,57 @@
-import administracao from "./administracao";
-import analiseEDesenvolvimentoDeSistemas from "./analise-e-desenvolvimento-de-sistemas";
-import artesCenicas from "./artes-cenicas";
-import artesVisuais from "./artes-visuais";
-import biologia from "./biologia";
-import biomedicina from "./biomedicina";
-import cienciaDaComputacao from "./ciencia-da-computacao";
-import cienciaDeDados from "./ciencia-de-dados";
-import cienciasAeronauticas from "./ciencias-aeronauticas";
-import design from "./design";
-import direito from "./direito";
-import educacaoFisica from "./educacao-fisica";
-import engenhariaCivil from "./engenharia-civil";
-import engenhariaDeSoftware from "./engenharia-de-software";
-import engenhariaEletrica from "./engenharia-eletrica";
-import engenhariaFlorestal from "./engenharia-florestal";
-import engenhariaMecanica from "./engenharia-mecanica";
-import engenhariaMecatronica from "./engenharia-mecatronica";
-import engenhariaProducao from "./engenharia-producao";
-import engenhariaQuimica from "./engenharia-quimica";
-import farmacia from "./farmacia";
-import fisioterapia from "./fisioterapia";
-import fonoaudiologia from "./fonoaudiologia";
-import fotografia from "./fotografia";
-import medicinaVeterinaria from "./medicina-veterinaria";
-import medicina from "./medicina";
-import moda from "./moda";
-import nutricao from "./nutricao";
-import odontologia from "./odontologia";
-import publicidadePropaganda from "./publicidade-propaganda";
-import relacoesInternacionais from "./relacoes-internacionais";
-import terapiaOcupacional from "./terapia-ocupacional";
+import administracao                        from "./administracao";
+import analiseEDesenvolvimentoDeSistemas    from "./analise-e-desenvolvimento-de-sistemas";
+import artesCenicas                         from "./artes-cenicas";
+import artesVisuais                         from "./artes-visuais";
+import biologia                             from "./biologia";
+import biomedicina                          from "./biomedicina";
+import cienciaDaComputacao                  from "./ciencia-da-computacao";
+import cienciaDeDados                       from "./ciencia-de-dados";
+import cienciasAeronauticas                 from "./ciencias-aeronauticas";
+import design                               from "./design";
+import direito                              from "./direito";
+import educacaoFisica                       from "./educacao-fisica";
+import engenhariaCivil                      from "./engenharia-civil";
+import engenhariaDeSoftware                 from "./engenharia-de-software";
+import engenhariaEletrica                   from "./engenharia-eletrica";
+import engenhariaFlorestal                  from "./engenharia-florestal";
+import engenhariaMecanica                   from "./engenharia-mecanica";
+import engenhariaMecatronica                from "./engenharia-mecatronica";
+import engenhariaProducao                   from "./engenharia-producao";
+import engenhariaQuimica                    from "./engenharia-quimica";
+import farmacia                             from "./farmacia";
+import fisioterapia                         from "./fisioterapia";
+import fonoaudiologia                       from "./fonoaudiologia";
+import fotografia                           from "./fotografia";
+import medicinaVeterinaria                  from "./medicina-veterinaria";
+import medicina                             from "./medicina";
+import moda                                 from "./moda";
+import nutricao                             from "./nutricao";
+import odontologia                          from "./odontologia";
+import publicidadePropaganda                from "./publicidade-propaganda";
+import relacoesInternacionais               from "./relacoes-internacionais";
+import terapiaOcupacional                   from "./terapia-ocupacional";
+import { cards }                            from "../cursosCatalogo";
+import { AREA_URL_POR_VALOR }               from "../areasCursos";
 
-// --- MAPA slug -> DADOS DA PAGINA DE CURSO ---
+// --- CURSOS QUE TEM PAGINA DE DETALHE MAS NAO APARECEM NO CATALOGO ---
+const AREA_URL_SEM_CARD = {
+    "relacoes-internacionais": "humanas"
+};
+
+// --- PALAVRA DE AREA USADA NA URL ---
+const areaUrlPorSlug = { ...AREA_URL_SEM_CARD };
+cards.forEach((card) => {
+    if (card.slug) {
+        areaUrlPorSlug[card.slug] = AREA_URL_POR_VALOR[card.area] || card.area;
+    }
+});
+
+// --- RETORNA A PALAVRA DE AREA DA URL PARA UM SLUG DE CURSO ---
+export function areaUrlDoCurso(slug) {
+    return areaUrlPorSlug[slug];
+}
+
+// --- DADOS DA PAGINA DE CURSO ---
 export const cursosPorSlug = {
     administracao,
     "analise-e-desenvolvimento-de-sistemas": analiseEDesenvolvimentoDeSistemas,
