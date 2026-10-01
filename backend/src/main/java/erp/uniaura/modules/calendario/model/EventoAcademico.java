@@ -1,11 +1,10 @@
 package erp.uniaura.modules.calendario.model;
 
+import erp.uniaura.infra.persistence.SqlServerBaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -19,7 +18,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -28,12 +26,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "eventoAcademico")
-public class EventoAcademico {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+public class EventoAcademico extends SqlServerBaseEntity {
 
     @Column(name = "titulo", nullable = false, length = 150)
     private String titulo;

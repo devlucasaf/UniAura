@@ -3,7 +3,7 @@ package erp.uniaura.modules.ouvidoria.service;
 import erp.uniaura.exception.BusinessException;
 import erp.uniaura.exception.ResourceNotFoundException;
 import erp.uniaura.infra.protocolo.GeradorProtocolo;
-import erp.uniaura.infra.security.UsuarioDetails;
+import erp.uniaura.infra.security.UsuarioAutenticadoProvider;
 import erp.uniaura.modules.ouvidoria.dto.ManifestacaoRequestDTO;
 import erp.uniaura.modules.ouvidoria.dto.ManifestacaoResponseDTO;
 import erp.uniaura.modules.ouvidoria.dto.ResponderManifestacaoRequestDTO;
@@ -21,8 +21,6 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +29,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -54,6 +51,7 @@ public class OuvidoriaService {
     private final ManifestacaoRepository manifestacaoRepository;
     private final RespostaManifestacaoRepository respostaRepository;
     private final GeradorProtocolo geradorProtocolo;
+    private final UsuarioAutenticadoProvider usuarioAutenticadoProvider;
 
     // --- O USUÁRIO AUTENTICADO REGISTRA UMA MANIFESTAÇÃO ---
     @Transactional
@@ -97,7 +95,7 @@ public class OuvidoriaService {
 
     // --- BUSCA UMA MANIFESTAÇÃO E O SEU HISTÓRICO DE RESPOSTAS ---
     @Transactional(readOnly = true)
-    public ManifestacaoResponseDTO buscarPorId(UUID id) {
+    public ManifestacaoResponseDTO buscarPorId(Long id) {
         Manifestacao manifestacao = buscarEntidade(id);
         Usuario autenticado = usuarioAutenticadoOuFalha();
         boolean somenteVisiveis = validarPodeVisualizar(manifestacao, autenticado);
@@ -118,7 +116,7 @@ public class OuvidoriaService {
 
     // --- A OUVIDORIA REGISTRA UMA RESPOSTA E MOVE A MANIFESTAÇÃO DE STATUS ---
     @Transactional
-    public ManifestacaoResponseDTO responder(UUID id, ResponderManifestacaoRequestDTO dto) {
+    public ManifestacaoResponseDTO responder(Long id, ResponderManifestacaoRequestDTO dto) {
         Manifestacao manifestacao = buscarEntidade(id);
         Usuario autenticado = usuarioAutenticadoOuFalha();
 
@@ -157,7 +155,7 @@ public class OuvidoriaService {
     }
 
     // --- BUSCA A MANIFESTAÇÃO PELO IDENTIFICADOR OU LANÇA UMA EXCEÇÃO CASO ELA NÃO SEJA ENCONTRADA ---
-    private Manifestacao buscarEntidade(UUID id) {
+    private Manifestacao buscarEntidade(Long id) {
         return manifestacaoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Manifestação", id));
     }
@@ -174,7 +172,7 @@ public class OuvidoriaService {
     }
 
     // --- CARREGA O HISTÓRICO, OCULTANDO AS NOTAS INTERNAS QUANDO O LEITOR É O AUTOR ---
-    private List<RespostaManifestacaoResponseDTO> buscarRespostas(UUID manifestacaoId, boolean somenteVisiveis) {
+    private List<RespostaManifestacaoResponseDTO> buscarRespostas(Long manifestacaoId, boolean somenteVisiveis) {
         List<RespostaManifestacao> respostas = somenteVisiveis
                 ? respostaRepository.findByManifestacaoIdAndVisivelParaAutorTrueOrderByCriadoEmAsc(manifestacaoId)
                 : respostaRepository.findByManifestacaoIdOrderByCriadoEmAsc(manifestacaoId);
@@ -218,11 +216,8 @@ public class OuvidoriaService {
 
     // --- RECUPERA O USUÁRIO AUTENTICADO OU LANÇA UMA EXCEÇÃO CASO ELE NÃO SEJA IDENTIFICADO ---
     private Usuario usuarioAutenticadoOuFalha() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !(auth.getPrincipal() instanceof UsuarioDetails ud)) {
-            throw new BusinessException("Usuário autenticado não identificado.");
-        }
-        return ud.getUsuario();
+        return usuarioAutenticadoProvider.obter()
+                .orElseThrow(() -> new BusinessException("Usuário autenticado não identificado."));
     }
 
     // --- CONVERTE A ENTIDADE MANIFESTAÇÃO EM UM DTO DE RESPOSTA, PRESERVANDO O SIGILO DO AUTOR ---

@@ -11,7 +11,6 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -20,8 +19,8 @@ import java.util.UUID;
 @Builder
 public class MensalidadeResponseDTO {
 
-    private UUID                    id;
-    private UUID                    alunoId;
+    private Long                    id;
+    private Long                    alunoId;
     private String                  alunoNome;
     private String                  competencia;
     private BigDecimal              valor;

@@ -10,7 +10,6 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -19,10 +18,10 @@ import java.util.UUID;
 @Builder
 public class EntregaAtividadeResponseDTO {
 
-    private UUID            id;
-    private UUID            atividadeId;
+    private Long            id;
+    private Long            atividadeId;
     private String          atividadeTitulo;
-    private UUID            alunoId;
+    private Long            alunoId;
     private String          alunoNome;
     private String          arquivoUrl;
     private String          comentarioAluno;

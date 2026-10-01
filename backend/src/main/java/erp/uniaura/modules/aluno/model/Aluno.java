@@ -1,5 +1,6 @@
 package erp.uniaura.modules.aluno.model;
 
+import erp.uniaura.infra.persistence.SqlServerBaseEntity;
 import erp.uniaura.modules.usuario.model.Usuario;
 
 import jakarta.persistence.Column;
@@ -7,8 +8,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
@@ -25,7 +24,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -34,16 +32,10 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "aluno")
-public class Aluno {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+public class Aluno extends SqlServerBaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "usuarioId", nullable = false, unique = true,
-            foreignKey = @ForeignKey(name = "fkAlunoUsuario"))
+    @JoinColumn(name = "usuarioId", nullable = false, unique = true, foreignKey = @ForeignKey(name = "fkAlunoUsuario"))
     private Usuario usuario;
 
     @Column(name = "matriculaRA", nullable = false, unique = true, length = 30)
@@ -57,7 +49,7 @@ public class Aluno {
     private StatusAluno status;
 
     @Column(name = "turmaAtualId")
-    private UUID turmaAtualId;
+    private Long turmaAtualId;
 
     @Column(name = "observacoes", length = 1000)
     private String observacoes;
@@ -76,7 +68,6 @@ public class Aluno {
     @Column(name = "nacionalidade", length = 80)
     private String nacionalidade;
 
-    // --- ORIGEM ---
     @Column(name = "municipioNascimento", length = 100)
     private String municipioNascimento;
 
@@ -86,7 +77,6 @@ public class Aluno {
     @Column(name = "estado", length = 2)
     private String estado;
 
-    // --- IDENTIFICAÇÃO ---
     @Column(name = "documentoOrgaoEmissor", length = 20)
     private String documentoOrgaoEmissor;
 
@@ -108,7 +98,6 @@ public class Aluno {
     @Column(name = "ufZonaEleitoral", length = 2)
     private String ufZonaEleitoral;
 
-    // --- CERTIFICADO DE RESERVISTA: OPCIONAL ---
     @Column(name = "numeroCertificadoReservista", length = 30)
     private String numeroCertificadoReservista;
 
@@ -118,7 +107,6 @@ public class Aluno {
     @Column(name = "ufReservista", length = 2)
     private String ufReservista;
 
-    // --- FILIAÇÃO ---
     @Column(name = "nomePai", length = 150)
     private String nomePai;
 
@@ -150,7 +138,6 @@ public class Aluno {
     @Column(name = "telefoneEmergencia", length = 20)
     private String telefoneEmergencia;
 
-    // --- INFORMAÇÕES GERAIS ---
     @Enumerated(EnumType.STRING)
     @Column(name = "tipoSanguineo", length = 15)
     private TipoSanguineo tipoSanguineo;
@@ -164,7 +151,6 @@ public class Aluno {
     @Column(name = "necessitaAcompanhamentoInstitucional", nullable = false)
     private Boolean necessitaAcompanhamentoInstitucional;
 
-    // --- CENSO ESCOLAR ---
     @Column(name = "instituicaoOrigem", length = 150)
     private String instituicaoOrigem;
 

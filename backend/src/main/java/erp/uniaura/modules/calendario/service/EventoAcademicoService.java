@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -32,11 +31,14 @@ public class EventoAcademicoService {
     @Transactional(readOnly = true)
     public List<EventoAcademicoResponseDTO> listarPublicos() {
         return eventoAcademicoRepository.findByPublicoTrueOrderByDataInicioAsc()
-                .stream().map(this::toResponse).toList();
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 
+    // --- BUSCAR EVENTOS MARCADOS PELO ID ---
     @Transactional(readOnly = true)
-    public EventoAcademicoResponseDTO buscarPorId(UUID id) {
+    public EventoAcademicoResponseDTO buscarPorId(Long id) {
         return toResponse(buscarEntidade(id));
     }
 
@@ -57,7 +59,7 @@ public class EventoAcademicoService {
 
     // --- ATUALIZA UM EVENTO EXISTENTE ---
     @Transactional
-    public EventoAcademicoResponseDTO atualizar(UUID id, EventoAcademicoRequestDTO dto) {
+    public EventoAcademicoResponseDTO atualizar(Long id, EventoAcademicoRequestDTO dto) {
         EventoAcademico evento = buscarEntidade(id);
 
         evento.setTitulo(dto.getTitulo());
@@ -72,15 +74,18 @@ public class EventoAcademicoService {
 
     // --- REMOVE UM EVENTO ---
     @Transactional
-    public void deletar(UUID id) {
+    public void deletar(Long id) {
         eventoAcademicoRepository.delete(buscarEntidade(id));
     }
 
-    private EventoAcademico buscarEntidade(UUID id) {
+
+    // --- BUSCA A ENTIDADE ---
+    private EventoAcademico buscarEntidade(Long id) {
         return eventoAcademicoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Evento acadêmico", id));
     }
 
+    // --- CONVERTE A ENTIDADE EM UM DTO DE RESPOSTA ---
     private EventoAcademicoResponseDTO toResponse(EventoAcademico e) {
         return EventoAcademicoResponseDTO.builder()
                 .id(e.getId())

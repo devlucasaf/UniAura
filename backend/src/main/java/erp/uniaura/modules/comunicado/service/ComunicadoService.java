@@ -2,7 +2,7 @@ package erp.uniaura.modules.comunicado.service;
 
 import erp.uniaura.exception.BusinessException;
 import erp.uniaura.exception.ResourceNotFoundException;
-import erp.uniaura.infra.security.UsuarioDetails;
+import erp.uniaura.infra.security.UsuarioAutenticadoProvider;
 import erp.uniaura.modules.aluno.model.Aluno;
 import erp.uniaura.modules.aluno.repository.AlunoRepository;
 import erp.uniaura.modules.comunicado.dto.ComunicadoRequestDTO;
@@ -17,13 +17,10 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -31,8 +28,9 @@ public class ComunicadoService {
 
     private final ComunicadoRepository comunicadoRepository;
     private final AlunoRepository alunoRepository;
+    private final UsuarioAutenticadoProvider usuarioAutenticadoProvider;
 
-    // --- LISTA COMUNICADOS (VISÃO ADMINISTRATIVA), COM FILTRO OPCIONAL POR PÚBLICO-ALVO ---
+    // --- LISTA COMUNICADOS, COM FILTRO OPCIONAL POR PÚBLICO-ALVO ---
     @Transactional(readOnly = true)
     public Page<ComunicadoResponseDTO> listar(PublicoAlvoComunicado publicoAlvo, Pageable pageable) {
         Page<Comunicado> page = publicoAlvo == null
@@ -41,7 +39,7 @@ public class ComunicadoService {
         return page.map(this::toResponse);
     }
 
-    // --- MURAL: OS ÚLTIMOS COMUNICADOS RELEVANTES PARA O USUÁRIO AUTENTICADO ---
+    // --- OS ÚLTIMOS COMUNICADOS RELEVANTES PARA O USUÁRIO AUTENTICADO ---
     @Transactional(readOnly = true)
     public List<ComunicadoResponseDTO> mural() {
         Usuario autenticado = usuarioAutenticadoOuFalha();
@@ -70,7 +68,6 @@ public class ComunicadoService {
                     .stream().map(this::toResponse).toList();
         }
 
-        // --- DEMAIS PERFIS (SECRETARIA, COORDENAÇÃO, ADMIN ETC.) VEEM AO MENOS OS COMUNICADOS GERAIS ---
         return comunicadoRepository.findTop30ByPublicoAlvoInOrderByCriadoEmDesc(List.of(PublicoAlvoComunicado.TODOS))
                 .stream().map(this::toResponse).toList();
     }
@@ -96,9 +93,9 @@ public class ComunicadoService {
         return toResponse(comunicadoRepository.save(comunicado));
     }
 
-    // --- ATUALIZA UM COMUNICADO (SOMENTE O AUTOR OU COORDENAÇÃO/ADMIN) ---
+    // --- ATUALIZA UM COMUNICADO ---
     @Transactional
-    public ComunicadoResponseDTO atualizar(UUID id, ComunicadoRequestDTO dto) {
+    public ComunicadoResponseDTO atualizar(Long id, ComunicadoRequestDTO dto) {
         Comunicado comunicado = buscarEntidade(id);
         validarPodeEditar(comunicado, usuarioAutenticadoOuFalha());
 
@@ -115,21 +112,21 @@ public class ComunicadoService {
         return toResponse(comunicadoRepository.save(comunicado));
     }
 
-    // --- REMOVE UM COMUNICADO (SOMENTE O AUTOR OU COORDENAÇÃO/ADMIN) ---
+    // --- REMOVE UM COMUNICADO ---
     @Transactional
-    public void deletar(UUID id) {
+    public void deletar(Long id) {
         Comunicado comunicado = buscarEntidade(id);
         validarPodeEditar(comunicado, usuarioAutenticadoOuFalha());
         comunicadoRepository.delete(comunicado);
     }
 
-    // --- HELPERS ---
-
-    private Comunicado buscarEntidade(UUID id) {
+    // --- BUSCA A ENTIDADE ---
+    private Comunicado buscarEntidade(Long id) {
         return comunicadoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Comunicado", id));
     }
 
+    // --- VALIDA QUE O USUÁRIO AUTENTICADO É O AUTOR OU FAZ PARTE DA COORDENAÇÃO/ADMIN ---
     private void validarPodeEditar(Comunicado comunicado, Usuario autenticado) {
         boolean equipeDireção = autenticado.getRole() == TipoUsuario.ADMIN
                 || autenticado.getRole() == TipoUsuario.COORDENADOR;
@@ -141,14 +138,13 @@ public class ComunicadoService {
         throw new BusinessException("Apenas o autor ou a coordenação podem alterar este comunicado.");
     }
 
+    // --- RECUPERA O USUÁRIO AUTENTICADO ---
     private Usuario usuarioAutenticadoOuFalha() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !(auth.getPrincipal() instanceof UsuarioDetails ud)) {
-            throw new BusinessException("Usuário autenticado não identificado.");
-        }
-        return ud.getUsuario();
+        return usuarioAutenticadoProvider.obter()
+                .orElseThrow(() -> new BusinessException("Usuário autenticado não identificado."));
     }
 
+    // --- CONVERTE A ENTIDADE EM UM DTO DE RESPOSTA ---
     private ComunicadoResponseDTO toResponse(Comunicado c) {
         return ComunicadoResponseDTO.builder()
                 .id(c.getId())

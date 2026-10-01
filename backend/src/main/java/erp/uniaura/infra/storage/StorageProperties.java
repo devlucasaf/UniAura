@@ -11,16 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "app.storage")
 public class StorageProperties {
-
     private String type = "local";
-    private Local local = new Local();
-
-    @Getter
-    @Setter
-    public static class Local {
-        private String basePath = "./storage";
-
-        private String publicBaseUrl = "/files";
-    }
+    private LocalStorage localStorage = new LocalStorage();
 }
 

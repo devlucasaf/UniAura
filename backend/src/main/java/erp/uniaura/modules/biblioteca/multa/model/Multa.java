@@ -1,5 +1,6 @@
 package erp.uniaura.modules.biblioteca.multa.model;
 
+import erp.uniaura.infra.persistence.SqlServerBaseEntity;
 import erp.uniaura.modules.biblioteca.emprestimo.model.Emprestimo;
 
 import jakarta.persistence.*;
@@ -14,7 +15,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -23,16 +23,10 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "multa")
-public class Multa {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+public class Multa extends SqlServerBaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "emprestimoId", nullable = false, unique = true,
-            foreignKey = @ForeignKey(name = "fkMultaEmprestimo"))
+    @JoinColumn(name = "emprestimoId", nullable = false, unique = true, foreignKey = @ForeignKey(name = "fkMultaEmprestimo"))
     private Emprestimo emprestimo;
 
     @Column(name = "valor", nullable = false, precision = 10, scale = 2)

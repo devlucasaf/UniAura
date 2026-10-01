@@ -8,8 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,7 +15,7 @@ import java.util.UUID;
 @Builder
 public class TurmaSemRegenteDTO {
 
-    private UUID    turmaId;
+    private Long    turmaId;
     private String  turmaCodigo;
     private String  serie;
     private Turno   turno;

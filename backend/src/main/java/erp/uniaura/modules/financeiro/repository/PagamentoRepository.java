@@ -6,10 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface PagamentoRepository extends JpaRepository<Pagamento, UUID> {
+public interface PagamentoRepository extends JpaRepository<Pagamento, Long> {
 
-    Optional<Pagamento> findByMensalidadeId(UUID mensalidadeId);
+    Optional<Pagamento> findByMensalidadeId(Long mensalidadeId);
 }

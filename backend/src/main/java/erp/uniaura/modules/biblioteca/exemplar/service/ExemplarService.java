@@ -17,8 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class ExemplarService {
@@ -28,13 +26,13 @@ public class ExemplarService {
 
     // --- LISTA OS EXEMPLARES DE UM LIVRO UTILIZANDO PAGINAÇÃO ---
     @Transactional(readOnly = true)
-    public Page<ExemplarResponseDTO> listarPorLivro(UUID livroId, Pageable pageable) {
+    public Page<ExemplarResponseDTO> listarPorLivro(Long livroId, Pageable pageable) {
         return exemplarRepository.findByLivroId(livroId, pageable).map(this::toResponse);
     }
 
     // --- BUSCA UM EXEMPLAR PELO SEU IDENTIFICADOR ---
     @Transactional(readOnly = true)
-    public ExemplarResponseDTO buscarPorId(UUID id) {
+    public ExemplarResponseDTO buscarPorId(Long id) {
         return toResponse(buscarEntidade(id));
     }
 
@@ -70,26 +68,27 @@ public class ExemplarService {
 
     // --- ATUALIZA A LOCALIZAÇÃO E O STATUS ADMINISTRATIVO DE UM EXEMPLAR ---
     @Transactional
-    public ExemplarResponseDTO atualizar(UUID id, ExemplarRequestDTO dto, StatusExemplar status) {
-        Exemplar ex = buscarEntidade(id);
-        ex.setLocalizacao(dto.getLocalizacao());
+    public ExemplarResponseDTO atualizar(Long id, ExemplarRequestDTO dto, StatusExemplar status) {
+        Exemplar exemplar = buscarEntidade(id);
+        exemplar.setLocalizacao(dto.getLocalizacao());
         if (status != null) {
             if (status == StatusExemplar.EMPRESTADO || status == StatusExemplar.RESERVADO) {
                 throw new BusinessException("Status " + status + " só pode ser definido via empréstimo/reserva.");
             }
-            ex.setStatus(status);
+            exemplar.setStatus(status);
         }
-        return toResponse(exemplarRepository.save(ex));
+        return toResponse(exemplarRepository.save(exemplar));
     }
 
     // --- REMOVE UM EXEMPLAR CASO ELE NÃO ESTEJA EMPRESTADO OU RESERVADO ---
     @Transactional
-    public void deletar(UUID id) {
-        Exemplar ex = buscarEntidade(id);
-        if (ex.getStatus() == StatusExemplar.EMPRESTADO || ex.getStatus() == StatusExemplar.RESERVADO) {
+    public void deletar(Long id) {
+        Exemplar exemplar = buscarEntidade(id);
+
+        if (exemplar.getStatus() == StatusExemplar.EMPRESTADO || exemplar.getStatus() == StatusExemplar.RESERVADO) {
             throw new BusinessException("Não é possível excluir exemplar emprestado ou reservado.");
         }
-        exemplarRepository.delete(ex);
+        exemplarRepository.delete(exemplar);
     }
 
     // --- GERA UM CÓDIGO DE BARRAS ÚNICO PARA UM EXEMPLAR ---
@@ -102,7 +101,7 @@ public class ExemplarService {
     }
 
     // --- BUSCA UM EXEMPLAR PELO IDENTIFICADOR OU LANÇA UMA EXCEÇÃO CASO ELE NÃO SEJA ENCONTRADO ---
-    public Exemplar buscarEntidade(UUID id) {
+    public Exemplar buscarEntidade(Long id) {
         return exemplarRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Exemplar", id));
     }

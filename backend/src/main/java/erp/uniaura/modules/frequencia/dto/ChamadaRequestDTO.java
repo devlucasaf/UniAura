@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -23,23 +22,8 @@ public class ChamadaRequestDTO {
 
     @NotEmpty
     @Valid
-    private List<ItemChamada> registros;
+    private List<ItemChamadaRequestDTO> registros;
 
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class ItemChamada {
 
-        @NotNull
-        private UUID alunoId;
-
-        @NotNull
-        private Boolean presente;
-
-        @Size(max = 1000)
-        private String justificativa;
-    }
 }
 

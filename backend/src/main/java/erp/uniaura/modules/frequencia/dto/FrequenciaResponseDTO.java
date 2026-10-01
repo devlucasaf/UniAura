@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -16,10 +15,10 @@ import java.util.UUID;
 @Builder
 public class FrequenciaResponseDTO {
 
-    private UUID        id;
-    private UUID        aulaId;
+    private Long        id;
+    private Long        aulaId;
     private LocalDate   dataAula;
-    private UUID        alunoId;
+    private Long        alunoId;
     private String      alunoNome;
     private String      alunoMatriculaRA;
     private Boolean     presente;

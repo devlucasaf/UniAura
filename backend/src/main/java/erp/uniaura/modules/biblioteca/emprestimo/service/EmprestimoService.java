@@ -2,7 +2,8 @@ package erp.uniaura.modules.biblioteca.emprestimo.service;
 
 import erp.uniaura.exception.BusinessException;
 import erp.uniaura.exception.ResourceNotFoundException;
-import erp.uniaura.infra.security.UsuarioDetails;
+import erp.uniaura.infra.email.EmailService;
+import erp.uniaura.infra.security.UsuarioAutenticadoProvider;
 import erp.uniaura.modules.biblioteca.config.model.ConfiguracaoBiblioteca;
 import erp.uniaura.modules.biblioteca.config.service.ConfiguracaoBibliotecaService;
 import erp.uniaura.modules.biblioteca.emprestimo.dto.EmprestimoRequestDTO;
@@ -30,8 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,25 +39,28 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmprestimoService {
 
+    private static final int PRAZO_RETIRADA_RESERVA_DIAS = 2;
+
     private final EmprestimoRepository emprestimoRepository;
     private final ExemplarRepository exemplarRepository;
     private final UsuarioRepository usuarioRepository;
     private final MultaRepository multaRepository;
     private final ReservaRepository reservaRepository;
-    private final ConfiguracaoBibliotecaService configuracaoService;
-    private final ApplicationEventPublisher eventPublisher;
+    private final ConfiguracaoBibliotecaService configuracaoBibliotecaService;
+    private final ApplicationEventPublisher applicationEventPublisher;
+    private final UsuarioAutenticadoProvider usuarioAutenticadoProvider;
+    private final EmailService emailService;
 
     // --- REGISTRA UM NOVO EMPRÉSTIMO ---
     @Transactional
     public EmprestimoResponseDTO registrar(EmprestimoRequestDTO dto) {
-        ConfiguracaoBiblioteca cfg = configuracaoService.obter();
+        ConfiguracaoBiblioteca configuracaoBiblioteca = configuracaoBibliotecaService.obter();
 
         Exemplar exemplar = resolverExemplar(dto);
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
@@ -76,15 +78,16 @@ public class EmprestimoService {
 
         long ativos = emprestimoRepository.countByUsuarioIdAndStatus(usuario.getId(), StatusEmprestimo.ATIVO)
                 + emprestimoRepository.countByUsuarioIdAndStatus(usuario.getId(), StatusEmprestimo.ATRASADO);
-        if (ativos >= cfg.getMaxEmprestimosSimultaneos()) {
+
+        if (ativos >= configuracaoBiblioteca.getMaxEmprestimosSimultaneos()) {
             throw new BusinessException("Limite de empréstimos simultâneos atingido ("
-                    + cfg.getMaxEmprestimosSimultaneos() + ").");
+                    + configuracaoBiblioteca.getMaxEmprestimosSimultaneos() + ").");
         }
 
         LocalDateTime agora = LocalDateTime.now();
-        int prazoDias = prazoDias(usuario, cfg);
+        int prazoDias = prazoDias(usuario, configuracaoBiblioteca);
 
-        Emprestimo emp = Emprestimo.builder()
+        Emprestimo emprestimo = Emprestimo.builder()
                 .exemplar(exemplar)
                 .usuario(usuario)
                 .dataEmprestimo(agora)
@@ -107,88 +110,93 @@ public class EmprestimoService {
                     reordenarFila(exemplar.getLivro().getId());
                 });
 
-        return toResponse(emprestimoRepository.save(emp));
+        return toResponse(emprestimoRepository.save(emprestimo));
     }
 
     // --- REGISTRA A DEVOLUÇÃO E GERA MULTA SE ATRASADO ---
     @Transactional
-    public EmprestimoResponseDTO devolver(UUID emprestimoId) {
-        Emprestimo emp = buscarEntidade(emprestimoId);
+    public EmprestimoResponseDTO devolver(Long emprestimoId) {
+        Emprestimo emprestimo = buscarEntidade(emprestimoId);
 
-        if (emp.getStatus() == StatusEmprestimo.DEVOLVIDO) {
+        if (emprestimo.getStatus() == StatusEmprestimo.DEVOLVIDO) {
             throw new BusinessException("Este empréstimo já foi devolvido.");
         }
 
         LocalDateTime agora = LocalDateTime.now();
-        emp.setDataDevolucaoEfetiva(agora);
-        emp.setStatus(StatusEmprestimo.DEVOLVIDO);
+        emprestimo.setDataDevolucaoEfetiva(agora);
+        emprestimo.setStatus(StatusEmprestimo.DEVOLVIDO);
 
-        int diasAtraso = calcularDiasAtraso(emp.getDataDevolucaoPrevista(), agora);
+        int diasAtraso = calcularDiasAtraso(emprestimo.getDataDevolucaoPrevista(), agora);
         if (diasAtraso > 0) {
-            gerarMulta(emp, diasAtraso);
+            gerarMulta(emprestimo, diasAtraso);
         }
 
         // --- ATUALIZA STATUS DO EXEMPLAR CONFORME FILA DE RESERVA ---
-        Exemplar exemplar = emp.getExemplar();
+        Exemplar exemplar = emprestimo.getExemplar();
         Optional<Reserva> primeiroDaFila = reservaRepository
                 .findFirstByLivroIdAndStatusOrderByPosicaoFilaAsc(exemplar.getLivro().getId(), StatusReserva.AGUARDANDO);
 
         if (primeiroDaFila.isPresent()) {
             exemplar.setStatus(StatusExemplar.RESERVADO);
+            Reserva reserva = primeiroDaFila.get();
+            reserva.setPrazoRetirada(agora.plusDays(PRAZO_RETIRADA_RESERVA_DIAS));
+            reservaRepository.save(reserva);
             log.info("Notificando usuário {} que o livro '{}' está disponível para retirada.",
-                    primeiroDaFila.get().getUsuario().getEmail(),
+                    reserva.getUsuario().getEmail(),
                     exemplar.getLivro().getTitulo());
         } else {
             exemplar.setStatus(StatusExemplar.DISPONIVEL);
         }
         exemplarRepository.save(exemplar);
 
-        return toResponse(emprestimoRepository.save(emp));
+        return toResponse(emprestimoRepository.save(emprestimo));
     }
 
     // --- RENOVA UM EMPRÉSTIMO EM ANDAMENTO ---
     @Transactional
-    public EmprestimoResponseDTO renovar(UUID emprestimoId) {
-        Emprestimo emp = buscarEntidade(emprestimoId);
-        ConfiguracaoBiblioteca cfg = configuracaoService.obter();
+    public EmprestimoResponseDTO renovar(Long emprestimoId) {
+        Emprestimo emprestimo = buscarEntidade(emprestimoId);
+        ConfiguracaoBiblioteca configuracaoBiblioteca = configuracaoBibliotecaService.obter();
 
-        if (emp.getStatus() == StatusEmprestimo.DEVOLVIDO) {
+        if (emprestimo.getStatus() == StatusEmprestimo.DEVOLVIDO) {
             throw new BusinessException("Empréstimo já devolvido não pode ser renovado.");
         }
 
-        if (emp.getRenovacoes() >= cfg.getMaxRenovacoes()) {
-            throw new BusinessException("Limite de renovações atingido (" + cfg.getMaxRenovacoes() + ").");
+        if (emprestimo.getRenovacoes() >= configuracaoBiblioteca.getMaxRenovacoes()) {
+            throw new BusinessException("Limite de renovações atingido (" + configuracaoBiblioteca.getMaxRenovacoes() + ").");
         }
 
-        if (multaRepository.existePendenteDoUsuario(emp.getUsuario().getId())) {
+        if (multaRepository.existePendenteDoUsuario(emprestimo.getUsuario().getId())) {
             throw new BusinessException("Usuário possui multa pendente. Renovação bloqueada.");
         }
 
         long aguardando = reservaRepository.countByLivroIdAndStatus(
-                emp.getExemplar().getLivro().getId(), StatusReserva.AGUARDANDO);
+                emprestimo.getExemplar().getLivro().getId(), StatusReserva.AGUARDANDO
+        );
+
         if (aguardando > 0) {
             throw new BusinessException("Existem reservas para este livro. Renovação não permitida.");
         }
 
-        int prazoDias = prazoDias(emp.getUsuario(), cfg);
-        LocalDateTime base = emp.getDataDevolucaoPrevista().isBefore(LocalDateTime.now())
+        int prazoDias = prazoDias(emprestimo.getUsuario(), configuracaoBiblioteca);
+        LocalDateTime base = emprestimo.getDataDevolucaoPrevista().isBefore(LocalDateTime.now())
                 ? LocalDateTime.now()
-                : emp.getDataDevolucaoPrevista();
-        emp.setDataDevolucaoPrevista(base.plusDays(prazoDias));
-        emp.setRenovacoes(emp.getRenovacoes() + 1);
-        emp.setStatus(StatusEmprestimo.ATIVO);
-        return toResponse(emprestimoRepository.save(emp));
+                : emprestimo.getDataDevolucaoPrevista();
+        emprestimo.setDataDevolucaoPrevista(base.plusDays(prazoDias));
+        emprestimo.setRenovacoes(emprestimo.getRenovacoes() + 1);
+        emprestimo.setStatus(StatusEmprestimo.ATIVO);
+        return toResponse(emprestimoRepository.save(emprestimo));
     }
 
     // --- LISTA OS EMPRÉSTIMOS DE UM USUÁRIO UTILIZANDO PAGINAÇÃO ---
     @Transactional(readOnly = true)
-    public Page<EmprestimoResponseDTO> listarPorUsuario(UUID usuarioId, Pageable pageable) {
+    public Page<EmprestimoResponseDTO> listarPorUsuario(Long usuarioId, Pageable pageable) {
         return emprestimoRepository.findByUsuarioId(usuarioId, pageable).map(this::toResponse);
     }
 
     // --- BUSCA UM EMPRÉSTIMO PELO SEU IDENTIFICADOR ---
     @Transactional(readOnly = true)
-    public EmprestimoResponseDTO buscarPorId(UUID id) {
+    public EmprestimoResponseDTO buscarPorId(Long id) {
         return toResponse(buscarEntidade(id));
     }
 
@@ -199,11 +207,20 @@ public class EmprestimoService {
                 .findByStatusAndDataDevolucaoPrevistaBefore(StatusEmprestimo.ATIVO, LocalDateTime.now());
         vencidos.forEach(e -> e.setStatus(StatusEmprestimo.ATRASADO));
         emprestimoRepository.saveAll(vencidos);
+        vencidos.forEach(this::notificarAtraso);
         return vencidos.size();
     }
 
+    // --- NOTIFICA O USUÁRIO QUE UM EMPRÉSTIMO SEU ACABOU DE FICAR ATRASADO ---
+    private void notificarAtraso(Emprestimo emprestimo) {
+        int diasAtraso = calcularDiasAtraso(emprestimo.getDataDevolucaoPrevista(), LocalDateTime.now());
+        Usuario usuario = emprestimo.getUsuario();
+        emailService.notificarEmprestimoAtrasado(usuario.getEmail(), usuario.getNome(),
+                emprestimo.getExemplar().getLivro().getTitulo(), diasAtraso);
+    }
+
     // --- BUSCA UM EMPRÉSTIMO PELO IDENTIFICADOR OU LANÇA UMA EXCEÇÃO CASO ELE NÃO SEJA ENCONTRADO ---
-    private Emprestimo buscarEntidade(UUID id) {
+    private Emprestimo buscarEntidade(Long id) {
         return emprestimoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Empréstimo", id));
     }
@@ -214,6 +231,7 @@ public class EmprestimoService {
             return exemplarRepository.findById(dto.getExemplarId())
                     .orElseThrow(() -> new ResourceNotFoundException("Exemplar", dto.getExemplarId()));
         }
+
         if (dto.getCodigoBarras() != null && !dto.getCodigoBarras().isBlank()) {
             return exemplarRepository.findByCodigoBarras(dto.getCodigoBarras().trim())
                     .orElseThrow(() -> new ResourceNotFoundException("Exemplar", dto.getCodigoBarras()));
@@ -238,7 +256,7 @@ public class EmprestimoService {
 
     // --- GERA A MULTA E DISPARA EVENTO PARA O MÓDULO FINANCEIRO ---
     private void gerarMulta(Emprestimo emp, int diasAtraso) {
-        ConfiguracaoBiblioteca cfg = configuracaoService.obter();
+        ConfiguracaoBiblioteca cfg = configuracaoBibliotecaService.obter();
         BigDecimal valor = cfg.getValorMultaDia().multiply(BigDecimal.valueOf(diasAtraso));
 
         Multa multa = Multa.builder()
@@ -249,7 +267,7 @@ public class EmprestimoService {
                 .build();
         multa = multaRepository.save(multa);
 
-        eventPublisher.publishEvent(new MultaGeradaEvent(
+        applicationEventPublisher.publishEvent(new MultaGeradaEvent(
                 multa.getId(),
                 emp.getId(),
                 emp.getUsuario().getId(),
@@ -260,7 +278,7 @@ public class EmprestimoService {
     }
 
     // --- REORDENA AS POSIÇÕES DOS USUÁRIOS QUE ESTÃO AGUARDANDO NA FILA DE RESERVA DO LIVRO ---
-    private void reordenarFila(UUID livroId) {
+    private void reordenarFila(Long livroId) {
         List<Reserva> fila = reservaRepository
                 .findByLivroIdAndStatusOrderByPosicaoFilaAsc(livroId, StatusReserva.AGUARDANDO);
         int pos = 1;
@@ -272,11 +290,8 @@ public class EmprestimoService {
 
     // --- RECUPERA O USUÁRIO AUTENTICADO OU LANÇA UMA EXCEÇÃO CASO ELE NÃO SEJA IDENTIFICADO ---
     private Usuario usuarioAutenticadoOuFalha() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !(auth.getPrincipal() instanceof UsuarioDetails ud)) {
-            throw new BusinessException("Usuário autenticado não identificado.");
-        }
-        return ud.getUsuario();
+        return usuarioAutenticadoProvider.obter()
+                .orElseThrow(() -> new BusinessException("Usuário autenticado não identificado."));
     }
 
     // --- CONVERTE A ENTIDADE EMPRÉSTIMO EM UM DTO DE RESPOSTA, INCLUINDO ATRASO E MULTA ---
@@ -289,6 +304,7 @@ public class EmprestimoService {
         if (baseComparacao.isAfter(e.getDataDevolucaoPrevista())) {
             diasAtraso = calcularDiasAtraso(e.getDataDevolucaoPrevista(), baseComparacao);
         }
+
         Optional<Multa> multaOptional = multaRepository.findAll().stream()
                 .filter(m -> m.getEmprestimo().getId().equals(e.getId()))
                 .findFirst();

@@ -8,8 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,10 +15,10 @@ import java.util.UUID;
 @Builder
 public class EmprestimoRequestDTO {
 
-    private UUID    exemplarId;
+    private Long    exemplarId;
     private String  codigoBarras;
 
     @NotNull
-    private UUID usuarioId;
+    private Long usuarioId;
 }
 

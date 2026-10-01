@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -23,7 +22,6 @@ import java.util.UUID;
 @Builder
 public class AlunoRequestDTO {
 
-    // --- DADOS DO USUÁRIO ASSOCIADO ---
     @NotBlank(message = "O nome é obrigatório.")
     @Size(max = 150)
     private String nome;
@@ -33,7 +31,6 @@ public class AlunoRequestDTO {
     @Size(max = 150)
     private String email;
 
-    // --- SENHA OPCIONAL ---
     @Size(min = 6, max = 100)
     private String senha;
 
@@ -45,7 +42,6 @@ public class AlunoRequestDTO {
 
     private LocalDate dataNascimento;
 
-    // --- DADOS ACADÊMICOS ---
     @NotBlank(message = "A matrícula (RA) é obrigatória.")
     @Size(max = 30)
     private String matriculaRA;
@@ -56,7 +52,7 @@ public class AlunoRequestDTO {
     @NotNull(message = "O status é obrigatório.")
     private StatusAluno status;
 
-    private UUID turmaAtualId;
+    private Long turmaAtualId;
 
     @Size(max = 1000)
     private String observacoes;

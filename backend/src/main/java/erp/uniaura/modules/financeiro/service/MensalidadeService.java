@@ -2,14 +2,17 @@ package erp.uniaura.modules.financeiro.service;
 
 import erp.uniaura.exception.BusinessException;
 import erp.uniaura.exception.ResourceNotFoundException;
-import erp.uniaura.infra.security.UsuarioDetails;
+import erp.uniaura.infra.email.EmailService;
+import erp.uniaura.infra.security.UsuarioAutenticadoProvider;
 import erp.uniaura.modules.aluno.model.Aluno;
 import erp.uniaura.modules.aluno.repository.AlunoRepository;
 import erp.uniaura.modules.auditoria.service.AuditoriaService;
+import erp.uniaura.modules.financeiro.dto.BoletoResponseDTO;
 import erp.uniaura.modules.financeiro.dto.MensalidadeRequestDTO;
 import erp.uniaura.modules.financeiro.dto.MensalidadeResponseDTO;
 import erp.uniaura.modules.financeiro.dto.PagamentoRequestDTO;
 import erp.uniaura.modules.financeiro.dto.PagamentoResponseDTO;
+import erp.uniaura.modules.financeiro.dto.PixResponseDTO;
 import erp.uniaura.modules.financeiro.model.FormaPagamento;
 import erp.uniaura.modules.financeiro.model.Mensalidade;
 import erp.uniaura.modules.financeiro.model.Pagamento;
@@ -23,26 +26,36 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class MensalidadeService {
 
+    private static final BigDecimal PERCENTUAL_MULTA_ATRASO = new BigDecimal("0.02");
+    private static final BigDecimal PERCENTUAL_JUROS_AO_DIA = new BigDecimal("0.00033");
+    private static final int MINUTOS_EXPIRACAO_PIX = 30;
+
     private final MensalidadeRepository mensalidadeRepository;
     private final PagamentoRepository pagamentoRepository;
     private final AlunoRepository alunoRepository;
     private final AuditoriaService auditoriaService;
+    private final UsuarioAutenticadoProvider usuarioAutenticadoProvider;
+    private final EmailService emailService;
 
     // --- LISTA MENSALIDADES COM FILTROS ---
     @Transactional(readOnly = true)
-    public Page<MensalidadeResponseDTO> listar(UUID alunoId, StatusMensalidade status, Pageable pageable) {
+    public Page<MensalidadeResponseDTO> listar(Long alunoId, StatusMensalidade status, Pageable pageable) {
         Page<Mensalidade> page;
+
         if (alunoId != null && status != null) {
             page = mensalidadeRepository.findByAlunoIdAndStatus(alunoId, status, pageable);
         } else if (alunoId != null) {
@@ -52,6 +65,7 @@ public class MensalidadeService {
         } else {
             page = mensalidadeRepository.findAll(pageable);
         }
+
         return page.map(this::toResponse);
     }
 
@@ -62,8 +76,9 @@ public class MensalidadeService {
         return mensalidadeRepository.findByAlunoId(aluno.getId(), pageable).map(this::toResponse);
     }
 
+    // --- BUSCA UMA MENSALIDADE PELO SEU IDENTIFICADOR ---
     @Transactional(readOnly = true)
-    public MensalidadeResponseDTO buscarPorId(UUID id) {
+    public MensalidadeResponseDTO buscarPorId(Long id) {
         return toResponse(buscarEntidade(id));
     }
 
@@ -91,7 +106,7 @@ public class MensalidadeService {
 
     // --- ATUALIZA OS DADOS DE UMA MENSALIDADE AINDA NÃO PAGA ---
     @Transactional
-    public MensalidadeResponseDTO atualizar(UUID id, MensalidadeRequestDTO dto) {
+    public MensalidadeResponseDTO atualizar(Long id, MensalidadeRequestDTO dto) {
         Mensalidade mensalidade = buscarEntidade(id);
 
         if (mensalidade.getStatus() == StatusMensalidade.PAGA) {
@@ -117,7 +132,7 @@ public class MensalidadeService {
 
     // --- REMOVE UMA MENSALIDADE AINDA NÃO PAGA ---
     @Transactional
-    public void deletar(UUID id) {
+    public void deletar(Long id) {
         Mensalidade mensalidade = buscarEntidade(id);
 
         if (mensalidade.getStatus() == StatusMensalidade.PAGA) {
@@ -129,7 +144,7 @@ public class MensalidadeService {
 
     // --- REGISTRA O PAGAMENTO DE UMA MENSALIDADE ---
     @Transactional
-    public MensalidadeResponseDTO registrarPagamento(UUID id, PagamentoRequestDTO dto) {
+    public MensalidadeResponseDTO registrarPagamento(Long id, PagamentoRequestDTO dto) {
         Mensalidade mensalidade = buscarEntidade(id);
         Usuario autenticado = usuarioAutenticadoOuFalha();
 
@@ -138,6 +153,7 @@ public class MensalidadeService {
         if (mensalidade.getStatus() == StatusMensalidade.PAGA) {
             throw new BusinessException("Esta mensalidade já está paga.");
         }
+
         if (mensalidade.getStatus() == StatusMensalidade.CANCELADA) {
             throw new BusinessException("Não é possível pagar uma mensalidade cancelada.");
         }
@@ -147,10 +163,13 @@ public class MensalidadeService {
             throw new BusinessException("Para pagamento com cartão, informe número, validade e CVV (dados fictícios).");
         }
 
+        BigDecimal valorMulta = calcularMulta(mensalidade);
+
         Pagamento pagamento = Pagamento.builder()
                 .mensalidade(mensalidade)
                 .formaPagamento(dto.getFormaPagamento())
-                .valorPago(mensalidade.getValor())
+                .valorPago(mensalidade.getValor().add(valorMulta))
+                .valorMulta(valorMulta)
                 .cartaoFinal(ultimosDigitos(dto.getCartaoNumero()))
                 .build();
         pagamentoRepository.save(pagamento);
@@ -164,9 +183,93 @@ public class MensalidadeService {
         return toResponse(mensalidade);
     }
 
-    // --- HELPERS ---
+    // --- MARCA COMO ATRASADA TODA MENSALIDADE PENDENTE COM VENCIMENTO EXPIRADO ---
+    @Transactional
+    public int marcarMensalidadesAtrasadas() {
+        List<Mensalidade> vencidas = mensalidadeRepository
+                .findByStatusAndVencimentoBefore(StatusMensalidade.PENDENTE, LocalDate.now());
+        vencidas.forEach(m -> m.setStatus(StatusMensalidade.ATRASADA));
+        mensalidadeRepository.saveAll(vencidas);
+        vencidas.forEach(this::notificarAtraso);
+        return vencidas.size();
+    }
 
-    private Mensalidade buscarEntidade(UUID id) {
+    // --- NOTIFICA O ALUNO QUE UMA MENSALIDADE SUA ACABOU DE FICAR ATRASADA ---
+    private void notificarAtraso(Mensalidade mensalidade) {
+        Usuario usuario = mensalidade.getAluno().getUsuario();
+        if (usuario == null) {
+            return;
+        }
+        emailService.notificarMensalidadeAtrasada(usuario.getEmail(), usuario.getNome(),
+                mensalidade.getCompetencia(), mensalidade.getValor());
+    }
+
+    // --- GERA UM PIX FICTÍCIO (COPIA E COLA) PARA PAGAMENTO DA MENSALIDADE ---
+    @Transactional(readOnly = true)
+    public PixResponseDTO gerarPix(Long id) {
+        Mensalidade mensalidade = buscarEntidade(id);
+        validarPendenteOuAtrasada(mensalidade);
+
+        BigDecimal valorTotal = mensalidade.getValor().add(calcularMulta(mensalidade));
+        String payload = "00020126580014BR.GOV.BCB.PIX0136uniaura-ficticio-%06d520400005303986540%s5802BR5913UNIAURA ERP6009SAO PAULO62070503***6304FICT"
+                .formatted(mensalidade.getId(), valorTotal.setScale(2, RoundingMode.HALF_UP));
+
+        return PixResponseDTO.builder()
+                .payload(payload)
+                .valor(valorTotal)
+                .expiraEm(LocalDateTime.now().plusMinutes(MINUTOS_EXPIRACAO_PIX))
+                .build();
+    }
+
+    // --- GERA UM BOLETO FICTÍCIO PARA PAGAMENTO DA MENSALIDADE ---
+    @Transactional(readOnly = true)
+    public BoletoResponseDTO gerarBoleto(Long id) {
+        Mensalidade mensalidade = buscarEntidade(id);
+        validarPendenteOuAtrasada(mensalidade);
+
+        BigDecimal valorTotal = mensalidade.getValor().add(calcularMulta(mensalidade));
+        long centavos = valorTotal.multiply(BigDecimal.valueOf(100)).longValue();
+        String codigoBarras = "%03d9%01d%010d%010d%010d"
+                .formatted(237, 9, centavos, mensalidade.getId(), mensalidade.getId() * 7 + 13);
+        String linhaDigitavel = "%s.%s %s.%s %s.%s %s %s".formatted(
+                codigoBarras.substring(0, 5), codigoBarras.substring(5, 10),
+                codigoBarras.substring(10, 15), codigoBarras.substring(15, 21),
+                codigoBarras.substring(21, 26), codigoBarras.substring(26, 32),
+                codigoBarras.substring(32, 33), codigoBarras.substring(33));
+
+        return BoletoResponseDTO.builder()
+                .linhaDigitavel(linhaDigitavel)
+                .codigoBarras(codigoBarras)
+                .valor(valorTotal)
+                .vencimento(mensalidade.getVencimento())
+                .build();
+    }
+
+    // --- CALCULA MULTA + JUROS PRO RATA PARA MENSALIDADES EM ATRASO ---
+    private BigDecimal calcularMulta(Mensalidade mensalidade) {
+        if (mensalidade.getStatus() != StatusMensalidade.ATRASADA) {
+            return BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+        }
+
+        long diasAtraso = Math.max(0, ChronoUnit.DAYS.between(mensalidade.getVencimento(), LocalDate.now()));
+        BigDecimal percentualJuros = PERCENTUAL_JUROS_AO_DIA.multiply(BigDecimal.valueOf(diasAtraso));
+        BigDecimal percentualTotal = PERCENTUAL_MULTA_ATRASO.add(percentualJuros);
+
+        return mensalidade.getValor().multiply(percentualTotal).setScale(2, RoundingMode.HALF_UP);
+    }
+
+    // --- SÓ É POSSÍVEL GERAR PIX/BOLETO PARA MENSALIDADE AINDA NÃO PAGA/CANCELADA ---
+    private void validarPendenteOuAtrasada(Mensalidade mensalidade) {
+        if (mensalidade.getStatus() == StatusMensalidade.PAGA) {
+            throw new BusinessException("Esta mensalidade já está paga.");
+        }
+        if (mensalidade.getStatus() == StatusMensalidade.CANCELADA) {
+            throw new BusinessException("Não é possível gerar cobrança para uma mensalidade cancelada.");
+        }
+    }
+
+    // --- BUSCA A ENTIDADE ---
+    private Mensalidade buscarEntidade(Long id) {
         return mensalidadeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Mensalidade", id));
     }
@@ -196,6 +299,7 @@ public class MensalidadeService {
         }
     }
 
+    // --- MASCARA O NÚMERO DO CARTÃO, MANTENDO SOMENTE OS ÚLTIMOS 4 DÍGITOS ---
     private String ultimosDigitos(String cartaoNumero) {
         if (cartaoNumero == null || cartaoNumero.length() < 4) {
             return cartaoNumero;
@@ -203,20 +307,20 @@ public class MensalidadeService {
         return cartaoNumero.substring(cartaoNumero.length() - 4);
     }
 
+    // --- RECUPERA O USUÁRIO AUTENTICADO ---
     private Usuario usuarioAutenticadoOuFalha() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !(auth.getPrincipal() instanceof UsuarioDetails ud)) {
-            throw new BusinessException("Usuário autenticado não identificado.");
-        }
-        return ud.getUsuario();
+        return usuarioAutenticadoProvider.obter()
+                .orElseThrow(() -> new BusinessException("Usuário autenticado não identificado."));
     }
 
+    // --- CONVERTE A ENTIDADE EM UM DTO DE RESPOSTA ---
     private MensalidadeResponseDTO toResponse(Mensalidade m) {
         PagamentoResponseDTO pagamentoDto = pagamentoRepository.findByMensalidadeId(m.getId())
                 .map(p -> PagamentoResponseDTO.builder()
                         .id(p.getId())
                         .formaPagamento(p.getFormaPagamento())
                         .valorPago(p.getValorPago())
+                        .valorMulta(p.getValorMulta())
                         .cartaoFinal(p.getCartaoFinal())
                         .dataPagamento(p.getDataPagamento())
                         .build())

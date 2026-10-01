@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -16,9 +15,9 @@ import java.util.UUID;
 @Builder
 public class ProfessorDisciplinaResponseDTO {
 
-    private UUID            id;
-    private UUID            professorId;
-    private UUID            disciplinaId;
+    private Long            id;
+    private Long            professorId;
+    private Long            disciplinaId;
     private LocalDateTime   criadoEm;
 }
 

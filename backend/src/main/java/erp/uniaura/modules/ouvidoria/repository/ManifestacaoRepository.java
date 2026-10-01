@@ -12,18 +12,17 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface ManifestacaoRepository extends JpaRepository<Manifestacao, UUID> {
+public interface ManifestacaoRepository extends JpaRepository<Manifestacao, Long> {
 
     Optional<Manifestacao> findByProtocolo(String protocolo);
 
     boolean existsByProtocolo(String protocolo);
 
-    Page<Manifestacao> findByAutorId(UUID autorId, Pageable pageable);
+    Page<Manifestacao> findByAutorId(Long autorId, Pageable pageable);
 
-    Page<Manifestacao> findByAutorIdAndStatus(UUID autorId, StatusManifestacao status, Pageable pageable);
+    Page<Manifestacao> findByAutorIdAndStatus(Long autorId, StatusManifestacao status, Pageable pageable);
 
     // --- LISTAGEM DA OUVIDORIA, COM FILTROS OPCIONAIS DE STATUS E TIPO ---
     @Query("""

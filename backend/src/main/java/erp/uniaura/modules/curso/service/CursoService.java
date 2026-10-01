@@ -1,6 +1,7 @@
 package erp.uniaura.modules.curso.service;
 
 import erp.uniaura.exception.ResourceNotFoundException;
+import erp.uniaura.infra.config.CacheConfig;
 import erp.uniaura.modules.curso.dto.CursoRequestDTO;
 import erp.uniaura.modules.curso.dto.CursoResponseDTO;
 import erp.uniaura.modules.curso.model.Curso;
@@ -9,12 +10,12 @@ import erp.uniaura.modules.curso.repository.CursoRepository;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -22,8 +23,9 @@ public class CursoService {
 
     private final CursoRepository cursoRepository;
 
-    // --- LISTA CURSOS ---
+    // --- LISTA CURSOS (CATÁLOGO PÚBLICO, MUDA RARO) ---
     @Transactional(readOnly = true)
+    @Cacheable(value = CacheConfig.CACHE_CURSOS, key = "#nivel + '-' + #pageable")
     public Page<CursoResponseDTO> listar(NivelCurso nivel, Pageable pageable) {
         Page<Curso> page = (nivel == null)
                 ? cursoRepository.findAll(pageable)
@@ -33,19 +35,21 @@ public class CursoService {
 
     // --- BUSCA CURSO POR ID ---
     @Transactional(readOnly = true)
-    public CursoResponseDTO buscarPorId(UUID id) {
+    @Cacheable(value = CacheConfig.CACHE_CURSOS, key = "#id")
+    public CursoResponseDTO buscarPorId(Long id) {
         return toResponse(buscarEntidade(id));
     }
 
     // --- EXPÕE A ENTIDADE PARA OUTROS SERVICES ---
     @Transactional(readOnly = true)
-    public Curso buscarEntidade(UUID id) {
+    public Curso buscarEntidade(Long id) {
         return cursoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Curso", id));
     }
 
     // --- CRIA UM NOVO CURSO ---
     @Transactional
+    @CacheEvict(value = CacheConfig.CACHE_CURSOS, allEntries = true)
     public CursoResponseDTO criar(CursoRequestDTO dto) {
         Curso curso = Curso.builder()
                 .nome(dto.getNome())
@@ -60,8 +64,10 @@ public class CursoService {
 
     // --- ATUALIZA OS DADOS DE UM CURSO EXISTENTE ---
     @Transactional
-    public CursoResponseDTO atualizar(UUID id, CursoRequestDTO dto) {
+    @CacheEvict(value = CacheConfig.CACHE_CURSOS, allEntries = true)
+    public CursoResponseDTO atualizar(Long id, CursoRequestDTO dto) {
         Curso curso = buscarEntidade(id);
+
         curso.setNome(dto.getNome());
         curso.setDescricao(dto.getDescricao());
         curso.setNivel(dto.getNivel());
@@ -76,7 +82,8 @@ public class CursoService {
 
     // --- REMOVE UM CURSO ---
     @Transactional
-    public void deletar(UUID id) {
+    @CacheEvict(value = CacheConfig.CACHE_CURSOS, allEntries = true)
+    public void deletar(Long id) {
         Curso curso = buscarEntidade(id);
         cursoRepository.delete(curso);
     }

@@ -1,5 +1,6 @@
 package erp.uniaura.modules.biblioteca.emprestimo.model;
 
+import erp.uniaura.infra.persistence.SqlServerBaseEntity;
 import erp.uniaura.modules.biblioteca.exemplar.model.Exemplar;
 import erp.uniaura.modules.usuario.model.Usuario;
 
@@ -14,7 +15,6 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -23,21 +23,14 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "emprestimo")
-public class Emprestimo {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+public class Emprestimo extends SqlServerBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "exemplarId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkEmprestimoExemplar"))
+    @JoinColumn(name = "exemplarId", nullable = false, foreignKey = @ForeignKey(name = "fkEmprestimoExemplar"))
     private Exemplar exemplar;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "usuarioId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkEmprestimoUsuario"))
+    @JoinColumn(name = "usuarioId", nullable = false, foreignKey = @ForeignKey(name = "fkEmprestimoUsuario"))
     private Usuario usuario;
 
     @Column(name = "dataEmprestimo", nullable = false)
@@ -57,8 +50,7 @@ public class Emprestimo {
     private StatusEmprestimo status;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "criadoPorId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkEmprestimoCriadoPor"))
+    @JoinColumn(name = "criadoPorId", nullable = false,  foreignKey = @ForeignKey(name = "fkEmprestimoCriadoPor"))
     private Usuario criadoPor;
 
     @CreationTimestamp

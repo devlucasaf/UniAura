@@ -33,7 +33,7 @@ public class LocalStorageService implements StorageService {
     @PostConstruct
     public void init() {
         try {
-            baseDir = Paths.get(properties.getLocal().getBasePath()).toAbsolutePath().normalize();
+            baseDir = Paths.get(properties.getLocalStorage().getBasePath()).toAbsolutePath().normalize();
             Files.createDirectories(baseDir);
             log.info("LocalStorageService inicializado em: {}", baseDir);
         } catch (IOException ex) {
@@ -65,7 +65,7 @@ public class LocalStorageService implements StorageService {
             Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
 
             // --- URL PÚBLICA RELATIVA ---
-            return properties.getLocal().getPublicBaseUrl() + "/" + sanitizeSubDir(subDir) + "/" + safeName;
+            return properties.getLocalStorage().getPublicBaseUrl() + "/" + sanitizeSubDir(subDir) + "/" + safeName;
         } catch (IOException ex) {
             log.error("Falha ao salvar arquivo no storage local", ex);
             throw new BusinessException("Falha ao salvar arquivo: " + ex.getMessage());
@@ -79,9 +79,9 @@ public class LocalStorageService implements StorageService {
             return;
         }
 
-        String prefix = properties.getLocal().getPublicBaseUrl();
+        String prefix = properties.getLocalStorage().getPublicBaseUrl();
         if (!url.startsWith(prefix)) {
-            log.warn("Tentativa de deletar URL fora do storage local: {}", url);
+            log.warn("Tentativa de deletarMaterial URL fora do storage local: {}", url);
             return;
         }
 
@@ -89,12 +89,12 @@ public class LocalStorageService implements StorageService {
         try {
             Path target = baseDir.resolve(relative).normalize();
             if (!target.startsWith(baseDir)) {
-                log.warn("Tentativa de deletar fora do baseDir: {}", target);
+                log.warn("Tentativa de deletarMaterial fora do baseDir: {}", target);
                 return;
             }
             Files.deleteIfExists(target);
         } catch (IOException ex) {
-            log.warn("Falha ao deletar arquivo {}: {}", url, ex.getMessage());
+            log.warn("Falha ao deletarMaterial arquivo {}: {}", url, ex.getMessage());
         }
     }
 

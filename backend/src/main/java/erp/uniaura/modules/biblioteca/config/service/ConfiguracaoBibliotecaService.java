@@ -1,12 +1,15 @@
 package erp.uniaura.modules.biblioteca.config.service;
 
 import erp.uniaura.exception.BusinessException;
+import erp.uniaura.infra.config.CacheConfig;
 import erp.uniaura.modules.biblioteca.config.dto.ConfiguracaoBibliotecaDTO;
 import erp.uniaura.modules.biblioteca.config.model.ConfiguracaoBiblioteca;
 import erp.uniaura.modules.biblioteca.config.repository.ConfiguracaoBibliotecaRepository;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,8 +19,9 @@ public class ConfiguracaoBibliotecaService {
 
     private final ConfiguracaoBibliotecaRepository configuracaoBibliotecaRepository;
 
-    // --- RETORNA A ÚNICA LINHA DE CONFIGURAÇÃO ---
+    // --- RETORNA A ÚNICA LINHA DE CONFIGURAÇÃO (LIDA EM TODO EMPRÉSTIMO/RENOVAÇÃO, VALE CACHE) ---
     @Transactional(readOnly = true)
+    @Cacheable(CacheConfig.CACHE_CONFIGURACAO_BIBLIOTECA)
     public ConfiguracaoBiblioteca obter() {
         return configuracaoBibliotecaRepository.findAll().stream().findFirst()
                 .orElseThrow(() -> new BusinessException(
@@ -26,6 +30,7 @@ public class ConfiguracaoBibliotecaService {
 
     // --- ATUALIZA OS PARÂMETROS GLOBAIS ---
     @Transactional
+    @CacheEvict(CacheConfig.CACHE_CONFIGURACAO_BIBLIOTECA)
     public ConfiguracaoBiblioteca atualizar(ConfiguracaoBibliotecaDTO dto) {
         ConfiguracaoBiblioteca configuracaoBiblioteca = obter();
 

@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -18,10 +17,10 @@ import java.util.UUID;
 @Builder
 public class ReservaResponseDTO {
 
-    private UUID            id;
-    private UUID            livroId;
+    private Long            id;
+    private Long            livroId;
     private String          livroTitulo;
-    private UUID            usuarioId;
+    private Long            usuarioId;
     private String          usuarioNome;
     private LocalDateTime   dataReserva;
     private StatusReserva   status;

@@ -1,13 +1,12 @@
 package erp.uniaura.modules.professor.model;
 
+import erp.uniaura.infra.persistence.SqlServerBaseEntity;
 import erp.uniaura.modules.usuario.model.Usuario;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -23,7 +22,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -32,12 +30,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "professor")
-public class Professor {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+public class Professor extends SqlServerBaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "usuarioId", nullable = false, unique = true,

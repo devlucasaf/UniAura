@@ -12,18 +12,17 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface ProcessoRepository extends JpaRepository<Processo, UUID> {
+public interface ProcessoRepository extends JpaRepository<Processo, Long> {
 
     Optional<Processo> findByProtocolo(String protocolo);
 
     boolean existsByProtocolo(String protocolo);
 
-    Page<Processo> findByAlunoId(UUID alunoId, Pageable pageable);
+    Page<Processo> findByAlunoId(Long alunoId, Pageable pageable);
 
-    Page<Processo> findByAlunoIdAndStatus(UUID alunoId, StatusProcesso status, Pageable pageable);
+    Page<Processo> findByAlunoIdAndStatus(Long alunoId, StatusProcesso status, Pageable pageable);
 
     // --- LISTAGEM DA SECRETARIA, COM FILTROS OPCIONAIS DE STATUS E TIPO ---
     @Query("""

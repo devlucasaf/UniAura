@@ -11,7 +11,6 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -20,7 +19,7 @@ import java.util.UUID;
 @Builder
 public class FuncionarioResponseDTO {
 
-    private UUID                id;
+    private Long                id;
     private UsuarioResponseDTO  usuario;
     private CargoFuncionario    cargo;
     private LocalDate           dataAdmissao;

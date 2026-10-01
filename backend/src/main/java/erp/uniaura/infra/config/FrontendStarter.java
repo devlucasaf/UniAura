@@ -21,11 +21,10 @@ public class FrontendStarter {
     private static final String RESET_COLOR = "\u001B[0m";
     private static final String FRONTEND_DIR = "../frontend";
     private static final String FRONTEND_URL = "http://localhost:5173";
-    private static final String SWAGGER_URL  = "http://localhost:8080/api/swagger-ui.html";
-    private static final String BACKEND_URL  = "http://localhost:8080/api";
+    private static final String SWAGGER_URL = "http://localhost:8080/api/swagger-ui.html";
+    private static final String BACKEND_URL = "http://localhost:8080/api";
 
-
-    // --- EXECUTA ASSIM QUE A APLICACAO FICA PRONTA ---
+    // --- EXECUTA ASSIM QUE A APLICAÇÃO FICA PRONTA ---
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReady() {
         System.out.println();
@@ -33,7 +32,7 @@ public class FrontendStarter {
         System.out.println("  ERP Sistema Acadêmico Universitário - Iniciando ambiente de desenvolvimento  ");
         System.out.println("------------------------------------------------------------------------------------");
 
-        // --- INICIA O FRONTEND EM UMA THREAD SEPARADA PARA NAO BLOQUEAR O SPRING ---
+        // --- INICIA O FRONTEND EM UMA THREAD SEPARADA PARA NÃO BLOQUEAR O SPRING ---
         new Thread(() -> {
             try {
                 if (isViteRodando()) {
@@ -71,7 +70,7 @@ public class FrontendStarter {
         }, "frontend-starter").start();
     }
 
-    // --- VERIFICA SE O VITE JA ESTA RODANDO NA PORTA 5173 ---
+    // --- VERIFICA SE O VITE JÁ ESTÁ RODANDO NA PORTA 5173 ---
     private boolean isViteRodando() {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL(FRONTEND_URL).openConnection();

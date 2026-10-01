@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +38,7 @@ public class DisciplinaService {
 
     // --- BUSCA DISCIPLINA POR ID ---
     @Transactional(readOnly = true)
-    public DisciplinaResponseDTO buscarPorId(UUID id) {
+    public DisciplinaResponseDTO buscarPorId(Long id) {
         return toResponse(buscarEntidade(id));
     }
 
@@ -53,7 +52,7 @@ public class DisciplinaService {
 
     // --- LISTA AS DISCIPLINAS DE UM CURSO ESPECÍFICO ---
     @Transactional(readOnly = true)
-    public Page<DisciplinaResponseDTO> listarPorCurso(UUID cursoId, Pageable pageable) {
+    public Page<DisciplinaResponseDTO> listarPorCurso(Long cursoId, Pageable pageable) {
         cursoService.buscarEntidade(cursoId);
         return disciplinaRepository.findByCursoId(cursoId, pageable).map(this::toResponse);
     }
@@ -82,7 +81,7 @@ public class DisciplinaService {
 
     // --- ATUALIZA UMA DISCIPLINA EXISTENTE ---
     @Transactional
-    public DisciplinaResponseDTO atualizar(UUID id, DisciplinaRequestDTO dto) {
+    public DisciplinaResponseDTO atualizar(Long id, DisciplinaRequestDTO dto) {
         Disciplina disciplina = buscarEntidade(id);
 
         if (!disciplina.getCodigo().equalsIgnoreCase(dto.getCodigo())
@@ -109,14 +108,14 @@ public class DisciplinaService {
 
     // --- REMOVE UMA DISCIPLINA ---
     @Transactional
-    public void deletar(UUID id) {
+    public void deletar(Long id) {
         Disciplina disciplina = buscarEntidade(id);
         disciplinaRepository.delete(disciplina);
     }
 
     // --- LISTA OS PRÉ-REQUISITOS DE UMA DISCIPLINA ---
     @Transactional(readOnly = true)
-    public List<DisciplinaPrerequisitoResponseDTO> listarPrerequisitos(UUID disciplinaId) {
+    public List<DisciplinaPrerequisitoResponseDTO> listarPrerequisitos(Long disciplinaId) {
         buscarEntidade(disciplinaId);
         return disciplinaPrerequisitoRepository.findByDisciplinaId(disciplinaId)
                 .stream()
@@ -126,7 +125,7 @@ public class DisciplinaService {
 
     // --- VINCULA UM PRÉ-REQUISITO À DISCIPLINA ---
     @Transactional
-    public DisciplinaPrerequisitoResponseDTO vincularPrerequisito(UUID disciplinaId,
+    public DisciplinaPrerequisitoResponseDTO vincularPrerequisito(Long disciplinaId,
                                                                   VincularPrerequisitoRequestDTO dto) {
         if (disciplinaId.equals(dto.getPrerequisitoId())) {
             throw new BusinessException("Uma disciplina não pode ser pré-requisito de si mesma.");
@@ -150,7 +149,7 @@ public class DisciplinaService {
 
     // --- REMOVE O VÍNCULO DE PRÉ-REQUISITO ---
     @Transactional
-    public void desvincularPrerequisito(UUID disciplinaId, UUID prerequisitoId) {
+    public void desvincularPrerequisito(Long disciplinaId, Long prerequisitoId) {
         DisciplinaPrerequisito vinculo = disciplinaPrerequisitoRepository
                 .findByDisciplinaIdAndPrerequisitoId(disciplinaId, prerequisitoId)
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -160,7 +159,7 @@ public class DisciplinaService {
 
     // --- EXPÕE A ENTIDADE PARA OUTROS SERVICES ---
     @Transactional(readOnly = true)
-    public Disciplina buscarEntidade(UUID id) {
+    public Disciplina buscarEntidade(Long id) {
         return disciplinaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Disciplina", id));
     }

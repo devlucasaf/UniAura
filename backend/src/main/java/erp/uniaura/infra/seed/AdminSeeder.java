@@ -29,7 +29,7 @@ public class AdminSeeder implements CommandLineRunner {
             return;
         }
 
-        Usuario admin = Usuario.builder()
+        Usuario usuarioAdmin = Usuario.builder()
                 .nome("Administrador")
                 .email(ADMIN_EMAIL)
                 .senha(passwordEncoder.encode(ADMIN_SENHA))
@@ -37,8 +37,8 @@ public class AdminSeeder implements CommandLineRunner {
                 .role(TipoUsuario.ADMIN)
                 .build();
 
-        usuarioRepository.save(admin);
-        log.info("Usuario admin inicial criado: {} / {}", ADMIN_EMAIL, ADMIN_SENHA);
+        usuarioRepository.save(usuarioAdmin);
+        log.info("Usuario usuarioAdmin inicial criado: {} / {}", ADMIN_EMAIL, ADMIN_SENHA);
     }
 }
 

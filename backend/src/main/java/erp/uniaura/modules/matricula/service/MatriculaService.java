@@ -2,7 +2,7 @@ package erp.uniaura.modules.matricula.service;
 
 import erp.uniaura.exception.BusinessException;
 import erp.uniaura.exception.ResourceNotFoundException;
-import erp.uniaura.infra.security.UsuarioDetails;
+import erp.uniaura.infra.security.UsuarioAutenticadoProvider;
 import erp.uniaura.modules.aluno.model.Aluno;
 import erp.uniaura.modules.aluno.repository.AlunoRepository;
 import erp.uniaura.modules.matricula.dto.AlterarStatusMatriculaRequestDTO;
@@ -19,13 +19,10 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -34,10 +31,11 @@ public class MatriculaService {
     private final MatriculaRepository matriculaRepository;
     private final AlunoRepository alunoRepository;
     private final TurmaRepository turmaRepository;
+    private final UsuarioAutenticadoProvider usuarioAutenticadoProvider;
 
     // --- LISTA MATRÍCULAS ---
     @Transactional(readOnly = true)
-    public Page<MatriculaResponseDTO> listar(UUID alunoId, Pageable pageable) {
+    public Page<MatriculaResponseDTO> listar(Long alunoId, Pageable pageable) {
         Page<Matricula> page = (alunoId == null)
                 ? matriculaRepository.findAll(pageable)
                 : matriculaRepository.findByAlunoId(alunoId, pageable);
@@ -46,7 +44,7 @@ public class MatriculaService {
 
     // --- BUSCA MATRÍCULA POR ID ---
     @Transactional(readOnly = true)
-    public MatriculaResponseDTO buscarPorId(UUID id) {
+    public MatriculaResponseDTO buscarPorId(Long id) {
         return toResponse(buscarEntidade(id));
     }
 
@@ -65,8 +63,7 @@ public class MatriculaService {
 
         if (matriculaRepository.existsByAlunoIdAndTurmaPeriodoLetivoAndStatus(
                 aluno.getId(), turma.getPeriodoLetivo(), StatusMatricula.ATIVA)) {
-            throw new BusinessException(
-                    "O aluno já possui matrícula ATIVA no período letivo " + turma.getPeriodoLetivo() + ".");
+            throw new BusinessException("O aluno já possui matrícula ATIVA no período letivo " + turma.getPeriodoLetivo() + ".");
         }
 
         long ocupadas = matriculaRepository.countByTurmaIdAndStatus(turma.getId(), StatusMatricula.ATIVA);
@@ -95,18 +92,19 @@ public class MatriculaService {
 
     // --- TRANCA UMA MATRÍCULA ATIVA ---
     @Transactional
-    public MatriculaResponseDTO trancar(UUID id, AlterarStatusMatriculaRequestDTO dto) {
-        return alterarStatus(id, StatusMatricula.TRANCADA, dto, true);
+    public MatriculaResponseDTO trancar(Long id, AlterarStatusMatriculaRequestDTO alterarStatusMatriculaDTO) {
+        return alterarStatus(id, StatusMatricula.TRANCADA, alterarStatusMatriculaDTO, true);
     }
 
     // --- CANCELA UMA MATRÍCULA ---
     @Transactional
-    public MatriculaResponseDTO cancelar(UUID id, AlterarStatusMatriculaRequestDTO dto) {
-        return alterarStatus(id, StatusMatricula.CANCELADA, dto, true);
+    public MatriculaResponseDTO cancelar(Long id, AlterarStatusMatriculaRequestDTO alterarStatusMatriculaDTO) {
+        return alterarStatus(id, StatusMatricula.CANCELADA, alterarStatusMatriculaDTO, true);
     }
 
     // --- ALTERA O STATUS DE UMA MATRÍCULA ATIVA E LIBERA A TURMA ATUAL DO ALUNO QUANDO NECESSÁRIO ---
-    private MatriculaResponseDTO alterarStatus(UUID id, StatusMatricula novoStatus, AlterarStatusMatriculaRequestDTO dto, boolean liberarTurmaAtualDoAluno) {
+    private MatriculaResponseDTO alterarStatus(Long id, StatusMatricula novoStatus,
+           AlterarStatusMatriculaRequestDTO alterarStatusMatriculaDTO, boolean liberarTurmaAtualDoAluno) {
         Matricula matricula = buscarEntidade(id);
 
         if (matricula.getStatus() != StatusMatricula.ATIVA) {
@@ -115,8 +113,8 @@ public class MatriculaService {
         }
 
         matricula.setStatus(novoStatus);
-        if (dto != null && dto.getObservacoes() != null) {
-            matricula.setObservacoes(dto.getObservacoes());
+        if (alterarStatusMatriculaDTO != null && alterarStatusMatriculaDTO.getObservacoes() != null) {
+            matricula.setObservacoes(alterarStatusMatriculaDTO.getObservacoes());
         }
 
         if (liberarTurmaAtualDoAluno) {
@@ -131,43 +129,34 @@ public class MatriculaService {
     }
 
     // --- BUSCA UMA MATRÍCULA PELO IDENTIFICADOR OU LANÇA UMA EXCEÇÃO CASO ELA NÃO SEJA ENCONTRADA ---
-    private Matricula buscarEntidade(UUID id) {
+    private Matricula buscarEntidade(Long id) {
         return matriculaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Matrícula", id));
     }
 
     // --- RECUPERA O USUÁRIO AUTENTICADO A PARTIR DO SECURITY CONTEXT ---
     private Usuario usuarioAutenticado() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !auth.isAuthenticated()) {
-            return null;
-        }
-
-        Object principal = auth.getPrincipal();
-        if (principal instanceof UsuarioDetails details) {
-            return details.getUsuario();
-        }
-        return null;
+        return usuarioAutenticadoProvider.obter().orElse(null);
     }
 
     // --- CONVERTE A ENTIDADE MATRÍCULA EM UM DTO DE RESPOSTA ---
-    private MatriculaResponseDTO toResponse(Matricula m) {
-        Usuario criador = m.getCriadaPor();
+    private MatriculaResponseDTO toResponse(Matricula matricula) {
+        Usuario usuarioCriador = matricula.getCriadaPor();
         return MatriculaResponseDTO.builder()
-                .id(m.getId())
-                .alunoId(m.getAluno().getId())
-                .alunoNome(m.getAluno().getUsuario().getNome())
-                .alunoMatriculaRA(m.getAluno().getMatriculaRA())
-                .turmaId(m.getTurma().getId())
-                .turmaCodigo(m.getTurma().getCodigo())
-                .turmaPeriodoLetivo(m.getTurma().getPeriodoLetivo())
-                .dataMatricula(m.getDataMatricula())
-                .status(m.getStatus())
-                .observacoes(m.getObservacoes())
-                .criadaPorId(criador != null ? criador.getId() : null)
-                .criadaPorNome(criador != null ? criador.getNome() : null)
-                .criadoEm(m.getCriadoEm())
-                .atualizadoEm(m.getAtualizadoEm())
+                .id(matricula.getId())
+                .alunoId(matricula.getAluno().getId())
+                .alunoNome(matricula.getAluno().getUsuario().getNome())
+                .alunoMatriculaRA(matricula.getAluno().getMatriculaRA())
+                .turmaId(matricula.getTurma().getId())
+                .turmaCodigo(matricula.getTurma().getCodigo())
+                .turmaPeriodoLetivo(matricula.getTurma().getPeriodoLetivo())
+                .dataMatricula(matricula.getDataMatricula())
+                .status(matricula.getStatus())
+                .observacoes(matricula.getObservacoes())
+                .criadaPorId(usuarioCriador != null ? usuarioCriador.getId() : null)
+                .criadaPorNome(usuarioCriador != null ? usuarioCriador.getNome() : null)
+                .criadoEm(matricula.getCriadoEm())
+                .atualizadoEm(matricula.getAtualizadoEm())
                 .build();
     }
 }

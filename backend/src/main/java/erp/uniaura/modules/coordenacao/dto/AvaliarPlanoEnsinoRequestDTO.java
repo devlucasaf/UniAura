@@ -18,7 +18,6 @@ import lombok.Setter;
 @Builder
 public class AvaliarPlanoEnsinoRequestDTO {
 
-    // --- ACEITA APENAS APROVADO, DEVOLVIDO OU REPROVADO ---
     @NotNull
     private StatusPlanoEnsino   status;
 

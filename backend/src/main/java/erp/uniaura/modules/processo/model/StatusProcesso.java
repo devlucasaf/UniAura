@@ -3,7 +3,6 @@ package erp.uniaura.modules.processo.model;
 import java.util.Set;
 
 public enum StatusProcesso {
-
     ABERTO,
     EM_ANALISE,
     AGUARDANDO_ALUNO,

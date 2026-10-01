@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -19,7 +18,7 @@ import java.util.UUID;
 @Builder
 public class ResponsavelResponseDTO {
 
-    private UUID                id;
+    private Long                id;
     private UsuarioResponseDTO  usuario;
     private Parentesco          parentesco;
     private LocalDateTime       criadoEm;

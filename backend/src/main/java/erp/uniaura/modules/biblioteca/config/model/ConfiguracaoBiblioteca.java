@@ -1,5 +1,7 @@
 package erp.uniaura.modules.biblioteca.config.model;
 
+import erp.uniaura.infra.persistence.SqlServerBaseEntity;
+
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -12,7 +14,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -21,12 +22,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "configuracaoBiblioteca")
-public class ConfiguracaoBiblioteca {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+public class ConfiguracaoBiblioteca extends SqlServerBaseEntity {
 
     @Column(name = "prazoEmprestimoAluno", nullable = false)
     private Integer prazoEmprestimoAluno;

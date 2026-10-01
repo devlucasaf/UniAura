@@ -11,8 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -36,7 +34,7 @@ public class DisciplinaRequestDTO {
     private Integer cargaHoraria;
 
     @NotNull(message = "O curso é obrigatório.")
-    private UUID cursoId;
+    private Long cursoId;
 
     @NotNull(message = "O período é obrigatório.")
     @Positive(message = "O período deve ser positivo.")

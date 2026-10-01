@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -16,9 +15,9 @@ import java.util.UUID;
 @Builder
 public class FrequenciaPercentualDTO {
 
-    private UUID        alunoId;
+    private Long        alunoId;
     private String      alunoNome;
-    private UUID        disciplinaId;
+    private Long        disciplinaId;
     private String      disciplinaNome;
     private long        totalAulas;
     private long        presencas;

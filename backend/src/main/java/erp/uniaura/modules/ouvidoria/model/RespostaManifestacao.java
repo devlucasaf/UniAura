@@ -1,5 +1,6 @@
 package erp.uniaura.modules.ouvidoria.model;
 
+import erp.uniaura.infra.persistence.SqlServerBaseEntity;
 import erp.uniaura.modules.usuario.model.Usuario;
 
 import jakarta.persistence.Column;
@@ -23,7 +24,6 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -32,12 +32,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "respostaManifestacao")
-public class RespostaManifestacao {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+public class RespostaManifestacao extends SqlServerBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "manifestacaoId", nullable = false,

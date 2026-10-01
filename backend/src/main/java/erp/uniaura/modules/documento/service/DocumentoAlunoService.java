@@ -2,7 +2,7 @@ package erp.uniaura.modules.documento.service;
 
 import erp.uniaura.exception.BusinessException;
 import erp.uniaura.exception.ResourceNotFoundException;
-import erp.uniaura.infra.security.UsuarioDetails;
+import erp.uniaura.infra.security.UsuarioAutenticadoProvider;
 import erp.uniaura.infra.storage.StorageService;
 import erp.uniaura.modules.aluno.model.Aluno;
 import erp.uniaura.modules.aluno.repository.AlunoRepository;
@@ -19,14 +19,12 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -37,10 +35,11 @@ public class DocumentoAlunoService {
     private final DocumentoAlunoRepository documentoAlunoRepository;
     private final AlunoRepository alunoRepository;
     private final StorageService storageService;
+    private final UsuarioAutenticadoProvider usuarioAutenticadoProvider;
 
-    // --- ENVIA UM DOCUMENTO: O PRÓPRIO ALUNO ENVIA O SEU, OU A SECRETARIA/COORDENAÇÃO ENVIA EM NOME DELE ---
+    // --- ENVIA UM DOCUMENTO ---
     @Transactional
-    public DocumentoAlunoResponseDTO enviar(UUID alunoIdInformado, TipoDocumento tipo, MultipartFile arquivo) {
+    public DocumentoAlunoResponseDTO enviar(Long alunoIdInformado, TipoDocumento tipo, MultipartFile arquivo) {
         if (arquivo == null || arquivo.isEmpty()) {
             throw new BusinessException("É obrigatório enviar um arquivo.");
         }
@@ -48,20 +47,30 @@ public class DocumentoAlunoService {
         Usuario autenticado = usuarioAutenticadoOuFalha();
         Aluno aluno = resolverAluno(alunoIdInformado, autenticado);
 
+        int proximaVersao = (int) documentoAlunoRepository.countByAlunoIdAndTipo(aluno.getId(), tipo) + 1;
+
         DocumentoAluno documento = DocumentoAluno.builder()
                 .aluno(aluno)
                 .tipo(tipo)
                 .nomeArquivo(arquivo.getOriginalFilename())
                 .arquivoUrl(storageService.store(arquivo, SUBDIR_DOCUMENTOS))
                 .status(StatusDocumento.PENDENTE)
+                .versao(proximaVersao)
                 .build();
 
         return toResponse(documentoAlunoRepository.save(documento));
     }
 
-    // --- LISTA OS DOCUMENTOS DE UM ALUNO (VISÃO DA SECRETARIA/COORDENAÇÃO) ---
+    // --- HISTÓRICO DE VERSÕES ENVIADAS DE UM TIPO DE DOCUMENTO DO ALUNO, DA MAIS RECENTE PARA A MAIS ANTIGA ---
     @Transactional(readOnly = true)
-    public Page<DocumentoAlunoResponseDTO> listarPorAluno(UUID alunoId, Pageable pageable) {
+    public List<DocumentoAlunoResponseDTO> historico(Long alunoId, TipoDocumento tipo) {
+        return documentoAlunoRepository.findByAlunoIdAndTipoOrderByVersaoDesc(alunoId, tipo)
+                .stream().map(this::toResponse).toList();
+    }
+
+    // --- LISTA OS DOCUMENTOS DE UM ALUNO ---
+    @Transactional(readOnly = true)
+    public Page<DocumentoAlunoResponseDTO> listarPorAluno(Long alunoId, Pageable pageable) {
         return documentoAlunoRepository.findByAlunoId(alunoId, pageable).map(this::toResponse);
     }
 
@@ -74,7 +83,7 @@ public class DocumentoAlunoService {
 
     // --- APROVA OU REJEITA UM DOCUMENTO ENVIADO ---
     @Transactional
-    public DocumentoAlunoResponseDTO analisar(UUID id, AnalisarDocumentoRequestDTO dto) {
+    public DocumentoAlunoResponseDTO analisar(Long id, AnalisarDocumentoRequestDTO dto) {
         DocumentoAluno documento = buscarEntidade(id);
         Usuario autenticado = usuarioAutenticadoOuFalha();
 
@@ -86,9 +95,9 @@ public class DocumentoAlunoService {
         return toResponse(documentoAlunoRepository.save(documento));
     }
 
-    // --- REMOVE UM DOCUMENTO: O DONO SÓ PODE EXCLUIR ENQUANTO ELE AINDA ESTIVER PENDENTE ---
+    // --- REMOVE UM DOCUMENTO ---
     @Transactional
-    public void deletar(UUID id) {
+    public void deletar(Long id) {
         DocumentoAluno documento = buscarEntidade(id);
         Usuario autenticado = usuarioAutenticadoOuFalha();
 
@@ -111,15 +120,13 @@ public class DocumentoAlunoService {
         documentoAlunoRepository.delete(documento);
     }
 
-    // --- HELPERS ---
-
-    private DocumentoAluno buscarEntidade(UUID id) {
+    private DocumentoAluno buscarEntidade(Long id) {
         return documentoAlunoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Documento", id));
     }
 
-    // --- RESOLVE O ALUNO DONO DO UPLOAD: O PRÓPRIO ALUNO, OU O INFORMADO PELA EQUIPE ADMINISTRATIVA ---
-    private Aluno resolverAluno(UUID alunoIdInformado, Usuario autenticado) {
+    // --- RESOLVE O ALUNO DONO DO UPLOAD ---
+    private Aluno resolverAluno(Long alunoIdInformado, Usuario autenticado) {
         if (autenticado.getRole() == TipoUsuario.ALUNO) {
             return alunoRepository.findByUsuarioId(autenticado.getId())
                     .orElseThrow(() -> new BusinessException("O usuário autenticado não possui matrícula de aluno."));
@@ -139,11 +146,8 @@ public class DocumentoAlunoService {
     }
 
     private Usuario usuarioAutenticadoOuFalha() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !(auth.getPrincipal() instanceof UsuarioDetails ud)) {
-            throw new BusinessException("Usuário autenticado não identificado.");
-        }
-        return ud.getUsuario();
+        return usuarioAutenticadoProvider.obter()
+                .orElseThrow(() -> new BusinessException("Usuário autenticado não identificado."));
     }
 
     private DocumentoAlunoResponseDTO toResponse(DocumentoAluno d) {
@@ -155,6 +159,7 @@ public class DocumentoAlunoService {
                 .nomeArquivo(d.getNomeArquivo())
                 .arquivoUrl(d.getArquivoUrl())
                 .status(d.getStatus())
+                .versao(d.getVersao())
                 .observacoes(d.getObservacoes())
                 .analisadoPorNome(d.getAnalisadoPor() == null ? null : d.getAnalisadoPor().getNome())
                 .analisadoEm(d.getAnalisadoEm())

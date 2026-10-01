@@ -7,15 +7,16 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface TurmaDisciplinaRepository extends JpaRepository<TurmaDisciplina, UUID> {
+public interface TurmaDisciplinaRepository extends JpaRepository<TurmaDisciplina, Long> {
 
-    List<TurmaDisciplina> findByTurmaId(UUID turmaId);
+    List<TurmaDisciplina> findByTurmaId(Long turmaId);
 
-    boolean existsByTurmaIdAndDisciplinaId(UUID turmaId, UUID disciplinaId);
+    List<TurmaDisciplina> findByProfessorId(Long professorId);
 
-    Optional<TurmaDisciplina> findByTurmaIdAndDisciplinaId(UUID turmaId, UUID disciplinaId);
+    boolean existsByTurmaIdAndDisciplinaId(Long turmaId, Long disciplinaId);
+
+    Optional<TurmaDisciplina> findByTurmaIdAndDisciplinaId(Long turmaId, Long disciplinaId);
 }
 

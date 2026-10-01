@@ -7,11 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
 @Repository
-public interface AtividadeRepository extends JpaRepository<Atividade, UUID> {
+public interface AtividadeRepository extends JpaRepository<Atividade, Long> {
 
-    Page<Atividade> findByTurmaDisciplinaId(UUID turmaDisciplinaId, Pageable pageable);
+    Page<Atividade> findByTurmaDisciplinaId(Long turmaDisciplinaId, Pageable pageable);
 }
 

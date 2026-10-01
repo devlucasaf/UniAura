@@ -19,27 +19,22 @@ import java.math.RoundingMode;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class PainelCoordenacaoService {
 
-    // --- O SISTEMA NÃO POSSUÍA UMA REGRA DE APROVAÇÃO; ESTE É O PATAMAR ADOTADO AQUI ---
     private static final BigDecimal MEDIA_APROVACAO = new BigDecimal("6.00");
-
     private static final String STATUS_MATRICULA_ATIVA = "ATIVA";
-
     private static final int ESCALA = 2;
-
     private static final BigDecimal CEM = new BigDecimal("100");
 
-    private final PainelCoordenacaoRepository painelRepository;
+    private final PainelCoordenacaoRepository painelCoordenacaoRepository;
     private final CursoRepository cursoRepository;
 
     // --- CONSOLIDA OS INDICADORES DO CURSO E DO PERÍODO LETIVO INFORMADOS ---
     @Transactional(readOnly = true)
-    public PainelCoordenacaoResponseDTO consolidar(UUID cursoId, String periodoLetivo) {
+    public PainelCoordenacaoResponseDTO consolidar(Long cursoId, String periodoLetivo) {
         String periodo = (periodoLetivo == null || periodoLetivo.isBlank()) ? null : periodoLetivo;
         Curso curso = cursoId == null ? null : buscarCurso(cursoId);
 
@@ -55,8 +50,8 @@ public class PainelCoordenacaoService {
                 .alunosPorStatusMatricula(alunosPorStatus)
                 .totalAlunosAtivos(alunosPorStatus.getOrDefault(STATUS_MATRICULA_ATIVA, 0L))
 
-                .totalTurmas(painelRepository.contarTurmas(cursoId, periodo))
-                .turmasAtivas(painelRepository.contarTurmasAtivas(cursoId, periodo))
+                .totalTurmas(painelCoordenacaoRepository.contarTurmas(cursoId, periodo))
+                .turmasAtivas(painelCoordenacaoRepository.contarTurmasAtivas(cursoId, periodo))
                 .turmasSemProfessorRegente((long) semRegente.size())
                 .ocupacaoMediaPercentual(calcularOcupacao(cursoId, periodo))
 
@@ -68,37 +63,35 @@ public class PainelCoordenacaoService {
 
                 .frequenciaMediaPercentual(calcularFrequenciaMedia(cursoId, periodo))
 
-                .processosPendentes(painelRepository.contarProcessosPendentes())
-                .manifestacoesPendentes(painelRepository.contarManifestacoesPendentes())
+                .processosPendentes(painelCoordenacaoRepository.contarProcessosPendentes())
+                .manifestacoesPendentes(painelCoordenacaoRepository.contarManifestacoesPendentes())
 
                 .turmasQueExigemAtencao(semRegente)
                 .build();
     }
-
-    // --- HELPERS ---
 
     // --- RESULTADO INTERMEDIÁRIO DA APURAÇÃO DE NOTAS ---
     private record Desempenho(long total, long aprovacoes, BigDecimal mediaGeral) {
     }
 
     // --- BUSCA O CURSO PELO IDENTIFICADOR OU LANÇA UMA EXCEÇÃO CASO ELE NÃO SEJA ENCONTRADO ---
-    private Curso buscarCurso(UUID id) {
+    private Curso buscarCurso(Long id) {
         return cursoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Curso", id));
     }
 
     // --- CONVERTE AS LINHAS AGRUPADAS EM UM MAPA DE STATUS PARA QUANTIDADE ---
-    private Map<String, Long> contarAlunosPorStatus(UUID cursoId, String periodoLetivo) {
+    private Map<String, Long> contarAlunosPorStatus(Long cursoId, String periodoLetivo) {
         Map<String, Long> resultado = new LinkedHashMap<>();
-        for (Object[] linha : painelRepository.contarAlunosPorStatusMatricula(cursoId, periodoLetivo)) {
+        for (Object[] linha : painelCoordenacaoRepository.contarAlunosPorStatusMatricula(cursoId, periodoLetivo)) {
             resultado.put(String.valueOf(linha[0]), ((Number) linha[1]).longValue());
         }
         return resultado;
     }
 
     // --- MONTA A LISTA DE TURMAS ATIVAS QUE AINDA NÃO TÊM REGENTE ---
-    private List<TurmaSemRegenteDTO> buscarTurmasSemRegente(UUID cursoId, String periodoLetivo) {
-        List<Turma> turmas = painelRepository.buscarTurmasSemProfessorRegente(cursoId, periodoLetivo);
+    private List<TurmaSemRegenteDTO> buscarTurmasSemRegente(Long cursoId, String periodoLetivo) {
+        List<Turma> turmas = painelCoordenacaoRepository.buscarTurmasSemProfessorRegente(cursoId, periodoLetivo);
 
         return turmas.stream()
                 .map(t -> TurmaSemRegenteDTO.builder()
@@ -108,22 +101,22 @@ public class PainelCoordenacaoService {
                         .turno(t.getTurno())
                         .periodoLetivo(t.getPeriodoLetivo())
                         .capacidadeMaxima(t.getCapacidadeMaxima())
-                        .matriculasAtivas(painelRepository.contarMatriculasAtivasDaTurma(t.getId()))
+                        .matriculasAtivas(painelCoordenacaoRepository.contarMatriculasAtivasDaTurma(t.getId()))
                         .build())
                 .toList();
     }
 
     // --- PERCENTUAL DE VAGAS OCUPADAS NAS TURMAS ATIVAS ---
-    private BigDecimal calcularOcupacao(UUID cursoId, String periodoLetivo) {
-        long capacidade = painelRepository.somarCapacidadeTurmasAtivas(cursoId, periodoLetivo);
-        long ocupadas = painelRepository.contarMatriculasAtivasEmTurmasAtivas(cursoId, periodoLetivo);
+    private BigDecimal calcularOcupacao(Long cursoId, String periodoLetivo) {
+        long capacidade = painelCoordenacaoRepository.somarCapacidadeTurmasAtivas(cursoId, periodoLetivo);
+        long ocupadas = painelCoordenacaoRepository.contarMatriculasAtivasEmTurmasAtivas(cursoId, periodoLetivo);
         return percentual(ocupadas, capacidade);
     }
 
     // --- APURA APROVAÇÕES E MÉDIA GERAL A PARTIR DAS MÉDIAS PONDERADAS DE CADA ALUNO EM CADA DISCIPLINA ---
-    private Desempenho calcularDesempenho(UUID cursoId, String periodoLetivo) {
+    private Desempenho calcularDesempenho(Long cursoId, String periodoLetivo) {
         List<MediaDisciplinaProjecao> medias =
-                painelRepository.buscarMediasPorAlunoDisciplina(cursoId, periodoLetivo);
+                painelCoordenacaoRepository.buscarMediasPorAlunoDisciplina(cursoId, periodoLetivo);
 
         if (medias.isEmpty()) {
             return new Desempenho(0L, 0L, zero());
@@ -145,8 +138,8 @@ public class PainelCoordenacaoService {
     }
 
     // --- PERCENTUAL DE PRESENÇAS SOBRE O TOTAL DE REGISTROS DE CHAMADA ---
-    private BigDecimal calcularFrequenciaMedia(UUID cursoId, String periodoLetivo) {
-        List<Object[]> linhas = painelRepository.resumirFrequencia(cursoId, periodoLetivo);
+    private BigDecimal calcularFrequenciaMedia(Long cursoId, String periodoLetivo) {
+        List<Object[]> linhas = painelCoordenacaoRepository.resumirFrequencia(cursoId, periodoLetivo);
         if (linhas.isEmpty()) {
             return zero();
         }

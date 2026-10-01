@@ -2,7 +2,7 @@ package erp.uniaura.modules.material.service;
 
 import erp.uniaura.exception.BusinessException;
 import erp.uniaura.exception.ResourceNotFoundException;
-import erp.uniaura.infra.security.UsuarioDetails;
+import erp.uniaura.infra.security.UsuarioAutenticadoProvider;
 import erp.uniaura.infra.storage.StorageService;
 import erp.uniaura.modules.material.dto.MaterialRequestDTO;
 import erp.uniaura.modules.material.dto.MaterialResponseDTO;
@@ -19,13 +19,9 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -36,47 +32,48 @@ public class MaterialService {
     private final MaterialRepository materialRepository;
     private final TurmaDisciplinaRepository turmaDisciplinaRepository;
     private final StorageService storageService;
+    private final UsuarioAutenticadoProvider usuarioAutenticadoProvider;
 
     // --- LISTA OS MATERIAIS DE UMA TURMA + DISCIPLINA ---
     @Transactional(readOnly = true)
-    public Page<MaterialResponseDTO> listarPorTurmaDisciplina(UUID turmaId, UUID disciplinaId, Pageable pageable) {
+    public Page<MaterialResponseDTO> listarPorTurmaDisciplina(Long turmaId, Long disciplinaId, Pageable pageable) {
         return materialRepository.findByTurmaIdAndDisciplinaId(turmaId, disciplinaId, pageable)
                 .map(this::toResponse);
     }
 
-    // --- BUSCA UM MATERIAL PELO SEU IDENTIFICADOR ---
+    // --- BUSCA UM MATERIAL PELO SEU ID ---
     @Transactional(readOnly = true)
-    public MaterialResponseDTO buscarPorId(UUID id) {
-        return toResponse(buscarEntidade(id));
+    public MaterialResponseDTO buscarMaterialPorId(Long id) {
+        return toResponse(buscarMaterialEntidade(id));
     }
 
     // --- CRIA UM MATERIAL PARA UMA TURMA/DISCIPLINA ---
     @Transactional
-    public MaterialResponseDTO criar(MaterialRequestDTO dto, MultipartFile arquivo) {
-        TurmaDisciplina td = buscarTurmaDisciplina(dto.getTurmaDisciplinaId());
-        Usuario autenticado = usuarioAutenticadoOuFalha();
-        Professor professor = validarProfessorDaDisciplina(td, autenticado);
+    public MaterialResponseDTO criarMaterialTurma(MaterialRequestDTO materialDTO, MultipartFile arquivo) {
+        TurmaDisciplina turmaDisciplina = buscarTurmaDisciplina(materialDTO.getTurmaDisciplinaId());
+        Usuario usuarioAutenticado = usuarioAutenticadoOuFalha();
+        Professor professor = validarProfessorDaDisciplina(turmaDisciplina, usuarioAutenticado);
 
         Material material = Material.builder()
-                .turmaDisciplina(td)
-                .titulo(dto.getTitulo())
-                .descricao(dto.getDescricao())
-                .tipo(dto.getTipo())
-                .linkUrl(dto.getLinkUrl())
+                .turmaDisciplina(turmaDisciplina)
+                .titulo(materialDTO.getTitulo())
+                .descricao(materialDTO.getDescricao())
+                .tipo(materialDTO.getTipo())
+                .linkUrl(materialDTO.getLinkUrl())
                 .professor(professor)
                 .build();
 
-        aplicarRegraDeArquivoOuLink(material, dto, arquivo);
+        aplicarRegraDeArquivoOuLink(material, materialDTO, arquivo);
 
         return toResponse(materialRepository.save(material));
     }
 
     // --- ATUALIZA METADADOS DO MATERIAL ---
     @Transactional
-    public MaterialResponseDTO atualizar(UUID id, MaterialRequestDTO dto, MultipartFile arquivo) {
-        Material material = buscarEntidade(id);
-        Usuario autenticado = usuarioAutenticadoOuFalha();
-        validarPodeEditar(material, autenticado);
+    public MaterialResponseDTO atualizarMaterial(Long id, MaterialRequestDTO dto, MultipartFile arquivo) {
+        Material material = buscarMaterialEntidade(id);
+        Usuario usuarioAutenticado = usuarioAutenticadoOuFalha();
+        validarPodeEditar(material, usuarioAutenticado);
 
         if (!material.getTurmaDisciplina().getId().equals(dto.getTurmaDisciplinaId())) {
             material.setTurmaDisciplina(buscarTurmaDisciplina(dto.getTurmaDisciplinaId()));
@@ -94,10 +91,10 @@ public class MaterialService {
 
     // --- REMOVE O MATERIAL ---
     @Transactional
-    public void deletar(UUID id) {
-        Material material = buscarEntidade(id);
-        Usuario autenticado = usuarioAutenticadoOuFalha();
-        validarPodeEditar(material, autenticado);
+    public void deletarMaterial(Long id) {
+        Material material = buscarMaterialEntidade(id);
+        Usuario usuarioAutenticado = usuarioAutenticadoOuFalha();
+        validarPodeEditar(material, usuarioAutenticado);
 
         if (material.getArquivoUrl() != null) {
             storageService.delete(material.getArquivoUrl());
@@ -105,22 +102,22 @@ public class MaterialService {
         materialRepository.delete(material);
     }
 
-    // --- HELPERS ---
-
-    // --- BUSCA UM MATERIAL PELO IDENTIFICADOR OU LANÇA UMA EXCEÇÃO CASO ELE NÃO SEJA ENCONTRADO ---
-    private Material buscarEntidade(UUID id) {
-        return materialRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Material", id));
+    // --- BUSCA UM MATERIAL PELO ID OU LANÇA UMA EXCEÇÃO CASO ELE NÃO SEJA ENCONTRADO ---
+    private Material buscarMaterialEntidade(Long id) {
+        return materialRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Material", id));
     }
 
     // --- BUSCA O VÍNCULO ENTRE TURMA E DISCIPLINA OU LANÇA UMA EXCEÇÃO CASO ELE NÃO SEJA ENCONTRADO ---
-    private TurmaDisciplina buscarTurmaDisciplina(UUID id) {
-        return turmaDisciplinaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Vínculo turma/disciplina", id));
+    private TurmaDisciplina buscarTurmaDisciplina(Long id) {
+        return turmaDisciplinaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Vínculo turma/disciplina", id));
     }
 
     // --- GARANTE COERÊNCIA ---
-    private void aplicarRegraDeArquivoOuLink(Material material, MaterialRequestDTO dto, MultipartFile arquivo) {
-        if (dto.getTipo() == TipoMaterial.LINK) {
-            if (dto.getLinkUrl() == null || dto.getLinkUrl().isBlank()) {
+    private void aplicarRegraDeArquivoOuLink(Material material, MaterialRequestDTO materialDTO, MultipartFile arquivo) {
+        if (materialDTO.getTipo() == TipoMaterial.LINK) {
+            if (materialDTO.getLinkUrl() == null || materialDTO.getLinkUrl().isBlank()) {
                 throw new BusinessException("Para tipo LINK é obrigatório informar 'linkUrl'.");
             }
 
@@ -135,20 +132,18 @@ public class MaterialService {
             if (material.getArquivoUrl() != null) {
                 storageService.delete(material.getArquivoUrl());
             }
+
             material.setArquivoUrl(storageService.store(arquivo, SUBDIR_MATERIAIS));
             material.setLinkUrl(null);
         } else if (material.getArquivoUrl() == null) {
-            throw new BusinessException("Para o tipo " + dto.getTipo() + " é obrigatório enviar um arquivo.");
+            throw new BusinessException("Para o tipo " + materialDTO.getTipo() + " é obrigatório enviar um arquivo.");
         }
     }
 
     // --- RECUPERA O USUÁRIO AUTENTICADO OU LANÇA UMA EXCEÇÃO CASO ELE NÃO SEJA IDENTIFICADO ---
     private Usuario usuarioAutenticadoOuFalha() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !(auth.getPrincipal() instanceof UsuarioDetails ud)) {
-            throw new BusinessException("Usuário autenticado não identificado.");
-        }
-        return ud.getUsuario();
+        return usuarioAutenticadoProvider.obter()
+                .orElseThrow(() -> new BusinessException("Usuário autenticado não identificado."));
     }
 
     // --- VALIDA SE O PROFESSOR AUTENTICADO É O RESPONSÁVEL PELA DISCIPLINA DA TURMA ---
@@ -158,8 +153,7 @@ public class MaterialService {
             throw new BusinessException("Vínculo turma/disciplina não possui professor responsável.");
         }
 
-        if (autenticado.getRole() == TipoUsuario.ADMIN
-                || autenticado.getRole() == TipoUsuario.COORDENADOR) {
+        if (autenticado.getRole() == TipoUsuario.ADMIN || autenticado.getRole() == TipoUsuario.COORDENADOR) {
             return professor;
         }
 
@@ -171,8 +165,7 @@ public class MaterialService {
 
     // --- VERIFICA SE O USUÁRIO AUTENTICADO POSSUI PERMISSÃO PARA EDITAR O MATERIAL ---
     private void validarPodeEditar(Material material, Usuario autenticado) {
-        if (autenticado.getRole() == TipoUsuario.ADMIN
-                || autenticado.getRole() == TipoUsuario.COORDENADOR) {
+        if (autenticado.getRole() == TipoUsuario.ADMIN || autenticado.getRole() == TipoUsuario.COORDENADOR) {
             return;
         }
 
@@ -182,19 +175,19 @@ public class MaterialService {
     }
 
     // --- CONVERTE A ENTIDADE MATERIAL EM UM DTO DE RESPOSTA ---
-    private MaterialResponseDTO toResponse(Material m) {
+    private MaterialResponseDTO toResponse(Material material) {
         return MaterialResponseDTO.builder()
-                .id(m.getId())
-                .turmaDisciplinaId(m.getTurmaDisciplina().getId())
-                .titulo(m.getTitulo())
-                .descricao(m.getDescricao())
-                .tipo(m.getTipo())
-                .arquivoUrl(m.getArquivoUrl())
-                .linkUrl(m.getLinkUrl())
-                .professorId(m.getProfessor().getId())
-                .professorNome(m.getProfessor().getUsuario() == null ? null : m.getProfessor().getUsuario().getNome())
-                .criadoEm(m.getCriadoEm())
-                .atualizadoEm(m.getAtualizadoEm())
+                .id(material.getId())
+                .turmaDisciplinaId(material.getTurmaDisciplina().getId())
+                .titulo(material.getTitulo())
+                .descricao(material.getDescricao())
+                .tipo(material.getTipo())
+                .arquivoUrl(material.getArquivoUrl())
+                .linkUrl(material.getLinkUrl())
+                .professorId(material.getProfessor().getId())
+                .professorNome(material.getProfessor().getUsuario() == null ? null : material.getProfessor().getUsuario().getNome())
+                .criadoEm(material.getCriadoEm())
+                .atualizadoEm(material.getAtualizadoEm())
                 .build();
     }
 }

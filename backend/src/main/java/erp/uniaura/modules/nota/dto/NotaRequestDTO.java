@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -26,10 +25,10 @@ import java.util.UUID;
 public class NotaRequestDTO {
 
     @NotNull
-    private UUID alunoId;
+    private Long alunoId;
 
     @NotNull
-    private UUID turmaDisciplinaId;
+    private Long turmaDisciplinaId;
 
     @NotNull
     private PeriodoAvaliacao periodoAvaliacao;

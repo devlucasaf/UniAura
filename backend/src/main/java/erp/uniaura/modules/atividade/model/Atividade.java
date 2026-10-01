@@ -1,5 +1,6 @@
 package erp.uniaura.modules.atividade.model;
 
+import erp.uniaura.infra.persistence.SqlServerBaseEntity;
 import erp.uniaura.modules.professor.model.Professor;
 import erp.uniaura.modules.turma.model.TurmaDisciplina;
 
@@ -16,7 +17,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -25,16 +25,10 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "atividade")
-public class Atividade {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+public class Atividade extends SqlServerBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "turmaDisciplinaId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkAtividadeTurmaDisciplina"))
+    @JoinColumn(name = "turmaDisciplinaId", nullable = false, foreignKey = @ForeignKey(name = "fkAtividadeTurmaDisciplina"))
     private TurmaDisciplina turmaDisciplina;
 
     @Column(name = "titulo", nullable = false, length = 200)
@@ -57,8 +51,7 @@ public class Atividade {
     private BigDecimal valorMaximo;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "professorId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkAtividadeProfessor"))
+    @JoinColumn(name = "professorId", nullable = false, foreignKey = @ForeignKey(name = "fkAtividadeProfessor"))
     private Professor professor;
 
     @Column(name = "ativa", nullable = false)

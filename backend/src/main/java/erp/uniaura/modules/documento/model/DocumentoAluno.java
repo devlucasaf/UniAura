@@ -1,5 +1,6 @@
 package erp.uniaura.modules.documento.model;
 
+import erp.uniaura.infra.persistence.SqlServerBaseEntity;
 import erp.uniaura.modules.aluno.model.Aluno;
 import erp.uniaura.modules.usuario.model.Usuario;
 
@@ -9,8 +10,6 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -24,9 +23,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
-// --- DOCUMENTO ENVIADO PELO ALUNO (OU PELA SECRETARIA EM SEU NOME) PARA A MATRÍCULA ---
 @Getter
 @Setter
 @NoArgsConstructor
@@ -34,16 +31,10 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "documentoAluno")
-public class DocumentoAluno {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+public class DocumentoAluno extends SqlServerBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "alunoId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkDocumentoAlunoAluno"))
+    @JoinColumn(name = "alunoId", nullable = false, foreignKey = @ForeignKey(name = "fkDocumentoAlunoAluno"))
     private Aluno aluno;
 
     @Enumerated(EnumType.STRING)
@@ -59,6 +50,9 @@ public class DocumentoAluno {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
     private StatusDocumento status;
+
+    @Column(name = "versao")
+    private Integer versao;
 
     @Column(name = "observacoes", length = 500)
     private String observacoes;

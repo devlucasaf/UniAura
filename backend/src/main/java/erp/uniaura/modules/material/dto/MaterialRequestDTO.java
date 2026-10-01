@@ -11,8 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,7 +19,7 @@ import java.util.UUID;
 public class MaterialRequestDTO {
 
     @NotNull
-    private UUID turmaDisciplinaId;
+    private Long turmaDisciplinaId;
 
     @NotNull
     @Size(min = 3, max = 200)

@@ -10,17 +10,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
 @Repository
-public interface ReuniaoColegiadoRepository extends JpaRepository<ReuniaoColegiado, UUID> {
+public interface ReuniaoColegiadoRepository extends JpaRepository<ReuniaoColegiado, Long> {
 
     @Query("""
             SELECT r FROM ReuniaoColegiado r
              WHERE (:cursoId IS NULL OR r.curso.id = :cursoId)
                AND (:status IS NULL OR r.status = :status)
             """)
-    Page<ReuniaoColegiado> buscarComFiltros(@Param("cursoId") UUID cursoId,
-                                            @Param("status") StatusReuniao status,
-                                            Pageable pageable);
+    Page<ReuniaoColegiado> buscarComFiltros(@Param("cursoId") Long cursoId, @Param("status") StatusReuniao status, Pageable pageable);
 }

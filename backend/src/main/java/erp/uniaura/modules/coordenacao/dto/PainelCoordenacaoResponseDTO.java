@@ -9,7 +9,6 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -18,7 +17,7 @@ import java.util.UUID;
 @Builder
 public class PainelCoordenacaoResponseDTO {
 
-    private UUID                        cursoId;
+    private Long                        cursoId;
     private String                      cursoNome;
     private String                      periodoLetivo;
     private Map<String, Long>           alunosPorStatusMatricula;

@@ -1,5 +1,6 @@
 package erp.uniaura.modules.frequencia.model;
 
+import erp.uniaura.infra.persistence.SqlServerBaseEntity;
 import erp.uniaura.modules.professor.model.Professor;
 import erp.uniaura.modules.turma.model.TurmaDisciplina;
 
@@ -15,7 +16,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -24,16 +24,10 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "aula")
-public class Aula {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+public class Aula extends SqlServerBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "turmaDisciplinaId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkAulaTurmaDisciplina"))
+    @JoinColumn(name = "turmaDisciplinaId", nullable = false, foreignKey = @ForeignKey(name = "fkAulaTurmaDisciplina"))
     private TurmaDisciplina turmaDisciplina;
 
     @Column(name = "dataAula", nullable = false)
@@ -43,8 +37,7 @@ public class Aula {
     private String conteudoMinistrado;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "professorId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkAulaProfessor"))
+    @JoinColumn(name = "professorId", nullable = false, foreignKey = @ForeignKey(name = "fkAulaProfessor"))
     private Professor professor;
 
     @CreationTimestamp

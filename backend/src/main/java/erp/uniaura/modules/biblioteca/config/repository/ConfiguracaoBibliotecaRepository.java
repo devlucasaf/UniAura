@@ -4,8 +4,6 @@ import erp.uniaura.modules.biblioteca.config.model.ConfiguracaoBiblioteca;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.UUID;
-
-public interface ConfiguracaoBibliotecaRepository extends JpaRepository<ConfiguracaoBiblioteca, UUID> {
+public interface ConfiguracaoBibliotecaRepository extends JpaRepository<ConfiguracaoBiblioteca, Long> {
 }
 

@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +35,7 @@ public class UsuarioService {
 
     // --- BUSCA USUÁRIO POR ID ---
     @Transactional(readOnly = true)
-    public UsuarioResponseDTO buscarPorId(UUID id) {
+    public UsuarioResponseDTO buscarPorId(Long id) {
         return toResponse(buscarEntidade(id));
     }
 
@@ -49,12 +48,10 @@ public class UsuarioService {
     // --- CRIA UM NOVO USUÁRIO E RETORNA A ENTIDADE ---
     @Transactional
     public Usuario criarEntidade(UsuarioRequestDTO dto) {
-        // --- GARANTE UNICIDADE DO E-MAIL ---
         if (usuarioRepository.existsByEmail(dto.getEmail())) {
             throw new BusinessException("Já existe um usuário cadastrado com o e-mail: " + dto.getEmail());
         }
 
-        // --- SE A SENHA NÃO FOI INFORMADA, GERA UMA SENHA TEMPORÁRIA ---
         boolean senhaGerada = dto.getSenha() == null || dto.getSenha().isBlank();
         String senhaFinal = senhaGerada ? geradorSenhaTemporaria.gerar() : dto.getSenha();
 
@@ -80,7 +77,7 @@ public class UsuarioService {
 
     // --- ATUALIZA UM USUÁRIO EXISTENTE ---
     @Transactional
-    public UsuarioResponseDTO atualizar(UUID id, UsuarioRequestDTO dto) {
+    public UsuarioResponseDTO atualizar(Long id, UsuarioRequestDTO dto) {
         Usuario usuario = buscarEntidade(id);
 
         if (!usuario.getEmail().equalsIgnoreCase(dto.getEmail()) && usuarioRepository.existsByEmail(dto.getEmail())) {
@@ -107,13 +104,13 @@ public class UsuarioService {
 
     // --- REMOVE UM USUÁRIO ---
     @Transactional
-    public void deletar(UUID id) {
+    public void deletar(Long id) {
         Usuario usuario = buscarEntidade(id);
         usuarioRepository.delete(usuario);
     }
 
     // --- BUSCA A ENTIDADE ---
-    private Usuario buscarEntidade(UUID id) {
+    private Usuario buscarEntidade(Long id) {
         return usuarioRepository.findById(id) .orElseThrow(() -> new ResourceNotFoundException("Usuário", id));
     }
 

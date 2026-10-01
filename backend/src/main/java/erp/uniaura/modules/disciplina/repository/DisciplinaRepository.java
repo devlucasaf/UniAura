@@ -8,15 +8,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface DisciplinaRepository extends JpaRepository<Disciplina, UUID> {
+public interface DisciplinaRepository extends JpaRepository<Disciplina, Long> {
 
     Optional<Disciplina> findByCodigo(String codigo);
 
     boolean existsByCodigo(String codigo);
 
-    Page<Disciplina> findByCursoId(UUID cursoId, Pageable pageable);
+    Page<Disciplina> findByCursoId(Long cursoId, Pageable pageable);
 }
 

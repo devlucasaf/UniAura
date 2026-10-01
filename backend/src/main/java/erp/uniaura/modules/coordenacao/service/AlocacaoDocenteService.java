@@ -22,7 +22,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +39,7 @@ public class AlocacaoDocenteService {
 
     // --- TROCA O PROFESSOR RESPONSÁVEL POR UMA TURMA/DISCIPLINA JÁ EXISTENTE ---
     @Transactional
-    public TurmaDisciplinaResponseDTO alocarProfessor(UUID turmaDisciplinaId, UUID professorId) {
+    public TurmaDisciplinaResponseDTO alocarProfessor(Long turmaDisciplinaId, Long professorId) {
         TurmaDisciplina vinculo = buscarVinculo(turmaDisciplinaId);
         Professor professor = buscarProfessor(professorId);
 
@@ -58,7 +57,7 @@ public class AlocacaoDocenteService {
 
     // --- DEFINE OU REMOVE O PROFESSOR REGENTE DE UMA TURMA ---
     @Transactional
-    public void definirProfessorRegente(UUID turmaId, UUID professorId) {
+    public void definirProfessorRegente(Long turmaId, Long professorId) {
         Turma turma = turmaRepository.findById(turmaId)
                 .orElseThrow(() -> new ResourceNotFoundException("Turma", turmaId));
 
@@ -68,7 +67,7 @@ public class AlocacaoDocenteService {
 
     // --- CONSOLIDA A CARGA HORÁRIA SEMANAL JÁ COMPROMETIDA DE UM PROFESSOR ---
     @Transactional(readOnly = true)
-    public CargaHorariaProfessorDTO consultarCargaHoraria(UUID professorId, String periodoLetivo) {
+    public CargaHorariaProfessorDTO consultarCargaHoraria(Long professorId, String periodoLetivo) {
         Professor professor = buscarProfessor(professorId);
         String periodo = (periodoLetivo == null || periodoLetivo.isBlank()) ? null : periodoLetivo;
 
@@ -91,21 +90,21 @@ public class AlocacaoDocenteService {
                 .build();
     }
 
-    // --- HELPERS ---
-
-    private TurmaDisciplina buscarVinculo(UUID id) {
+    // --- BUSCA O VÍNCULO ENTRE TURMA E DISCIPLINA ---
+    private TurmaDisciplina buscarVinculo(Long id) {
         return turmaDisciplinaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Vínculo turma/disciplina", id));
     }
 
-    private Professor buscarProfessor(UUID id) {
+    // --- BUSCA O PROFESSOR ---
+    private Professor buscarProfessor(Long id) {
         return professorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Professor", id));
     }
 
     // --- O PROFESSOR PRECISA ESTAR HABILITADO A LECIONAR A DISCIPLINA, MESMA REGRA APLICADA POR TurmaService ---
     private void validarHabilitacao(Professor professor, TurmaDisciplina vinculo) {
-        UUID disciplinaId = vinculo.getDisciplina().getId();
+        Long disciplinaId = vinculo.getDisciplina().getId();
         if (!professorDisciplinaRepository.existsByProfessorIdAndDisciplinaId(professor.getId(), disciplinaId)) {
             throw new BusinessException("O professor selecionado não está habilitado a lecionar a disciplina informada.");
         }

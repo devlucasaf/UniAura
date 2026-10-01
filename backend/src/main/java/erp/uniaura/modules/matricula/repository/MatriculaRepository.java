@@ -9,20 +9,19 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.UUID;
 
 @Repository
-public interface MatriculaRepository extends JpaRepository<Matricula, UUID> {
+public interface MatriculaRepository extends JpaRepository<Matricula, Long> {
 
-    Page<Matricula> findByAlunoId(UUID alunoId, Pageable pageable);
+    Page<Matricula> findByAlunoId(Long alunoId, Pageable pageable);
 
-    boolean existsByAlunoIdAndTurmaPeriodoLetivoAndStatus(UUID alunoId, String periodoLetivo, StatusMatricula status);
+    boolean existsByAlunoIdAndTurmaPeriodoLetivoAndStatus(Long alunoId, String periodoLetivo, StatusMatricula status);
 
-    long countByTurmaIdAndStatus(UUID turmaId, StatusMatricula status);
+    long countByTurmaIdAndStatus(Long turmaId, StatusMatricula status);
 
     // --- MATRÍCULAS DE UMA TURMA EM UM STATUS ---
-    List<Matricula> findByTurmaIdAndStatus(UUID turmaId, StatusMatricula status);
+    List<Matricula> findByTurmaIdAndStatus(Long turmaId, StatusMatricula status);
 
     // --- VERIFICA SE O ALUNO ESTÁ COM UMA MATRÍCULA NO STATUS INFORMADO NA TURMA ---
-    boolean existsByAlunoIdAndTurmaIdAndStatus(UUID alunoId, UUID turmaId, StatusMatricula status);
+    boolean existsByAlunoIdAndTurmaIdAndStatus(Long alunoId, Long turmaId, StatusMatricula status);
 }

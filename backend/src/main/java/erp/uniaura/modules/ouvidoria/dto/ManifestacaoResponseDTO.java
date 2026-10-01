@@ -12,7 +12,6 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -21,7 +20,7 @@ import java.util.UUID;
 @Builder
 public class ManifestacaoResponseDTO {
 
-    private UUID                                    id;
+    private Long                                    id;
     private String                                  protocolo;
     private TipoManifestacao                        tipo;
     private String                                  assunto;
@@ -29,9 +28,9 @@ public class ManifestacaoResponseDTO {
     private String                                  setor;
     private StatusManifestacao                      status;
     private Boolean                                 anonima;
-    private UUID                                    autorId;
+    private Long                                    autorId;
     private String                                  autorNome;
-    private UUID                                    responsavelId;
+    private Long                                    responsavelId;
     private String                                  responsavelNome;
     private LocalDate                               prazoResposta;
     private String                                  respostaFinal;

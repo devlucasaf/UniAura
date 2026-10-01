@@ -68,12 +68,6 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.UNAUTHORIZED, "Falha de autenticação.", request);
     }
 
-    // --- FALLBACK PARA QUALQUER EXCEÇÃO NÃO TRATADA ACIMA ---
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneric(Exception ex, HttpServletRequest request) {
-        return build(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno do servidor: " + ex.getMessage(), request);
-    }
-
     // --- MONTA A RESPOSTA PADRÃO SEM LISTA DE ERROS POR CAMPO ---
     private ResponseEntity<ErrorResponse> build(HttpStatus status, String message, HttpServletRequest request) {
         ErrorResponse body = new ErrorResponse(LocalDateTime.now(), status.value(), message, request.getRequestURI());

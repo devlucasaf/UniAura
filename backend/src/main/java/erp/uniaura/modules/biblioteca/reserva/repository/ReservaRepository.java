@@ -5,20 +5,22 @@ import erp.uniaura.modules.biblioteca.reserva.model.StatusReserva;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
-public interface ReservaRepository extends JpaRepository<Reserva, UUID> {
+public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
-    List<Reserva> findByLivroIdAndStatusOrderByPosicaoFilaAsc(UUID livroId, StatusReserva status);
+    List<Reserva> findByLivroIdAndStatusOrderByPosicaoFilaAsc(Long livroId, StatusReserva status);
 
-    Optional<Reserva> findFirstByLivroIdAndStatusOrderByPosicaoFilaAsc(UUID livroId, StatusReserva status);
+    Optional<Reserva> findFirstByLivroIdAndStatusOrderByPosicaoFilaAsc(Long livroId, StatusReserva status);
 
-    List<Reserva> findByUsuarioIdOrderByDataReservaDesc(UUID usuarioId);
+    List<Reserva> findByUsuarioIdOrderByDataReservaDesc(Long usuarioId);
 
-    boolean existsByLivroIdAndUsuarioIdAndStatus(UUID livroId, UUID usuarioId, StatusReserva status);
+    boolean existsByLivroIdAndUsuarioIdAndStatus(Long livroId, Long usuarioId, StatusReserva status);
 
-    long countByLivroIdAndStatus(UUID livroId, StatusReserva status);
+    long countByLivroIdAndStatus(Long livroId, StatusReserva status);
+
+    List<Reserva> findByStatusAndPrazoRetiradaBefore(StatusReserva status, LocalDateTime data);
 }
 

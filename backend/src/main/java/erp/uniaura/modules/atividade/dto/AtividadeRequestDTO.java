@@ -14,7 +14,6 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -24,7 +23,7 @@ import java.util.UUID;
 public class AtividadeRequestDTO {
 
     @NotNull
-    private UUID turmaDisciplinaId;
+    private Long turmaDisciplinaId;
 
     @NotNull
     @Size(min = 3, max = 200)

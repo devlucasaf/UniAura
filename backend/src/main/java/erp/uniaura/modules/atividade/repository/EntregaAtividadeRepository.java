@@ -10,19 +10,18 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface EntregaAtividadeRepository extends JpaRepository<EntregaAtividade, UUID> {
+public interface EntregaAtividadeRepository extends JpaRepository<EntregaAtividade, Long> {
 
-    Optional<EntregaAtividade> findByAtividadeIdAndAlunoId(UUID atividadeId, UUID alunoId);
+    Optional<EntregaAtividade> findByAtividadeIdAndAlunoId(Long atividadeId, Long alunoId);
 
-    boolean existsByAtividadeIdAndAlunoId(UUID atividadeId, UUID alunoId);
+    boolean existsByAtividadeIdAndAlunoId(Long atividadeId, Long alunoId);
 
-    List<EntregaAtividade> findByAtividadeId(UUID atividadeId);
+    List<EntregaAtividade> findByAtividadeId(Long atividadeId);
 
-    Page<EntregaAtividade> findByAlunoId(UUID alunoId, Pageable pageable);
+    Page<EntregaAtividade> findByAlunoId(Long alunoId, Pageable pageable);
 
-    Page<EntregaAtividade> findByAlunoIdAndStatus(UUID alunoId, StatusEntrega status, Pageable pageable);
+    Page<EntregaAtividade> findByAlunoIdAndStatus(Long alunoId, StatusEntrega status, Pageable pageable);
 }
 

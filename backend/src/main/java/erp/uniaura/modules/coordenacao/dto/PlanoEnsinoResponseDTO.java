@@ -10,7 +10,6 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -19,17 +18,16 @@ import java.util.UUID;
 @Builder
 public class PlanoEnsinoResponseDTO {
 
-    private UUID                                    id;
-    private UUID                                    turmaDisciplinaId;
-    private UUID                                    turmaId;
+    private Long                                    id;
+    private Long                                    turmaDisciplinaId;
+    private Long                                    turmaId;
     private String                                  turmaCodigo;
     private String                                  periodoLetivo;
-    private UUID                                    disciplinaId;
+    private Long                                    disciplinaId;
     private String                                  disciplinaCodigo;
     private String                                  disciplinaNome;
-    private UUID                                    professorId;
+    private Long                                    professorId;
     private String                                  professorNome;
-
     private String                                  ementa;
     private String                                  objetivos;
     private String                                  conteudoProgramatico;
@@ -37,16 +35,13 @@ public class PlanoEnsinoResponseDTO {
     private String                                  criteriosAvaliacao;
     private String                                  bibliografiaBasica;
     private String                                  bibliografiaComplementar;
-
     private StatusPlanoEnsino                       status;
-    private UUID                                    avaliadoPorId;
+    private Long                                    avaliadoPorId;
     private String                                  avaliadoPorNome;
     private String                                  parecer;
     private LocalDateTime                           submetidoEm;
     private LocalDateTime                           avaliadoEm;
     private LocalDateTime                           criadoEm;
     private LocalDateTime                           atualizadoEm;
-
-    // --- PREENCHIDO APENAS NA CONSULTA DE UM PLANO ESPECÍFICO ---
     private List<AvaliacaoPlanoEnsinoResponseDTO>   historico;
 }

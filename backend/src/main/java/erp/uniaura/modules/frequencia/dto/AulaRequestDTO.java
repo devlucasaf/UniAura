@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -20,7 +19,7 @@ import java.util.UUID;
 public class AulaRequestDTO {
 
     @NotNull
-    private UUID turmaDisciplinaId;
+    private Long turmaDisciplinaId;
 
     @NotNull
     private LocalDate dataAula;
@@ -28,6 +27,6 @@ public class AulaRequestDTO {
     @Size(max = 4000)
     private String conteudoMinistrado;
 
-    private UUID professorId;
+    private Long professorId;
 }
 

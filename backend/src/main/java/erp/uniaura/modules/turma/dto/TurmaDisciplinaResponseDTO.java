@@ -10,7 +10,6 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -19,12 +18,12 @@ import java.util.UUID;
 @Builder
 public class TurmaDisciplinaResponseDTO {
 
-    private UUID            id;
-    private UUID            turmaId;
-    private UUID            disciplinaId;
+    private Long            id;
+    private Long            turmaId;
+    private Long            disciplinaId;
     private String          disciplinaCodigo;
     private String          disciplinaNome;
-    private UUID            professorId;
+    private Long            professorId;
     private String          professorNome;
     private DiaSemana       diaSemana;
     private LocalTime       horarioInicio;

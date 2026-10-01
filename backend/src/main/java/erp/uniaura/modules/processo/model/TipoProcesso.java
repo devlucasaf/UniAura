@@ -1,6 +1,5 @@
 package erp.uniaura.modules.processo.model;
 
-// --- REQUERIMENTOS ACADÊMICOS QUE O ALUNO PODE ABRIR JUNTO À SECRETARIA ---
 public enum TipoProcesso {
     TRANCAMENTO_MATRICULA,
     REABERTURA_MATRICULA,

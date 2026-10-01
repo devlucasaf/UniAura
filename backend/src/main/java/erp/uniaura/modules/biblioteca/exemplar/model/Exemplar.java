@@ -1,5 +1,6 @@
 package erp.uniaura.modules.biblioteca.exemplar.model;
 
+import erp.uniaura.infra.persistence.SqlServerBaseEntity;
 import erp.uniaura.modules.biblioteca.livro.model.Livro;
 
 import jakarta.persistence.*;
@@ -13,7 +14,6 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -22,16 +22,10 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "exemplar")
-public class Exemplar {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+public class Exemplar extends SqlServerBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "livroId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkExemplarLivro"))
+    @JoinColumn(name = "livroId", nullable = false, foreignKey = @ForeignKey(name = "fkExemplarLivro"))
     private Livro livro;
 
     @Column(name = "codigoBarras", nullable = false, unique = true, length = 50)

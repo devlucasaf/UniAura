@@ -10,22 +10,21 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
 @Repository
-public interface MaterialRepository extends JpaRepository<Material, UUID> {
+public interface MaterialRepository extends JpaRepository<Material, Long> {
 
-    Page<Material> findByTurmaDisciplinaId(UUID turmaDisciplinaId, Pageable pageable);
+    Page<Material> findByTurmaDisciplinaId(Long turmaDisciplinaId, Pageable pageable);
 
-    Page<Material> findByTurmaDisciplinaIdAndTipo(UUID turmaDisciplinaId, TipoMaterial tipo, Pageable pageable);
+    Page<Material> findByTurmaDisciplinaIdAndTipo(Long turmaDisciplinaId, TipoMaterial tipo, Pageable pageable);
 
     @Query("""
             SELECT m FROM Material m
              WHERE m.turmaDisciplina.turma.id = :turmaId
                AND m.turmaDisciplina.disciplina.id = :disciplinaId
             """)
-    Page<Material> findByTurmaIdAndDisciplinaId(@Param("turmaId") UUID turmaId,
-                                                @Param("disciplinaId") UUID disciplinaId,
-                                                Pageable pageable);
+    Page<Material> findByTurmaIdAndDisciplinaId(@Param("turmaId") Long turmaId,
+                                                @Param("disciplinaId") Long disciplinaId,
+                                                Pageable pageable
+    );
 }
 

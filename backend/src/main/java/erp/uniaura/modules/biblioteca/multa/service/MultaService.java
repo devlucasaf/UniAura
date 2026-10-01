@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -32,14 +31,14 @@ public class MultaService {
 
     // --- LISTA AS MULTAS PENDENTES DE UM USUÁRIO ---
     @Transactional(readOnly = true)
-    public List<MultaResponseDTO> pendentesDoUsuario(UUID usuarioId) {
+    public List<MultaResponseDTO> pendentesDoUsuario(Long usuarioId) {
         return multaRepository.findByEmprestimoUsuarioIdAndStatus(usuarioId, StatusMulta.PENDENTE)
                 .stream().map(this::toResponse).toList();
     }
 
     // --- BAIXA DE PAGAMENTO ---
     @Transactional
-    public MultaResponseDTO pagar(UUID multaId) {
+    public MultaResponseDTO pagar(Long multaId) {
         Multa multa = multaRepository.findById(multaId)
                 .orElseThrow(() -> new ResourceNotFoundException("Multa", multaId));
         if (multa.getStatus() != StatusMulta.PENDENTE) {
@@ -53,7 +52,7 @@ public class MultaService {
 
     // --- CANCELA UMA MULTA CASO ELA AINDA NÃO TENHA SIDO PAGA ---
     @Transactional
-    public MultaResponseDTO cancelar(UUID multaId) {
+    public MultaResponseDTO cancelar(Long multaId) {
         Multa multa = multaRepository.findById(multaId)
                 .orElseThrow(() -> new ResourceNotFoundException("Multa", multaId));
         if (multa.getStatus() == StatusMulta.PAGA) {

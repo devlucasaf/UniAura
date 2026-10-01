@@ -1,5 +1,6 @@
 package erp.uniaura.modules.coordenacao.model;
 
+import erp.uniaura.infra.persistence.SqlServerBaseEntity;
 import erp.uniaura.modules.curso.model.Curso;
 import erp.uniaura.modules.usuario.model.Usuario;
 
@@ -9,8 +10,6 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -25,7 +24,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -34,16 +32,10 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "reuniaoColegiado")
-public class ReuniaoColegiado {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+public class ReuniaoColegiado extends SqlServerBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "cursoId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkReuniaoColegiadoCurso"))
+    @JoinColumn(name = "cursoId", nullable = false, foreignKey = @ForeignKey(name = "fkReuniaoColegiadoCurso"))
     private Curso curso;
 
     @Column(name = "titulo", nullable = false, length = 200)
@@ -62,7 +54,6 @@ public class ReuniaoColegiado {
     @Column(name = "status", nullable = false, length = 20)
     private StatusReuniao status;
 
-    // --- PREENCHIDA NO REGISTRO DA ATA ---
     @Column(name = "deliberacoes", length = 8000)
     private String deliberacoes;
 
@@ -73,8 +64,7 @@ public class ReuniaoColegiado {
     private LocalDateTime encerradaEm;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "criadaPorId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkReuniaoColegiadoCriadaPor"))
+    @JoinColumn(name = "criadaPorId", nullable = false, foreignKey = @ForeignKey(name = "fkReuniaoColegiadoCriadaPor"))
     private Usuario criadaPor;
 
     @CreationTimestamp

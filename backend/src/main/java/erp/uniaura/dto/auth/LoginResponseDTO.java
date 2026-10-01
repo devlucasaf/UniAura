@@ -1,6 +1,7 @@
 package erp.uniaura.dto.auth;
 
 import erp.uniaura.modules.usuario.dto.UsuarioResponseDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,6 @@ public class LoginResponseDTO {
 
     private String              token;
     private String              refreshToken;
-    private UsuarioResponseDTO  usuario;
+    private UsuarioResponseDTO  usuarioDTO;
 }
 

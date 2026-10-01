@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -36,13 +35,13 @@ public class ProfessorService {
 
     // --- LISTA PROFESSORES PAGINADOS ---
     @Transactional(readOnly = true)
-    public Page<ProfessorResponseDTO> listar(Pageable pageable) {
+    public Page<ProfessorResponseDTO> listarProfessor(Pageable pageable) {
         return professorRepository.findAll(pageable).map(this::toResponse);
     }
 
     // --- BUSCA PROFESSOR POR ID ---
     @Transactional(readOnly = true)
-    public ProfessorResponseDTO buscarPorId(UUID id) {
+    public ProfessorResponseDTO buscarProfessorPorId(Long id) {
         return toResponse(buscarEntidade(id));
     }
 
@@ -74,7 +73,7 @@ public class ProfessorService {
 
     // --- ATUALIZA OS DADOS DO PROFESSOR E DO USUÁRIO VINCULADO ---
     @Transactional
-    public ProfessorResponseDTO atualizar(UUID id, ProfessorRequestDTO dto) {
+    public ProfessorResponseDTO atualizar(Long id, ProfessorRequestDTO dto) {
         Professor professor = buscarEntidade(id);
         Usuario usuario = professor.getUsuario();
 
@@ -98,14 +97,14 @@ public class ProfessorService {
 
     // --- REMOVE O PROFESSOR ---
     @Transactional
-    public void deletar(UUID id) {
+    public void deletar(Long id) {
         Professor professor = buscarEntidade(id);
         professorRepository.delete(professor);
     }
 
     // --- LISTA AS DISCIPLINAS VINCULADAS AO PROFESSOR ---
     @Transactional(readOnly = true)
-    public List<ProfessorDisciplinaResponseDTO> listarDisciplinas(UUID professorId) {
+    public List<ProfessorDisciplinaResponseDTO> listarDisciplinas(Long professorId) {
         buscarEntidade(professorId);
         return professorDisciplinaRepository.findByProfessorId(professorId)
                 .stream()
@@ -115,7 +114,7 @@ public class ProfessorService {
 
     // --- VINCULA UMA DISCIPLINA AO PROFESSOR ---
     @Transactional
-    public ProfessorDisciplinaResponseDTO vincularDisciplina(UUID professorId, VincularDisciplinaRequestDTO dto) {
+    public ProfessorDisciplinaResponseDTO vincularDisciplina(Long professorId, VincularDisciplinaRequestDTO dto) {
         Professor professor = buscarEntidade(professorId);
 
         if (professorDisciplinaRepository.existsByProfessorIdAndDisciplinaId(professorId, dto.getDisciplinaId())) {
@@ -132,34 +131,34 @@ public class ProfessorService {
 
     // --- REMOVE O VÍNCULO ENTRE PROFESSOR E DISCIPLINA ---
     @Transactional
-    public void desvincularDisciplina(UUID professorId, UUID disciplinaId) {
-        ProfessorDisciplina vinculo = professorDisciplinaRepository
+    public void desvincularDisciplina(Long professorId, Long disciplinaId) {
+        ProfessorDisciplina vinculoProfessorDisciplina = professorDisciplinaRepository
                 .findByProfessorIdAndDisciplinaId(professorId, disciplinaId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Vínculo professor/disciplina", professorId + "/" + disciplinaId));
-        professorDisciplinaRepository.delete(vinculo);
+        professorDisciplinaRepository.delete(vinculoProfessorDisciplina);
     }
 
     // --- BUSCA A ENTIDADE ---
-    private Professor buscarEntidade(UUID id) {
+    private Professor buscarEntidade(Long id) {
         return professorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Professor", id));
     }
 
     // --- CONVERTE Professor PARA O DTO DE RESPOSTA ---
     private ProfessorResponseDTO toResponse(Professor professor) {
-        Usuario u = professor.getUsuario();
+        Usuario usuario = professor.getUsuario();
         UsuarioResponseDTO usuarioDto = UsuarioResponseDTO.builder()
-                .id(u.getId())
-                .nome(u.getNome())
-                .email(u.getEmail())
-                .cpf(u.getCpf())
-                .telefone(u.getTelefone())
-                .dataNascimento(u.getDataNascimento())
-                .ativo(u.getAtivo())
-                .role(u.getRole())
-                .criadoEm(u.getCriadoEm())
-                .atualizadoEm(u.getAtualizadoEm())
+                .id(usuario.getId())
+                .nome(usuario.getNome())
+                .email(usuario.getEmail())
+                .cpf(usuario.getCpf())
+                .telefone(usuario.getTelefone())
+                .dataNascimento(usuario.getDataNascimento())
+                .ativo(usuario.getAtivo())
+                .role(usuario.getRole())
+                .criadoEm(usuario.getCriadoEm())
+                .atualizadoEm(usuario.getAtualizadoEm())
                 .build();
 
         return ProfessorResponseDTO.builder()
@@ -176,12 +175,12 @@ public class ProfessorService {
     }
 
     // --- CONVERTE O VÍNCULO PROFESSOR/DISCIPLINA PARA O DTO DE RESPOSTA ---
-    private ProfessorDisciplinaResponseDTO toVinculoResponse(ProfessorDisciplina v) {
+    private ProfessorDisciplinaResponseDTO toVinculoResponse(ProfessorDisciplina professorDisciplina) {
         return ProfessorDisciplinaResponseDTO.builder()
-                .id(v.getId())
-                .professorId(v.getProfessor().getId())
-                .disciplinaId(v.getDisciplinaId())
-                .criadoEm(v.getCriadoEm())
+                .id(professorDisciplina.getId())
+                .professorId(professorDisciplina.getProfessor().getId())
+                .disciplinaId(professorDisciplina.getDisciplinaId())
+                .criadoEm(professorDisciplina.getCriadoEm())
                 .build();
     }
 }

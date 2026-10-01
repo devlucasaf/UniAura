@@ -12,8 +12,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -32,7 +30,7 @@ public class ComunicadoRequestDTO {
     @NotNull(message = "O público-alvo é obrigatório.")
     private PublicoAlvoComunicado publicoAlvo;
 
-    private UUID turmaId;
+    private Long turmaId;
 
     private Boolean importante;
 }

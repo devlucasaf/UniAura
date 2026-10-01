@@ -11,7 +11,6 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -20,12 +19,12 @@ import java.util.UUID;
 @Builder
 public class AlunoResponseDTO {
 
-    private UUID                id;
+    private Long                id;
     private UsuarioResponseDTO  usuario;
     private String              matriculaRA;
     private LocalDate           dataIngresso;
     private StatusAluno         status;
-    private UUID                turmaAtualId;
+    private Long                turmaAtualId;
     private String              observacoes;
     private LocalDateTime       criadoEm;
     private LocalDateTime       atualizadoEm;

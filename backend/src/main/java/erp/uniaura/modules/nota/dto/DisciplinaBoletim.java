@@ -8,7 +8,6 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -17,7 +16,7 @@ import java.util.UUID;
 @Builder
 public class DisciplinaBoletim {
 
-    private UUID                    disciplinaId;
+    private Long                    disciplinaId;
     private String                  disciplinaCodigo;
     private String                  disciplinaNome;
     private BigDecimal              mediaFinal;

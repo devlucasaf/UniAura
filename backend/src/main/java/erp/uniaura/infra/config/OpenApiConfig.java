@@ -17,7 +17,7 @@ public class OpenApiConfig {
     private static final String SECURITY_SCHEME_NAME = "bearerAuth";
 
     @Bean
-    public OpenAPI erpAcademicOpenAPI() {
+    public OpenAPI uniAuraOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
                         .title("ERP Academic School System API")

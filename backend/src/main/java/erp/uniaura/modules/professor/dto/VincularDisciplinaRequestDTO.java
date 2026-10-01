@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -18,6 +17,6 @@ import java.util.UUID;
 public class VincularDisciplinaRequestDTO {
 
     @NotNull(message = "O id da disciplina é obrigatório.")
-    private UUID disciplinaId;
+    private Long disciplinaId;
 }
 

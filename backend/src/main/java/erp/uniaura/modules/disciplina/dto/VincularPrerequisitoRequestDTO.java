@@ -8,8 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,6 +16,6 @@ import java.util.UUID;
 public class VincularPrerequisitoRequestDTO {
 
     @NotNull(message = "O id da disciplina pré-requisito é obrigatório.")
-    private UUID prerequisitoId;
+    private Long prerequisitoId;
 }
 

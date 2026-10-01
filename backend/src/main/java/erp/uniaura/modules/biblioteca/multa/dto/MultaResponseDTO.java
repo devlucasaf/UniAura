@@ -10,7 +10,6 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -19,9 +18,9 @@ import java.util.UUID;
 @Builder
 public class MultaResponseDTO {
 
-    private UUID            id;
-    private UUID            emprestimoId;
-    private UUID            usuarioId;
+    private Long            id;
+    private Long            emprestimoId;
+    private Long            usuarioId;
     private String          usuarioNome;
     private String          livroTitulo;
     private BigDecimal      valor;

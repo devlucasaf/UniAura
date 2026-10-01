@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +44,7 @@ public class ResponsavelService {
 
     // --- BUSCA UM RESPONSÁVEL PELO SEU IDENTIFICADOR ---
     @Transactional(readOnly = true)
-    public ResponsavelResponseDTO buscarPorId(UUID id) {
+    public ResponsavelResponseDTO buscarPorId(Long id) {
         return toResponse(buscarEntidade(id));
     }
 
@@ -73,10 +72,11 @@ public class ResponsavelService {
 
     // --- ATUALIZA OS DADOS PESSOAIS E O PARENTESCO DE UM RESPONSÁVEL ---
     @Transactional
-    public ResponsavelResponseDTO atualizar(UUID id, ResponsavelRequestDTO dto) {
+    public ResponsavelResponseDTO atualizar(Long id, ResponsavelRequestDTO dto) {
         Responsavel responsavel = buscarEntidade(id);
 
         Usuario usuario = responsavel.getUsuario();
+
         usuario.setNome(dto.getNome());
         usuario.setEmail(dto.getEmail());
         usuario.setCpf(dto.getCpf());
@@ -90,14 +90,14 @@ public class ResponsavelService {
 
     // --- REMOVE UM RESPONSÁVEL PELO SEU IDENTIFICADOR ---
     @Transactional
-    public void deletar(UUID id) {
+    public void deletar(Long id) {
         Responsavel responsavel = buscarEntidade(id);
         responsavelRepository.delete(responsavel);
     }
 
     // --- LISTA OS ALUNOS VINCULADOS A UM RESPONSÁVEL ---
     @Transactional(readOnly = true)
-    public List<ResponsavelAlunoResponseDTO> listarAlunos(UUID responsavelId) {
+    public List<ResponsavelAlunoResponseDTO> listarAlunos(Long responsavelId) {
         buscarEntidade(responsavelId); // valida existência
         return responsavelAlunoRepository.findByResponsavelId(responsavelId)
                 .stream()
@@ -107,7 +107,7 @@ public class ResponsavelService {
 
     // --- VINCULA UM ALUNO A UM RESPONSÁVEL ---
     @Transactional
-    public ResponsavelAlunoResponseDTO vincularAluno(UUID responsavelId, VincularAlunoRequestDTO dto) {
+    public ResponsavelAlunoResponseDTO vincularAluno(Long responsavelId, VincularAlunoRequestDTO dto) {
         Responsavel responsavel = buscarEntidade(responsavelId);
         Aluno aluno = alunoRepository.findById(dto.getAlunoId())
                 .orElseThrow(() -> new ResourceNotFoundException("Aluno", dto.getAlunoId()));
@@ -127,7 +127,7 @@ public class ResponsavelService {
 
     // --- REMOVE O VÍNCULO ENTRE UM RESPONSÁVEL E UM ALUNO ---
     @Transactional
-    public void desvincularAluno(UUID responsavelId, UUID alunoId) {
+    public void desvincularAluno(Long responsavelId, Long alunoId) {
         ResponsavelAluno vinculo = responsavelAlunoRepository
                 .findByResponsavelIdAndAlunoId(responsavelId, alunoId)
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -136,7 +136,7 @@ public class ResponsavelService {
     }
 
     // --- BUSCA UM RESPONSÁVEL PELO IDENTIFICADOR OU LANÇA UMA EXCEÇÃO CASO ELE NÃO SEJA ENCONTRADO ---
-    private Responsavel buscarEntidade(UUID id) {
+    private Responsavel buscarEntidade(Long id) {
         return responsavelRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Responsável", id));
     }

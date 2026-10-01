@@ -7,17 +7,16 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface ResponsavelAlunoRepository extends JpaRepository<ResponsavelAluno, UUID> {
+public interface ResponsavelAlunoRepository extends JpaRepository<ResponsavelAluno, Long> {
 
-    List<ResponsavelAluno> findByResponsavelId(UUID responsavelId);
+    List<ResponsavelAluno> findByResponsavelId(Long responsavelId);
 
-    List<ResponsavelAluno> findByAlunoId(UUID alunoId);
+    List<ResponsavelAluno> findByAlunoId(Long alunoId);
 
-    Optional<ResponsavelAluno> findByResponsavelIdAndAlunoId(UUID responsavelId, UUID alunoId);
+    Optional<ResponsavelAluno> findByResponsavelIdAndAlunoId(Long responsavelId, Long alunoId);
 
-    boolean existsByResponsavelIdAndAlunoId(UUID responsavelId, UUID alunoId);
+    boolean existsByResponsavelIdAndAlunoId(Long responsavelId, Long alunoId);
 }
 

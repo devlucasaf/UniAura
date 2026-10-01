@@ -7,15 +7,14 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface ProfessorDisciplinaRepository extends JpaRepository<ProfessorDisciplina, UUID> {
+public interface ProfessorDisciplinaRepository extends JpaRepository<ProfessorDisciplina, Long> {
 
-    List<ProfessorDisciplina> findByProfessorId(UUID professorId);
+    List<ProfessorDisciplina> findByProfessorId(Long professorId);
 
-    Optional<ProfessorDisciplina> findByProfessorIdAndDisciplinaId(UUID professorId, UUID disciplinaId);
+    Optional<ProfessorDisciplina> findByProfessorIdAndDisciplinaId(Long professorId, Long disciplinaId);
 
-    boolean existsByProfessorIdAndDisciplinaId(UUID professorId, UUID disciplinaId);
+    boolean existsByProfessorIdAndDisciplinaId(Long professorId, Long disciplinaId);
 }
 

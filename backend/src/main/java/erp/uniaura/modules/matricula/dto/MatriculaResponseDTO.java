@@ -10,7 +10,6 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -19,17 +18,17 @@ import java.util.UUID;
 @Builder
 public class MatriculaResponseDTO {
 
-    private UUID            id;
-    private UUID            alunoId;
+    private Long            id;
+    private Long            alunoId;
     private String          alunoNome;
     private String          alunoMatriculaRA;
-    private UUID            turmaId;
+    private Long            turmaId;
     private String          turmaCodigo;
     private String          turmaPeriodoLetivo;
     private LocalDate       dataMatricula;
     private StatusMatricula status;
     private String          observacoes;
-    private UUID            criadaPorId;
+    private Long            criadaPorId;
     private String          criadaPorNome;
     private LocalDateTime   criadoEm;
     private LocalDateTime   atualizadoEm;

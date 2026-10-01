@@ -10,7 +10,6 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -19,9 +18,10 @@ import java.util.UUID;
 @Builder
 public class PagamentoResponseDTO {
 
-    private UUID            id;
+    private Long            id;
     private FormaPagamento  formaPagamento;
     private BigDecimal      valorPago;
+    private BigDecimal      valorMulta;
     private String          cartaoFinal;
     private LocalDateTime   dataPagamento;
 }

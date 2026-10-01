@@ -2,7 +2,7 @@ package erp.uniaura.modules.atividade.service;
 
 import erp.uniaura.exception.BusinessException;
 import erp.uniaura.exception.ResourceNotFoundException;
-import erp.uniaura.infra.security.UsuarioDetails;
+import erp.uniaura.infra.security.UsuarioAutenticadoProvider;
 import erp.uniaura.infra.storage.StorageService;
 import erp.uniaura.modules.aluno.model.Aluno;
 import erp.uniaura.modules.aluno.repository.AlunoRepository;
@@ -27,15 +27,12 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -44,34 +41,36 @@ public class AtividadeService {
     private static final String SUBDIR_ENTREGAS = "atividades/entregas";
 
     private final AtividadeRepository atividadeRepository;
-    private final EntregaAtividadeRepository entregaRepository;
+    private final EntregaAtividadeRepository entregaAtividadeRepository;
     private final TurmaDisciplinaRepository turmaDisciplinaRepository;
     private final AlunoRepository alunoRepository;
     private final MatriculaRepository matriculaRepository;
     private final StorageService storageService;
+    private final UsuarioAutenticadoProvider usuarioAutenticadoProvider;
 
     // --- LISTA AS ATIVIDADES DE UMA TURMA/DISCIPLINA ---
     @Transactional(readOnly = true)
-    public Page<AtividadeResponseDTO> listarPorTurmaDisciplina(UUID turmaDisciplinaId, Pageable pageable) {
+    public Page<AtividadeResponseDTO> listarPorTurmaDisciplina(Long turmaDisciplinaId, Pageable pageable) {
         buscarTurmaDisciplina(turmaDisciplinaId);
         return atividadeRepository.findByTurmaDisciplinaId(turmaDisciplinaId, pageable)
                 .map(this::toResponse);
     }
 
+    // --- BUSCA UMA ATIVIDADE PELO ID ---
     @Transactional(readOnly = true)
-    public AtividadeResponseDTO buscarPorId(UUID id) {
+    public AtividadeResponseDTO buscarPorId(Long id) {
         return toResponse(buscarEntidade(id));
     }
 
     // --- CRIAÇÃO DE UMA NOVA ATIVIDADE ---
     @Transactional
     public AtividadeResponseDTO criar(AtividadeRequestDTO dto) {
-        TurmaDisciplina td = buscarTurmaDisciplina(dto.getTurmaDisciplinaId());
-        Usuario autenticado = usuarioAutenticadoOuFalha();
-        Professor professor = validarProfessorDaDisciplina(td, autenticado);
+        TurmaDisciplina turmaDisciplina = buscarTurmaDisciplina(dto.getTurmaDisciplinaId());
+        Usuario usuarioAutenticado = usuarioAutenticadoOuFalha();
+        Professor professor = validarProfessorDaDisciplina(turmaDisciplina, usuarioAutenticado);
 
         Atividade atividade = Atividade.builder()
-                .turmaDisciplina(td)
+                .turmaDisciplina(turmaDisciplina)
                 .titulo(dto.getTitulo())
                 .descricao(dto.getDescricao())
                 .tipo(dto.getTipo())
@@ -91,10 +90,10 @@ public class AtividadeService {
 
     // --- ATUALIZAÇÃO DE METADADOS DA ATIVIDADE ---
     @Transactional
-    public AtividadeResponseDTO atualizar(UUID id, AtividadeRequestDTO dto) {
+    public AtividadeResponseDTO atualizar(Long id, AtividadeRequestDTO dto) {
         Atividade atividade = buscarEntidade(id);
-        Usuario autenticado = usuarioAutenticadoOuFalha();
-        validarPodeEditarAtividade(atividade, autenticado);
+        Usuario usuarioAutenticado = usuarioAutenticadoOuFalha();
+        validarPodeEditarAtividade(atividade, usuarioAutenticado);
 
         if (!atividade.getTurmaDisciplina().getId().equals(dto.getTurmaDisciplinaId())) {
             atividade.setTurmaDisciplina(buscarTurmaDisciplina(dto.getTurmaDisciplinaId()));
@@ -117,30 +116,31 @@ public class AtividadeService {
         return toResponse(atividadeRepository.save(atividade));
     }
 
+    // --- REMOVE A ATIVIDADE E OS ARQUIVOS DAS ENTREGAS VINCULADAS ---
     @Transactional
-    public void deletar(UUID id) {
+    public void deletar(Long id) {
         Atividade atividade = buscarEntidade(id);
-        Usuario autenticado = usuarioAutenticadoOuFalha();
-        validarPodeEditarAtividade(atividade, autenticado);
+        Usuario usuarioAutenticado = usuarioAutenticadoOuFalha();
+        validarPodeEditarAtividade(atividade, usuarioAutenticado);
 
-        entregaRepository.findByAtividadeId(id).forEach(e -> storageService.delete(e.getArquivoUrl()));
+        entregaAtividadeRepository.findByAtividadeId(id).forEach(e -> storageService.delete(e.getArquivoUrl()));
         atividadeRepository.delete(atividade);
     }
 
     // --- ALUNO ENTREGA A ATIVIDADE ---
     @Transactional
-    public EntregaAtividadeResponseDTO entregar(UUID atividadeId, MultipartFile arquivo, String comentarioAluno) {
+    public EntregaAtividadeResponseDTO entregar(Long atividadeId, MultipartFile arquivo, String comentarioAluno) {
         Atividade atividade = buscarEntidade(atividadeId);
 
         if (Boolean.FALSE.equals(atividade.getAtiva())) {
             throw new BusinessException("Esta atividade não está mais ativa.");
         }
 
-        Usuario autenticado = usuarioAutenticadoOuFalha();
-        Aluno aluno = alunoRepository.findByUsuarioId(autenticado.getId())
-                .orElseThrow(() -> new BusinessException("O usuário autenticado não está vinculado a um aluno."));
+        Usuario usuarioAutenticado = usuarioAutenticadoOuFalha();
+        Aluno aluno = alunoRepository.findByUsuarioId(usuarioAutenticado.getId())
+                .orElseThrow(() -> new BusinessException("O usuário usuarioAutenticado não está vinculado a um aluno."));
 
-        UUID turmaId = atividade.getTurmaDisciplina().getTurma().getId();
+        Long turmaId = atividade.getTurmaDisciplina().getTurma().getId();
         if (!matriculaRepository.existsByAlunoIdAndTurmaIdAndStatus(aluno.getId(), turmaId, StatusMatricula.ATIVA)) {
             throw new BusinessException("Aluno não possui matrícula ATIVA na turma desta atividade.");
         }
@@ -148,7 +148,7 @@ public class AtividadeService {
         LocalDateTime agora = LocalDateTime.now();
         StatusEntrega status = agora.isAfter(atividade.getDataEntrega()) ? StatusEntrega.ATRASADA : StatusEntrega.ENTREGUE;
 
-        EntregaAtividade entrega = entregaRepository.findByAtividadeIdAndAlunoId(atividadeId, aluno.getId())
+        EntregaAtividade entrega = entregaAtividadeRepository.findByAtividadeIdAndAlunoId(atividadeId, aluno.getId())
                 .orElseGet(() -> EntregaAtividade.builder()
                         .atividade(atividade)
                         .aluno(aluno)
@@ -169,17 +169,17 @@ public class AtividadeService {
         entrega.setDataEntrega(agora);
         entrega.setStatus(status);
 
-        return toEntregaResponse(entregaRepository.save(entrega));
+        return toEntregaResponse(entregaAtividadeRepository.save(entrega));
     }
 
     // --- PROFESSOR AVALIA UMA ENTREGA ---
     @Transactional
-    public EntregaAtividadeResponseDTO avaliar(UUID entregaId, AvaliarEntregaRequestDTO dto) {
-        EntregaAtividade entrega = entregaRepository.findById(entregaId)
+    public EntregaAtividadeResponseDTO avaliar(Long entregaId, AvaliarEntregaRequestDTO dto) {
+        EntregaAtividade entrega = entregaAtividadeRepository.findById(entregaId)
                 .orElseThrow(() -> new ResourceNotFoundException("Entrega de atividade", entregaId));
 
-        Usuario autenticado = usuarioAutenticadoOuFalha();
-        validarPodeEditarAtividade(entrega.getAtividade(), autenticado);
+        Usuario usuarioAutenticado = usuarioAutenticadoOuFalha();
+        validarPodeEditarAtividade(entrega.getAtividade(), usuarioAutenticado);
 
         if (dto.getNota().doubleValue() > entrega.getAtividade().getValorMaximo().doubleValue()) {
             throw new BusinessException("Nota não pode ultrapassar o valor máximo da atividade ("
@@ -190,45 +190,44 @@ public class AtividadeService {
         entrega.setFeedback(dto.getFeedback());
         entrega.setStatus(StatusEntrega.AVALIADA);
 
-        return toEntregaResponse(entregaRepository.save(entrega));
+        return toEntregaResponse(entregaAtividadeRepository.save(entrega));
     }
 
     // --- LISTA AS ENTREGAS DE UM ALUNO ---
     @Transactional(readOnly = true)
-    public Page<EntregaAtividadeResponseDTO> listarEntregasDoAluno(UUID alunoId, StatusEntrega status, Pageable pageable) {
+    public Page<EntregaAtividadeResponseDTO> listarEntregasDoAluno(Long alunoId, StatusEntrega status, Pageable pageable) {
         Page<EntregaAtividade> page = (status == null)
-                ? entregaRepository.findByAlunoId(alunoId, pageable)
-                : entregaRepository.findByAlunoIdAndStatus(alunoId, status, pageable);
+                ? entregaAtividadeRepository.findByAlunoId(alunoId, pageable)
+                : entregaAtividadeRepository.findByAlunoIdAndStatus(alunoId, status, pageable);
         return page.map(this::toEntregaResponse);
     }
 
     // --- LISTA AS ENTREGAS DE UMA ATIVIDADE ---
     @Transactional(readOnly = true)
-    public List<EntregaAtividadeResponseDTO> listarEntregasDaAtividade(UUID atividadeId) {
+    public List<EntregaAtividadeResponseDTO> listarEntregasDaAtividade(Long atividadeId) {
         buscarEntidade(atividadeId);
-        return entregaRepository.findByAtividadeId(atividadeId)
+        return entregaAtividadeRepository.findByAtividadeId(atividadeId)
                 .stream()
                 .map(this::toEntregaResponse)
                 .toList();
     }
 
-    private Atividade buscarEntidade(UUID id) {
+    // --- BUSCA A ATIVIDADE PELO ID OU LANÇA EXCEÇÃO SE NÃO EXISTIR ---
+    private Atividade buscarEntidade(Long id) {
         return atividadeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Atividade", id));
     }
 
-    private TurmaDisciplina buscarTurmaDisciplina(UUID id) {
+    // --- BUSCA O VÍNCULO TURMA/DISCIPLINA PELO ID OU LANÇA EXCEÇÃO SE NÃO EXISTIR ---
+    private TurmaDisciplina buscarTurmaDisciplina(Long id) {
         return turmaDisciplinaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Vínculo turma/disciplina", id));
     }
 
     // --- RECUPERA O Usuario AUTENTICADO A PARTIR DO SECURITYCONTEXT ---
     private Usuario usuarioAutenticadoOuFalha() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !(auth.getPrincipal() instanceof UsuarioDetails ud)) {
-            throw new BusinessException("Usuário autenticado não identificado.");
-        }
-        return ud.getUsuario();
+        return usuarioAutenticadoProvider.obter()
+                .orElseThrow(() -> new BusinessException("Usuário autenticado não identificado."));
     }
 
     // --- VALIDA QUE O PROFESSOR LOGADO É O RESPONSÁVEL PELA DISCIPLINA ALOCADA NA TURMA ---

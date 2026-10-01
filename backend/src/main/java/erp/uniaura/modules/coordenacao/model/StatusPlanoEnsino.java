@@ -3,7 +3,6 @@ package erp.uniaura.modules.coordenacao.model;
 import java.util.Set;
 
 public enum StatusPlanoEnsino {
-
     RASCUNHO,
     SUBMETIDO,
     DEVOLVIDO,

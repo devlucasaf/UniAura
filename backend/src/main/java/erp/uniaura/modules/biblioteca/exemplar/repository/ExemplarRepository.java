@@ -10,20 +10,21 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface ExemplarRepository extends JpaRepository<Exemplar, UUID> {
+public interface ExemplarRepository extends JpaRepository<Exemplar, Long> {
 
     Optional<Exemplar> findByCodigoBarras(String codigoBarras);
 
-    Page<Exemplar> findByLivroId(UUID livroId, Pageable pageable);
+    Page<Exemplar> findByLivroId(Long livroId, Pageable pageable);
 
-    List<Exemplar> findByLivroIdAndStatus(UUID livroId, StatusExemplar status);
+    List<Exemplar> findByLivroIdAndStatus(Long livroId, StatusExemplar status);
 
-    long countByLivroId(UUID livroId);
+    long countByLivroId(Long livroId);
 
-    long countByLivroIdAndStatus(UUID livroId, StatusExemplar status);
+    long countByLivroIdAndStatus(Long livroId, StatusExemplar status);
+
+    long countByStatus(StatusExemplar status);
 
     boolean existsByCodigoBarras(String codigoBarras);
 }

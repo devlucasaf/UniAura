@@ -8,16 +8,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface TurmaRepository extends JpaRepository<Turma, UUID> {
+public interface TurmaRepository extends JpaRepository<Turma, Long> {
 
     Optional<Turma> findByCodigo(String codigo);
 
     boolean existsByCodigo(String codigo);
 
-    Page<Turma> findByCursoId(UUID cursoId, Pageable pageable);
+    Page<Turma> findByCursoId(Long cursoId, Pageable pageable);
 
     Page<Turma> findByPeriodoLetivo(String periodoLetivo, Pageable pageable);
 }

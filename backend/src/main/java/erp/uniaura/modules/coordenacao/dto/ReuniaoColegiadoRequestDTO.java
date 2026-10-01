@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -20,7 +19,7 @@ import java.util.UUID;
 public class ReuniaoColegiadoRequestDTO {
 
     @NotNull
-    private UUID            cursoId;
+    private Long            cursoId;
 
     @NotNull
     @Size(min = 5, max = 200)

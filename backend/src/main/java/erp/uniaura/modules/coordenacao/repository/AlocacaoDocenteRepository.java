@@ -10,13 +10,9 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalTime;
 import java.util.List;
-import java.util.UUID;
 
 @Repository
-public interface AlocacaoDocenteRepository extends JpaRepository<TurmaDisciplina, UUID> {
-
-    // --- AULAS DO PROFESSOR QUE COLIDEM COM A FAIXA INFORMADA NO MESMO DIA E PERÍODO LETIVO ---
-    // --- DUAS FAIXAS SE SOBREPÕEM QUANDO CADA UMA COMEÇA ANTES DO FIM DA OUTRA ---
+public interface AlocacaoDocenteRepository extends JpaRepository<TurmaDisciplina, Long> {
     @Query("""
             SELECT td FROM TurmaDisciplina td
              WHERE td.professor.id = :professorId
@@ -26,12 +22,12 @@ public interface AlocacaoDocenteRepository extends JpaRepository<TurmaDisciplina
                AND td.horarioInicio < :horarioFim
                AND td.horarioFim > :horarioInicio
             """)
-    List<TurmaDisciplina> buscarConflitosDeHorario(@Param("professorId") UUID professorId,
+    List<TurmaDisciplina> buscarConflitosDeHorario(@Param("professorId") Long professorId,
                                                    @Param("diaSemana") DiaSemana diaSemana,
                                                    @Param("periodoLetivo") String periodoLetivo,
                                                    @Param("horarioInicio") LocalTime horarioInicio,
                                                    @Param("horarioFim") LocalTime horarioFim,
-                                                   @Param("ignorarVinculoId") UUID ignorarVinculoId);
+                                                   @Param("ignorarVinculoId") Long ignorarVinculoId);
 
     // --- TODAS AS AULAS DO PROFESSOR EM UM PERÍODO LETIVO ---
     @Query("""
@@ -40,6 +36,6 @@ public interface AlocacaoDocenteRepository extends JpaRepository<TurmaDisciplina
                AND (:periodoLetivo IS NULL OR td.turma.periodoLetivo = :periodoLetivo)
              ORDER BY td.diaSemana, td.horarioInicio
             """)
-    List<TurmaDisciplina> buscarAlocacoesDoProfessor(@Param("professorId") UUID professorId,
+    List<TurmaDisciplina> buscarAlocacoesDoProfessor(@Param("professorId") Long professorId,
                                                      @Param("periodoLetivo") String periodoLetivo);
 }

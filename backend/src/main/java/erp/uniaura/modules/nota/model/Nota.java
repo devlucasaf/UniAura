@@ -1,5 +1,6 @@
 package erp.uniaura.modules.nota.model;
 
+import erp.uniaura.infra.persistence.SqlServerBaseEntity;
 import erp.uniaura.modules.aluno.model.Aluno;
 import erp.uniaura.modules.turma.model.TurmaDisciplina;
 import erp.uniaura.modules.usuario.model.Usuario;
@@ -17,7 +18,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -26,21 +26,14 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "nota")
-public class Nota {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+public class Nota extends SqlServerBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "alunoId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkNotaAluno"))
+    @JoinColumn(name = "alunoId", nullable = false, foreignKey = @ForeignKey(name = "fkNotaAluno"))
     private Aluno aluno;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "turmaDisciplinaId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkNotaTurmaDisciplina"))
+    @JoinColumn(name = "turmaDisciplinaId", nullable = false, foreignKey = @ForeignKey(name = "fkNotaTurmaDisciplina"))
     private TurmaDisciplina turmaDisciplina;
 
     @Enumerated(EnumType.STRING)

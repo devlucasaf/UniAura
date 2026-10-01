@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -19,15 +18,16 @@ import java.util.UUID;
 @Builder
 public class DocumentoAlunoResponseDTO {
 
-    private UUID id;
-    private UUID alunoId;
-    private String alunoNome;
-    private TipoDocumento tipo;
-    private String nomeArquivo;
-    private String arquivoUrl;
+    private Long            id;
+    private Long            alunoId;
+    private String          alunoNome;
+    private TipoDocumento   tipo;
+    private String          nomeArquivo;
+    private String          arquivoUrl;
     private StatusDocumento status;
-    private String observacoes;
-    private String analisadoPorNome;
-    private LocalDateTime analisadoEm;
-    private LocalDateTime enviadoEm;
+    private Integer         versao;
+    private String          observacoes;
+    private String          analisadoPorNome;
+    private LocalDateTime   analisadoEm;
+    private LocalDateTime   enviadoEm;
 }

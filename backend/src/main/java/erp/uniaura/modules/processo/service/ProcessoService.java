@@ -3,7 +3,7 @@ package erp.uniaura.modules.processo.service;
 import erp.uniaura.exception.BusinessException;
 import erp.uniaura.exception.ResourceNotFoundException;
 import erp.uniaura.infra.protocolo.GeradorProtocolo;
-import erp.uniaura.infra.security.UsuarioDetails;
+import erp.uniaura.infra.security.UsuarioAutenticadoProvider;
 import erp.uniaura.modules.aluno.model.Aluno;
 import erp.uniaura.modules.aluno.repository.AlunoRepository;
 import erp.uniaura.modules.processo.dto.MovimentacaoProcessoResponseDTO;
@@ -23,8 +23,6 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +31,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -57,15 +54,16 @@ public class ProcessoService {
     ));
 
     private final ProcessoRepository processoRepository;
-    private final MovimentacaoProcessoRepository movimentacaoRepository;
+    private final MovimentacaoProcessoRepository movimentacaoProcessoRepository;
     private final AlunoRepository alunoRepository;
     private final GeradorProtocolo geradorProtocolo;
+    private final UsuarioAutenticadoProvider usuarioAutenticadoProvider;
 
     // --- O ALUNO AUTENTICADO ABRE UM NOVO REQUERIMENTO ---
     @Transactional
     public ProcessoResponseDTO abrir(ProcessoRequestDTO dto) {
-        Usuario autenticado = usuarioAutenticadoOuFalha();
-        Aluno aluno = alunoDoUsuarioOuFalha(autenticado);
+        Usuario usuarioAutenticado = usuarioAutenticadoOuFalha();
+        Aluno aluno = alunoDoUsuarioOuFalha(usuarioAutenticado);
 
         Processo processo = Processo.builder()
                 .protocolo(gerarProtocoloUnico())
@@ -78,7 +76,7 @@ public class ProcessoService {
 
         processoRepository.save(processo);
 
-        registrarMovimentacao(processo, autenticado, null, StatusProcesso.ABERTO,
+        registrarMovimentacao(processo, usuarioAutenticado, null, StatusProcesso.ABERTO,
                 "Processo aberto pelo aluno.", true);
 
         return toResponse(processo, List.of());
@@ -87,8 +85,8 @@ public class ProcessoService {
     // --- LISTA OS PROCESSOS DO ALUNO AUTENTICADO ---
     @Transactional(readOnly = true)
     public Page<ProcessoResponseDTO> listarMeusProcessos(StatusProcesso status, Pageable pageable) {
-        Usuario autenticado = usuarioAutenticadoOuFalha();
-        Aluno aluno = alunoDoUsuarioOuFalha(autenticado);
+        Usuario usuarioAutenticado = usuarioAutenticadoOuFalha();
+        Aluno aluno = alunoDoUsuarioOuFalha(usuarioAutenticado);
 
         Page<Processo> pagina = status == null
                 ? processoRepository.findByAlunoId(aluno.getId(), pageable)
@@ -100,16 +98,15 @@ public class ProcessoService {
     // --- LISTAGEM ADMINISTRATIVA COM FILTROS OPCIONAIS ---
     @Transactional(readOnly = true)
     public Page<ProcessoResponseDTO> listar(StatusProcesso status, TipoProcesso tipo, Pageable pageable) {
-        return processoRepository.buscarComFiltros(status, tipo, pageable)
-                .map(p -> toResponse(p, null));
+        return processoRepository.buscarComFiltros(status, tipo, pageable).map(p -> toResponse(p, null));
     }
 
     // --- BUSCA UM PROCESSO E A SUA LINHA DO TEMPO ---
     @Transactional(readOnly = true)
-    public ProcessoResponseDTO buscarPorId(UUID id) {
+    public ProcessoResponseDTO buscarPorId(Long id) {
         Processo processo = buscarEntidade(id);
-        Usuario autenticado = usuarioAutenticadoOuFalha();
-        boolean somenteVisiveis = validarPodeVisualizar(processo, autenticado);
+        Usuario usuarioAutenticado = usuarioAutenticadoOuFalha();
+        boolean somenteVisiveis = validarPodeVisualizar(processo, usuarioAutenticado);
 
         return toResponse(processo, buscarMovimentacoes(processo.getId(), somenteVisiveis));
     }
@@ -119,30 +116,29 @@ public class ProcessoService {
     public ProcessoResponseDTO buscarPorProtocolo(String protocolo) {
         Processo processo = processoRepository.findByProtocolo(protocolo)
                 .orElseThrow(() -> new ResourceNotFoundException("Processo", protocolo));
-        Usuario autenticado = usuarioAutenticadoOuFalha();
-        boolean somenteVisiveis = validarPodeVisualizar(processo, autenticado);
+        Usuario usuarioAutenticado = usuarioAutenticadoOuFalha();
+        boolean somenteVisiveis = validarPodeVisualizar(processo, usuarioAutenticado);
 
         return toResponse(processo, buscarMovimentacoes(processo.getId(), somenteVisiveis));
     }
 
     // --- A SECRETARIA MOVIMENTA O PROCESSO PARA UM NOVO STATUS ---
     @Transactional
-    public ProcessoResponseDTO tramitar(UUID id, TramitarProcessoRequestDTO dto) {
+    public ProcessoResponseDTO tramitar(Long id, TramitarProcessoRequestDTO dto) {
         Processo processo = buscarEntidade(id);
-        Usuario autenticado = usuarioAutenticadoOuFalha();
+        Usuario usuarioAutenticado = usuarioAutenticadoOuFalha();
 
-        StatusProcesso anterior = processo.getStatus();
-        validarTransicao(anterior, dto.getStatus());
+        StatusProcesso statusProcessoAnterior = processo.getStatus();
+        validarTransicao(statusProcessoAnterior, dto.getStatus());
 
-        boolean encerrando = dto.getStatus() == StatusProcesso.DEFERIDO
-                || dto.getStatus() == StatusProcesso.INDEFERIDO;
+        boolean encerrando = dto.getStatus() == StatusProcesso.DEFERIDO || dto.getStatus() == StatusProcesso.INDEFERIDO;
 
         if (encerrando && (dto.getComentario() == null || dto.getComentario().isBlank())) {
             throw new BusinessException("É obrigatório registrar o parecer ao deferir ou indeferir um processo.");
         }
 
         processo.setStatus(dto.getStatus());
-        processo.setResponsavel(autenticado);
+        processo.setResponsavel(usuarioAutenticado);
 
         if (dto.getPrazoResposta() != null) {
             processo.setPrazoResposta(dto.getPrazoResposta());
@@ -156,36 +152,36 @@ public class ProcessoService {
         processoRepository.save(processo);
 
         boolean visivel = dto.getVisivelParaAluno() == null || dto.getVisivelParaAluno();
-        registrarMovimentacao(processo, autenticado, anterior, dto.getStatus(), dto.getComentario(), visivel);
+        registrarMovimentacao(processo, usuarioAutenticado, statusProcessoAnterior, dto.getStatus(), dto.getComentario(), visivel);
 
         return toResponse(processo, buscarMovimentacoes(processo.getId(), false));
     }
 
     // --- O ALUNO CANCELA UM REQUERIMENTO QUE AINDA NÃO FOI CONCLUÍDO ---
     @Transactional
-    public ProcessoResponseDTO cancelar(UUID id, String motivo) {
+    public ProcessoResponseDTO cancelar(Long id, String motivo) {
         Processo processo = buscarEntidade(id);
-        Usuario autenticado = usuarioAutenticadoOuFalha();
+        Usuario usuarioAutenticado = usuarioAutenticadoOuFalha();
 
-        if (!ehDonoDoProcesso(processo, autenticado)) {
+        if (!ehDonoDoProcesso(processo, usuarioAutenticado)) {
             throw new BusinessException("Apenas o aluno autor do processo pode cancelá-lo.");
         }
 
-        StatusProcesso anterior = processo.getStatus();
-        validarTransicao(anterior, StatusProcesso.CANCELADO);
+        StatusProcesso statusProcessoAnterior = processo.getStatus();
+        validarTransicao(statusProcessoAnterior, StatusProcesso.CANCELADO);
 
         processo.setStatus(StatusProcesso.CANCELADO);
         processo.setEncerradoEm(LocalDateTime.now());
         processoRepository.save(processo);
 
-        registrarMovimentacao(processo, autenticado, anterior, StatusProcesso.CANCELADO,
+        registrarMovimentacao(processo, usuarioAutenticado, statusProcessoAnterior, StatusProcesso.CANCELADO,
                 motivo == null || motivo.isBlank() ? "Cancelado pelo aluno." : motivo, true);
 
         return toResponse(processo, buscarMovimentacoes(processo.getId(), true));
     }
 
     // --- BUSCA O PROCESSO PELO IDENTIFICADOR OU LANÇA UMA EXCEÇÃO CASO ELE NÃO SEJA ENCONTRADO ---
-    private Processo buscarEntidade(UUID id) {
+    private Processo buscarEntidade(Long id) {
         return processoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Processo", id));
     }
@@ -203,8 +199,8 @@ public class ProcessoService {
 
     // --- GRAVA UM PASSO NA LINHA DO TEMPO DO PROCESSO ---
     private void registrarMovimentacao(Processo processo, Usuario autor, StatusProcesso anterior,
-                                       StatusProcesso novo, String comentario, boolean visivelParaAluno) {
-        movimentacaoRepository.save(MovimentacaoProcesso.builder()
+                   StatusProcesso novo, String comentario, boolean visivelParaAluno) {
+        movimentacaoProcessoRepository.save(MovimentacaoProcesso.builder()
                 .processo(processo)
                 .autor(autor)
                 .statusAnterior(anterior)
@@ -215,10 +211,10 @@ public class ProcessoService {
     }
 
     // --- CARREGA A LINHA DO TEMPO, OCULTANDO OS DESPACHOS INTERNOS QUANDO O LEITOR É O ALUNO ---
-    private List<MovimentacaoProcessoResponseDTO> buscarMovimentacoes(UUID processoId, boolean somenteVisiveis) {
+    private List<MovimentacaoProcessoResponseDTO> buscarMovimentacoes(Long processoId, boolean somenteVisiveis) {
         List<MovimentacaoProcesso> movimentacoes = somenteVisiveis
-                ? movimentacaoRepository.findByProcessoIdAndVisivelParaAlunoTrueOrderByCriadoEmAsc(processoId)
-                : movimentacaoRepository.findByProcessoIdOrderByCriadoEmAsc(processoId);
+                ? movimentacaoProcessoRepository.findByProcessoIdAndVisivelParaAlunoTrueOrderByCriadoEmAsc(processoId)
+                : movimentacaoProcessoRepository.findByProcessoIdOrderByCriadoEmAsc(processoId);
 
         return movimentacoes.stream().map(this::toMovimentacaoResponse).toList();
     }
@@ -265,11 +261,8 @@ public class ProcessoService {
 
     // --- RECUPERA O USUÁRIO AUTENTICADO OU LANÇA UMA EXCEÇÃO CASO ELE NÃO SEJA IDENTIFICADO ---
     private Usuario usuarioAutenticadoOuFalha() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !(auth.getPrincipal() instanceof UsuarioDetails ud)) {
-            throw new BusinessException("Usuário autenticado não identificado.");
-        }
-        return ud.getUsuario();
+        return usuarioAutenticadoProvider.obter()
+                .orElseThrow(() -> new BusinessException("Usuário autenticado não identificado."));
     }
 
     // --- RECUPERA O CADASTRO DE ALUNO VINCULADO AO USUÁRIO AUTENTICADO ---

@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -18,14 +17,14 @@ import java.util.UUID;
 @Builder
 public class MaterialResponseDTO {
 
-    private UUID            id;
-    private UUID            turmaDisciplinaId;
+    private Long            id;
+    private Long            turmaDisciplinaId;
     private String          titulo;
     private String          descricao;
     private TipoMaterial    tipo;
     private String          arquivoUrl;
     private String          linkUrl;
-    private UUID            professorId;
+    private Long            professorId;
     private String          professorNome;
     private LocalDateTime   criadoEm;
     private LocalDateTime   atualizadoEm;

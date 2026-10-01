@@ -6,6 +6,7 @@ import erp.uniaura.dto.auth.RefreshTokenRequestDTO;
 import erp.uniaura.dto.auth.RegisterRequestDTO;
 import erp.uniaura.exception.BusinessException;
 import erp.uniaura.exception.ResourceNotFoundException;
+import erp.uniaura.infra.security.LoginRateLimiter;
 import erp.uniaura.infra.security.TokenService;
 import erp.uniaura.infra.security.UsuarioDetails;
 import erp.uniaura.modules.usuario.dto.UsuarioRequestDTO;
@@ -23,8 +24,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class AutenticacaoService {
@@ -33,18 +32,23 @@ public class AutenticacaoService {
     private final TokenService tokenService;
     private final UsuarioService usuarioService;
     private final UsuarioRepository usuarioRepository;
+    private final LoginRateLimiter loginRateLimiter;
 
     // --- AUTENTICA O USUÁRIO POR E-MAIL/SENHA E DEVOLVE OS TOKENS ---
     @Transactional(readOnly = true)
     public LoginResponseDTO login(LoginRequestDTO dto) {
+        loginRateLimiter.verificarBloqueio(dto.getEmail());
+
         try {
             Authentication auth = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getSenha())
             );
 
             Usuario usuario = ((UsuarioDetails) auth.getPrincipal()).getUsuario();
+            loginRateLimiter.registrarSucesso(dto.getEmail());
             return montarLoginResponse(usuario);
         } catch (BadCredentialsException ex) {
+            loginRateLimiter.registrarFalha(dto.getEmail());
             throw new BusinessException("E-mail ou senha inválidos.");
         }
     }
@@ -83,7 +87,7 @@ public class AutenticacaoService {
 
     // --- RETORNA OS DADOS DO USUÁRIO AUTENTICADO ---
     @Transactional(readOnly = true)
-    public UsuarioResponseDTO dadosDoUsuario(UUID usuarioId) {
+    public UsuarioResponseDTO dadosDoUsuario(Long usuarioId) {
         return usuarioService.buscarPorId(usuarioId);
     }
 
@@ -92,7 +96,7 @@ public class AutenticacaoService {
         return LoginResponseDTO.builder()
                 .token(tokenService.gerarToken(usuario))
                 .refreshToken(tokenService.gerarRefreshToken(usuario))
-                .usuario(usuarioService.buscarPorId(usuario.getId()))
+                .usuarioDTO(usuarioService.buscarPorId(usuario.getId()))
                 .build();
     }
 }

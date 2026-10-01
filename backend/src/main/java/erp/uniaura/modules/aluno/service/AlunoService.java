@@ -2,7 +2,7 @@ package erp.uniaura.modules.aluno.service;
 
 import erp.uniaura.exception.BusinessException;
 import erp.uniaura.exception.ResourceNotFoundException;
-import erp.uniaura.infra.security.UsuarioDetails;
+import erp.uniaura.infra.security.UsuarioAutenticadoProvider;
 import erp.uniaura.modules.aluno.dto.AlunoRequestDTO;
 import erp.uniaura.modules.aluno.dto.AlunoResponseDTO;
 import erp.uniaura.modules.aluno.model.Aluno;
@@ -19,12 +19,8 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +29,7 @@ public class AlunoService {
     private final AlunoRepository alunoRepository;
     private final UsuarioService usuarioService;
     private final AuditoriaService auditoriaService;
+    private final UsuarioAutenticadoProvider usuarioAutenticadoProvider;
 
     // --- LISTA ALUNOS ---
     @Transactional(readOnly = true)
@@ -45,7 +42,7 @@ public class AlunoService {
 
     // --- BUSCA ALUNO POR ID ---
     @Transactional(readOnly = true)
-    public AlunoResponseDTO buscarPorId(UUID id) {
+    public AlunoResponseDTO buscarPorId(Long id) {
         return toResponse(buscarEntidade(id));
     }
 
@@ -91,7 +88,7 @@ public class AlunoService {
 
     // --- ATUALIZA OS DADOS ACADÊMICOS DO ALUNO E DO USUÁRIO VINCULADO ---
     @Transactional
-    public AlunoResponseDTO atualizar(UUID id, AlunoRequestDTO dto) {
+    public AlunoResponseDTO atualizar(Long id, AlunoRequestDTO dto) {
         Aluno aluno = buscarEntidade(id);
 
         if (!aluno.getMatriculaRA().equalsIgnoreCase(dto.getMatriculaRA()) &&
@@ -119,7 +116,7 @@ public class AlunoService {
 
     // --- REMOVE O ALUNO ---
     @Transactional
-    public void deletar(UUID id) {
+    public void deletar(Long id) {
         Aluno aluno = buscarEntidade(id);
         String nomeAluno = aluno.getUsuario() == null ? null : aluno.getUsuario().getNome();
         alunoRepository.delete(aluno);
@@ -128,12 +125,11 @@ public class AlunoService {
 
     // --- RECUPERA O USUÁRIO AUTENTICADO, OU NULO QUANDO NÃO HÁ CONTEXTO DE SEGURANÇA DISPONÍVEL ---
     private Usuario usuarioAutenticadoOuNulo() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return (auth != null && auth.getPrincipal() instanceof UsuarioDetails ud) ? ud.getUsuario() : null;
+        return usuarioAutenticadoProvider.obter().orElse(null);
     }
 
     // --- BUSCA A ENTIDADE ---
-    private Aluno buscarEntidade(UUID id) {
+    private Aluno buscarEntidade(Long id) {
         return alunoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Aluno", id));
     }

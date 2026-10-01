@@ -9,18 +9,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface AlunoRepository extends JpaRepository<Aluno, UUID> {
+public interface AlunoRepository extends JpaRepository<Aluno, Long> {
 
     Optional<Aluno> findByMatriculaRA(String matriculaRA);
 
     boolean existsByMatriculaRA(String matriculaRA);
 
-    Optional<Aluno> findByUsuarioId(UUID usuarioId);
+    Optional<Aluno> findByUsuarioId(Long usuarioId);
 
     Page<Aluno> findByStatus(StatusAluno status, Pageable pageable);
 
-    Page<Aluno> findByTurmaAtualId(UUID turmaAtualId, Pageable pageable);
+    Page<Aluno> findByTurmaAtualId(Long turmaAtualId, Pageable pageable);
 }

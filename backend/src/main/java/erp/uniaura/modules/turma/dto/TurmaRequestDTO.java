@@ -13,8 +13,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,7 +25,7 @@ public class TurmaRequestDTO {
     private String codigo;
 
     @NotNull
-    private UUID cursoId;
+    private Long cursoId;
 
     @NotBlank
     @Size(max = 20)
@@ -43,8 +41,7 @@ public class TurmaRequestDTO {
     @NotNull
     private Turno turno;
 
-    // --- OPCIONAL ---
-    private UUID professorRegenteId;
+    private Long professorRegenteId;
 
     @NotNull
     @Positive

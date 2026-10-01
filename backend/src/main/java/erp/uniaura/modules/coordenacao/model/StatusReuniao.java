@@ -3,7 +3,6 @@ package erp.uniaura.modules.coordenacao.model;
 import java.util.Set;
 
 public enum StatusReuniao {
-
     AGENDADA,
     REALIZADA,
     CANCELADA;

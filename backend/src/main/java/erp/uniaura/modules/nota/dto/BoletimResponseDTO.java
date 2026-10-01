@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -16,7 +15,7 @@ import java.util.UUID;
 @Builder
 public class BoletimResponseDTO {
 
-    private UUID                    alunoId;
+    private Long                    alunoId;
     private String                  alunoNome;
     private String                  alunoMatriculaRA;
     private String                  periodoLetivo;

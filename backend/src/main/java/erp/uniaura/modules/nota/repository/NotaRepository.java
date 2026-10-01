@@ -6,15 +6,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.UUID;
 
 @Repository
-public interface NotaRepository extends JpaRepository<Nota, UUID> {
+public interface NotaRepository extends JpaRepository<Nota, Long> {
 
-    List<Nota> findByTurmaDisciplina_TurmaIdAndTurmaDisciplina_DisciplinaId(UUID turmaId, UUID disciplinaId);
+    List<Nota> findByTurmaDisciplina_TurmaIdAndTurmaDisciplina_DisciplinaId(Long turmaId, Long disciplinaId);
 
-    List<Nota> findByAlunoId(UUID alunoId);
+    List<Nota> findByAlunoId(Long alunoId);
 
-    List<Nota> findByAlunoIdAndTurmaDisciplina_TurmaPeriodoLetivo(UUID alunoId, String periodoLetivo);
+    List<Nota> findByAlunoIdAndTurmaDisciplina_TurmaPeriodoLetivo(Long alunoId, String periodoLetivo);
 }
 

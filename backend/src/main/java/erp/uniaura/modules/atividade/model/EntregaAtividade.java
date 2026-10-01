@@ -1,5 +1,6 @@
 package erp.uniaura.modules.atividade.model;
 
+import erp.uniaura.infra.persistence.SqlServerBaseEntity;
 import erp.uniaura.modules.aluno.model.Aluno;
 
 import jakarta.persistence.*;
@@ -15,7 +16,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -23,22 +23,18 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "entregaAtividade", uniqueConstraints = @UniqueConstraint(name = "ukEntregaAtividadeAtividadeAluno", columnNames = {"atividadeId", "alunoId"}))
-public class EntregaAtividade {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+@Table(name = "entregaAtividade", uniqueConstraints = @UniqueConstraint(
+        name = "ukEntregaAtividadeAtividadeAluno",
+        columnNames = {"atividadeId", "alunoId"})
+)
+public class EntregaAtividade extends SqlServerBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "atividadeId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkEntregaAtividadeAtividade"))
+    @JoinColumn(name = "atividadeId", nullable = false, foreignKey = @ForeignKey(name = "fkEntregaAtividadeAtividade"))
     private Atividade atividade;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "alunoId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkEntregaAtividadeAluno"))
+    @JoinColumn(name = "alunoId", nullable = false, foreignKey = @ForeignKey(name = "fkEntregaAtividadeAluno"))
     private Aluno aluno;
 
     @Column(name = "arquivoUrl", length = 500)

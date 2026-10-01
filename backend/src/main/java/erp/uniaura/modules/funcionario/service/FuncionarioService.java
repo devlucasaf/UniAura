@@ -18,8 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class FuncionarioService {
@@ -38,7 +36,7 @@ public class FuncionarioService {
 
     // --- BUSCA FUNCIONÁRIO POR ID ---
     @Transactional(readOnly = true)
-    public FuncionarioResponseDTO buscarPorId(UUID id) {
+    public FuncionarioResponseDTO buscarPorId(Long id) {
         return toResponse(buscarEntidade(id));
     }
 
@@ -68,7 +66,7 @@ public class FuncionarioService {
 
     // --- ATUALIZA OS DADOS DO FUNCIONÁRIO E DO USUÁRIO VINCULADO ---
     @Transactional
-    public FuncionarioResponseDTO atualizar(UUID id, FuncionarioRequestDTO dto) {
+    public FuncionarioResponseDTO atualizar(Long id, FuncionarioRequestDTO dto) {
         Funcionario funcionario = buscarEntidade(id);
         Usuario usuario = funcionario.getUsuario();
 
@@ -91,31 +89,31 @@ public class FuncionarioService {
 
     // --- REMOVE UM FUNCIONÁRIO ---
     @Transactional
-    public void deletar(UUID id) {
+    public void deletar(Long id) {
         Funcionario funcionario = buscarEntidade(id);
         funcionarioRepository.delete(funcionario);
     }
 
     // --- BUSCA A ENTIDADE ---
-    private Funcionario buscarEntidade(UUID id) {
+    private Funcionario buscarEntidade(Long id) {
         return funcionarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Funcionário", id));
     }
 
     // --- CONVERTE Funcionario PARA O DTO DE RESPOSTA ---
     private FuncionarioResponseDTO toResponse(Funcionario funcionario) {
-        Usuario u = funcionario.getUsuario();
+        Usuario usuario = funcionario.getUsuario();
         UsuarioResponseDTO usuarioDto = UsuarioResponseDTO.builder()
-                .id(u.getId())
-                .nome(u.getNome())
-                .email(u.getEmail())
-                .cpf(u.getCpf())
-                .telefone(u.getTelefone())
-                .dataNascimento(u.getDataNascimento())
-                .ativo(u.getAtivo())
-                .role(u.getRole())
-                .criadoEm(u.getCriadoEm())
-                .atualizadoEm(u.getAtualizadoEm())
+                .id(usuario.getId())
+                .nome(usuario.getNome())
+                .email(usuario.getEmail())
+                .cpf(usuario.getCpf())
+                .telefone(usuario.getTelefone())
+                .dataNascimento(usuario.getDataNascimento())
+                .ativo(usuario.getAtivo())
+                .role(usuario.getRole())
+                .criadoEm(usuario.getCriadoEm())
+                .atualizadoEm(usuario.getAtualizadoEm())
                 .build();
 
         return FuncionarioResponseDTO.builder()

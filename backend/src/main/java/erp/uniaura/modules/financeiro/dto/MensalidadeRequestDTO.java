@@ -15,7 +15,6 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -25,7 +24,7 @@ import java.util.UUID;
 public class MensalidadeRequestDTO {
 
     @NotNull(message = "O aluno é obrigatório.")
-    private UUID alunoId;
+    private Long alunoId;
 
     @NotNull(message = "A competência é obrigatória.")
     @Pattern(regexp = "\\d{4}-\\d{2}", message = "Informe a competência no formato AAAA-MM.")

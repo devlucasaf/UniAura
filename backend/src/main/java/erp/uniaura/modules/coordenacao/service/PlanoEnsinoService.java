@@ -2,7 +2,7 @@ package erp.uniaura.modules.coordenacao.service;
 
 import erp.uniaura.exception.BusinessException;
 import erp.uniaura.exception.ResourceNotFoundException;
-import erp.uniaura.infra.security.UsuarioDetails;
+import erp.uniaura.infra.security.UsuarioAutenticadoProvider;
 import erp.uniaura.modules.coordenacao.dto.AvaliacaoPlanoEnsinoResponseDTO;
 import erp.uniaura.modules.coordenacao.dto.AvaliarPlanoEnsinoRequestDTO;
 import erp.uniaura.modules.coordenacao.dto.PlanoEnsinoRequestDTO;
@@ -23,30 +23,27 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class PlanoEnsinoService {
 
-    // --- DESFECHOS ACEITOS NA AVALIAÇÃO DA COORDENAÇÃO ---
     private static final Set<StatusPlanoEnsino> DESFECHOS = Set.of(
             StatusPlanoEnsino.APROVADO,
             StatusPlanoEnsino.DEVOLVIDO,
             StatusPlanoEnsino.REPROVADO);
 
-    private final PlanoEnsinoRepository planoRepository;
-    private final AvaliacaoPlanoEnsinoRepository avaliacaoRepository;
+    private final PlanoEnsinoRepository planoEnsinoRepository;
+    private final AvaliacaoPlanoEnsinoRepository avaliacaoPlanoEnsinoRepository;
     private final TurmaDisciplinaRepository turmaDisciplinaRepository;
     private final ProfessorRepository professorRepository;
+    private final UsuarioAutenticadoProvider usuarioAutenticadoProvider;
 
     // --- O PROFESSOR CRIA O PLANO DA SUA TURMA/DISCIPLINA EM RASCUNHO ---
     @Transactional
@@ -54,7 +51,7 @@ public class PlanoEnsinoService {
         Usuario autenticado = usuarioAutenticadoOuFalha();
         TurmaDisciplina td = buscarTurmaDisciplina(dto.getTurmaDisciplinaId());
 
-        if (planoRepository.existsByTurmaDisciplinaId(td.getId())) {
+        if (planoEnsinoRepository.existsByTurmaDisciplinaId(td.getId())) {
             throw new BusinessException("Já existe um plano de ensino para esta turma/disciplina.");
         }
 
@@ -67,7 +64,7 @@ public class PlanoEnsinoService {
                 .build();
 
         aplicarConteudo(plano, dto);
-        planoRepository.save(plano);
+        planoEnsinoRepository.save(plano);
 
         registrarHistorico(plano, autenticado, null, StatusPlanoEnsino.RASCUNHO, "Plano de ensino criado.");
 
@@ -76,41 +73,40 @@ public class PlanoEnsinoService {
 
     // --- ATUALIZA O CONTEÚDO ENQUANTO O PLANO AINDA É EDITÁVEL ---
     @Transactional
-    public PlanoEnsinoResponseDTO atualizar(UUID id, PlanoEnsinoRequestDTO dto) {
+    public PlanoEnsinoResponseDTO atualizar(Long id, PlanoEnsinoRequestDTO dto) {
         PlanoEnsino plano = buscarEntidade(id);
         Usuario autenticado = usuarioAutenticadoOuFalha();
 
         validarPodeEditarConteudo(plano.getTurmaDisciplina(), autenticado);
 
         if (!plano.getStatus().isEditavel()) {
-            throw new BusinessException(
-                    "O plano está %s e só pode ser editado em RASCUNHO ou DEVOLVIDO.".formatted(plano.getStatus()));
+            throw new BusinessException("O plano está %s e só pode ser editado em RASCUNHO ou DEVOLVIDO.".formatted(plano.getStatus()));
         }
 
         aplicarConteudo(plano, dto);
-        planoRepository.save(plano);
+        planoEnsinoRepository.save(plano);
 
         return toResponse(plano, buscarHistorico(plano.getId()));
     }
 
     // --- O PROFESSOR ENVIA O PLANO PARA A COORDENAÇÃO ---
     @Transactional
-    public PlanoEnsinoResponseDTO submeter(UUID id) {
+    public PlanoEnsinoResponseDTO submeter(Long id) {
         PlanoEnsino plano = buscarEntidade(id);
         Usuario autenticado = usuarioAutenticadoOuFalha();
 
         validarPodeEditarConteudo(plano.getTurmaDisciplina(), autenticado);
 
         if (!plano.getStatus().isEditavel()) {
-            throw new BusinessException(
-                    "Somente um plano em RASCUNHO ou DEVOLVIDO pode ser submetido. Status atual: %s."
-                            .formatted(plano.getStatus()));
+            throw new BusinessException("Somente um plano em RASCUNHO ou DEVOLVIDO pode ser submetido. Status atual: %s."
+                            .formatted(plano.getStatus())
+            );
         }
 
         StatusPlanoEnsino anterior = plano.getStatus();
         plano.setStatus(StatusPlanoEnsino.SUBMETIDO);
         plano.setSubmetidoEm(LocalDateTime.now());
-        planoRepository.save(plano);
+        planoEnsinoRepository.save(plano);
 
         registrarHistorico(plano, autenticado, anterior, StatusPlanoEnsino.SUBMETIDO,
                 "Plano submetido para avaliação da coordenação.");
@@ -120,7 +116,7 @@ public class PlanoEnsinoService {
 
     // --- A COORDENAÇÃO APROVA, DEVOLVE PARA AJUSTE OU REPROVA ---
     @Transactional
-    public PlanoEnsinoResponseDTO avaliar(UUID id, AvaliarPlanoEnsinoRequestDTO dto) {
+    public PlanoEnsinoResponseDTO avaliar(Long id, AvaliarPlanoEnsinoRequestDTO dto) {
         PlanoEnsino plano = buscarEntidade(id);
         Usuario autenticado = usuarioAutenticadoOuFalha();
 
@@ -143,7 +139,7 @@ public class PlanoEnsinoService {
         plano.setAvaliadoPor(autenticado);
         plano.setParecer(dto.getParecer());
         plano.setAvaliadoEm(LocalDateTime.now());
-        planoRepository.save(plano);
+        planoEnsinoRepository.save(plano);
 
         registrarHistorico(plano, autenticado, anterior, dto.getStatus(), dto.getParecer());
 
@@ -152,10 +148,10 @@ public class PlanoEnsinoService {
 
     // --- FILA DA COORDENAÇÃO ---
     @Transactional(readOnly = true)
-    public Page<PlanoEnsinoResponseDTO> listar(StatusPlanoEnsino status, UUID cursoId,
-                                               String periodoLetivo, Pageable pageable) {
+    public Page<PlanoEnsinoResponseDTO> listar(StatusPlanoEnsino status, Long cursoId,
+                String periodoLetivo, Pageable pageable) {
         String periodo = (periodoLetivo == null || periodoLetivo.isBlank()) ? null : periodoLetivo;
-        return planoRepository.buscarComFiltros(status, cursoId, periodo, pageable)
+        return planoEnsinoRepository.buscarComFiltros(status, cursoId, periodo, pageable)
                 .map(p -> toResponse(p, null));
     }
 
@@ -163,31 +159,29 @@ public class PlanoEnsinoService {
     @Transactional(readOnly = true)
     public Page<PlanoEnsinoResponseDTO> listarMeusPlanos(Pageable pageable) {
         Usuario autenticado = usuarioAutenticadoOuFalha();
-        return planoRepository.findByProfessorId(professorDoUsuarioOuFalha(autenticado), pageable)
+        return planoEnsinoRepository.findByProfessorId(professorDoUsuarioOuFalha(autenticado), pageable)
                 .map(p -> toResponse(p, null));
     }
 
     @Transactional(readOnly = true)
-    public PlanoEnsinoResponseDTO buscarPorId(UUID id) {
+    public PlanoEnsinoResponseDTO buscarPorId(Long id) {
         PlanoEnsino plano = buscarEntidade(id);
         return toResponse(plano, buscarHistorico(plano.getId()));
     }
 
     @Transactional(readOnly = true)
-    public PlanoEnsinoResponseDTO buscarPorTurmaDisciplina(UUID turmaDisciplinaId) {
-        PlanoEnsino plano = planoRepository.findByTurmaDisciplinaId(turmaDisciplinaId)
+    public PlanoEnsinoResponseDTO buscarPorTurmaDisciplina(Long turmaDisciplinaId) {
+        PlanoEnsino plano = planoEnsinoRepository.findByTurmaDisciplinaId(turmaDisciplinaId)
                 .orElseThrow(() -> new ResourceNotFoundException("Plano de ensino (turma/disciplina)", turmaDisciplinaId));
         return toResponse(plano, buscarHistorico(plano.getId()));
     }
 
-    // --- HELPERS ---
-
-    private PlanoEnsino buscarEntidade(UUID id) {
-        return planoRepository.findById(id)
+    private PlanoEnsino buscarEntidade(Long id) {
+        return planoEnsinoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Plano de ensino", id));
     }
 
-    private TurmaDisciplina buscarTurmaDisciplina(UUID id) {
+    private TurmaDisciplina buscarTurmaDisciplina(Long id) {
         return turmaDisciplinaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Vínculo turma/disciplina", id));
     }
@@ -206,7 +200,7 @@ public class PlanoEnsinoService {
     // --- GRAVA UM PASSO NO HISTÓRICO DO PLANO ---
     private void registrarHistorico(PlanoEnsino plano, Usuario autor, StatusPlanoEnsino anterior,
                                     StatusPlanoEnsino novo, String parecer) {
-        avaliacaoRepository.save(AvaliacaoPlanoEnsino.builder()
+        avaliacaoPlanoEnsinoRepository.save(AvaliacaoPlanoEnsino.builder()
                 .planoEnsino(plano)
                 .autor(autor)
                 .statusAnterior(anterior)
@@ -215,8 +209,8 @@ public class PlanoEnsinoService {
                 .build());
     }
 
-    private List<AvaliacaoPlanoEnsinoResponseDTO> buscarHistorico(UUID planoId) {
-        return avaliacaoRepository.findByPlanoEnsinoIdOrderByCriadoEmAsc(planoId)
+    private List<AvaliacaoPlanoEnsinoResponseDTO> buscarHistorico(Long planoId) {
+        return avaliacaoPlanoEnsinoRepository.findByPlanoEnsinoIdOrderByCriadoEmAsc(planoId)
                 .stream()
                 .map(a -> AvaliacaoPlanoEnsinoResponseDTO.builder()
                         .id(a.getId())
@@ -243,18 +237,15 @@ public class PlanoEnsinoService {
     }
 
     // --- RECUPERA O IDENTIFICADOR DO PROFESSOR VINCULADO AO USUÁRIO AUTENTICADO ---
-    private UUID professorDoUsuarioOuFalha(Usuario usuario) {
+    private Long professorDoUsuarioOuFalha(Usuario usuario) {
         return professorRepository.findByUsuarioId(usuario.getId())
                 .map(Professor::getId)
                 .orElseThrow(() -> new BusinessException("O usuário autenticado não possui cadastro de professor."));
     }
 
     private Usuario usuarioAutenticadoOuFalha() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !(auth.getPrincipal() instanceof UsuarioDetails ud)) {
-            throw new BusinessException("Usuário autenticado não identificado.");
-        }
-        return ud.getUsuario();
+        return usuarioAutenticadoProvider.obter()
+                .orElseThrow(() -> new BusinessException("Usuário autenticado não identificado."));
     }
 
     // --- CONVERTE A ENTIDADE PLANO DE ENSINO EM UM DTO DE RESPOSTA ---

@@ -1,13 +1,12 @@
 package erp.uniaura.modules.responsavel.model;
 
+import erp.uniaura.infra.persistence.SqlServerBaseEntity;
 import erp.uniaura.modules.aluno.model.Aluno;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -22,7 +21,6 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -30,27 +28,17 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(
-        name = "responsavelAluno",
-        uniqueConstraints = @UniqueConstraint(
-                name = "ukResponsavelAluno",
-                columnNames = {"responsavelId", "alunoId"})
+@Table(name = "responsavelAluno", uniqueConstraints = @UniqueConstraint(
+                name = "ukResponsavelAluno", columnNames = {"responsavelId", "alunoId"})
 )
-public class ResponsavelAluno {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+public class ResponsavelAluno extends SqlServerBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "responsavelId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkResponsavelAlunoResponsavel"))
+    @JoinColumn(name = "responsavelId", nullable = false, foreignKey = @ForeignKey(name = "fkResponsavelAlunoResponsavel"))
     private Responsavel responsavel;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "alunoId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkResponsavelAlunoAluno"))
+    @JoinColumn(name = "alunoId", nullable = false, foreignKey = @ForeignKey(name = "fkResponsavelAlunoAluno"))
     private Aluno aluno;
 
     @Column(name = "observacao", length = 500)

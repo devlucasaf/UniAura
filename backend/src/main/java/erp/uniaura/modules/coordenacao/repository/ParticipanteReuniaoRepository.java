@@ -7,14 +7,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface ParticipanteReuniaoRepository extends JpaRepository<ParticipanteReuniao, UUID> {
+public interface ParticipanteReuniaoRepository extends JpaRepository<ParticipanteReuniao, Long> {
 
-    List<ParticipanteReuniao> findByReuniaoIdOrderByCriadoEmAsc(UUID reuniaoId);
+    List<ParticipanteReuniao> findByReuniaoIdOrderByCriadoEmAsc(Long reuniaoId);
 
-    Optional<ParticipanteReuniao> findByReuniaoIdAndUsuarioId(UUID reuniaoId, UUID usuarioId);
+    Optional<ParticipanteReuniao> findByReuniaoIdAndUsuarioId(Long reuniaoId, Long usuarioId);
 
-    boolean existsByReuniaoIdAndUsuarioId(UUID reuniaoId, UUID usuarioId);
+    boolean existsByReuniaoIdAndUsuarioId(Long reuniaoId, Long usuarioId);
 }

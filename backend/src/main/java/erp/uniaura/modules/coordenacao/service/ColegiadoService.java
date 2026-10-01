@@ -2,12 +2,8 @@ package erp.uniaura.modules.coordenacao.service;
 
 import erp.uniaura.exception.BusinessException;
 import erp.uniaura.exception.ResourceNotFoundException;
-import erp.uniaura.infra.security.UsuarioDetails;
-import erp.uniaura.modules.coordenacao.dto.ConvocarParticipanteRequestDTO;
-import erp.uniaura.modules.coordenacao.dto.ParticipanteReuniaoResponseDTO;
-import erp.uniaura.modules.coordenacao.dto.RegistrarAtaRequestDTO;
-import erp.uniaura.modules.coordenacao.dto.ReuniaoColegiadoRequestDTO;
-import erp.uniaura.modules.coordenacao.dto.ReuniaoColegiadoResponseDTO;
+import erp.uniaura.infra.security.UsuarioAutenticadoProvider;
+import erp.uniaura.modules.coordenacao.dto.*;
 import erp.uniaura.modules.coordenacao.model.ParticipanteReuniao;
 import erp.uniaura.modules.coordenacao.model.ReuniaoColegiado;
 import erp.uniaura.modules.coordenacao.model.StatusReuniao;
@@ -22,8 +18,6 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,16 +25,16 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class ColegiadoService {
 
-    private final ReuniaoColegiadoRepository reuniaoRepository;
-    private final ParticipanteReuniaoRepository participanteRepository;
+    private final ReuniaoColegiadoRepository reuniaoColegiadoRepository;
+    private final ParticipanteReuniaoRepository participanteReuniaoRepository;
     private final CursoRepository cursoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final UsuarioAutenticadoProvider usuarioAutenticadoProvider;
 
     // --- AGENDA UMA NOVA REUNIÃO DO COLEGIADO ---
     @Transactional
@@ -58,35 +52,35 @@ public class ColegiadoService {
                 .criadaPor(autenticado)
                 .build();
 
-        return toResponse(reuniaoRepository.save(reuniao), List.of());
+        return toResponse(reuniaoColegiadoRepository.save(reuniao), List.of());
     }
 
     // --- ATUALIZA OS DADOS DE UMA REUNIÃO AINDA AGENDADA ---
     @Transactional
-    public ReuniaoColegiadoResponseDTO atualizar(UUID id, ReuniaoColegiadoRequestDTO dto) {
-        ReuniaoColegiado reuniao = buscarEntidade(id);
-        garantirAgendada(reuniao, "alterada");
+    public ReuniaoColegiadoResponseDTO atualizar(Long id, ReuniaoColegiadoRequestDTO dto) {
+        ReuniaoColegiado reuniaoColegiado = buscarEntidade(id);
+        garantirAgendada(reuniaoColegiado, "alterada");
 
-        if (!reuniao.getCurso().getId().equals(dto.getCursoId())) {
-            reuniao.setCurso(buscarCurso(dto.getCursoId()));
+        if (!reuniaoColegiado.getCurso().getId().equals(dto.getCursoId())) {
+            reuniaoColegiado.setCurso(buscarCurso(dto.getCursoId()));
         }
 
-        reuniao.setTitulo(dto.getTitulo());
-        reuniao.setDataHora(dto.getDataHora());
-        reuniao.setLocal(dto.getLocal());
-        reuniao.setPauta(dto.getPauta());
+        reuniaoColegiado.setTitulo(dto.getTitulo());
+        reuniaoColegiado.setDataHora(dto.getDataHora());
+        reuniaoColegiado.setLocal(dto.getLocal());
+        reuniaoColegiado.setPauta(dto.getPauta());
 
-        reuniaoRepository.save(reuniao);
-        return toResponse(reuniao, buscarParticipantes(reuniao.getId()));
+        reuniaoColegiadoRepository.save(reuniaoColegiado);
+        return toResponse(reuniaoColegiado, buscarParticipantes(reuniaoColegiado.getId()));
     }
 
     // --- CONVOCA UM PARTICIPANTE PARA A REUNIÃO ---
     @Transactional
-    public ParticipanteReuniaoResponseDTO convocar(UUID reuniaoId, ConvocarParticipanteRequestDTO dto) {
+    public ParticipanteReuniaoResponseDTO convocar(Long reuniaoId, ConvocarParticipanteRequestDTO dto) {
         ReuniaoColegiado reuniao = buscarEntidade(reuniaoId);
         garantirAgendada(reuniao, "alterada");
 
-        if (participanteRepository.existsByReuniaoIdAndUsuarioId(reuniaoId, dto.getUsuarioId())) {
+        if (participanteReuniaoRepository.existsByReuniaoIdAndUsuarioId(reuniaoId, dto.getUsuarioId())) {
             throw new BusinessException("Este participante já foi convocado para a reunião.");
         }
 
@@ -99,37 +93,37 @@ public class ColegiadoService {
                 .papel(dto.getPapel())
                 .build();
 
-        return toParticipanteResponse(participanteRepository.save(participante));
+        return toParticipanteResponse(participanteReuniaoRepository.save(participante));
     }
 
     // --- REMOVE UM CONVOCADO ANTES DA REUNIÃO ACONTECER ---
     @Transactional
-    public void removerParticipante(UUID reuniaoId, UUID usuarioId) {
+    public void removerParticipante(Long reuniaoId, Long usuarioId) {
         ReuniaoColegiado reuniao = buscarEntidade(reuniaoId);
         garantirAgendada(reuniao, "alterada");
 
-        ParticipanteReuniao participante = participanteRepository
+        ParticipanteReuniao participante = participanteReuniaoRepository
                 .findByReuniaoIdAndUsuarioId(reuniaoId, usuarioId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Participante da reunião", reuniaoId + "/" + usuarioId));
 
-        participanteRepository.delete(participante);
+        participanteReuniaoRepository.delete(participante);
     }
 
     // --- REGISTRA A ATA, MARCA AS PRESENÇAS E ENCERRA A REUNIÃO ---
     @Transactional
-    public ReuniaoColegiadoResponseDTO registrarAta(UUID id, RegistrarAtaRequestDTO dto) {
+    public ReuniaoColegiadoResponseDTO registrarAta(Long id, RegistrarAtaRequestDTO dto) {
         ReuniaoColegiado reuniao = buscarEntidade(id);
         garantirAgendada(reuniao, "encerrada");
 
-        List<ParticipanteReuniao> participantes = participanteRepository.findByReuniaoIdOrderByCriadoEmAsc(id);
+        List<ParticipanteReuniao> participantes = participanteReuniaoRepository.findByReuniaoIdOrderByCriadoEmAsc(id);
         if (participantes.isEmpty()) {
             throw new BusinessException("Não é possível registrar a ata de uma reunião sem participantes convocados.");
         }
 
-        Map<UUID, Boolean> presencas = new HashMap<>();
+        Map<Long, Boolean> presencas = new HashMap<>();
         if (dto.getPresencas() != null) {
-            for (RegistrarAtaRequestDTO.PresencaDTO presenca : dto.getPresencas()) {
+            for (PresencaDTO presenca : dto.getPresencas()) {
                 presencas.put(presenca.getUsuarioId(), presenca.getPresente());
             }
         }
@@ -138,19 +132,19 @@ public class ColegiadoService {
         for (ParticipanteReuniao participante : participantes) {
             participante.setPresente(presencas.getOrDefault(participante.getUsuario().getId(), Boolean.FALSE));
         }
-        participanteRepository.saveAll(participantes);
+        participanteReuniaoRepository.saveAll(participantes);
 
         reuniao.setDeliberacoes(dto.getDeliberacoes());
         reuniao.setStatus(StatusReuniao.REALIZADA);
         reuniao.setEncerradaEm(LocalDateTime.now());
-        reuniaoRepository.save(reuniao);
+        reuniaoColegiadoRepository.save(reuniao);
 
         return toResponse(reuniao, buscarParticipantes(id));
     }
 
     // --- CANCELA UMA REUNIÃO AGENDADA ---
     @Transactional
-    public ReuniaoColegiadoResponseDTO cancelar(UUID id, String motivo) {
+    public ReuniaoColegiadoResponseDTO cancelar(Long id, String motivo) {
         ReuniaoColegiado reuniao = buscarEntidade(id);
         garantirAgendada(reuniao, "cancelada");
 
@@ -161,31 +155,33 @@ public class ColegiadoService {
         reuniao.setStatus(StatusReuniao.CANCELADA);
         reuniao.setMotivoCancelamento(motivo);
         reuniao.setEncerradaEm(LocalDateTime.now());
-        reuniaoRepository.save(reuniao);
+        reuniaoColegiadoRepository.save(reuniao);
 
         return toResponse(reuniao, buscarParticipantes(id));
     }
 
+    // --- LISTA AS REUNIÕES, COM FILTRO OPCIONAL POR CURSO E STATUS ---
     @Transactional(readOnly = true)
-    public Page<ReuniaoColegiadoResponseDTO> listar(UUID cursoId, StatusReuniao status, Pageable pageable) {
-        return reuniaoRepository.buscarComFiltros(cursoId, status, pageable)
+    public Page<ReuniaoColegiadoResponseDTO> listar(Long cursoId, StatusReuniao status, Pageable pageable) {
+        return reuniaoColegiadoRepository.buscarComFiltros(cursoId, status, pageable)
                 .map(r -> toResponse(r, null));
     }
 
+    // --- BUSCA UMA REUNIÃO PELO SEU IDENTIFICADOR ---
     @Transactional(readOnly = true)
-    public ReuniaoColegiadoResponseDTO buscarPorId(UUID id) {
+    public ReuniaoColegiadoResponseDTO buscarPorId(Long id) {
         ReuniaoColegiado reuniao = buscarEntidade(id);
         return toResponse(reuniao, buscarParticipantes(id));
     }
 
-    // --- HELPERS ---
-
-    private ReuniaoColegiado buscarEntidade(UUID id) {
-        return reuniaoRepository.findById(id)
+    // --- BUSCA A ENTIDADE ---
+    private ReuniaoColegiado buscarEntidade(Long id) {
+        return reuniaoColegiadoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reunião do colegiado", id));
     }
 
-    private Curso buscarCurso(UUID id) {
+    // --- BUSCA O CURSO ---
+    private Curso buscarCurso(Long id) {
         return cursoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Curso", id));
     }
@@ -193,55 +189,53 @@ public class ColegiadoService {
     // --- REUNIÃO JÁ REALIZADA OU CANCELADA NÃO ACEITA MAIS ALTERAÇÕES ---
     private void garantirAgendada(ReuniaoColegiado reuniao, String acao) {
         if (reuniao.getStatus().isFinal()) {
-            throw new BusinessException(
-                    "A reunião está %s e não pode mais ser %s.".formatted(reuniao.getStatus(), acao));
+            throw new BusinessException("A reunião está %s e não pode mais ser %s.".formatted(reuniao.getStatus(), acao));
         }
     }
 
-    private List<ParticipanteReuniaoResponseDTO> buscarParticipantes(UUID reuniaoId) {
-        return participanteRepository.findByReuniaoIdOrderByCriadoEmAsc(reuniaoId)
+    // --- BUSCA OS PARTICIPANTES CONVOCADOS PARA A REUNIÃO ---
+    private List<ParticipanteReuniaoResponseDTO> buscarParticipantes(Long reuniaoId) {
+        return participanteReuniaoRepository.findByReuniaoIdOrderByCriadoEmAsc(reuniaoId)
                 .stream()
                 .map(this::toParticipanteResponse)
                 .toList();
     }
 
+    // --- RECUPERA O USUÁRIO AUTENTICADO ---
     private Usuario usuarioAutenticadoOuFalha() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !(auth.getPrincipal() instanceof UsuarioDetails ud)) {
-            throw new BusinessException("Usuário autenticado não identificado.");
-        }
-        return ud.getUsuario();
+        return usuarioAutenticadoProvider.obter()
+                .orElseThrow(() -> new BusinessException("Usuário autenticado não identificado."));
     }
 
     // --- CONVERTE A ENTIDADE REUNIÃO EM UM DTO DE RESPOSTA ---
-    private ReuniaoColegiadoResponseDTO toResponse(ReuniaoColegiado r,
-                                                   List<ParticipanteReuniaoResponseDTO> participantes) {
+    private ReuniaoColegiadoResponseDTO toResponse(ReuniaoColegiado reuniaoColegiado, List<ParticipanteReuniaoResponseDTO> participantes) {
         return ReuniaoColegiadoResponseDTO.builder()
-                .id(r.getId())
-                .cursoId(r.getCurso().getId())
-                .cursoNome(r.getCurso().getNome())
-                .titulo(r.getTitulo())
-                .dataHora(r.getDataHora())
-                .local(r.getLocal())
-                .pauta(r.getPauta())
-                .status(r.getStatus())
-                .deliberacoes(r.getDeliberacoes())
-                .motivoCancelamento(r.getMotivoCancelamento())
-                .encerradaEm(r.getEncerradaEm())
-                .criadaPorNome(r.getCriadaPor() == null ? null : r.getCriadaPor().getNome())
-                .criadoEm(r.getCriadoEm())
-                .atualizadoEm(r.getAtualizadoEm())
+                .id(reuniaoColegiado.getId())
+                .cursoId(reuniaoColegiado.getCurso().getId())
+                .cursoNome(reuniaoColegiado.getCurso().getNome())
+                .titulo(reuniaoColegiado.getTitulo())
+                .dataHora(reuniaoColegiado.getDataHora())
+                .local(reuniaoColegiado.getLocal())
+                .pauta(reuniaoColegiado.getPauta())
+                .status(reuniaoColegiado.getStatus())
+                .deliberacoes(reuniaoColegiado.getDeliberacoes())
+                .motivoCancelamento(reuniaoColegiado.getMotivoCancelamento())
+                .encerradaEm(reuniaoColegiado.getEncerradaEm())
+                .criadaPorNome(reuniaoColegiado.getCriadaPor() == null ? null : reuniaoColegiado.getCriadaPor().getNome())
+                .criadoEm(reuniaoColegiado.getCriadoEm())
+                .atualizadoEm(reuniaoColegiado.getAtualizadoEm())
                 .participantes(participantes)
                 .build();
     }
 
-    private ParticipanteReuniaoResponseDTO toParticipanteResponse(ParticipanteReuniao p) {
+    // --- CONVERTE A ENTIDADE PARTICIPANTE EM UM DTO DE RESPOSTA ---
+    private ParticipanteReuniaoResponseDTO toParticipanteResponse(ParticipanteReuniao participanteReuniao) {
         return ParticipanteReuniaoResponseDTO.builder()
-                .id(p.getId())
-                .usuarioId(p.getUsuario().getId())
-                .usuarioNome(p.getUsuario().getNome())
-                .papel(p.getPapel())
-                .presente(p.getPresente())
+                .id(participanteReuniao.getId())
+                .usuarioId(participanteReuniao.getUsuario().getId())
+                .usuarioNome(participanteReuniao.getUsuario().getNome())
+                .papel(participanteReuniao.getPapel())
+                .presente(participanteReuniao.getPresente())
                 .build();
     }
 }

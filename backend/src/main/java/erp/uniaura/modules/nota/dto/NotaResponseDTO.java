@@ -11,7 +11,6 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -20,23 +19,23 @@ import java.util.UUID;
 @Builder
 public class NotaResponseDTO {
 
-    private UUID                id;
-    private UUID                alunoId;
+    private Long                id;
+    private Long                alunoId;
     private String              alunoNome;
     private String              alunoMatriculaRA;
-    private UUID                turmaDisciplinaId;
-    private UUID                turmaId;
+    private Long                turmaDisciplinaId;
+    private Long                turmaId;
     private String              turmaCodigo;
-    private UUID                disciplinaId;
+    private Long                disciplinaId;
     private String              disciplinaNome;
-    private UUID                professorId;
+    private Long                professorId;
     private String              professorNome;
     private PeriodoAvaliacao    periodoAvaliacao;
     private TipoAvaliacao       tipoAvaliacao;
     private BigDecimal          valor;
     private BigDecimal          peso;
     private String              observacoes;
-    private UUID                lancadaPorId;
+    private Long                lancadaPorId;
     private String              lancadaPorNome;
     private LocalDateTime       lancadaEm;
     private LocalDateTime       atualizadaEm;

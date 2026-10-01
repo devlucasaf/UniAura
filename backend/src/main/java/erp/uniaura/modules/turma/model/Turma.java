@@ -1,5 +1,6 @@
 package erp.uniaura.modules.turma.model;
 
+import erp.uniaura.infra.persistence.SqlServerBaseEntity;
 import erp.uniaura.modules.curso.model.Curso;
 import erp.uniaura.modules.professor.model.Professor;
 
@@ -15,7 +16,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -24,19 +24,13 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "turma")
-public class Turma {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+public class Turma extends SqlServerBaseEntity {
 
     @Column(name = "codigo", nullable = false, unique = true, length = 50)
     private String codigo;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "cursoId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkTurmaCurso"))
+    @JoinColumn(name = "cursoId", nullable = false, foreignKey = @ForeignKey(name = "fkTurmaCurso"))
     private Curso curso;
 
     @Column(name = "periodoLetivo", nullable = false, length = 20)
@@ -53,8 +47,7 @@ public class Turma {
     private Turno turno;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "professorRegenteId",
-            foreignKey = @ForeignKey(name = "fkTurmaProfessorRegente"))
+    @JoinColumn(name = "professorRegenteId", foreignKey = @ForeignKey(name = "fkTurmaProfessorRegente"))
     private Professor professorRegente;
 
     @Column(name = "capacidadeMaxima", nullable = false)

@@ -19,12 +19,10 @@ import java.time.ZoneOffset;
 @Service
 public class TokenService {
 
-    // --- NOMES DAS CLAIMS ARMAZENADAS NO TOKEN ---
-    private static final String CLAIM_PERFIL = "role";
-    private static final String CLAIM_ID_USUARIO = "uid";
+    private static final String CLAIM_PERFIL = "roles";
+    private static final String CLAIM_ID_USUARIO = "user_id";
     private static final String CLAIM_TIPO = "type";
-
-    // --- VALORES POSSIVEIS PARA A CLAIM DE TIPO ---
+    private static final String PREFIXO_AUTORIDADE = "ROLE_";
     private static final String TIPO_ACESSO = "access";
     private static final String TIPO_RENOVACAO = "refresh";
 
@@ -46,7 +44,7 @@ public class TokenService {
                 .withIssuer(emissor)
                 .withSubject(usuario.getEmail())
                 .withClaim(CLAIM_ID_USUARIO, usuario.getId().toString())
-                .withClaim(CLAIM_PERFIL, usuario.getRole().name())
+                .withArrayClaim(CLAIM_PERFIL, new String[]{PREFIXO_AUTORIDADE + usuario.getRole().name()})
                 .withClaim(CLAIM_TIPO, TIPO_ACESSO)
                 .withIssuedAt(Instant.now())
                 .withExpiresAt(expiracao(minutosExpiracao))

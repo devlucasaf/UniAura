@@ -2,7 +2,8 @@ package erp.uniaura.modules.nota.service;
 
 import erp.uniaura.exception.BusinessException;
 import erp.uniaura.exception.ResourceNotFoundException;
-import erp.uniaura.infra.security.UsuarioDetails;
+import erp.uniaura.infra.email.EmailService;
+import erp.uniaura.infra.security.UsuarioAutenticadoProvider;
 import erp.uniaura.modules.aluno.model.Aluno;
 import erp.uniaura.modules.aluno.repository.AlunoRepository;
 import erp.uniaura.modules.nota.dto.BoletimResponseDTO;
@@ -18,8 +19,6 @@ import erp.uniaura.modules.usuario.model.Usuario;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,19 +29,20 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class NotaService {
 
-    private static final BigDecimal NOTA_MIN = new BigDecimal("0.00");
-    private static final BigDecimal NOTA_MAX = new BigDecimal("10.00");
+    private static final BigDecimal NOTA_MINIMA = new BigDecimal("0.00");
+    private static final BigDecimal NOTA_MAXIMA = new BigDecimal("10.00");
     private static final BigDecimal PESO_DEFAULT = BigDecimal.ONE;
 
     private final NotaRepository notaRepository;
     private final AlunoRepository alunoRepository;
     private final TurmaDisciplinaRepository turmaDisciplinaRepository;
+    private final UsuarioAutenticadoProvider usuarioAutenticadoProvider;
+    private final EmailService emailService;
 
     // --- LANÇA UMA NOVA NOTA ---
     @Transactional
@@ -50,54 +50,66 @@ public class NotaService {
         Aluno aluno = alunoRepository.findById(dto.getAlunoId())
                 .orElseThrow(() -> new ResourceNotFoundException("Aluno", dto.getAlunoId()));
 
-        TurmaDisciplina td = turmaDisciplinaRepository.findById(dto.getTurmaDisciplinaId())
+        TurmaDisciplina turmaDisciplina = turmaDisciplinaRepository.findById(dto.getTurmaDisciplinaId())
                 .orElseThrow(() -> new ResourceNotFoundException("Vínculo turma/disciplina", dto.getTurmaDisciplinaId()));
 
         validarValor(dto.getValor());
 
-        Usuario autenticado = usuarioAutenticadoObrigatorio();
-        validarPermissaoLancamento(autenticado, td);
+        Usuario usuarioAutenticado = usuarioAutenticadoObrigatorio();
+        validarPermissaoLancamento(usuarioAutenticado, turmaDisciplina);
 
         Nota nota = Nota.builder()
                 .aluno(aluno)
-                .turmaDisciplina(td)
+                .turmaDisciplina(turmaDisciplina)
                 .periodoAvaliacao(dto.getPeriodoAvaliacao())
                 .tipoAvaliacao(dto.getTipoAvaliacao())
                 .valor(dto.getValor())
                 .peso(dto.getPeso() != null ? dto.getPeso() : PESO_DEFAULT)
                 .observacoes(dto.getObservacoes())
-                .lancadaPor(autenticado)
+                .lancadaPor(usuarioAutenticado)
                 .build();
 
-        return toResponse(notaRepository.save(nota));
+        Nota salva = notaRepository.save(nota);
+        notificarLancamento(salva);
+        return toResponse(salva);
+    }
+
+    // --- NOTIFICA O ALUNO QUE UMA NOVA NOTA FOI LANÇADA PARA ELE ---
+    private void notificarLancamento(Nota nota) {
+        Usuario usuarioDoAluno = nota.getAluno().getUsuario();
+        if (usuarioDoAluno == null) {
+            return;
+        }
+        emailService.notificarNotaLancada(usuarioDoAluno.getEmail(), usuarioDoAluno.getNome(),
+                nota.getTurmaDisciplina().getDisciplina().getNome(), nota.getValor());
     }
 
     // --- ATUALIZA UMA NOTA EXISTENTE ---
     @Transactional
-    public NotaResponseDTO atualizar(UUID id, NotaRequestDTO dto) {
+    public NotaResponseDTO atualizar(Long id, NotaRequestDTO notaDTO) {
         Nota nota = buscarEntidade(id);
 
-        validarValor(dto.getValor());
+        validarValor(notaDTO.getValor());
 
-        Usuario autenticado = usuarioAutenticadoObrigatorio();
-        validarPermissaoLancamento(autenticado, nota.getTurmaDisciplina());
+        Usuario usuarioAutenticado = usuarioAutenticadoObrigatorio();
+        validarPermissaoLancamento(usuarioAutenticado, nota.getTurmaDisciplina());
 
-        nota.setPeriodoAvaliacao(dto.getPeriodoAvaliacao());
-        nota.setTipoAvaliacao(dto.getTipoAvaliacao());
-        nota.setValor(dto.getValor());
+        nota.setPeriodoAvaliacao(notaDTO.getPeriodoAvaliacao());
+        nota.setTipoAvaliacao(notaDTO.getTipoAvaliacao());
+        nota.setValor(notaDTO.getValor());
 
-        if (dto.getPeso() != null) {
-            nota.setPeso(dto.getPeso());
+        if (notaDTO.getPeso() != null) {
+            nota.setPeso(notaDTO.getPeso());
         }
-        nota.setObservacoes(dto.getObservacoes());
-        nota.setLancadaPor(autenticado);
+        nota.setObservacoes(notaDTO.getObservacoes());
+        nota.setLancadaPor(usuarioAutenticado);
 
         return toResponse(notaRepository.save(nota));
     }
 
     // --- REMOVE UMA NOTA ---
     @Transactional
-    public void deletar(UUID id) {
+    public void deletar(Long id) {
         Nota nota = buscarEntidade(id);
 
         Usuario autenticado = usuarioAutenticadoObrigatorio();
@@ -107,7 +119,7 @@ public class NotaService {
     }
 
     @Transactional(readOnly = true)
-    public List<NotaResponseDTO> listarPorTurmaDisciplina(UUID turmaId, UUID disciplinaId) {
+    public List<NotaResponseDTO> listarPorTurmaDisciplina(Long turmaId, Long disciplinaId) {
         return notaRepository
                 .findByTurmaDisciplina_TurmaIdAndTurmaDisciplina_DisciplinaId(turmaId, disciplinaId)
                 .stream()
@@ -117,7 +129,7 @@ public class NotaService {
 
     // --- LISTA TODAS AS NOTAS DE UM ALUNO ---
     @Transactional(readOnly = true)
-    public List<NotaResponseDTO> listarPorAluno(UUID alunoId) {
+    public List<NotaResponseDTO> listarPorAluno(Long alunoId) {
         return notaRepository.findByAlunoId(alunoId)
                 .stream()
                 .map(this::toResponse)
@@ -126,7 +138,7 @@ public class NotaService {
 
     // --- BOLETIM CONSOLIDADO DO ALUNO PARA UM PERÍODO LETIVO ---
     @Transactional(readOnly = true)
-    public BoletimResponseDTO boletim(UUID alunoId, String periodoLetivo) {
+    public BoletimResponseDTO boletim(Long alunoId, String periodoLetivo) {
         Aluno aluno = alunoRepository.findById(alunoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Aluno", alunoId));
 
@@ -134,11 +146,11 @@ public class NotaService {
                 .findByAlunoIdAndTurmaDisciplina_TurmaPeriodoLetivo(alunoId, periodoLetivo);
 
         // --- AGRUPA NOTAS POR DISCIPLINA ---
-        Map<UUID, List<Nota>> porDisciplina = new LinkedHashMap<>();
-        for (Nota n : notas) {
+        Map<Long, List<Nota>> porDisciplina = new LinkedHashMap<>();
+        for (Nota nota : notas) {
             porDisciplina
-                    .computeIfAbsent(n.getTurmaDisciplina().getDisciplina().getId(), k -> new ArrayList<>())
-                    .add(n);
+                    .computeIfAbsent(nota.getTurmaDisciplina().getDisciplina().getId(), k -> new ArrayList<>())
+                    .add(nota);
         }
 
         // --- CONSTRÓI CADA LINHA DO BOLETIM CALCULANDO A MÉDIA PONDERADA ---
@@ -169,8 +181,8 @@ public class NotaService {
 
     // --- VALIDA QUE A NOTA ESTÁ DENTRO DO INTERVALO PERMITIDO ---
     private void validarValor(BigDecimal valor) {
-        if (valor == null || valor.compareTo(NOTA_MIN) < 0 || valor.compareTo(NOTA_MAX) > 0) {
-            throw new BusinessException("A nota deve estar entre " + NOTA_MIN + " e " + NOTA_MAX + ".");
+        if (valor == null || valor.compareTo(NOTA_MINIMA) < 0 || valor.compareTo(NOTA_MAXIMA) > 0) {
+            throw new BusinessException("A nota deve estar entre " + NOTA_MINIMA + " e " + NOTA_MAXIMA + ".");
         }
     }
 
@@ -183,7 +195,7 @@ public class NotaService {
         }
 
         if (role == TipoUsuario.PROFESSOR) {
-            UUID profUsuarioId = td.getProfessor().getUsuario().getId();
+            Long profUsuarioId = td.getProfessor().getUsuario().getId();
             if (profUsuarioId.equals(autenticado.getId())) {
                 return;
             }
@@ -197,9 +209,9 @@ public class NotaService {
     private BigDecimal calcularMediaPonderada(List<Nota> notas) {
         BigDecimal somaPonderada = BigDecimal.ZERO;
         BigDecimal somaPesos = BigDecimal.ZERO;
-        for (Nota n : notas) {
-            somaPonderada = somaPonderada.add(n.getValor().multiply(n.getPeso()));
-            somaPesos = somaPesos.add(n.getPeso());
+        for (Nota nota : notas) {
+            somaPonderada = somaPonderada.add(nota.getValor().multiply(nota.getPeso()));
+            somaPesos = somaPesos.add(nota.getPeso());
         }
 
         if (somaPesos.compareTo(BigDecimal.ZERO) == 0) {
@@ -209,45 +221,42 @@ public class NotaService {
     }
 
     // --- BUSCA A ENTIDADE ---
-    private Nota buscarEntidade(UUID id) {
+    private Nota buscarEntidade(Long id) {
         return notaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Nota", id));
     }
 
     // --- RECUPERA O USUÁRIO AUTENTICADO ---
     private Usuario usuarioAutenticadoObrigatorio() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !auth.isAuthenticated() || !(auth.getPrincipal() instanceof UsuarioDetails details)) {
-            throw new BusinessException("Não foi possível identificar o usuário autenticado.");
-        }
-        return details.getUsuario();
+        return usuarioAutenticadoProvider.obter()
+                .orElseThrow(() -> new BusinessException("Não foi possível identificar o usuário autenticado."));
     }
 
     // --- CONVERSÃO ENTIDADE ---
-    private NotaResponseDTO toResponse(Nota n) {
-        TurmaDisciplina td = n.getTurmaDisciplina();
-        Usuario lancador = n.getLancadaPor();
+    private NotaResponseDTO toResponse(Nota nota) {
+        TurmaDisciplina turmaDisciplina = nota.getTurmaDisciplina();
+        Usuario usuarioLancador = nota.getLancadaPor();
         return NotaResponseDTO.builder()
-                .id(n.getId())
-                .alunoId(n.getAluno().getId())
-                .alunoNome(n.getAluno().getUsuario().getNome())
-                .alunoMatriculaRA(n.getAluno().getMatriculaRA())
-                .turmaDisciplinaId(td.getId())
-                .turmaId(td.getTurma().getId())
-                .turmaCodigo(td.getTurma().getCodigo())
-                .disciplinaId(td.getDisciplina().getId())
-                .disciplinaNome(td.getDisciplina().getNome())
-                .professorId(td.getProfessor().getId())
-                .professorNome(td.getProfessor().getUsuario().getNome())
-                .periodoAvaliacao(n.getPeriodoAvaliacao())
-                .tipoAvaliacao(n.getTipoAvaliacao())
-                .valor(n.getValor())
-                .peso(n.getPeso())
-                .observacoes(n.getObservacoes())
-                .lancadaPorId(lancador != null ? lancador.getId() : null)
-                .lancadaPorNome(lancador != null ? lancador.getNome() : null)
-                .lancadaEm(n.getLancadaEm())
-                .atualizadaEm(n.getAtualizadaEm())
+                .id(nota.getId())
+                .alunoId(nota.getAluno().getId())
+                .alunoNome(nota.getAluno().getUsuario().getNome())
+                .alunoMatriculaRA(nota.getAluno().getMatriculaRA())
+                .turmaDisciplinaId(turmaDisciplina.getId())
+                .turmaId(turmaDisciplina.getTurma().getId())
+                .turmaCodigo(turmaDisciplina.getTurma().getCodigo())
+                .disciplinaId(turmaDisciplina.getDisciplina().getId())
+                .disciplinaNome(turmaDisciplina.getDisciplina().getNome())
+                .professorId(turmaDisciplina.getProfessor().getId())
+                .professorNome(turmaDisciplina.getProfessor().getUsuario().getNome())
+                .periodoAvaliacao(nota.getPeriodoAvaliacao())
+                .tipoAvaliacao(nota.getTipoAvaliacao())
+                .valor(nota.getValor())
+                .peso(nota.getPeso())
+                .observacoes(nota.getObservacoes())
+                .lancadaPorId(usuarioLancador != null ? usuarioLancador.getId() : null)
+                .lancadaPorNome(usuarioLancador != null ? usuarioLancador.getNome() : null)
+                .lancadaEm(nota.getLancadaEm())
+                .atualizadaEm(nota.getAtualizadaEm())
                 .build();
     }
 }

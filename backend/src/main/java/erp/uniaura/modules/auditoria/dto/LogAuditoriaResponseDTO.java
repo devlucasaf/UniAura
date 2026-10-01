@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -16,8 +15,8 @@ import java.util.UUID;
 @Builder
 public class LogAuditoriaResponseDTO {
 
-    private UUID            id;
-    private UUID            usuarioId;
+    private Long            id;
+    private Long            usuarioId;
     private String          usuarioNome;
     private String          acao;
     private String          entidade;

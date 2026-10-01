@@ -7,15 +7,14 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface DisciplinaPrerequisitoRepository extends JpaRepository<DisciplinaPrerequisito, UUID> {
+public interface DisciplinaPrerequisitoRepository extends JpaRepository<DisciplinaPrerequisito, Long> {
 
-    List<DisciplinaPrerequisito> findByDisciplinaId(UUID disciplinaId);
+    List<DisciplinaPrerequisito> findByDisciplinaId(Long disciplinaId);
 
-    Optional<DisciplinaPrerequisito> findByDisciplinaIdAndPrerequisitoId(UUID disciplinaId, UUID prerequisitoId);
+    Optional<DisciplinaPrerequisito> findByDisciplinaIdAndPrerequisitoId(Long disciplinaId, Long prerequisitoId);
 
-    boolean existsByDisciplinaIdAndPrerequisitoId(UUID disciplinaId, UUID prerequisitoId);
+    boolean existsByDisciplinaIdAndPrerequisitoId(Long disciplinaId, Long prerequisitoId);
 }
 

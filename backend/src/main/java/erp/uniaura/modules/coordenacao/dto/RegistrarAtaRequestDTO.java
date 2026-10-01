@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -24,21 +23,8 @@ public class RegistrarAtaRequestDTO {
     @Size(min = 20, max = 8000)
     private String              deliberacoes;
 
-    // --- PRESENÇAS DOS CONVOCADOS; OS NÃO INFORMADOS FICAM COMO AUSENTES ---
     @Valid
     private List<PresencaDTO>   presencas;
 
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class PresencaDTO {
 
-        @NotNull
-        private UUID    usuarioId;
-
-        @NotNull
-        private Boolean presente;
-    }
 }

@@ -7,12 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
 @Repository
-public interface LogAuditoriaRepository extends JpaRepository<LogAuditoria, UUID> {
+public interface LogAuditoriaRepository extends JpaRepository<LogAuditoria, Long> {
 
     Page<LogAuditoria> findByEntidadeIgnoreCase(String entidade, Pageable pageable);
 
-    Page<LogAuditoria> findByUsuarioId(UUID usuarioId, Pageable pageable);
+    Page<LogAuditoria> findByUsuarioId(Long usuarioId, Pageable pageable);
 }

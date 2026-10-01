@@ -9,8 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,7 +17,7 @@ import java.util.UUID;
 public class PlanoEnsinoRequestDTO {
 
     @NotNull
-    private UUID    turmaDisciplinaId;
+    private Long    turmaDisciplinaId;
 
     @NotNull
     @Size(min = 20, max = 4000)

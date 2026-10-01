@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -18,7 +17,7 @@ import java.util.UUID;
 @Builder
 public class MovimentacaoProcessoResponseDTO {
 
-    private UUID            id;
+    private Long            id;
     private String          autorNome;
     private StatusProcesso  statusAnterior;
     private StatusProcesso  statusNovo;

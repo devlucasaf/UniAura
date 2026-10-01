@@ -31,7 +31,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +46,7 @@ public class TurmaService {
 
     // --- LISTA AS TURMAS UTILIZANDO PAGINAÇÃO E PERMITE A FILTRAGEM POR CURSO OU PERÍODO LETIVO ---
     @Transactional(readOnly = true)
-    public Page<TurmaResponseDTO> listar(UUID cursoId, String periodoLetivo, Pageable pageable) {
+    public Page<TurmaResponseDTO> listar(Long cursoId, String periodoLetivo, Pageable pageable) {
         Page<Turma> page;
         if (cursoId != null) {
             page = turmaRepository.findByCursoId(cursoId, pageable);
@@ -61,7 +60,7 @@ public class TurmaService {
 
     // --- BUSCA TURMA POR ID ---
     @Transactional(readOnly = true)
-    public TurmaResponseDTO buscarPorId(UUID id) {
+    public TurmaResponseDTO buscarPorId(Long id) {
         return toResponse(buscarEntidade(id));
     }
 
@@ -104,7 +103,7 @@ public class TurmaService {
 
     // --- ATUALIZA OS DADOS DE UMA TURMA EXISTENTE ---
     @Transactional
-    public TurmaResponseDTO atualizar(UUID id, TurmaRequestDTO dto) {
+    public TurmaResponseDTO atualizar(Long id, TurmaRequestDTO dto) {
         Turma turma = buscarEntidade(id);
 
         if (!turma.getCodigo().equalsIgnoreCase(dto.getCodigo()) && turmaRepository.existsByCodigo(dto.getCodigo())) {
@@ -138,21 +137,21 @@ public class TurmaService {
 
     // --- REMOVE UMA TURMA ---
     @Transactional
-    public void deletar(UUID id) {
+    public void deletar(Long id) {
         Turma turma = buscarEntidade(id);
         turmaRepository.delete(turma);
     }
 
     // --- LISTA OS ALUNOS MATRICULADOS NA TURMA ---
     @Transactional(readOnly = true)
-    public Page<AlunoResponseDTO> listarAlunos(UUID turmaId, Pageable pageable) {
+    public Page<AlunoResponseDTO> listarAlunos(Long turmaId, Pageable pageable) {
         buscarEntidade(turmaId);
         return alunoRepository.findByTurmaAtualId(turmaId, pageable).map(this::toAlunoResponse);
     }
 
     // --- LISTA AS DISCIPLINAS VINCULADAS À TURMA ---
     @Transactional(readOnly = true)
-    public List<TurmaDisciplinaResponseDTO> listarDisciplinas(UUID turmaId) {
+    public List<TurmaDisciplinaResponseDTO> listarDisciplinas(Long turmaId) {
         buscarEntidade(turmaId);
         return turmaDisciplinaRepository.findByTurmaId(turmaId)
                 .stream()
@@ -162,7 +161,7 @@ public class TurmaService {
 
     // --- ADICIONA UMA DISCIPLINA À TURMA COM PROFESSOR RESPONSÁVEL E HORÁRIO ---
     @Transactional
-    public TurmaDisciplinaResponseDTO vincularDisciplina(UUID turmaId, VincularDisciplinaTurmaRequestDTO dto) {
+    public TurmaDisciplinaResponseDTO vincularDisciplina(Long turmaId, VincularDisciplinaTurmaRequestDTO dto) {
         Turma turma = buscarEntidade(turmaId);
 
         if (!dto.getHorarioFim().isAfter(dto.getHorarioInicio())) {
@@ -196,7 +195,7 @@ public class TurmaService {
 
     // --- REMOVE O VÍNCULO DE UMA DISCIPLINA NA TURMA ---
     @Transactional
-    public void desvincularDisciplina(UUID turmaId, UUID disciplinaId) {
+    public void desvincularDisciplina(Long turmaId, Long disciplinaId) {
         TurmaDisciplina vinculo = turmaDisciplinaRepository
                 .findByTurmaIdAndDisciplinaId(turmaId, disciplinaId)
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -205,13 +204,13 @@ public class TurmaService {
     }
 
     // --- BUSCA UMA TURMA PELO IDENTIFICADOR OU LANÇA UMA EXCEÇÃO CASO ELA NÃO SEJA ENCONTRADA ---
-    private Turma buscarEntidade(UUID id) {
+    private Turma buscarEntidade(Long id) {
         return turmaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Turma", id));
     }
 
     // --- BUSCA UM PROFESSOR PELO IDENTIFICADOR OU LANÇA UMA EXCEÇÃO CASO ELE NÃO SEJA ENCONTRADO ---
-    private Professor buscarProfessor(UUID id) {
+    private Professor buscarProfessor(Long id) {
         return professorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Professor", id));
     }

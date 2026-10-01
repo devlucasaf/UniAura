@@ -1,5 +1,6 @@
 package erp.uniaura.modules.turma.model;
 
+import erp.uniaura.infra.persistence.SqlServerBaseEntity;
 import erp.uniaura.modules.disciplina.model.Disciplina;
 import erp.uniaura.modules.professor.model.Professor;
 
@@ -15,7 +16,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -23,33 +23,21 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(
-        name = "turmaDisciplina",
-        uniqueConstraints = @UniqueConstraint(
-                name = "ukTurmaDisciplina",
-                columnNames = {"turmaId", "disciplinaId"}
-        )
+@Table(name = "turmaDisciplina", uniqueConstraints = @UniqueConstraint(
+                name = "ukTurmaDisciplina", columnNames = {"turmaId", "disciplinaId"})
 )
-public class TurmaDisciplina {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+public class TurmaDisciplina extends SqlServerBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "turmaId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkTurmaDisciplinaTurma"))
+    @JoinColumn(name = "turmaId", nullable = false, foreignKey = @ForeignKey(name = "fkTurmaDisciplinaTurma"))
     private Turma turma;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "disciplinaId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkTurmaDisciplinaDisciplina"))
+    @JoinColumn(name = "disciplinaId", nullable = false, foreignKey = @ForeignKey(name = "fkTurmaDisciplinaDisciplina"))
     private Disciplina disciplina;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "professorId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkTurmaDisciplinaProfessor"))
+    @JoinColumn(name = "professorId", nullable = false, foreignKey = @ForeignKey(name = "fkTurmaDisciplinaProfessor"))
     private Professor professor;
 
     @Enumerated(EnumType.STRING)

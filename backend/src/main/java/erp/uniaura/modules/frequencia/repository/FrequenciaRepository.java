@@ -9,23 +9,22 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface FrequenciaRepository extends JpaRepository<Frequencia, UUID> {
+public interface FrequenciaRepository extends JpaRepository<Frequencia, Long> {
 
-    List<Frequencia> findByAulaId(UUID aulaId);
+    List<Frequencia> findByAulaId(Long aulaId);
 
-    Optional<Frequencia> findByAulaIdAndAlunoId(UUID aulaId, UUID alunoId);
+    Optional<Frequencia> findByAulaIdAndAlunoId(Long aulaId, Long alunoId);
 
     @Query("""
             select f from Frequencia f
             where f.aluno.id = :alunoId
               and f.aula.turmaDisciplina.disciplina.id = :disciplinaId
             """)
-    List<Frequencia> findByAlunoAndDisciplina(@Param("alunoId") UUID alunoId,
-                                              @Param("disciplinaId") UUID disciplinaId);
+    List<Frequencia> findByAlunoAndDisciplina(@Param("alunoId") Long alunoId,
+                                              @Param("disciplinaId") Long disciplinaId);
 
-    List<Frequencia> findByAlunoId(UUID alunoId);
+    List<Frequencia> findByAlunoId(Long alunoId);
 }
 

@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -20,8 +19,8 @@ import java.util.UUID;
 @Builder
 public class VincularDisciplinaTurmaRequestDTO {
 
-    @NotNull private UUID       disciplinaId;
-    @NotNull private UUID       professorId;
+    @NotNull private Long       disciplinaId;
+    @NotNull private Long       professorId;
     @NotNull private DiaSemana  diaSemana;
     @NotNull private LocalTime  horarioInicio;
     @NotNull private LocalTime  horarioFim;

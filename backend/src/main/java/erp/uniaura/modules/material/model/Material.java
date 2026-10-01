@@ -1,5 +1,6 @@
 package erp.uniaura.modules.material.model;
 
+import erp.uniaura.infra.persistence.SqlServerBaseEntity;
 import erp.uniaura.modules.professor.model.Professor;
 import erp.uniaura.modules.turma.model.TurmaDisciplina;
 
@@ -15,9 +16,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
-// --- MATERIAL DIDÁTICO ASSOCIADO A UMA TURMA/DISCIPLINA (ARQUIVO OU LINK EXTERNO) ---
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,16 +24,10 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "material")
-public class Material {
-
-    @Id
-    @GeneratedValue
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+public class Material extends SqlServerBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "turmaDisciplinaId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkMaterialTurmaDisciplina"))
+    @JoinColumn(name = "turmaDisciplinaId", nullable = false, foreignKey = @ForeignKey(name = "fkMaterialTurmaDisciplina"))
     private TurmaDisciplina turmaDisciplina;
 
     @Column(name = "titulo", nullable = false, length = 200)
@@ -54,8 +47,7 @@ public class Material {
     private String linkUrl;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "professorId", nullable = false,
-            foreignKey = @ForeignKey(name = "fkMaterialProfessor"))
+    @JoinColumn(name = "professorId", nullable = false, foreignKey = @ForeignKey(name = "fkMaterialProfessor"))
     private Professor professor;
 
     @CreationTimestamp

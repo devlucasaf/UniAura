@@ -9,8 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,7 +17,7 @@ import java.util.UUID;
 public class ExemplarRequestDTO {
 
     @NotNull
-    private UUID livroId;
+    private Long livroId;
 
     @Size(max = 50)
     private String codigoBarras;

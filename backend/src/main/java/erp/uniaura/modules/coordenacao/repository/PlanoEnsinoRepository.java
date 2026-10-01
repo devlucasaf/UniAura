@@ -11,16 +11,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface PlanoEnsinoRepository extends JpaRepository<PlanoEnsino, UUID> {
+public interface PlanoEnsinoRepository extends JpaRepository<PlanoEnsino, Long> {
 
-    Optional<PlanoEnsino> findByTurmaDisciplinaId(UUID turmaDisciplinaId);
+    Optional<PlanoEnsino> findByTurmaDisciplinaId(Long turmaDisciplinaId);
 
-    boolean existsByTurmaDisciplinaId(UUID turmaDisciplinaId);
+    boolean existsByTurmaDisciplinaId(Long turmaDisciplinaId);
 
-    Page<PlanoEnsino> findByProfessorId(UUID professorId, Pageable pageable);
+    Page<PlanoEnsino> findByProfessorId(Long professorId, Pageable pageable);
 
     // --- FILA DA COORDENAÇÃO, COM FILTROS OPCIONAIS DE STATUS, CURSO E PERÍODO LETIVO ---
     @Query("""
@@ -30,7 +29,7 @@ public interface PlanoEnsinoRepository extends JpaRepository<PlanoEnsino, UUID> 
                AND (:periodoLetivo IS NULL OR p.turmaDisciplina.turma.periodoLetivo = :periodoLetivo)
             """)
     Page<PlanoEnsino> buscarComFiltros(@Param("status") StatusPlanoEnsino status,
-                                       @Param("cursoId") UUID cursoId,
+                                       @Param("cursoId") Long cursoId,
                                        @Param("periodoLetivo") String periodoLetivo,
                                        Pageable pageable);
 }

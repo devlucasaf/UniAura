@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +43,7 @@ public class LivroService {
 
     // --- BUSCA UM LIVRO PELO SEU IDENTIFICADOR ---
     @Transactional(readOnly = true)
-    public LivroResponseDTO buscarPorId(UUID id) {
+    public LivroResponseDTO buscarPorId(Long id) {
         return toResponse(buscarEntidade(id));
     }
 
@@ -74,7 +73,7 @@ public class LivroService {
 
     // --- ATUALIZA LIVRO ---
     @Transactional
-    public LivroResponseDTO atualizar(UUID id, LivroRequestDTO dto, MultipartFile capa) {
+    public LivroResponseDTO atualizar(Long id, LivroRequestDTO dto, MultipartFile capa) {
         Livro livro = buscarEntidade(id);
         validarIsbnUnico(dto.getIsbn(), id);
 
@@ -100,7 +99,7 @@ public class LivroService {
 
     // --- REMOVE LIVRO ---
     @Transactional
-    public void deletar(UUID id) {
+    public void deletar(Long id) {
         Livro livro = buscarEntidade(id);
         if (exemplarRepository.countByLivroId(id) > 0) {
             throw new BusinessException("Não é possível excluir livro com exemplares cadastrados.");
@@ -113,13 +112,13 @@ public class LivroService {
     }
 
     // --- BUSCA UM LIVRO PELO IDENTIFICADOR OU LANÇA UMA EXCEÇÃO CASO ELE NÃO SEJA ENCONTRADO ---
-    public Livro buscarEntidade(UUID id) {
+    public Livro buscarEntidade(Long id) {
         return livroRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Livro", id));
     }
 
     // --- VALIDA SE O ISBN INFORMADO NÃO ESTÁ ASSOCIADO A OUTRO LIVRO ---
-    private void validarIsbnUnico(String isbn, UUID idAtual) {
+    private void validarIsbnUnico(String isbn, Long idAtual) {
         if (isbn == null || isbn.isBlank()) {
             return;
         }
@@ -140,6 +139,7 @@ public class LivroService {
     private LivroResponseDTO toResponse(Livro l) {
         long total = exemplarRepository.countByLivroId(l.getId());
         long disponiveis = exemplarRepository.countByLivroIdAndStatus(l.getId(), StatusExemplar.DISPONIVEL);
+
         return LivroResponseDTO.builder()
                 .id(l.getId())
                 .isbn(l.getIsbn())

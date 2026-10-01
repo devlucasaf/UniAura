@@ -12,8 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class AuditoriaService {
@@ -39,8 +37,9 @@ public class AuditoriaService {
 
     // --- LISTA OS LOGS ---
     @Transactional(readOnly = true)
-    public Page<LogAuditoriaResponseDTO> listar(String entidade, UUID usuarioId, Pageable pageable) {
+    public Page<LogAuditoriaResponseDTO> listar(String entidade, Long usuarioId, Pageable pageable) {
         Page<LogAuditoria> page;
+
         if (entidade != null && !entidade.isBlank()) {
             page = logAuditoriaRepository.findByEntidadeIgnoreCase(entidade, pageable);
         } else if (usuarioId != null) {
@@ -48,6 +47,7 @@ public class AuditoriaService {
         } else {
             page = logAuditoriaRepository.findAll(pageable);
         }
+
         return page.map(this::toResponse);
     }
 
