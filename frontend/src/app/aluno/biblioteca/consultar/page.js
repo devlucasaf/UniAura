@@ -1,10 +1,17 @@
 "use client";
 
 import { useEffect, useState }  from "react";
+import { InputText }            from "primereact/inputtext";
+import { Button }               from "primereact/button";
+import { DataTable }            from "primereact/datatable";
+import { Column }               from "primereact/column";
+import { Paginator }            from "primereact/paginator";
+import { Tag }                  from "primereact/tag";
 import AppShell                 from "@/components/interno/AppShell";
 import { livroApi, reservaApi } from "@/lib/api/biblioteca";
 
 const FILTRO_VAZIO = { titulo: "", autor: "", categoria: "", isbn: "" };
+const TAMANHO_PAGINA = 10;
 
 // --- PÁGINA DE CONSULTA DE LIVROS DO ACERVO DA BIBLIOTECA ---
 export default function AlunoBibliotecaConsultarPage() {
@@ -15,7 +22,7 @@ export default function AlunoBibliotecaConsultarPage() {
 
     // --- BUSCA DE LIVROS COM FILTRO E PAGINAÇÃO ---
     async function buscar(paginaAlvo = pagina, filtroAlvo = filtroAtivo) {
-        const resultado = await livroApi.buscar({ ...filtroAlvo, page: paginaAlvo, size: 10 });
+        const resultado = await livroApi.buscar({ ...filtroAlvo, page: paginaAlvo, size: TAMANHO_PAGINA });
         setPage(resultado);
     }
 
@@ -41,13 +48,6 @@ export default function AlunoBibliotecaConsultarPage() {
         buscar(0, proximo);
     }
 
-    // --- NAVEGAÇÃO ENTRE PÁGINAS ---
-    function irPagina(delta) {
-        const novaPagina = pagina + delta;
-        setPagina(novaPagina);
-        buscar(novaPagina);
-    }
-
     const livros = page?.content || [];
 
     return (
@@ -57,73 +57,58 @@ export default function AlunoBibliotecaConsultarPage() {
                 <form className="toolbar" onSubmit={aplicarFiltro}>
                     <label className="field">
                         Título
-                        <input 
-                            value={filtro.titulo} 
-                            onChange={(e) => setFiltro({ ...filtro, titulo: e.target.value })} 
+                        <InputText
+                            value={filtro.titulo}
+                            onChange={(e) => setFiltro({ ...filtro, titulo: e.target.value })}
                         />
                     </label>
                     <label className="field">
                         Autor
-                        <input 
-                            value={filtro.autor} 
-                            onChange={(e) => setFiltro({ ...filtro, autor: e.target.value })} 
+                        <InputText
+                            value={filtro.autor}
+                            onChange={(e) => setFiltro({ ...filtro, autor: e.target.value })}
                         />
                     </label>
                     <label className="field">
                         Categoria
-                        <input 
-                            value={filtro.categoria} 
-                            onChange={(e) => setFiltro({ ...filtro, categoria: e.target.value })} 
+                        <InputText
+                            value={filtro.categoria}
+                            onChange={(e) => setFiltro({ ...filtro, categoria: e.target.value })}
                         />
                     </label>
                     <label className="field">
                         ISBN
-                        <input 
-                            value={filtro.isbn} 
-                            onChange={(e) => setFiltro({ ...filtro, isbn: e.target.value })} 
+                        <InputText
+                            value={filtro.isbn}
+                            onChange={(e) => setFiltro({ ...filtro, isbn: e.target.value })}
                         />
                     </label>
-                    <button type="submit" className="btn">Buscar</button>
+                    <Button type="submit" label="Buscar" />
                 </form>
             </section>
 
             <section className="card">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Título</th>
-                            <th>Autor</th>
-                            <th>Categoria</th>
-                            <th>Disponíveis</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {livros.length === 0 && <tr><td colSpan={5}>Nada encontrado.</td></tr>}
-                        {livros.map((livro) => {
-                            const disponivel = livro.exemplaresDisponiveis > 0;
-                            return (
-                                <tr key={livro.id}>
-                                    <td>{livro.titulo}</td>
-                                    <td>{livro.autor}</td>
-                                    <td>{livro.categoria || "-"}</td>
-                                    <td>{livro.exemplaresDisponiveis}/{livro.totalExemplares}</td>
-                                    <td>
-                                        {disponivel
-                                            ? <span className="badge DISPONIVEL">Disponível</span>
-                                            : <button className="btn btn-sm" onClick={() => reservar(livro.id)}>Reservar</button>}
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
+                <DataTable value={livros} emptyMessage="Nada encontrado." dataKey="id">
+                    <Column header="Título" body={(livro) => livro.titulo} />
+                    <Column header="Autor" body={(livro) => livro.autor} />
+                    <Column header="Categoria" body={(livro) => livro.categoria || "-"} />
+                    <Column header="Disponíveis" body={(livro) => `${livro.exemplaresDisponiveis}/${livro.totalExemplares}`} />
+                    <Column
+                        header=""
+                        body={(livro) => (
+                            livro.exemplaresDisponiveis > 0
+                                ? <Tag value="Disponível" severity="success" />
+                                : <Button label="Reservar" size="small" onClick={() => reservar(livro.id)} />
+                        )}
+                    />
+                </DataTable>
                 {page && (
-                    <div className="toolbar" style={{ marginTop: ".75rem" }}>
-                        <button className="btn secondary" disabled={page.first} onClick={() => irPagina(-1)}>← Anterior</button>
-                        <span>Página {page.number + 1} de {page.totalPages || 1}</span>
-                        <button className="btn secondary" disabled={page.last} onClick={() => irPagina(1)}>Próxima →</button>
-                    </div>
+                    <Paginator
+                        first={pagina * TAMANHO_PAGINA}
+                        rows={TAMANHO_PAGINA}
+                        totalRecords={page.totalElements}
+                        onPageChange={(e) => { setPagina(e.page); buscar(e.page); }}
+                    />
                 )}
             </section>
         </AppShell>

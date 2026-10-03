@@ -1,6 +1,14 @@
 "use client";
 
 import { useEffect, useState }  from "react";
+import { DataTable }            from "primereact/datatable";
+import { Column }               from "primereact/column";
+import { InputText }            from "primereact/inputtext";
+import { InputNumber }          from "primereact/inputnumber";
+import { Dropdown }             from "primereact/dropdown";
+import { Checkbox }             from "primereact/checkbox";
+import { Button }               from "primereact/button";
+import { Box }                  from "@bernardo-dias/react-cloudsupport/prime";
 import { notificar }            from "@/lib/notificar";
 import Modal                    from "./Modal";
 import Paginacao                from "./Paginacao";
@@ -124,7 +132,7 @@ export default function CrudEntityPage({titulo, tituloSingular, api, sort,
                 notificar(`${tituloSingular} atualizado.`, "success");
             } else {
                 await api.criar(dados);
-                notificar(`${tituloSingular} criado. Senha temporária enviada por e-mail (ver log do servidor).`, "success");
+                notificar(`${tituloSingular} criado.`, "success");
             }
             setModalAberto(false);
             carregar(editando ? paginaAtual : 0);
@@ -140,63 +148,54 @@ export default function CrudEntityPage({titulo, tituloSingular, api, sort,
         <section className="card">
             <div className="toolbar toolbar-between">
                 <h1>{titulo}</h1>
-                <button className="btn" onClick={abrirNovo}>+ Novo {tituloSingular.toLowerCase()}</button>
+                <Button label={`+ Novo ${tituloSingular.toLowerCase()}`} onClick={abrirNovo} />
             </div>
 
-            <form className="toolbar" onSubmit={(evento) => {
-                    evento.preventDefault();
-                    if (filtroSelect) {
-                        carregar(0, filtroValor);
-                    }
-                }}
-            >
-                {filtroSelect && (
-                    <label className="field">
-                        {filtroSelect.label}
-                        <select value={filtroValor} onChange={(e) => setFiltroValor(e.target.value)}>
-                            <option value="">Todos</option>
-                            {filtroSelect.options.map((opcao) => (
-                                <option key={opcao} value={opcao}>{opcao}</option>
-                            ))}
-                        </select>
-                    </label>
-                )}
-                <label className="field">
-                    Filtrar na página
-                    <input 
-                        value={busca} 
-                        onChange={(e) => setBusca(e.target.value)} 
-                        placeholder="nome, e-mail..." 
-                    />
-                </label>
-                <button type="submit" className="btn">Aplicar</button>
-            </form>
-
-            <table>
-                <thead>
-                    <tr>
-                        {colunas.map((coluna) => <th key={coluna.header}>{coluna.header}</th>)}
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {linhasVisiveis.length === 0 && (
-                        <tr>
-                            <td colSpan={colunas.length + 1}>{mensagemColunaVazia}</td>
-                        </tr>
+            <Box>
+                <form className="toolbar" onSubmit={(evento) => {
+                        evento.preventDefault();
+                        if (filtroSelect) {
+                            carregar(0, filtroValor);
+                        }
+                    }}
+                >
+                    {filtroSelect && (
+                        <label className="field">
+                            {filtroSelect.label}
+                            <Dropdown
+                                value={filtroValor}
+                                onChange={(e) => setFiltroValor(e.value)}
+                                options={[{ label: "Todos", value: "" }, ...filtroSelect.options.map((o) => ({ label: o, value: o }))]}
+                            />
+                        </label>
                     )}
-                    {linhasVisiveis.map((item) => (
-                        <tr key={item.id}>
-                            {colunas.map((coluna) => <td key={coluna.header}>{coluna.render(item)}</td>)}
-                            <td className="acoes">
-                                <button className="btn secondary btn-sm" onClick={() => abrirEdicao(item)}>Editar</button>
-                                <button className="btn danger btn-sm" onClick={() => excluir(item)}>Excluir</button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            
+                    <label className="field">
+                        Filtrar na página
+                        <InputText
+                            value={busca}
+                            onChange={(e) => setBusca(e.target.value)}
+                            placeholder="nome, e-mail..."
+                        />
+                    </label>
+                    <Button type="submit" label="Aplicar" outlined />
+                </form>
+            </Box>
+
+            <DataTable value={linhasVisiveis} emptyMessage={mensagemColunaVazia} dataKey="id">
+                {colunas.map((coluna) => (
+                    <Column key={coluna.header} header={coluna.header} body={(item) => coluna.render(item)} />
+                ))}
+                <Column
+                    header=""
+                    body={(item) => (
+                        <div className="acoes">
+                            <Button label="Editar" size="small" severity="secondary" outlined onClick={() => abrirEdicao(item)} />
+                            <Button label="Excluir" size="small" severity="danger" outlined onClick={() => excluir(item)} />
+                        </div>
+                    )}
+                />
+            </DataTable>
+
             {/* --- PAGINAÇÃO --- */}
             <Paginacao page={page} aoIr={(pagina) => carregar(pagina)} />
 
@@ -207,10 +206,9 @@ export default function CrudEntityPage({titulo, tituloSingular, api, sort,
                         if (campo.type === "checkbox") {
                             return (
                                 <label key={campo.name} className="field field-inline">
-                                    <input
-                                        type="checkbox"
+                                    <Checkbox
                                         checked={!!valores[campo.name]}
-                                        onChange={(e) => atualizarValor(campo.name, e.target.checked)}
+                                        onChange={(e) => atualizarValor(campo.name, e.checked)}
                                     />
                                     {campo.label}
                                 </label>
@@ -221,18 +219,27 @@ export default function CrudEntityPage({titulo, tituloSingular, api, sort,
                             <div key={campo.name} className={`field${campo.full ? " field-full" : ""}`}>
                                 {campo.label}
                                 {campo.type === "select" && (
-                                    <select value={valores[campo.name] ?? ""} required={campo.required} onChange={(e) => atualizarValor(campo.name, e.target.value)}>
-                                        {campo.options.map((opcao) => <option key={opcao} value={opcao}>{opcao}</option>)}
-                                    </select>
+                                    <Dropdown
+                                        value={valores[campo.name] ?? ""}
+                                        required={campo.required}
+                                        onChange={(e) => atualizarValor(campo.name, e.value)}
+                                        options={campo.options.map((o) => ({ label: o, value: o }))}
+                                    />
                                 )}
                                 {campo.type === "textarea" && (
                                     <textarea value={valores[campo.name] ?? ""} onChange={(e) => atualizarValor(campo.name, e.target.value)}/>
                                 )}
-                                {(!campo.type || ["text", "email", "date", "number"].includes(campo.type)) && (
-                                    <input
+                                {campo.type === "number" && (
+                                    <InputNumber
+                                        value={valores[campo.name] === "" || valores[campo.name] == null ? null : Number(valores[campo.name])}
+                                        min={campo.min}
+                                        onValueChange={(e) => atualizarValor(campo.name, e.value)}
+                                    />
+                                )}
+                                {(!campo.type || ["text", "email", "date"].includes(campo.type)) && (
+                                    <InputText
                                         type={campo.type || "text"}
                                         required={campo.required}
-                                        min={campo.min}
                                         value={valores[campo.name] ?? ""}
                                         onChange={(e) => atualizarValor(campo.name, e.target.value)}
                                     />
@@ -244,10 +251,10 @@ export default function CrudEntityPage({titulo, tituloSingular, api, sort,
                     {erroModal && <p className="msg-error field-full">{erroModal}</p>}
 
                     <div className="toolbar field-full toolbar-between">
-                        <span className="muted">A senha é gerada automaticamente e enviada por e-mail.</span>
+                        <span />
                         <span>
-                            <button type="button" className="btn secondary" onClick={() => setModalAberto(false)}>Cancelar</button>
-                            <button type="submit" className="btn" disabled={salvando}>Salvar</button>
+                            <Button type="button" label="Cancelar" severity="secondary" outlined onClick={() => setModalAberto(false)} />
+                            <Button type="submit" label="Salvar" loading={salvando} />
                         </span>
                     </div>
                 </form>

@@ -1,30 +1,25 @@
-let raizNotificacoes;
+let toastRef = null;
 
-// --- GARANTE QUE A RAIZ DAS NOTIFICAÇÕES EXISTE ---
-function garantirRaizNotificacoes() {
-    if (!raizNotificacoes) {
-        raizNotificacoes = document.createElement("div");
-        raizNotificacoes.className = "toast-container";
-        document.body.appendChild(raizNotificacoes);
-    }
-    return raizNotificacoes;
+// --- REGISTRA A REFERÊNCIA DO <Toast> DO PRIMEREACT MONTADO PELO PrimeToastHost ---
+export function registrarToastRef(ref) {
+    toastRef = ref;
 }
 
-// --- EXIBE UMA NOTIFICAÇÃO ---
+const SEVERIDADE_POR_TIPO = {
+    info: "info",
+    success: "success",
+    error: "error",
+    warning: "warn"
+};
+
+// --- EXIBE UMA NOTIFICAÇÃO (TOAST DO PRIMEREACT) ---
 export function notificar(mensagem, tipo = "info", tempo = 3500) {
-    if (typeof document === "undefined") {
+    if (!toastRef) {
         return;
     }
-
-    const raiz = garantirRaizNotificacoes();
-    const elemento = document.createElement("div");
-    elemento.className = `toast toast-${tipo}`;
-    elemento.textContent = mensagem;
-    raiz.appendChild(elemento);
-
-    requestAnimationFrame(() => elemento.classList.add("show"));
-    setTimeout(() => {
-        elemento.classList.remove("show");
-        setTimeout(() => elemento.remove(), 300);
-    }, tempo);
+    toastRef.show({
+        severity: SEVERIDADE_POR_TIPO[tipo] || "info",
+        detail: mensagem,
+        life: tempo
+    });
 }

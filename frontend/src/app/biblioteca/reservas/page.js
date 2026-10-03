@@ -1,6 +1,10 @@
 "use client";
 
 import { useState }     from "react";
+import { InputText }    from "primereact/inputtext";
+import { Button }       from "primereact/button";
+import { DataTable }    from "primereact/datatable";
+import { Column }       from "primereact/column";
 import AppShell         from "@/components/interno/AppShell";
 import Badge            from "@/components/interno/Badge";
 import { reservaApi }   from "@/lib/api/biblioteca";
@@ -23,7 +27,7 @@ export default function BibliotecaReservasPage() {
         if (!confirm("Cancelar reserva?")) {
             return;
         }
-        
+
         try {
             await reservaApi.cancelar(id);
             carregarFila();
@@ -38,39 +42,24 @@ export default function BibliotecaReservasPage() {
                 <h2>Fila de reservas de um livro</h2>
                 <form className="toolbar" onSubmit={carregarFila}>
                     <label className="field">ID do livro
-                        <input  
-                            required 
-                            value={livroId} 
+                        <InputText
+                            required
+                            value={livroId}
                             onChange={(e) => setLivroId(e.target.value)}
                         />
                     </label>
-                    <button type="submit" className="btn">Ver fila</button>
+                    <Button type="submit" label="Ver fila" />
                 </form>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Pos.</th>
-                            <th>Usuário</th>
-                            <th>Data</th>
-                            <th>Status</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {fila && fila.length === 0 && <tr><td colSpan={5}>Fila vazia.</td></tr>}
-                        {fila?.map((r) => (
-                            <tr key={r.id}>
-                                <td>{r.posicaoFila}</td>
-                                <td>{r.usuarioNome}</td>
-                                <td>{formatarData(r.dataReserva)}</td>
-                                <td><Badge status={r.status} /></td>
-                                <td>
-                                    <button className="btn danger btn-sm" onClick={() => cancelar(r.id)}>Cancelar</button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <DataTable value={fila || []} emptyMessage="Fila vazia." dataKey="id">
+                    <Column header="Pos." body={(r) => r.posicaoFila} />
+                    <Column header="Usuário" body={(r) => r.usuarioNome} />
+                    <Column header="Data" body={(r) => formatarData(r.dataReserva)} />
+                    <Column header="Status" body={(r) => <Badge status={r.status} />} />
+                    <Column
+                        header=""
+                        body={(r) => <Button label="Cancelar" size="small" severity="danger" outlined onClick={() => cancelar(r.id)} />}
+                    />
+                </DataTable>
             </section>
         </AppShell>
     );

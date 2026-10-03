@@ -1,22 +1,25 @@
 "use client";
 
 import { useEffect, useState }          from "react";
+import { InputNumber }                  from "primereact/inputnumber";
+import { Button }                       from "primereact/button";
+import { Message }                      from "primereact/message";
 import AppShell                         from "@/components/interno/AppShell";
 import { configuracaoBibliotecaApi }    from "@/lib/api/biblioteca";
 
 const CAMPOS = [
-    "prazoEmprestimoAluno", 
-    "prazoEmprestimoProfessor", 
-    "maxEmprestimosSimultaneos", 
-    "maxRenovacoes", 
+    "prazoEmprestimoAluno",
+    "prazoEmprestimoProfessor",
+    "maxEmprestimosSimultaneos",
+    "maxRenovacoes",
     "valorMultaDia"
 ];
 
 const FORM_VAZIO = {
-    prazoEmprestimoAluno: "", 
-    prazoEmprestimoProfessor: "", 
+    prazoEmprestimoAluno: "",
+    prazoEmprestimoProfessor: "",
     maxEmprestimosSimultaneos: "",
-    maxRenovacoes: "", 
+    maxRenovacoes: "",
     valorMultaDia: ""
 };
 
@@ -52,60 +55,61 @@ export default function BibliotecaConfiguracoesPage() {
         }
     }
 
+    // --- ATUALIZA UM CAMPO NUMÉRICO DO FORMULÁRIO ---
+    function atualizar(nome, valor) {
+        setForm({ ...form, [nome]: valor ?? "" });
+    }
+
     return (
         <AppShell titulo="Biblioteca — Configurações" perfis={["BIBLIOTECARIO", "ADMIN"]}>
             <section className="card">
                 <h2>Parâmetros gerais</h2>
                 <form className="form-grid" onSubmit={salvar}>
                     <div className="field">Prazo empréstimo aluno (dias)
-                        <input
-                            type="number"
+                        <InputNumber
                             required
-                            min="1"
-                            value={form.prazoEmprestimoAluno}
-                            onChange={(e) => setForm({ ...form, prazoEmprestimoAluno: e.target.value })}
+                            min={1}
+                            value={form.prazoEmprestimoAluno === "" ? null : Number(form.prazoEmprestimoAluno)}
+                            onValueChange={(e) => atualizar("prazoEmprestimoAluno", e.value)}
                         />
                     </div>
                     <div className="field">Prazo empréstimo professor (dias)
-                        <input
-                            type="number"
+                        <InputNumber
                             required
-                            min="1"
-                            value={form.prazoEmprestimoProfessor}
-                            onChange={(e) => setForm({ ...form, prazoEmprestimoProfessor: e.target.value })}
+                            min={1}
+                            value={form.prazoEmprestimoProfessor === "" ? null : Number(form.prazoEmprestimoProfessor)}
+                            onValueChange={(e) => atualizar("prazoEmprestimoProfessor", e.value)}
                         />
                     </div>
                     <div className="field">Máx. empréstimos simultâneos
-                        <input
-                            type="number"
+                        <InputNumber
                             required
-                            min="1"
-                            value={form.maxEmprestimosSimultaneos}
-                            onChange={(e) => setForm({ ...form, maxEmprestimosSimultaneos: e.target.value })}
+                            min={1}
+                            value={form.maxEmprestimosSimultaneos === "" ? null : Number(form.maxEmprestimosSimultaneos)}
+                            onValueChange={(e) => atualizar("maxEmprestimosSimultaneos", e.value)}
                         />
                     </div>
                     <div className="field">Máx. renovações
-                        <input
-                            type="number"
+                        <InputNumber
                             required
-                            min="0"
-                            value={form.maxRenovacoes}
-                            onChange={(e) => setForm({ ...form, maxRenovacoes: e.target.value })}
+                            min={0}
+                            value={form.maxRenovacoes === "" ? null : Number(form.maxRenovacoes)}
+                            onValueChange={(e) => atualizar("maxRenovacoes", e.value)}
                         />
                     </div>
                     <div className="field">Valor da multa por dia (R$)
-                        <input
-                            type="number"
-                            step="0.01"
+                        <InputNumber
                             required
-                            min="0"
-                            value={form.valorMultaDia}
-                            onChange={(e) => setForm({ ...form, valorMultaDia: e.target.value })}
+                            min={0}
+                            minFractionDigits={2}
+                            maxFractionDigits={2}
+                            value={form.valorMultaDia === "" ? null : Number(form.valorMultaDia)}
+                            onValueChange={(e) => atualizar("valorMultaDia", e.value)}
                         />
                     </div>
                     <div className="toolbar field-full">
-                        <button type="submit" className="btn">Salvar</button>
-                        {mensagem.texto && <span className={mensagem.tipo === "error" ? "msg-error" : "msg-ok"}>{mensagem.texto}</span>}
+                        <Button type="submit" label="Salvar" />
+                        {mensagem.texto && <Message severity={mensagem.tipo === "error" ? "error" : "success"} text={mensagem.texto} />}
                     </div>
                 </form>
             </section>

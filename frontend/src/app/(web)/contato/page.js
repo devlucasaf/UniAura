@@ -1,8 +1,13 @@
 "use client";
 
 import { useState }             from "react";
+import { InputText }            from "primereact/inputtext";
+import { InputTextarea }        from "primereact/inputtextarea";
+import { Dropdown }             from "primereact/dropdown";
+import { Checkbox }             from "primereact/checkbox";
+import { Button }               from "primereact/button";
+import { Message }              from "primereact/message";
 import SiteChrome               from "@/components/web/SiteChrome";
-import Dropdown                 from "@/components/ui/Dropdown";
 import { useEfeitosDePagina }   from "@/hooks/useEfeitosDePagina";
 import { mascararTelefone }     from "@/lib/mascaras";
 
@@ -20,11 +25,11 @@ const ASSUNTOS = [
 // -- LISTA DE CANAIS DE CONTATO ---
 const CANAIS = [
     {
-        cor: "#e1306c", 
-        nome: "Instagram", 
-        handle: "@uniaura", 
+        cor: "#e1306c",
+        nome: "Instagram",
+        handle: "@uniaura",
         href: "https://www.instagram.com/__.fr3it4s.__/",
-        externo: true, 
+        externo: true,
         texto: "O dia a dia do campus, eventos, bastidores e as datas do vestibular.",
         icone: (
             <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -35,10 +40,10 @@ const CANAIS = [
         )
     },
     {
-        cor: "#0a66c2", 
-        nome: "LinkedIn", 
-        handle: "/company/uniaura", 
-        href: "#", 
+        cor: "#0a66c2",
+        nome: "LinkedIn",
+        handle: "/company/uniaura",
+        href: "#",
         externo: true,
         texto: "Vagas, parcerias com empresas e a trajetória dos nossos egressos.",
         icone: (
@@ -50,10 +55,10 @@ const CANAIS = [
         )
     },
     {
-        cor: "#1db954", 
-        nome: "Spotify", 
-        handle: "AuraCast · UniAura", 
-        href: "#", 
+        cor: "#1db954",
+        nome: "Spotify",
+        handle: "AuraCast · UniAura",
+        href: "#",
         externo: true,
         texto: "O AuraCast, nosso podcast com professores, pesquisadores e alunos.",
         icone: (
@@ -66,10 +71,10 @@ const CANAIS = [
         )
     },
     {
-        cor: "#5865f2", 
-        nome: "Discord", 
-        handle: "discord.gg/uniaura", 
-        href: "#", 
+        cor: "#5865f2",
+        nome: "Discord",
+        handle: "discord.gg/uniaura",
+        href: "#",
         externo: true,
         texto: "A comunidade dos alunos: grupos de estudo, monitoria e avisos por curso.",
         icone: (
@@ -83,10 +88,10 @@ const CANAIS = [
         )
     },
     {
-        cor: "#1e40af", 
-        nome: "E-mail", 
-        handle: "contato@uniaura.edu.br", 
-        href: "mailto:contato@uniaura.edu.br", 
+        cor: "#1e40af",
+        nome: "E-mail",
+        handle: "contato@uniaura.edu.br",
+        href: "mailto:contato@uniaura.edu.br",
         externo: false,
         texto: "Para assuntos formais, envio de documentos e solicitações da secretaria.",
         icone: (
@@ -97,10 +102,10 @@ const CANAIS = [
         )
     },
     {
-        cor: "#0f766e", 
-        nome: "Telefone", 
+        cor: "#0f766e",
+        nome: "Telefone",
         handle: "(74) 3000-1500",
-        href: "tel:+557430001500", 
+        href: "tel:+557430001500",
         externo: false,
         texto: "Atendimento imediato da central, de segunda a sexta, das 08h às 21h.",
         icone: (
@@ -113,31 +118,11 @@ const CANAIS = [
 
 // --- LISTA DE SETORES DE CONTATO ---
 const SETORES = [
-    { 
-        nome: "Secretaria Acadêmica", 
-        descricao: "Matrícula, histórico, declarações e trancamento", 
-        email: "secretaria@uniaura.edu.br"
-    },
-    { 
-        nome: "Financeiro", 
-        descricao: "Mensalidades, boletos, bolsas e negociação", 
-        email: "financeiro@uniaura.edu.br" 
-    },
-    { 
-        nome: "Coordenação de Curso", 
-        descricao: "Disciplinas, plano de ensino e aproveitamento", 
-        email: "coordenacao@uniaura.edu.br" 
-    },
-    { 
-        nome: "Biblioteca", 
-        descricao: "Empréstimos, reservas, multas e acervo", 
-        email: "biblioteca@uniaura.edu.br" 
-    },
-    { 
-        nome: "Ouvidoria", 
-        descricao: "Reclamações, denúncias, sugestões e elogios", 
-        email: "ouvidoria@uniaura.edu.br" 
-    }
+    { nome: "Secretaria Acadêmica", descricao: "Matrícula, histórico, declarações e trancamento", email: "secretaria@uniaura.edu.br" },
+    { nome: "Financeiro", descricao: "Mensalidades, boletos, bolsas e negociação", email: "financeiro@uniaura.edu.br" },
+    { nome: "Coordenação de Curso", descricao: "Disciplinas, plano de ensino e aproveitamento", email: "coordenacao@uniaura.edu.br" },
+    { nome: "Biblioteca", descricao: "Empréstimos, reservas, multas e acervo", email: "biblioteca@uniaura.edu.br" },
+    { nome: "Ouvidoria", descricao: "Reclamações, denúncias, sugestões e elogios", email: "ouvidoria@uniaura.edu.br" }
 ];
 
 // --- COMPONENTE DA PÁGINA DE CONTATO ---
@@ -210,8 +195,8 @@ export default function ContatoPage() {
                                 </p>
 
                                 <div className="grad-actions" data-entrada style={{ "--atraso": "360ms" }}>
-                                    <a className="grad-btn grad-btn-primary" href="#cc-canais">Ver nossos canais</a>
-                                    <a className="grad-btn grad-btn-outline" href="#cc-mensagem">Enviar uma mensagem</a>
+                                    <Button label="Ver nossos canais" onClick={() => document.getElementById("cc-canais")?.scrollIntoView({ behavior: "smooth" })} />
+                                    <Button label="Enviar uma mensagem" outlined onClick={() => document.getElementById("cc-mensagem")?.scrollIntoView({ behavior: "smooth" })} />
                                 </div>
                             </div>
 
@@ -229,24 +214,24 @@ export default function ContatoPage() {
                                         </span>
                                         <span className="grad-janela-linha"> </span>
                                         <span className="grad-janela-linha">
-                                            <span className="blue">Endereço</span>   
+                                            <span className="blue">Endereço</span>
                                             <span className="green">Av. Central, 1500</span>
                                         </span>
                                         <span className="grad-janela-linha">
-                                            <span className="blue">Bairro</span>     
+                                            <span className="blue">Bairro</span>
                                             <span className="green">Centro · Xique-Xique/BA</span>
                                         </span>
                                         <span className="grad-janela-linha">
-                                            <span className="blue">Telefone</span>   
+                                            <span className="blue">Telefone</span>
                                             <span className="green">(74) 3000-1500</span>
                                         </span>
                                         <span className="grad-janela-linha"> </span>
                                         <span className="grad-janela-linha">
-                                            <span className="blue">Seg a Sex</span>  
+                                            <span className="blue">Seg a Sex</span>
                                             <span className="green">08h às 21h</span>
                                         </span>
                                         <span className="grad-janela-linha">
-                                            <span className="blue">Sábado</span>     
+                                            <span className="blue">Sábado</span>
                                             <span className="green">08h às 12h</span>
                                         </span>
                                         <span className="grad-janela-linha">
@@ -313,35 +298,22 @@ export default function ContatoPage() {
                                 <div className="site-form-grid">
                                     <div className="field">
                                         <label htmlFor="ctNome">Nome completo *</label>
-                                        <input 
-                                            id="ctNome" 
-                                            name="nome" 
-                                            type="text" 
-                                            required 
-                                            minLength={5} 
-                                            autoComplete="name" 
-                                        />
+                                        <InputText id="ctNome" name="nome" required minLength={5} autoComplete="name" />
                                     </div>
 
                                     <div className="field">
                                         <label htmlFor="ctEmail">E-mail *</label>
-                                        <input 
-                                            id="ctEmail" 
-                                            name="email" 
-                                            type="email" 
-                                            required 
-                                            autoComplete="email" 
-                                        />
+                                        <InputText id="ctEmail" name="email" type="email" required autoComplete="email" />
                                     </div>
 
                                     <div className="field">
                                         <label htmlFor="ctTelefone">Telefone</label>
-                                        <input
-                                            id="ctTelefone" 
-                                            name="telefone" 
-                                            type="tel" 
+                                        <InputText
+                                            id="ctTelefone"
+                                            name="telefone"
+                                            type="tel"
                                             maxLength={15}
-                                            placeholder="(00) 00000-0000" 
+                                            placeholder="(00) 00000-0000"
                                             autoComplete="tel"
                                             value={telefone}
                                             onChange={(e) => setTelefone(mascararTelefone(e.target.value))}
@@ -355,41 +327,34 @@ export default function ContatoPage() {
                                             name="assunto"
                                             options={ASSUNTOS}
                                             value={assunto}
-                                            onChange={setAssunto}
+                                            onChange={(e) => setAssunto(e.value)}
                                             placeholder="Selecione o assunto"
-                                            invalid={assuntoInvalido}
+                                            className={assuntoInvalido ? "p-invalid" : ""}
                                         />
                                     </div>
                                 </div>
 
                                 <div className="field">
                                     <label htmlFor="ctMensagem">Mensagem *</label>
-                                    <textarea 
-                                        id="ctMensagem" 
-                                        name="mensagem" 
-                                        rows={5} 
-                                        required 
+                                    <InputTextarea
+                                        id="ctMensagem"
+                                        name="mensagem"
+                                        rows={5}
+                                        required
                                         minLength={20}
                                         placeholder="Conte com detalhes como podemos ajudar."
-                                    ></textarea>
+                                    />
                                 </div>
 
                                 <label className="site-form-termos">
-                                    <input 
-                                        id="ctTermos" 
-                                        name="termos" 
-                                        type="checkbox" 
-                                        required 
-                                    />
+                                    <Checkbox id="ctTermos" name="termos" required />
                                     <span>Autorizo o contato da UniAura e li a política de privacidade. *</span>
                                 </label>
 
-                                <button id="btnEnviarContato" className="grad-btn grad-btn-primary" type="submit" disabled={enviando}>
-                                    {enviando ? "Enviando..." : "Enviar mensagem"}
-                                </button>
+                                <Button id="btnEnviarContato" type="submit" label={enviando ? "Enviando..." : "Enviar mensagem"} loading={enviando} />
 
-                                {sucesso && <p id="ctMensagemOk" className="site-form-msg" aria-live="polite">{sucesso}</p>}
-                                {erro && <p id="ctErro" className="site-form-erro" aria-live="polite">{erro}</p>}
+                                {sucesso && <Message severity="success" text={sucesso} />}
+                                {erro && <Message severity="error" text={erro} />}
                             </form>
                         </div>
                     </section>

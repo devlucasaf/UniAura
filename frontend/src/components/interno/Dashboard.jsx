@@ -1,18 +1,18 @@
 "use client";
 
-import { obterUsuario } from "@/lib/auth";
+import { Card }          from "primereact/card";
+import { obterUsuario }  from "@/lib/auth";
 
 // --- PAINEL INICIAL DE UM PERFIL ---
 export default function Dashboard({ titulo }) {
     const usuario = obterUsuario();
 
     return (
-        <section className="card">
-            <h1>{titulo}</h1>
+        <Card title={titulo}>
             <p className="muted">Bem-vindo, {usuario?.nome || "usuário"}!</p>
             <p style={{ marginTop: "1rem" }}>
                 Este é um painel inicial. O conteúdo específico deste perfil será adicionado aqui nas próximas etapas.
             </p>
-        </section>
+        </Card>
     );
 }

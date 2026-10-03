@@ -1,7 +1,15 @@
-const BASE_API = "/api";
-const CHAVE_TOKEN = "token";
+import { obterToken } from "./auth";
 
-// --- CHAVE PARA O REFRESH TOKEN ---
+const BASE_API = "/api";
+
+let processingRef = null;
+
+// --- REGISTRA O ProcessingContext (notifyStart/notifyEnd) PARA ESTA FUNÇÃO PODER SINALIZAR O ProcessingIndicator ---
+export function registrarProcessing(processing) {
+    processingRef = processing;
+}
+
+// --- CHAMA A API ANEXANDO O ACCESS TOKEN OIDC ATUAL (KEYCLOAK) QUANDO HOUVER ---
 export async function api(caminho, { metodo = "GET", corpo, cabecalhos = {}, multipart = false } = {}) {
     const opcoes = {
         method: metodo,
@@ -10,7 +18,7 @@ export async function api(caminho, { metodo = "GET", corpo, cabecalhos = {}, mul
         }
     };
 
-    const token = typeof window !== "undefined" ? localStorage.getItem(CHAVE_TOKEN) : null;
+    const token = obterToken();
     if (token) {
         opcoes.headers.Authorization = `Bearer ${token}`;
     }
@@ -24,23 +32,24 @@ export async function api(caminho, { metodo = "GET", corpo, cabecalhos = {}, mul
         }
     }
 
-    const resposta = await fetch(`${BASE_API}${caminho}`, opcoes);
-    const texto = await resposta.text();
-    const dados = texto ? JSON.parse(texto) : null;
+    processingRef?.notifyStart();
+    try {
+        const resposta = await fetch(`${BASE_API}${caminho}`, opcoes);
+        const texto = await resposta.text();
+        const dados = texto ? JSON.parse(texto) : null;
 
-    if (resposta.status === 401) {
-        ["token", "refreshToken", "user", "usuarioId"].forEach((chave) => localStorage.removeItem(chave));
-        if (typeof window !== "undefined" && window.location.pathname !== "/login") {
-            window.location.href = "/login";
+        if (resposta.status === 401) {
+            throw new Error((dados && dados.message) || "Sessão expirada. Faça login novamente.");
         }
-        throw new Error((dados && dados.message) || "Sessão expirada. Faça login novamente.");
-    }
 
-    if (!resposta.ok) {
-        throw new Error((dados && (dados.message || dados.error)) || `Erro ${resposta.status}`);
-    }
+        if (!resposta.ok) {
+            throw new Error((dados && (dados.message || dados.error)) || `Erro ${resposta.status}`);
+        }
 
-    return resposta.status === 204 ? null : dados;
+        return resposta.status === 204 ? null : dados;
+    } finally {
+        processingRef?.notifyEnd();
+    }
 }
 
 // --- MONTA UMA QUERY STRING IGNORANDO VALORES VAZIOS ---

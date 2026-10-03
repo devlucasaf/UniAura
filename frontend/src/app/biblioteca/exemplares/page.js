@@ -1,6 +1,11 @@
 "use client";
 
 import { useState }                 from "react";
+import { InputText }                from "primereact/inputtext";
+import { Button }                   from "primereact/button";
+import { Message }                  from "primereact/message";
+import { DataTable }                from "primereact/datatable";
+import { Column }                   from "primereact/column";
 import AppShell                     from "@/components/interno/AppShell";
 import Badge                        from "@/components/interno/Badge";
 import { livroApi, exemplarApi }    from "@/lib/api/biblioteca";
@@ -87,15 +92,15 @@ export default function BibliotecaExemplaresPage() {
                 <form className="toolbar" onSubmit={buscarLivros}>
                     <label className="field">
                         Título
-                        <input 
-                            value={tituloBusca} 
-                            required 
-                            onChange={(e) => setTituloBusca(e.target.value)} 
+                        <InputText
+                            value={tituloBusca}
+                            required
+                            onChange={(e) => setTituloBusca(e.target.value)}
                         />
                     </label>
-                    <button type="submit" className="btn">Buscar</button>
+                    <Button type="submit" label="Buscar" />
                 </form>
-                {erroBusca && <p className="msg-error">{erroBusca}</p>}
+                {erroBusca && <Message severity="error" text={erroBusca} />}
                 {resultados && (
                     <ul>
                         {resultados.length === 0 && <li>Nenhum livro encontrado.</li>}
@@ -115,46 +120,30 @@ export default function BibliotecaExemplaresPage() {
                     <h2>Exemplares de {livroSelecionado.titulo}</h2>
                     <form className="toolbar" onSubmit={adicionarExemplar}>
                         <label className="field">Código de barras
-                            <input 
-                                placeholder="deixe vazio para gerar" 
-                                value={codigoBarras} 
-                                onChange={(e) => setCodigoBarras(e.target.value)} 
+                            <InputText
+                                placeholder="deixe vazio para gerar"
+                                value={codigoBarras}
+                                onChange={(e) => setCodigoBarras(e.target.value)}
                             />
                         </label>
                         <label className="field">Localização
-                            <input 
-                                placeholder="ex.: Estante A3" 
-                                value={localizacao} 
-                                onChange={(e) => setLocalizacao(e.target.value)} 
+                            <InputText
+                                placeholder="ex.: Estante A3"
+                                value={localizacao}
+                                onChange={(e) => setLocalizacao(e.target.value)}
                             />
                         </label>
-                        <button type="button" className="btn secondary" onClick={gerarCodigo}>Gerar código</button>
-                        <button type="submit" className="btn">Adicionar exemplar</button>
-                        {mensagemExemplar.texto && <span className={mensagemExemplar.tipo === "error" ? "msg-error" : "msg-ok"}>{mensagemExemplar.texto}</span>}
+                        <Button type="button" label="Gerar código" severity="secondary" outlined onClick={gerarCodigo} />
+                        <Button type="submit" label="Adicionar exemplar" />
+                        {mensagemExemplar.texto && <Message severity={mensagemExemplar.tipo === "error" ? "error" : "success"} text={mensagemExemplar.texto} />}
                     </form>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Código</th>
-                                <th>Localização</th>
-                                <th>Status</th>
-                                <th>Criado</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {exemplares.length === 0 && <tr><td colSpan={5}>Sem exemplares.</td></tr>}
-                            {exemplares.map((ex) => (
-                                <tr key={ex.id}>
-                                    <td>{ex.codigoBarras}</td>
-                                    <td>{ex.localizacao || "-"}</td>
-                                    <td><Badge status={ex.status} /></td>
-                                    <td>{formatarData(ex.criadoEm)}</td>
-                                    <td><button className="btn danger btn-sm" onClick={() => excluirExemplar(ex.id)}>Excluir</button></td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    <DataTable value={exemplares} emptyMessage="Sem exemplares." dataKey="id">
+                        <Column header="Código" body={(ex) => ex.codigoBarras} />
+                        <Column header="Localização" body={(ex) => ex.localizacao || "-"} />
+                        <Column header="Status" body={(ex) => <Badge status={ex.status} />} />
+                        <Column header="Criado" body={(ex) => formatarData(ex.criadoEm)} />
+                        <Column header="" body={(ex) => <Button label="Excluir" size="small" severity="danger" outlined onClick={() => excluirExemplar(ex.id)} />} />
+                    </DataTable>
                 </section>
             )}
         </AppShell>

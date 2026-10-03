@@ -4,9 +4,6 @@ import java.math.BigDecimal;
 
 public interface EmailService {
 
-    // --- ENVIA A SENHA TEMPORÁRIA GERADA PARA UM NOVO USUÁRIO ---
-    void enviarSenhaTemporaria(String destinatario, String nome, String senhaTemporaria);
-
     // --- AVISA O ALUNO QUE UMA MENSALIDADE VENCEU E ESTÁ EM ATRASO ---
     void notificarMensalidadeAtrasada(String destinatario, String nome, String competencia, BigDecimal valor);
 

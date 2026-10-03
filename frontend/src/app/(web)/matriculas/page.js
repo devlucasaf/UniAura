@@ -1,8 +1,13 @@
 "use client";
 
 import { useState }                         from "react";
+import { InputText }                        from "primereact/inputtext";
+import { InputTextarea }                    from "primereact/inputtextarea";
+import { Dropdown }                         from "primereact/dropdown";
+import { Checkbox }                         from "primereact/checkbox";
+import { Button }                           from "primereact/button";
+import { Message }                          from "primereact/message";
 import SiteChrome                           from "@/components/web/SiteChrome";
-import Dropdown                             from "@/components/ui/Dropdown";
 import { useEfeitosDePagina }               from "@/hooks/useEfeitosDePagina";
 import { mascararCpf, mascararTelefone }    from "@/lib/mascaras";
 
@@ -230,8 +235,8 @@ export default function MatriculasPage() {
                                 </p>
 
                                 <div className="grad-actions" data-entrada style={{ "--atraso": "360ms" }}>
-                                    <a className="grad-btn grad-btn-primary" href="#grad-inscricao">Iniciar inscrição</a>
-                                    <a className="grad-btn grad-btn-outline" href="#grad-documentos">Ver documentos exigidos</a>
+                                    <Button label="Iniciar inscrição" onClick={() => document.getElementById("grad-inscricao")?.scrollIntoView({ behavior: "smooth" })} />
+                                    <Button label="Ver documentos exigidos" outlined onClick={() => document.getElementById("grad-documentos")?.scrollIntoView({ behavior: "smooth" })} />
                                 </div>
                             </div>
 
@@ -340,33 +345,19 @@ export default function MatriculasPage() {
                                 <div className="site-form-grid">
                                     <div className="field">
                                         <label htmlFor="matNome">Nome completo *</label>
-                                        <input
-                                            id="matNome"
-                                            name="nome"
-                                            type="text"
-                                            required
-                                            minLength={5}
-                                            autoComplete="name"
-                                        />
+                                        <InputText id="matNome" name="nome" required minLength={5} autoComplete="name" />
                                     </div>
 
                                     <div className="field">
                                         <label htmlFor="matEmail">E-mail *</label>
-                                        <input
-                                            id="matEmail"
-                                            name="email"
-                                            type="email"
-                                            required
-                                            autoComplete="email"
-                                        />
+                                        <InputText id="matEmail" name="email" type="email" required autoComplete="email" />
                                     </div>
 
                                     <div className="field">
                                         <label htmlFor="matCpf">CPF *</label>
-                                        <input
+                                        <InputText
                                             id="matCpf"
                                             name="cpf"
-                                            type="text"
                                             required
                                             inputMode="numeric"
                                             maxLength={14}
@@ -378,7 +369,7 @@ export default function MatriculasPage() {
 
                                     <div className="field">
                                         <label htmlFor="matTelefone">Telefone *</label>
-                                        <input
+                                        <InputText
                                             id="matTelefone"
                                             name="telefone"
                                             type="tel"
@@ -393,80 +384,68 @@ export default function MatriculasPage() {
 
                                     <div className="field">
                                         <label htmlFor="matNascimento">Data de nascimento *</label>
-                                        <input 
-                                            id="matNascimento" 
-                                            name="dataNascimento" 
-                                            type="date" 
-                                            required 
-                                        />
+                                        <InputText id="matNascimento" name="dataNascimento" type="date" required />
                                     </div>
 
                                     <div className="field">
                                         <label htmlFor="matCurso">Curso pretendido *</label>
                                         <Dropdown
-                                            id="matCurso" 
-                                            name="curso" 
-                                            options={CURSOS} 
-                                            value={curso} 
-                                            onChange={setCurso}
-                                            placeholder="Selecione o curso" 
-                                            invalid={camposInvalidos.curso}
+                                            id="matCurso"
+                                            name="curso"
+                                            options={CURSOS}
+                                            value={curso}
+                                            onChange={(e) => setCurso(e.value)}
+                                            placeholder="Selecione o curso"
+                                            className={camposInvalidos.curso ? "p-invalid" : ""}
                                         />
                                     </div>
 
                                     <div className="field">
                                         <label htmlFor="matTurno">Turno *</label>
                                         <Dropdown
-                                            id="matTurno" 
-                                            name="turno" 
-                                            options={TURNOS} 
-                                            value={turno} 
-                                            onChange={setTurno}
-                                            placeholder="Selecione o turno" 
-                                            invalid={camposInvalidos.turno}
+                                            id="matTurno"
+                                            name="turno"
+                                            options={TURNOS}
+                                            value={turno}
+                                            onChange={(e) => setTurno(e.value)}
+                                            placeholder="Selecione o turno"
+                                            className={camposInvalidos.turno ? "p-invalid" : ""}
                                         />
                                     </div>
 
                                     <div className="field">
                                         <label htmlFor="matIngresso">Forma de ingresso *</label>
                                         <Dropdown
-                                            id="matIngresso" 
-                                            name="formaIngresso" 
+                                            id="matIngresso"
+                                            name="formaIngresso"
                                             options={FORMAS_INGRESSO}
-                                            value={formaIngresso} 
-                                            onChange={setFormaIngresso}
-                                            placeholder="Selecione a forma de ingresso" 
-                                            invalid={camposInvalidos.formaIngresso}
+                                            value={formaIngresso}
+                                            onChange={(e) => setFormaIngresso(e.value)}
+                                            placeholder="Selecione a forma de ingresso"
+                                            className={camposInvalidos.formaIngresso ? "p-invalid" : ""}
                                         />
                                     </div>
                                 </div>
 
                                 <div className="field">
                                     <label htmlFor="matObservacoes">Observações</label>
-                                    <textarea 
-                                        id="matObservacoes" 
-                                        name="observacoes" 
+                                    <InputTextarea
+                                        id="matObservacoes"
+                                        name="observacoes"
                                         rows={4}
                                         placeholder="Conte se você precisa de algum atendimento específico."
-                                    ></textarea>
+                                    />
                                 </div>
 
                                 <label className="site-form-termos">
-                                    <input 
-                                        id="matTermos" 
-                                        name="termos" 
-                                        type="checkbox" 
-                                        required 
-                                    />
+                                    <Checkbox id="matTermos" name="termos" required />
                                     <span>Li e aceito os termos do processo seletivo e a política de privacidade. *</span>
                                 </label>
 
-                                <button id="btnEnviarMatricula" className="grad-btn grad-btn-primary" type="submit" disabled={enviando}>
-                                    {enviando ? "Enviando..." : "Enviar inscrição"}
-                                </button>
+                                <Button id="btnEnviarMatricula" type="submit" label={enviando ? "Enviando..." : "Enviar inscrição"} loading={enviando} />
 
-                                {mensagem && <p id="matMensagem" className="site-form-msg" aria-live="polite">{mensagem}</p>}
-                                {erro && <p id="matErro" className="site-form-erro" aria-live="polite">{erro}</p>}
+                                {mensagem && <Message severity="success" text={mensagem} />}
+                                {erro && <Message severity="error" text={erro} />}
                             </form>
                         </div>
                     </section>

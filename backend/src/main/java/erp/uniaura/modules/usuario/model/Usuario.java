@@ -37,8 +37,11 @@ public class Usuario extends SqlServerBaseEntity {
     private String email;
 
     @JsonIgnore
-    @Column(name = "senha", nullable = false, length = 255)
+    @Column(name = "senha", length = 255)
     private String senha;
+
+    @Column(name = "keycloakSub", unique = true, length = 64)
+    private String keycloakSub;
 
     @Column(name = "cpf", length = 14)
     private String cpf;

@@ -1,10 +1,14 @@
 "use client";
 
-import { useEfeitosDePagina } from "@/hooks/useEfeitosDePagina";
+import { useRouter }           from "next/navigation";
+import { Accordion, AccordionTab } from "primereact/accordion";
+import { Button }              from "primereact/button";
+import { useEfeitosDePagina }  from "@/hooks/useEfeitosDePagina";
 
 // --- ESTRUTURA COMPARTILHADA DE UMA PAGINA DE CURSO ---
 export default function CursoTemplate({ curso }) {
     const raizRef = useEfeitosDePagina();
+    const router = useRouter();
 
     return (
         <div className="grad-page" ref={raizRef}>
@@ -52,10 +56,13 @@ export default function CursoTemplate({ curso }) {
                             <p data-entrada style={{ "--atraso": "260ms" }}>{curso.descricao}</p>
 
                             <div className="grad-actions" data-entrada style={{ "--atraso": "360ms" }}>
-                                {curso.acoes.map((acao) => (
-                                    <a key={acao.texto} className={`grad-btn ${acao === curso.acoes[0] ? "grad-btn-primary" : "grad-btn-outline"}`} href={acao.href}>
-                                        {acao.texto}
-                                    </a>
+                                {curso.acoes.map((acao, indice) => (
+                                    <Button
+                                        key={acao.texto}
+                                        label={acao.texto}
+                                        outlined={indice !== 0}
+                                        onClick={() => router.push(acao.href)}
+                                    />
                                 ))}
                             </div>
                         </div>
@@ -106,16 +113,16 @@ export default function CursoTemplate({ curso }) {
                             {curso.formacaoCards.map((card, indice) => (
                                 <article className="grad-card" data-revelar style={{ "--atraso": `${indice * 90}ms` }} key={card.titulo}>
                                     <div className="grad-card-icon">
-                                        <svg 
-                                            viewBox="0 0 24 24" 
-                                            width="23" 
-                                            height="23" 
-                                            fill="none" 
+                                        <svg
+                                            viewBox="0 0 24 24"
+                                            width="23"
+                                            height="23"
+                                            fill="none"
                                             stroke="currentColor"
-                                            strokeWidth="1.8" 
-                                            strokeLinecap="round" 
+                                            strokeWidth="1.8"
+                                            strokeLinecap="round"
                                             strokeLinejoin="round"
-                                            dangerouslySetInnerHTML={{ __html: card.iconeSvg }} 
+                                            dangerouslySetInnerHTML={{ __html: card.iconeSvg }}
                                         />
                                     </div>
                                     <h3>{card.titulo}</h3>
@@ -134,27 +141,17 @@ export default function CursoTemplate({ curso }) {
                             <p>{curso.matrizTexto}</p>
                         </div>
 
-                        <div className="grad-curriculum">
-                            {curso.semestres.map((semestre, indice) => (
-                                <div className={`grad-semester${indice === 0 ? " aberto" : ""}`} data-revelar style={{ "--atraso": `${indice * 60}ms` }} key={semestre.titulo}>
-                                    <button type="button" aria-expanded={indice === 0}>
-                                        <span>{semestre.titulo}</span>
-                                        <span className="grad-semester-seta" aria-hidden="true">
-                                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                                                <polyline points="6 9 12 15 18 9"></polyline>
-                                            </svg>
-                                        </span>
-                                    </button>
-                                    <div className="grad-semester-corpo">
-                                        <div className="grad-semester-list">
-                                            {semestre.disciplinas.map((disciplina) => (
-                                                <span className="grad-subject" key={disciplina}>{disciplina}</span>
-                                            ))}
-                                        </div>
+                        <Accordion activeIndex={0}>
+                            {curso.semestres.map((semestre) => (
+                                <AccordionTab key={semestre.titulo} header={semestre.titulo}>
+                                    <div className="grad-semester-list">
+                                        {semestre.disciplinas.map((disciplina) => (
+                                            <span className="grad-subject" key={disciplina}>{disciplina}</span>
+                                        ))}
                                     </div>
-                                </div>
+                                </AccordionTab>
                             ))}
-                        </div>
+                        </Accordion>
                     </div>
                 </section>
 
@@ -186,10 +183,7 @@ export default function CursoTemplate({ curso }) {
                                 <h2>{curso.ctaTitulo}</h2>
                                 <p>{curso.ctaTexto}</p>
                             </div>
-                            <a className="grad-btn grad-cta-btn" href="/matriculas">
-                                Fazer minha matrícula
-                                <span className="grad-cta-seta" aria-hidden="true">→</span>
-                            </a>
+                            <Button label="Fazer minha matrícula" icon="pi pi-arrow-right" iconPos="right" onClick={() => router.push("/matriculas")} />
                         </div>
                     </div>
                 </section>

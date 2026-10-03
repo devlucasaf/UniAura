@@ -1,5 +1,9 @@
 "use client";
 
+import { Paginator } from "primereact/paginator";
+
+const TAMANHO_PAGINA = 10;
+
 // --- BARRA DE PAGINAÇÃO PARA PÁGINAS SPRING ---
 export default function Paginacao({ page, aoIr }) {
     if (!page) {
@@ -7,10 +11,11 @@ export default function Paginacao({ page, aoIr }) {
     }
 
     return (
-        <div className="toolbar paginacao">
-            <button className="btn secondary btn-sm" disabled={page.first} onClick={() => aoIr(page.number - 1)}>← Anterior</button>
-            <span>Página {page.number + 1} de {page.totalPages || 1} · {page.totalElements} registro(s)</span>
-            <button className="btn secondary btn-sm" disabled={page.last} onClick={() => aoIr(page.number + 1)}>Próxima →</button>
-        </div>
+        <Paginator
+            first={page.number * TAMANHO_PAGINA}
+            rows={TAMANHO_PAGINA}
+            totalRecords={page.totalElements}
+            onPageChange={(evento) => aoIr(evento.page)}
+        />
     );
 }

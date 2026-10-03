@@ -1,40 +1,21 @@
 "use client";
 
-import { useState }                         from "react";
-import Link                                 from "next/link";
-import SiteChrome                           from "@/components/web/SiteChrome";
-import { autenticar, dashboardDoPerfil }    from "@/lib/auth";
-import { notificar }                        from "@/lib/notificar";
+import { useEffect }    from "react";
+import Link             from "next/link";
+import SiteChrome       from "@/components/web/SiteChrome";
+import { useAuth }      from "@bernardo-dias/react-cloudsupport";
+import { LoggedOut }    from "@bernardo-dias/react-cloudsupport/prime";
 
+// --- LOGIN DO PORTAL DO ALUNO: REDIRECIONA PARA O KEYCLOAK ---
 export default function PortalAlunoLoginPage() {
-    const [mensagem,    setMensagem]    = useState("");
-    const [carregando,  setCarregando]  = useState(false);
+    const auth = useAuth();
 
-    const aoEnviar = async (evento) => {
-        evento.preventDefault();
-        setMensagem("");
-
-        const formulario = evento.target;
-        const email = formulario.email.value.trim();
-        const senha = formulario.senha.value;
-
-        if (!email || !senha) {
-            setMensagem("Informe e-mail e senha.");
-            return;
+    // --- REDIRECIONA AUTOMATICAMENTE PARA A TELA DE LOGIN DO KEYCLOAK ---
+    useEffect(() => {
+        if (!auth.isLoading && !auth.isAuthenticated && !auth.activeNavigator) {
+            auth.signinRedirect();
         }
-
-        setCarregando(true);
-        try {
-            const usuario = await autenticar(email, senha);
-            notificar(`Bem-vindo, ${usuario.nome}!`, "success");
-            window.location.href = dashboardDoPerfil(usuario.role);
-        } catch (erro) {
-            setMensagem(erro.message);
-            notificar(erro.message, "error");
-        } finally {
-            setCarregando(false);
-        }
-    };
+    }, [auth.isLoading, auth.isAuthenticated, auth.activeNavigator]);
 
     return (
         <SiteChrome>
@@ -45,43 +26,8 @@ export default function PortalAlunoLoginPage() {
                             <div className="site-auth-card">
                                 <span className="grad-eyebrow">Portal do Aluno</span>
                                 <h1>Acesse sua conta</h1>
-                                <p className="muted">
-                                    Entre com o e-mail e a senha cadastrados na sua matrícula para acompanhar notas,
-                                    frequência, financeiro e a biblioteca.
-                                </p>
 
-                                <form id="formPortalLogin" className="site-form" noValidate onSubmit={aoEnviar}>
-                                    <div className="field">
-                                        <label htmlFor="palEmail">E-mail *</label>
-                                        <input
-                                            id="palEmail"
-                                            name="email"
-                                            type="email"
-                                            required
-                                            autoComplete="email"
-                                            autoFocus
-                                        />
-                                    </div>
-
-                                    <div className="field">
-                                        <label htmlFor="palSenha">Senha *</label>
-                                        <input
-                                            id="palSenha"
-                                            name="senha"
-                                            type="password"
-                                            required
-                                            autoComplete="current-password"
-                                        />
-                                    </div>
-
-                                    {mensagem && (
-                                        <p id="palMensagem" className="site-form-erro" aria-live="polite">{mensagem}</p>
-                                    )}
-
-                                    <button id="btnPortalEntrar" className="grad-btn grad-btn-primary site-auth-btn" type="submit" disabled={carregando}>
-                                        {carregando ? "Entrando..." : "Entrar"}
-                                    </button>
-                                </form>
+                                <LoggedOut message="Sua sessão foi encerrada. Entre novamente para continuar." label="Entrar" />
 
                                 <p className="site-auth-rodape">
                                     Ainda não é aluno da UniAura?{" "}

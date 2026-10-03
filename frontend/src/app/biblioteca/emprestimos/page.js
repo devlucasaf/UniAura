@@ -1,6 +1,11 @@
 "use client";
 
 import { useState }                     from "react";
+import { InputText }                    from "primereact/inputtext";
+import { Button }                       from "primereact/button";
+import { Message }                      from "primereact/message";
+import { DataTable }                    from "primereact/datatable";
+import { Column }                       from "primereact/column";
 import AppShell                         from "@/components/interno/AppShell";
 import Badge                            from "@/components/interno/Badge";
 import { emprestimoApi, exemplarApi }   from "@/lib/api/biblioteca";
@@ -19,7 +24,7 @@ export default function BibliotecaEmprestimosPage() {
             const ex = await exemplarApi.buscarPorCodigo(codigoBarras.trim());
             const emp = await emprestimoApi.registrar({ exemplarId: ex.id, usuarioId: usuarioIdNovo.trim() });
             setMensagem({
-                texto: `Empréstimo #${emp.id.substring(0, 8)} registrado. Devolução prevista: ${formatarData(emp.dataDevolucaoPrevista)}`,
+                texto: `Empréstimo #${emp.id.toString().substring(0, 8)} registrado. Devolução prevista: ${formatarData(emp.dataDevolucaoPrevista)}`,
                 tipo: "ok"
             });
             setCodigoBarras("");
@@ -41,22 +46,22 @@ export default function BibliotecaEmprestimosPage() {
                 <h2>Novo empréstimo</h2>
                 <form className="toolbar" onSubmit={registrar}>
                     <label className="field">Código de barras do exemplar
-                        <input 
-                            required 
-                            autoFocus 
-                            value={codigoBarras} 
-                            onChange={(e) => setCodigoBarras(e.target.value)} 
+                        <InputText
+                            required
+                            autoFocus
+                            value={codigoBarras}
+                            onChange={(e) => setCodigoBarras(e.target.value)}
                         />
                     </label>
                     <label className="field">ID do usuário (aluno/professor)
-                        <input 
-                            required 
-                            value={usuarioIdNovo} 
-                            onChange={(e) => setUsuarioIdNovo(e.target.value)} 
+                        <InputText
+                            required
+                            value={usuarioIdNovo}
+                            onChange={(e) => setUsuarioIdNovo(e.target.value)}
                         />
                     </label>
-                    <button type="submit" className="btn">Registrar</button>
-                    {mensagem.texto && <span className={mensagem.tipo === "error" ? "msg-error" : "msg-ok"}>{mensagem.texto}</span>}
+                    <Button type="submit" label="Registrar" />
+                    {mensagem.texto && <Message severity={mensagem.tipo === "error" ? "error" : "success"} text={mensagem.texto} />}
                 </form>
             </section>
 
@@ -64,43 +69,24 @@ export default function BibliotecaEmprestimosPage() {
                 <h2>Consultar empréstimos por usuário</h2>
                 <form className="toolbar" onSubmit={consultar}>
                     <label className="field">ID do usuário
-                        <input 
-                            required 
-                            value={usuarioIdConsulta} 
-                            onChange={(e) => setUsuarioIdConsulta(e.target.value)} 
+                        <InputText
+                            required
+                            value={usuarioIdConsulta}
+                            onChange={(e) => setUsuarioIdConsulta(e.target.value)}
                         />
                     </label>
-                    <button type="submit" className="btn">Listar</button>
+                    <Button type="submit" label="Listar" />
                 </form>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Livro</th>
-                            <th>Código</th>
-                            <th>Empréstimo</th>
-                            <th>Prev. devolução</th>
-                            <th>Devolvido em</th>
-                            <th>Status</th>
-                            <th>Renovações</th>
-                            <th>Multa</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {emprestimos && emprestimos.length === 0 && <tr><td colSpan={8}>Nenhum empréstimo.</td></tr>}
-                        {emprestimos?.map((emp) => (
-                            <tr key={emp.id}>
-                                <td>{emp.livroTitulo}</td>
-                                <td>{emp.exemplarCodigoBarras}</td>
-                                <td>{formatarData(emp.dataEmprestimo)}</td>
-                                <td>{formatarData(emp.dataDevolucaoPrevista)}</td>
-                                <td>{formatarData(emp.dataDevolucaoEfetiva)}</td>
-                                <td><Badge status={emp.status} /></td>
-                                <td>{emp.renovacoes}</td>
-                                <td>{formatarMoeda(emp.valorMulta)}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <DataTable value={emprestimos || []} emptyMessage="Nenhum empréstimo." dataKey="id">
+                    <Column header="Livro" body={(emp) => emp.livroTitulo} />
+                    <Column header="Código" body={(emp) => emp.exemplarCodigoBarras} />
+                    <Column header="Empréstimo" body={(emp) => formatarData(emp.dataEmprestimo)} />
+                    <Column header="Prev. devolução" body={(emp) => formatarData(emp.dataDevolucaoPrevista)} />
+                    <Column header="Devolvido em" body={(emp) => formatarData(emp.dataDevolucaoEfetiva)} />
+                    <Column header="Status" body={(emp) => <Badge status={emp.status} />} />
+                    <Column header="Renovações" body={(emp) => emp.renovacoes} />
+                    <Column header="Multa" body={(emp) => formatarMoeda(emp.valorMulta)} />
+                </DataTable>
             </section>
         </AppShell>
     );

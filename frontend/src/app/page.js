@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState }  from "react";
-import { useRouter }                    from "next/navigation";
-import Link                             from "next/link";
-import SiteChrome                       from "@/components/web/SiteChrome";
-import { notificar }                    from "@/lib/notificar";
+import { useState }     from "react";
+import { useRouter }    from "next/navigation";
+import { Carousel }     from "primereact/carousel";
+import { Button }       from "primereact/button";
+import { InputText }    from "primereact/inputtext";
+import { InputTextarea } from "primereact/inputtextarea";
+import { Message }      from "primereact/message";
+import SiteChrome        from "@/components/web/SiteChrome";
+import { notificar }     from "@/lib/notificar";
 
 // --- SLIDES DE NOTÍCIAS ---
 const SLIDES = [
@@ -56,38 +60,9 @@ const SLIDES = [
 // --- RENDERIZAÇÃO DA PÁGINA ---
 export default function HomePage() {
     const router = useRouter();
-    const [slideAtual, setSlideAtual] = useState(0);
     const [mensagemEnviada, setMensagemEnviada] = useState(false);
-    const temporizadorRef = useRef(null);
 
-    // --- FUNÇÕES DE NAVEGAÇÃO ENTRE SLIDES ---
-    const irPara = (indice) => {
-        setSlideAtual((indice + SLIDES.length) % SLIDES.length);
-    };
-
-    // --- FUNÇÕES DE ROTACIONAMENTO AUTOMÁTICO DOS SLIDES ---
-    const iniciarRotacao = () => {
-        pararRotacao();
-        temporizadorRef.current = setInterval(() => {
-            setSlideAtual((atual) => (atual + 1) % SLIDES.length);
-        }, 6000);
-    };
-
-    // --- FUNÇÃO PARA PARAR A ROTACIONAMENTO AUTOMÁTICO DOS SLIDES ---
-    const pararRotacao = () => {
-        if (temporizadorRef.current) {
-            clearInterval(temporizadorRef.current);
-            temporizadorRef.current = null;
-        }
-    };
-
-    // --- INICIA A ROTACIONAMENTO AUTOMÁTICO QUANDO O COMPONENTE É MONTADO ---
-    useEffect(() => {
-        iniciarRotacao();
-        return pararRotacao;
-    }, []);
-
-    // --- FUNÇÕES DE NAVEGAÇÃO E ENVIO DE FORMULÁRIO ---
+    // --- ROLA SUAVEMENTE PARA UMA ÂNCORA DA PÁGINA ---
     const rolarPara = (id) => (evento) => {
         evento.preventDefault();
         document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -111,53 +86,38 @@ export default function HomePage() {
         notificar("Mensagem enviada com sucesso!", "success");
     };
 
+    // --- TEMPLATE DE CADA SLIDE DO CARROSSEL DE NOTÍCIAS ---
+    const templateSlide = (slide) => (
+        <article className="site-noticia-slide ativo">
+            <div className="site-noticia-conteudo">
+                <span className={`site-noticia-tag ${slide.classeTag}`}>{slide.tag}</span>
+                <h1>{slide.titulo}</h1>
+                <p>{slide.texto}</p>
+                <div className="site-noticia-acoes">
+                    <Button label="Fale com a secretaria" size="large" onClick={rolarPara("contato")} />
+                    <Button label="Conheça os cursos" size="large" outlined onClick={rolarPara("ensino")} />
+                </div>
+            </div>
+            <div className="site-noticia-arte">
+                <span className="site-noticia-icone" aria-hidden="true">{slide.icone}</span>
+            </div>
+        </article>
+    );
+
     // --- RENDERIZAÇÃO DA PÁGINA ---
     return (
         <SiteChrome ancoras>
             <section id="noticias" className="site-noticias-hero">
                 <div className="site-container">
-                    <div className="site-noticias-slider" onMouseEnter={pararRotacao} onMouseLeave={iniciarRotacao}>
-                        {SLIDES.map((slide, indice) => (
-                            <article key={slide.titulo} className={`site-noticia-slide${indice === slideAtual ? " ativo" : ""}`} data-slide={indice}>
-                                <div className="site-noticia-conteudo">
-                                    <span className={`site-noticia-tag ${slide.classeTag}`}>{slide.tag}</span>
-                                    <h1>{slide.titulo}</h1>
-                                    <p>{slide.texto}</p>
-                                    <div className="site-noticia-acoes">
-                                        <button className="btn btn-primary btn-lg" type="button" onClick={rolarPara("contato")}>
-                                            Fale com a secretaria
-                                        </button>
-                                        <button className="btn btn-outline btn-lg" type="button" onClick={rolarPara("ensino")}>
-                                            Conheça os cursos
-                                        </button>
-                                    </div>
-                                </div>
-                                <div className="site-noticia-arte">
-                                    <span className="site-noticia-icone" aria-hidden="true">{slide.icone}</span>
-                                </div>
-                            </article>
-                        ))}
-                    </div>
-
-                    <div className="site-slider-controles">
-                        <button className="site-slider-btn" type="button" aria-label="Notícia anterior" onClick={() => { irPara(slideAtual - 1); iniciarRotacao(); }}>
-                            ‹
-                        </button>
-                        <div className="site-slider-pontos" role="tablist">
-                            {SLIDES.map((slide, indice) => (
-                                <button 
-                                    key={slide.titulo}
-                                    className={`site-slider-ponto${indice === slideAtual ? " ativo" : ""}`}
-                                    type="button"
-                                    aria-label={`Ir para notícia ${indice + 1}`}
-                                    onClick={() => { irPara(indice); iniciarRotacao(); }}
-                                />
-                            ))}
-                        </div>
-                        <button className="site-slider-btn" type="button" aria-label="Próxima notícia" onClick={() => { irPara(slideAtual + 1); iniciarRotacao(); }}>
-                            ›
-                        </button>
-                    </div>
+                    <Carousel
+                        value={SLIDES}
+                        itemTemplate={templateSlide}
+                        numVisible={1}
+                        numScroll={1}
+                        circular
+                        autoplayInterval={6000}
+                        showIndicators
+                    />
                 </div>
             </section>
 
@@ -284,7 +244,7 @@ export default function HomePage() {
                     </div>
 
                     <div className="site-cards-acao">
-                        <Link href="/graduacao/cursos" className="btn btn-primary btn-lg">Ver cursos</Link>
+                        <Button label="Ver cursos" size="large" onClick={() => router.push("/graduacao/cursos")} />
                     </div>
                 </div>
             </section>
@@ -305,9 +265,7 @@ export default function HomePage() {
                                 <li>Calendário de provas e eventos</li>
                             </ul>
 
-                            <button id="btnPortalAlunos" className="btn btn-primary btn-lg" type="button" onClick={irParaPortal}>
-                                Acessar o Portal
-                            </button>
+                            <Button label="Acessar o Portal" size="large" onClick={irParaPortal} />
                         </div>
 
                         <div className="site-split-art">
@@ -391,47 +349,26 @@ export default function HomePage() {
                         <form id="siteForm" className="site-form" noValidate onSubmit={enviarContato}>
                             <div className="field">
                                 <label htmlFor="siteNome">Nome completo</label>
-                                <input 
-                                    type="text" 
-                                    id="siteNome" 
-                                    name="nome" 
-                                    required 
-                                    autoComplete="name" 
-                                />
+                                <InputText id="siteNome" name="nome" required autoComplete="name" />
                             </div>
 
                             <div className="field">
                                 <label htmlFor="siteEmail">E-mail</label>
-                                <input 
-                                    type="email" 
-                                    id="siteEmail" 
-                                    name="email" 
-                                    required 
-                                    autoComplete="email" 
-                                />
+                                <InputText type="email" id="siteEmail" name="email" required autoComplete="email" />
                             </div>
 
                             <div className="field">
                                 <label htmlFor="siteTel">Telefone</label>
-                                <input 
-                                    type="tel" 
-                                    id="siteTel" 
-                                    name="telefone" 
-                                    autoComplete="tel" 
-                                />
+                                <InputText type="tel" id="siteTel" name="telefone" autoComplete="tel" />
                             </div>
 
                             <div className="field">
                                 <label htmlFor="siteMsg">Mensagem</label>
-                                <textarea id="siteMsg" name="mensagem" rows={4} required></textarea>
+                                <InputTextarea id="siteMsg" name="mensagem" rows={4} required />
                             </div>
 
-                            <button type="submit" className="btn btn-primary btn-lg">Enviar mensagem</button>
-                            {mensagemEnviada && (
-                                <p id="siteFormMsg" className="site-form-msg">
-                                    Mensagem enviada! Em breve entraremos em contato.
-                                </p>
-                            )}
+                            <Button type="submit" label="Enviar mensagem" size="large" />
+                            {mensagemEnviada && <Message severity="success" text="Mensagem enviada! Em breve entraremos em contato." />}
                         </form>
                     </div>
                 </div>

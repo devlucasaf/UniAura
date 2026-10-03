@@ -1,6 +1,11 @@
 "use client";
 
 import { useState }                     from "react";
+import { InputText }                    from "primereact/inputtext";
+import { Button }                       from "primereact/button";
+import { Message }                      from "primereact/message";
+import { DataTable }                    from "primereact/datatable";
+import { Column }                       from "primereact/column";
 import AppShell                         from "@/components/interno/AppShell";
 import Badge                            from "@/components/interno/Badge";
 import { emprestimoApi }                from "@/lib/api/biblioteca";
@@ -29,59 +34,37 @@ export default function BibliotecaDevolucoesPage() {
                 <h2>Registrar devolução</h2>
                 <form className="toolbar" onSubmit={(e) => { e.preventDefault(); processar("devolver"); }}>
                     <label className="field">ID do empréstimo
-                        <input 
-                            required 
-                            autoFocus 
-                            value={emprestimoId} 
-                            onChange={(e) => setEmprestimoId(e.target.value)} 
+                        <InputText
+                            required
+                            autoFocus
+                            value={emprestimoId}
+                            onChange={(e) => setEmprestimoId(e.target.value)}
                         />
                     </label>
-                    <button type="submit" className="btn">Devolver</button>
-                    <button type="button" className="btn secondary" onClick={() => processar("renovar")}>Renovar</button>
-                    {mensagem.texto && <span className={mensagem.tipo === "error" ? "msg-error" : "msg-ok"}>{mensagem.texto}</span>}
+                    <Button type="submit" label="Devolver" />
+                    <Button type="button" label="Renovar" severity="secondary" outlined onClick={() => processar("renovar")} />
+                    {mensagem.texto && <Message severity={mensagem.tipo === "error" ? "error" : "success"} text={mensagem.texto} />}
                 </form>
 
                 {detalhe && (
-                    <table style={{ marginTop: "1rem" }}>
-                        <tbody>
-                            <tr>
-                                <th>Livro</th>
-                                <td>{detalhe.livroTitulo}</td>
-                            </tr>
-                            <tr>
-                                <th>Exemplar</th>
-                                <td>{detalhe.exemplarCodigoBarras}</td>
-                            </tr>
-                            <tr>
-                                <th>Usuário</th>
-                                <td>{detalhe.usuarioNome}</td>
-                            </tr>
-                            <tr>
-                                <th>Status</th>
-                                <td><Badge status={detalhe.status} /></td>
-                            </tr>
-                            <tr>
-                                <th>Prev. devolução</th>
-                                <td>{formatarData(detalhe.dataDevolucaoPrevista)}</td>
-                            </tr>
-                            <tr>
-                                <th>Devolvido em</th>
-                                <td>{formatarData(detalhe.dataDevolucaoEfetiva)}</td>
-                            </tr>
-                            <tr>
-                                <th>Dias de atraso</th>
-                                <td>{detalhe.diasAtraso}</td>
-                            </tr>
-                            <tr>
-                                <th>Multa</th>
-                                <td>{formatarMoeda(detalhe.valorMulta)}</td>
-                            </tr>
-                            <tr>
-                                <th>Renovações</th>
-                                <td>{detalhe.renovacoes}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <DataTable
+                        style={{ marginTop: "1rem" }}
+                        value={[
+                            { campo: "Livro", valor: detalhe.livroTitulo },
+                            { campo: "Exemplar", valor: detalhe.exemplarCodigoBarras },
+                            { campo: "Usuário", valor: detalhe.usuarioNome },
+                            { campo: "Status", valor: <Badge status={detalhe.status} /> },
+                            { campo: "Prev. devolução", valor: formatarData(detalhe.dataDevolucaoPrevista) },
+                            { campo: "Devolvido em", valor: formatarData(detalhe.dataDevolucaoEfetiva) },
+                            { campo: "Dias de atraso", valor: detalhe.diasAtraso },
+                            { campo: "Multa", valor: formatarMoeda(detalhe.valorMulta) },
+                            { campo: "Renovações", valor: detalhe.renovacoes }
+                        ]}
+                        showHeaders={false}
+                    >
+                        <Column field="campo" body={(linha) => <strong>{linha.campo}</strong>} />
+                        <Column field="valor" />
+                    </DataTable>
                 )}
             </section>
         </AppShell>

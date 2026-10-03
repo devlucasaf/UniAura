@@ -1,8 +1,6 @@
-import { api } from "./api";
-
-const CHAVE_TOKEN = "token";
-const CHAVE_REFRESH = "refreshToken";
-const CHAVE_USUARIO = "user";
+const OIDC_AUTHORITY = "http://localhost:8081/realms/uniaura";
+const OIDC_CLIENT_ID = "uniaura-frontend";
+const CHAVE_OIDC_USER = `oidc.user:${OIDC_AUTHORITY}:${OIDC_CLIENT_ID}`;
 
 // --- ROTA DE DASHBOARD DE CADA PERFIL ---
 export const DASHBOARD_POR_PERFIL = {
@@ -21,59 +19,40 @@ export function dashboardDoPerfil(perfil) {
     return DASHBOARD_POR_PERFIL[perfil] || "/login";
 }
 
-// --- AUTENTICA E GRAVA A SESSÃO ---
-export async function autenticar(email, senha) {
-    const resposta = await api("/auth/login", {
-        metodo: "POST",
-        corpo: {
-            email,
-            senha
-        }
-    });
-    gravarSessao(resposta);
-    return resposta.usuario;
-}
-
-// --- GRAVA TOKENS E DADOS DO USUÁRIO ---
-export function gravarSessao({ token, refreshToken, usuario }) {
-    localStorage.setItem(CHAVE_TOKEN, token);
-    if (refreshToken) {
-        localStorage.setItem(CHAVE_REFRESH, refreshToken);
-    }
-
-    if (usuario) {
-        localStorage.setItem(CHAVE_USUARIO, JSON.stringify(usuario));
-        if (usuario.id) {
-            localStorage.setItem("usuarioId", usuario.id);
-        }
-    }
-}
-
-// --- ENCERRA A SESSÃO ---
-export function encerrarSessao() {
-    [CHAVE_TOKEN, CHAVE_REFRESH, CHAVE_USUARIO, "usuarioId"].forEach((chave) => localStorage.removeItem(chave));
-}
-
-// --- RETORNA O ACCESS TOKEN ARMAZENADO ---
-export function obterToken() {
+// --- LÊ O USUÁRIO OIDC QUE A BIBLIOTECA cloudsupport-react (oidc-client-ts) ARMAZENA NO SESSIONSTORAGE ---
+function lerUsuarioOidc() {
     if (typeof window === "undefined") {
         return null;
     }
-    return localStorage.getItem(CHAVE_TOKEN);
-}
-
-// --- RETORNA O USUÁRIO ARMAZENADO ---
-export function obterUsuario() {
-    if (typeof window === "undefined") {
-        return null;
-    }
-    const bruto = localStorage.getItem(CHAVE_USUARIO);
+    const bruto = sessionStorage.getItem(CHAVE_OIDC_USER);
     return bruto ? JSON.parse(bruto) : null;
 }
 
-// --- INDICA SE HÁ SESSÃO ATIVA ---
+// --- RETORNA O ACCESS TOKEN ATUAL (USADO PELO wrapper de fetch em lib/api.js) ---
+export function obterToken() {
+    return lerUsuarioOidc()?.access_token || null;
+}
+
+// --- RETORNA OS DADOS DO USUÁRIO LOGADO, A PARTIR DAS CLAIMS DO TOKEN OIDC ---
+export function obterUsuario() {
+    const profile = lerUsuarioOidc()?.profile;
+    if (!profile) {
+        return null;
+    }
+    const roles = Array.isArray(profile.roles) ? profile.roles : [];
+    return {
+        id: profile.sub,
+        nome: profile.name || profile.preferred_username,
+        email: profile.email,
+        role: roles[0],
+        roles
+    };
+}
+
+// --- INDICA SE HÁ SESSÃO ATIVA E NÃO EXPIRADA ---
 export function estaAutenticado() {
-    return !!obterToken();
+    const oidcUser = lerUsuarioOidc();
+    return !!oidcUser && !oidcUser.expired;
 }
 
 // --- VERIFICA SE O USUÁRIO POSSUI ALGUM DOS PERFIS INFORMADOS ---
@@ -83,5 +62,5 @@ export function possuiPerfil(perfis) {
         return false;
     }
     const lista = Array.isArray(perfis) ? perfis : [perfis];
-    return lista.includes(usuario.role);
+    return lista.some((perfil) => usuario.roles.includes(perfil));
 }

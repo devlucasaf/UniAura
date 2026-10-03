@@ -20,7 +20,7 @@ public class FrontendStarter {
     private static final String PURPLE_COLOR = "\u001B[35m";
     private static final String RESET_COLOR = "\u001B[0m";
     private static final String FRONTEND_DIR = "../frontend";
-    private static final String FRONTEND_URL = "http://localhost:5173";
+    private static final String FRONTEND_URL = "http://localhost:3000/uniaura/app";
     private static final String SWAGGER_URL = "http://localhost:8080/api/swagger-ui.html";
     private static final String BACKEND_URL = "http://localhost:8080/api";
 

@@ -1,20 +1,12 @@
 "use client";
 
+import { Dialog } from "primereact/dialog";
+
 // --- MODAL GENÉRICO DE CADASTRO/EDIÇÃO ---
 export default function Modal({ titulo, aberto, onFechar, children }) {
-    if (!aberto) {
-        return null;
-    }
-
     return (
-        <div className="modal-overlay">
-            <div className="modal">
-                <div className="modal-header">
-                    <h2>{titulo}</h2>
-                    <button className="icon-btn" aria-label="Fechar" onClick={onFechar}>✕</button>
-                </div>
-                {children}
-            </div>
-        </div>
+        <Dialog header={titulo} visible={aberto} onHide={onFechar} modal style={{ width: "min(640px, 92vw)" }}>
+            {children}
+        </Dialog>
     );
 }

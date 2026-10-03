@@ -1,0 +1,140 @@
+{
+  "realm": "uniaura",
+  "enabled": true,
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "accessTokenLifespan": 1800,
+  "ssoSessionIdleTimeout": 604800,
+  "roles": {
+    "realm": [
+      { "name": "ALUNO" },
+      { "name": "PROFESSOR" },
+      { "name": "COORDENADOR" },
+      { "name": "SECRETARIA" },
+      { "name": "BIBLIOTECARIO" },
+      { "name": "FINANCEIRO" },
+      { "name": "RESPONSAVEL" },
+      { "name": "ADMIN" }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "uniaura-frontend",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [
+        "http://localhost:3000/uniaura/app/*"
+      ],
+      "webOrigins": [
+        "http://localhost:3000"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:3000/uniaura/app/*"
+      },
+      "protocolMappers": [
+        {
+          "name": "roles-claim",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "multivalued": "true",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "roles",
+            "jsonType.label": "String"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "admin.teste",
+      "email": "admin.teste@uniaura.edu.br",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Admin",
+      "lastName": "Teste",
+      "credentials": [{ "type": "password", "value": "uniaura123", "temporary": false }],
+      "realmRoles": ["ADMIN"]
+    },
+    {
+      "username": "aluno.teste",
+      "email": "aluno.teste@uniaura.edu.br",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Aluno",
+      "lastName": "Teste",
+      "credentials": [{ "type": "password", "value": "uniaura123", "temporary": false }],
+      "realmRoles": ["ALUNO"]
+    },
+    {
+      "username": "professor.teste",
+      "email": "professor.teste@uniaura.edu.br",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Professor",
+      "lastName": "Teste",
+      "credentials": [{ "type": "password", "value": "uniaura123", "temporary": false }],
+      "realmRoles": ["PROFESSOR"]
+    },
+    {
+      "username": "coordenador.teste",
+      "email": "coordenador.teste@uniaura.edu.br",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Coordenador",
+      "lastName": "Teste",
+      "credentials": [{ "type": "password", "value": "uniaura123", "temporary": false }],
+      "realmRoles": ["COORDENADOR"]
+    },
+    {
+      "username": "secretaria.teste",
+      "email": "secretaria.teste@uniaura.edu.br",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Secretaria",
+      "lastName": "Teste",
+      "credentials": [{ "type": "password", "value": "uniaura123", "temporary": false }],
+      "realmRoles": ["SECRETARIA"]
+    },
+    {
+      "username": "bibliotecario.teste",
+      "email": "bibliotecario.teste@uniaura.edu.br",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Bibliotecario",
+      "lastName": "Teste",
+      "credentials": [{ "type": "password", "value": "uniaura123", "temporary": false }],
+      "realmRoles": ["BIBLIOTECARIO"]
+    },
+    {
+      "username": "financeiro.teste",
+      "email": "financeiro.teste@uniaura.edu.br",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Financeiro",
+      "lastName": "Teste",
+      "credentials": [{ "type": "password", "value": "uniaura123", "temporary": false }],
+      "realmRoles": ["FINANCEIRO"]
+    },
+    {
+      "username": "responsavel.teste",
+      "email": "responsavel.teste@uniaura.edu.br",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Responsavel",
+      "lastName": "Teste",
+      "credentials": [{ "type": "password", "value": "uniaura123", "temporary": false }],
+      "realmRoles": ["RESPONSAVEL"]
+    }
+  ]
+}

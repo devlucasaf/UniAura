@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useState }          from "react";
+import { DataTable }                    from "primereact/datatable";
+import { Column }                       from "primereact/column";
+import { Button }                       from "primereact/button";
 import AppShell                         from "@/components/interno/AppShell";
 import Badge                            from "@/components/interno/Badge";
 import { emprestimoApi, multaApi }      from "@/lib/api/biblioteca";
 import { formatarData, formatarMoeda }  from "@/lib/formato";
-import { obterUsuario }                 from "@/lib/auth";
+import { api }                          from "@/lib/api";
 
 // --- PÁGINA DE CONSULTA DE EMPRÉSTIMOS E MULTAS DO ALUNO ---
 export default function AlunoMeusEmprestimosPage() {
@@ -14,7 +17,7 @@ export default function AlunoMeusEmprestimosPage() {
 
     // --- CARREGAMENTO DE EMPRÉSTIMOS E MULTAS DO USUÁRIO LOGADO ---
     async function carregar() {
-        const usuario = obterUsuario();
+        const usuario = await api("/auth/me");
         if (!usuario?.id) {
             return;
         }
@@ -40,58 +43,28 @@ export default function AlunoMeusEmprestimosPage() {
         <AppShell titulo="Portal do Aluno — Meus empréstimos" perfis={["ALUNO"]}>
             <section className="card">
                 <h2>Meus empréstimos</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Livro</th>
-                            <th>Empréstimo</th>
-                            <th>Devolução prevista</th>
-                            <th>Devolvido em</th>
-                            <th>Status</th>
-                            <th>Renovações</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {emprestimos.length === 0 && <tr><td colSpan={7}>Nenhum empréstimo.</td></tr>}
-                        {emprestimos.map((e) => (
-                            <tr key={e.id}>
-                                <td>{e.livroTitulo}</td>
-                                <td>{formatarData(e.dataEmprestimo)}</td>
-                                <td>{formatarData(e.dataDevolucaoPrevista)}</td>
-                                <td>{formatarData(e.dataDevolucaoEfetiva)}</td>
-                                <td><Badge status={e.status} /></td>
-                                <td>{e.renovacoes}</td>
-                                <td>{e.status !== "DEVOLVIDO" && <button className="btn btn-sm" onClick={() => renovar(e.id)}>Renovar</button>}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <DataTable value={emprestimos} emptyMessage="Nenhum empréstimo." dataKey="id">
+                    <Column header="Livro" body={(e) => e.livroTitulo} />
+                    <Column header="Empréstimo" body={(e) => formatarData(e.dataEmprestimo)} />
+                    <Column header="Devolução prevista" body={(e) => formatarData(e.dataDevolucaoPrevista)} />
+                    <Column header="Devolvido em" body={(e) => formatarData(e.dataDevolucaoEfetiva)} />
+                    <Column header="Status" body={(e) => <Badge status={e.status} />} />
+                    <Column header="Renovações" body={(e) => e.renovacoes} />
+                    <Column
+                        header=""
+                        body={(e) => e.status !== "DEVOLVIDO" && <Button label="Renovar" size="small" onClick={() => renovar(e.id)} />}
+                    />
+                </DataTable>
             </section>
 
             <section className="card">
                 <h2>Minhas multas pendentes</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Livro</th>
-                            <th>Dias atraso</th>
-                            <th>Valor</th>
-                            <th>Gerada em</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {multas.length === 0 && <tr><td colSpan={4}>Sem multas pendentes.</td></tr>}
-                        {multas.map((m) => (
-                            <tr key={m.id}>
-                                <td>{m.livroTitulo}</td>
-                                <td>{m.diasAtraso}</td>
-                                <td>{formatarMoeda(m.valor)}</td>
-                                <td>{formatarData(m.geradaEm)}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <DataTable value={multas} emptyMessage="Sem multas pendentes." dataKey="id">
+                    <Column header="Livro" body={(m) => m.livroTitulo} />
+                    <Column header="Dias atraso" body={(m) => m.diasAtraso} />
+                    <Column header="Valor" body={(m) => formatarMoeda(m.valor)} />
+                    <Column header="Gerada em" body={(m) => formatarData(m.geradaEm)} />
+                </DataTable>
             </section>
         </AppShell>
     );

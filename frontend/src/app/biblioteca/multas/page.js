@@ -1,10 +1,16 @@
 "use client";
 
 import { useEffect, useState }          from "react";
+import { Dropdown }                     from "primereact/dropdown";
+import { Button }                       from "primereact/button";
+import { DataTable }                    from "primereact/datatable";
+import { Column }                       from "primereact/column";
 import AppShell                         from "@/components/interno/AppShell";
 import Badge                            from "@/components/interno/Badge";
 import { multaApi }                     from "@/lib/api/biblioteca";
 import { formatarData, formatarMoeda }  from "@/lib/formato";
+
+const OPCOES_STATUS = ["PENDENTE", "PAGA", "CANCELADA"];
 
 // --- COMPONENTE DE GESTÃO DE MULTAS DA BIBLIOTECA ---
 export default function BibliotecaMultasPage() {
@@ -48,52 +54,28 @@ export default function BibliotecaMultasPage() {
                 <h2>Multas</h2>
                 <form className="toolbar" onSubmit={(e) => { e.preventDefault(); listar(); }}>
                     <label className="field">Status
-                        <select value={status} onChange={(e) => setStatus(e.target.value)}>
-                            <option value="PENDENTE">PENDENTE</option>
-                            <option value="PAGA">PAGA</option>
-                            <option value="CANCELADA">CANCELADA</option>
-                        </select>
+                        <Dropdown value={status} onChange={(e) => setStatus(e.value)} options={OPCOES_STATUS.map((o) => ({ label: o, value: o }))} />
                     </label>
-                    <button type="submit" className="btn">Listar</button>
+                    <Button type="submit" label="Listar" />
                 </form>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Usuário</th>
-                            <th>Livro</th>
-                            <th>Dias atraso</th>
-                            <th>Valor</th>
-                            <th>Gerada</th>
-                            <th>Paga</th>
-                            <th>Status</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {multas.length === 0 && <tr>
-                            <td colSpan={8}>Nenhuma multa.</td>
-                        </tr>}
-                        {multas.map((m) => (
-                            <tr key={m.id}>
-                                <td>{m.usuarioNome}</td>
-                                <td>{m.livroTitulo}</td>
-                                <td>{m.diasAtraso}</td>
-                                <td>{formatarMoeda(m.valor)}</td>
-                                <td>{formatarData(m.geradaEm)}</td>
-                                <td>{formatarData(m.pagaEm)}</td>
-                                <td><Badge status={m.status} /></td>
-                                <td>
-                                    {m.status === "PENDENTE" && (
-                                        <>
-                                            <button className="btn btn-sm" onClick={() => pagar(m.id)}>Baixar pagto.</button>
-                                            <button className="btn danger btn-sm" onClick={() => cancelar(m.id)}>Cancelar</button>
-                                        </>
-                                    )}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <DataTable value={multas} emptyMessage="Nenhuma multa." dataKey="id">
+                    <Column header="Usuário" body={(m) => m.usuarioNome} />
+                    <Column header="Livro" body={(m) => m.livroTitulo} />
+                    <Column header="Dias atraso" body={(m) => m.diasAtraso} />
+                    <Column header="Valor" body={(m) => formatarMoeda(m.valor)} />
+                    <Column header="Gerada" body={(m) => formatarData(m.geradaEm)} />
+                    <Column header="Paga" body={(m) => formatarData(m.pagaEm)} />
+                    <Column header="Status" body={(m) => <Badge status={m.status} />} />
+                    <Column
+                        header=""
+                        body={(m) => m.status === "PENDENTE" && (
+                            <div className="acoes">
+                                <Button label="Baixar pagto." size="small" onClick={() => pagar(m.id)} />
+                                <Button label="Cancelar" size="small" severity="danger" outlined onClick={() => cancelar(m.id)} />
+                            </div>
+                        )}
+                    />
+                </DataTable>
             </section>
         </AppShell>
     );

@@ -2,6 +2,7 @@
 
 import { useState }                                         from "react";
 import Link                                                 from "next/link";
+import { SelectButton }                                     from "primereact/selectbutton";
 import SiteChrome                                           from "@/components/web/SiteChrome";
 import { tituloPagina, subtituloPagina, filtros, cards }    from "@/data/cursosCatalogo";
 import { AREA_URL_POR_VALOR }                               from "@/data/areasCursos";
@@ -22,12 +23,11 @@ export default function CursosPage() {
                     </header>
 
                     <div className="cursos-filtros" role="tablist" aria-label="Filtrar cursos por área de atuação">
-                        {filtros.map((filtro) => (
-                            <button key={filtro.valor} className={`site-filtro-btn${filtroAtivo === filtro.valor ? " ativo" : ""}`}
-                                    type="button" role="tab" aria-selected={filtroAtivo === filtro.valor} onClick={() => setFiltroAtivo(filtro.valor)}>
-                                {filtro.label}
-                            </button>
-                        ))}
+                        <SelectButton
+                            value={filtroAtivo}
+                            onChange={(e) => e.value && setFiltroAtivo(e.value)}
+                            options={filtros.map((f) => ({ label: f.label, value: f.valor }))}
+                        />
                     </div>
 
                     <p className="cursos-contador muted" aria-live="polite">
