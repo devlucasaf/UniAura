@@ -1,0 +1,195 @@
+{
+    "slug": "ciencias-economicas",
+    "subnavLabel": "Ciências Econômicas",
+    "eyebrow": "Graduação · Bacharelado",
+    "tituloPrincipal": "Ciências",
+    "tituloDestaque": "Econômicas",
+    "descricao": "Entenda como funcionam mercados, governos e empresas. Aprenda a interpretar cenários macroeconômicos, modelar comportamentos e propor políticas e estratégias baseadas em evidências.",
+    "acoes": [
+        {
+            "href": "#grad-matriz",
+            "texto": "Conhecer a matriz curricular"
+        },
+        {
+            "href": "#grad-carreira",
+            "texto": "Ver possibilidades de carreira"
+        }
+    ],
+    "codigoArquivo": "elasticidade-preco.calc",
+    "codigoLinhas": [
+        "<span class=\"muted\">// Elasticidade-preço da demanda</span>",
+        " ",
+        "<span class=\"blue\">Preço inicial</span>      R$ 10,00",
+        "<span class=\"blue\">Preço final</span>        R$ 12,00",
+        "<span class=\"blue\">Demanda inicial</span>    1.000 un.",
+        "<span class=\"blue\">Demanda final</span>      800 un.",
+        " ",
+        "<span class=\"yellow\">Var. demanda</span> = -20%",
+        "<span class=\"yellow\">Var. preço</span>   = +20%",
+        " ",
+        "<span class=\"green\">&gt;&gt; Elasticidade = -1,0 (unitária)</span><span class=\"grad-janela-cursor\" aria-hidden=\"true\"></span>"
+    ],
+    "stats": [
+        {
+            "contador": true,
+            "valor": "8",
+            "sufixo": "",
+            "label": "semestres"
+        },
+        {
+            "contador": true,
+            "valor": "3000",
+            "sufixo": "h",
+            "label": "carga horária"
+        },
+        {
+            "contador": false,
+            "valor": "Bacharelado",
+            "sufixo": "",
+            "label": "nível superior"
+        },
+        {
+            "contador": false,
+            "valor": "Presencial",
+            "sufixo": "",
+            "label": "modalidade"
+        }
+    ],
+    "formacaoEyebrow": "Formação",
+    "formacaoTitulo": "O que você vai aprender",
+    "formacaoTexto": "Da microeconomia do consumidor à macroeconomia dos países, com ferramentas quantitativas para medir, prever e explicar fenômenos econômicos.",
+    "formacaoCards": [
+        {
+            "iconeSvg": "<path d=\"M3 3v18h18\"></path> <path d=\"M7 14l4-4 3 3 5-6\"></path>",
+            "titulo": "Microeconomia",
+            "texto": "Comportamento do consumidor, oferta, demanda, concorrência e formação de preços."
+        },
+        {
+            "iconeSvg": "<path d=\"M3 21h18\"></path> <path d=\"M5 21V10l7-6 7 6v11\"></path>",
+            "titulo": "Macroeconomia",
+            "texto": "Crescimento, inflação, juros, emprego e políticas monetária e fiscal."
+        },
+        {
+            "iconeSvg": "<path d=\"M12 20V10\"></path> <path d=\"M18 20V4\"></path> <path d=\"M6 20v-6\"></path>",
+            "titulo": "Estatística e Econometria",
+            "texto": "Modelagem de dados econômicos, séries temporais e testes de hipóteses."
+        },
+        {
+            "iconeSvg": "<circle cx=\"12\" cy=\"12\" r=\"9\"></circle> <path d=\"M2 12h20\"></path> <path d=\"M12 3a14 14 0 0 1 0 18\"></path> <path d=\"M12 3a14 14 0 0 0 0 18\"></path>",
+            "titulo": "Economia Internacional",
+            "texto": "Comércio exterior, câmbio, integração regional e globalização."
+        },
+        {
+            "iconeSvg": "<path d=\"M4 4h16v12H7l-3 3V4Z\"></path> <path d=\"M8 9h8M8 12h5\"></path>",
+            "titulo": "Economia Pública",
+            "texto": "Finanças públicas, tributação, políticas sociais e regulação de mercados."
+        },
+        {
+            "iconeSvg": "<path d=\"M12 2l2.4 6.1L21 10l-5 4.1 1.5 6.4L12 17l-5.5 3.5L8 14.1 3 10l6.6-1.9L12 2Z\"></path>",
+            "titulo": "Análise de Cenários",
+            "texto": "Projeções, avaliação de políticas públicas e estudos de viabilidade econômica."
+        }
+    ],
+    "matrizEyebrow": "Matriz curricular",
+    "matrizTitulo": "Uma jornada de 8 semestres",
+    "matrizTexto": "Clique em cada semestre para visualizar as principais disciplinas.",
+    "semestres": [
+        {
+            "titulo": "1º semestre · Fundamentos",
+            "disciplinas": [
+                "Introdução à Economia",
+                "Matemática para Economistas",
+                "História Econômica",
+                "Introdução à Administração",
+                "Comunicação e Expressão"
+            ]
+        },
+        {
+            "titulo": "2º semestre · Teoria",
+            "disciplinas": [
+                "Microeconomia I",
+                "Cálculo para Economia",
+                "Contabilidade Básica",
+                "Filosofia e Ética",
+                "Sociologia Econômica"
+            ]
+        },
+        {
+            "titulo": "3º semestre · Análise",
+            "disciplinas": [
+                "Microeconomia II",
+                "Macroeconomia I",
+                "Estatística I",
+                "Álgebra Linear",
+                "Direito e Legislação Econômica"
+            ]
+        },
+        {
+            "titulo": "4º semestre · Macro",
+            "disciplinas": [
+                "Macroeconomia II",
+                "Estatística II",
+                "Economia Brasileira",
+                "Matemática Financeira",
+                "Teoria Monetária"
+            ]
+        },
+        {
+            "titulo": "5º semestre · Métodos",
+            "disciplinas": [
+                "Econometria I",
+                "Economia Internacional",
+                "Finanças Públicas",
+                "Teoria dos Jogos",
+                "Economia do Trabalho"
+            ]
+        },
+        {
+            "titulo": "6º semestre · Políticas",
+            "disciplinas": [
+                "Econometria II",
+                "Políticas Públicas",
+                "Economia Monetária e Bancária",
+                "Economia Industrial",
+                "Economia do Setor Público"
+            ]
+        },
+        {
+            "titulo": "7º semestre · Especialização",
+            "disciplinas": [
+                "Economia Ambiental",
+                "Desenvolvimento Econômico",
+                "Análise de Mercados Financeiros",
+                "Optativa I",
+                "Trabalho de Conclusão I"
+            ]
+        },
+        {
+            "titulo": "8º semestre · Conclusão",
+            "disciplinas": [
+                "Avaliação de Projetos",
+                "Economia Digital",
+                "Optativa II",
+                "Atividades Complementares",
+                "Estágio Supervisionado",
+                "Trabalho de Conclusão II"
+            ]
+        }
+    ],
+    "carreiraEyebrow": "Mercado de trabalho",
+    "carreiraTitulo": "Onde você pode chegar",
+    "carreiraTexto": "O economista analisa cenários e orienta decisões em bancos, consultorias, órgãos públicos, organismos internacionais e empresas de todos os portes, além da carreira acadêmica e da pesquisa.",
+    "carreiraCardTitulo": "Possíveis áreas de atuação",
+    "carreiraItens": [
+        "Analista Econômico",
+        "Economista de Mercado Financeiro",
+        "Consultor Econômico",
+        "Analista de Políticas Públicas",
+        "Economista Governamental",
+        "Analista de Risco",
+        "Pesquisador",
+        "Economista-chefe"
+    ],
+    "ctaTitulo": "Pronto para começar sua jornada?",
+    "ctaTexto": "As inscrições para o próximo semestre estão abertas. Faça sua matrícula on-line e garanta sua vaga em Ciências Econômicas."
+}

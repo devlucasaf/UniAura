@@ -1,35 +1,39 @@
-﻿import administracao                        from "./negocios/administracao";
-import analiseEDesenvolvimentoDeSistemas    from "./tecnologia/analise-e-desenvolvimento-de-sistemas";
-import artesCenicas                         from "./artes/artes-cenicas";
-import artesVisuais                         from "./artes/artes-visuais";
-import biologia                             from "./saude/biologia";
-import biomedicina                          from "./saude/biomedicina";
-import cienciaDaComputacao                  from "./tecnologia/ciencia-da-computacao";
-import cienciaDeDados                       from "./tecnologia/ciencia-de-dados";
-import cienciasAeronauticas                 from "./engenharias/ciencias-aeronauticas";
-import design                               from "./artes/design";
-import direito                              from "./humanas/direito";
-import educacaoFisica                       from "./saude/educacao-fisica";
-import engenhariaCivil                      from "./engenharias/engenharia-civil";
-import engenhariaDeSoftware                 from "./tecnologia/engenharia-de-software";
-import engenhariaEletrica                   from "./engenharias/engenharia-eletrica";
-import engenhariaFlorestal                  from "./engenharias/engenharia-florestal";
-import engenhariaMecanica                   from "./engenharias/engenharia-mecanica";
-import engenhariaMecatronica                from "./engenharias/engenharia-mecatronica";
-import engenhariaProducao                   from "./engenharias/engenharia-producao";
-import engenhariaQuimica                    from "./engenharias/engenharia-quimica";
-import farmacia                             from "./saude/farmacia";
-import fisioterapia                         from "./saude/fisioterapia";
-import fonoaudiologia                       from "./saude/fonoaudiologia";
-import fotografia                           from "./artes/fotografia";
-import medicinaVeterinaria                  from "./saude/medicina-veterinaria";
-import medicina                             from "./saude/medicina";
-import moda                                 from "./artes/moda";
-import nutricao                             from "./saude/nutricao";
-import odontologia                          from "./saude/odontologia";
-import publicidadePropaganda                from "./artes/publicidade-propaganda";
-import relacoesInternacionais               from "./humanas/relacoes-internacionais";
-import terapiaOcupacional                   from "./saude/terapia-ocupacional";
+﻿import administracao                        from "./js/negocios/administracao";
+import cienciasContabeis                    from "./js/negocios/ciencias-contabeis";
+import cienciasEconomicas                   from "./js/negocios/ciencias-economicas";
+import marketing                            from "./js/negocios/marketing";
+import gestaoComercial                      from "./js/negocios/gestao-comercial";
+import analiseEDesenvolvimentoDeSistemas    from "./js/tecnologia/analise-e-desenvolvimento-de-sistemas";
+import artesCenicas                         from "./js/artes/artes-cenicas";
+import artesVisuais                         from "./js/artes/artes-visuais";
+import biologia                             from "./js/saude/biologia";
+import biomedicina                          from "./js/saude/biomedicina";
+import cienciaDaComputacao                  from "./js/tecnologia/ciencia-da-computacao";
+import cienciaDeDados                       from "./js/tecnologia/ciencia-de-dados";
+import cienciasAeronauticas                 from "./js/engenharias/ciencias-aeronauticas";
+import design                               from "./js/artes/design";
+import direito                              from "./js/humanas/direito";
+import educacaoFisica                       from "./js/saude/educacao-fisica";
+import engenhariaCivil                      from "./js/engenharias/engenharia-civil";
+import engenhariaDeSoftware                 from "./js/tecnologia/engenharia-de-software";
+import engenhariaEletrica                   from "./js/engenharias/engenharia-eletrica";
+import engenhariaFlorestal                  from "./js/engenharias/engenharia-florestal";
+import engenhariaMecanica                   from "./js/engenharias/engenharia-mecanica";
+import engenhariaMecatronica                from "./js/engenharias/engenharia-mecatronica";
+import engenhariaProducao                   from "./js/engenharias/engenharia-producao";
+import engenhariaQuimica                    from "./js/engenharias/engenharia-quimica";
+import farmacia                             from "./js/saude/farmacia";
+import fisioterapia                         from "./js/saude/fisioterapia";
+import fonoaudiologia                       from "./js/saude/fonoaudiologia";
+import fotografia                           from "./js/artes/fotografia";
+import medicinaVeterinaria                  from "./js/saude/medicina-veterinaria";
+import medicina                             from "./js/saude/medicina";
+import moda                                 from "./js/artes/moda";
+import nutricao                             from "./js/saude/nutricao";
+import odontologia                          from "./js/saude/odontologia";
+import publicidadePropaganda                from "./js/artes/publicidade-propaganda";
+import relacoesInternacionais               from "./js/humanas/relacoes-internacionais";
+import terapiaOcupacional                   from "./js/saude/terapia-ocupacional";
 import { cards }                            from "../cursosCatalogo";
 import { AREA_URL_POR_VALOR }               from "../areasCursos";
 
@@ -54,6 +58,10 @@ export function areaUrlDoCurso(slug) {
 // --- DADOS DA PAGINA DE CURSO ---
 export const cursosPorSlug = {
     administracao,
+    "ciencias-contabeis": cienciasContabeis,
+    "ciencias-economicas": cienciasEconomicas,
+    marketing,
+    "gestao-comercial": gestaoComercial,
     "analise-e-desenvolvimento-de-sistemas": analiseEDesenvolvimentoDeSistemas,
     "artes-cenicas": artesCenicas,
     "artes-visuais": artesVisuais,

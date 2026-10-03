@@ -1,0 +1,192 @@
+{
+    "slug": "ciencias-contabeis",
+    "subnavLabel": "Ciências Contábeis",
+    "eyebrow": "Graduação · Bacharelado",
+    "tituloPrincipal": "Ciências",
+    "tituloDestaque": "Contábeis",
+    "descricao": "A linguagem dos números das empresas. Aprenda a registrar, analisar e auditar as informações financeiras que orientam decisões, impostos e a saúde de qualquer organização.",
+    "acoes": [
+        {
+            "href": "#grad-matriz",
+            "texto": "Conhecer a matriz curricular"
+        },
+        {
+            "href": "#grad-carreira",
+            "texto": "Ver possibilidades de carreira"
+        }
+    ],
+    "codigoArquivo": "balanco-patrimonial.calc",
+    "codigoLinhas": [
+        "<span class=\"muted\">// Balanço patrimonial simplificado</span>",
+        " ",
+        "<span class=\"blue\">Ativo</span>         R$ 500.000,00",
+        "<span class=\"blue\">Passivo</span>       R$ 320.000,00",
+        "<span class=\"blue\">Patrimônio</span>    R$ 180.000,00",
+        " ",
+        "<span class=\"yellow\">Ativo</span> = <span class=\"yellow\">Passivo</span> + <span class=\"yellow\">Patrimônio</span>",
+        "<span class=\"green\">&gt;&gt; 500.000 = 320.000 + 180.000</span><span class=\"grad-janela-cursor\" aria-hidden=\"true\"></span>"
+    ],
+    "stats": [
+        {
+            "contador": true,
+            "valor": "8",
+            "sufixo": "",
+            "label": "semestres"
+        },
+        {
+            "contador": true,
+            "valor": "3000",
+            "sufixo": "h",
+            "label": "carga horária"
+        },
+        {
+            "contador": false,
+            "valor": "Bacharelado",
+            "sufixo": "",
+            "label": "nível superior"
+        },
+        {
+            "contador": false,
+            "valor": "Presencial",
+            "sufixo": "",
+            "label": "modalidade"
+        }
+    ],
+    "formacaoEyebrow": "Formação",
+    "formacaoTitulo": "O que você vai aprender",
+    "formacaoTexto": "Da escrituração contábil à análise de demonstrações, passando por tributos, auditoria e perícia, com foco em decisões reais de negócios.",
+    "formacaoCards": [
+        {
+            "iconeSvg": "<rect x=\"4\" y=\"3\" width=\"16\" height=\"18\" rx=\"2\"></rect> <path d=\"M8 7h8M8 11h8M8 15h5\"></path>",
+            "titulo": "Contabilidade Geral",
+            "texto": "Escrituração, plano de contas, balanço patrimonial e demonstrações financeiras."
+        },
+        {
+            "iconeSvg": "<path d=\"M12 1v22\"></path> <path d=\"M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6\"></path>",
+            "titulo": "Custos e Orçamento",
+            "texto": "Apuração de custos, orçamento empresarial e análise de resultado por produto."
+        },
+        {
+            "iconeSvg": "<path d=\"M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3Z\"></path> <path d=\"M9 12l2 2 4-4\"></path>",
+            "titulo": "Auditoria",
+            "texto": "Controles internos, auditoria independente, governança e conformidade."
+        },
+        {
+            "iconeSvg": "<rect x=\"5\" y=\"3\" width=\"14\" height=\"18\" rx=\"2\"></rect> <path d=\"M9 7h6M9 11h6M9 15h3\"></path>",
+            "titulo": "Tributos",
+            "texto": "Planejamento tributário, obrigações fiscais e legislação aplicada às empresas."
+        },
+        {
+            "iconeSvg": "<path d=\"M3 3v18h18\"></path> <path d=\"M7 14l4-4 3 3 5-6\"></path>",
+            "titulo": "Análise de Demonstrações",
+            "texto": "Indicadores de liquidez, rentabilidade e endividamento para decisões de gestão."
+        },
+        {
+            "iconeSvg": "<circle cx=\"11\" cy=\"11\" r=\"7\"></circle> <path d=\"M21 21l-4.3-4.3\"></path>",
+            "titulo": "Perícia Contábil",
+            "texto": "Laudos, pareceres técnicos e apuração de valores em processos judiciais."
+        }
+    ],
+    "matrizEyebrow": "Matriz curricular",
+    "matrizTitulo": "Uma jornada de 8 semestres",
+    "matrizTexto": "Clique em cada semestre para visualizar as principais disciplinas.",
+    "semestres": [
+        {
+            "titulo": "1º semestre · Fundamentos",
+            "disciplinas": [
+                "Introdução à Contabilidade",
+                "Matemática Financeira",
+                "Introdução à Administração",
+                "Economia",
+                "Comunicação Empresarial"
+            ]
+        },
+        {
+            "titulo": "2º semestre · Escrituração",
+            "disciplinas": [
+                "Contabilidade Geral I",
+                "Estatística Aplicada",
+                "Direito Empresarial",
+                "Métodos Quantitativos",
+                "Informática Contábil"
+            ]
+        },
+        {
+            "titulo": "3º semestre · Demonstrações",
+            "disciplinas": [
+                "Contabilidade Geral II",
+                "Contabilidade de Custos I",
+                "Legislação Tributária I",
+                "Direito Trabalhista",
+                "Sistemas de Informação Gerencial"
+            ]
+        },
+        {
+            "titulo": "4º semestre · Custos",
+            "disciplinas": [
+                "Contabilidade de Custos II",
+                "Legislação Tributária II",
+                "Contabilidade Societária",
+                "Análise de Balanços",
+                "Administração Financeira"
+            ]
+        },
+        {
+            "titulo": "5º semestre · Análise",
+            "disciplinas": [
+                "Contabilidade Avançada",
+                "Orçamento Empresarial",
+                "Auditoria I",
+                "Contabilidade Pública",
+                "Ética Profissional"
+            ]
+        },
+        {
+            "titulo": "6º semestre · Controle",
+            "disciplinas": [
+                "Auditoria II",
+                "Controladoria",
+                "Perícia Contábil",
+                "Planejamento Tributário",
+                "Contabilidade Internacional"
+            ]
+        },
+        {
+            "titulo": "7º semestre · Especialização",
+            "disciplinas": [
+                "Governança Corporativa",
+                "Contabilidade Gerencial",
+                "Consultoria Contábil",
+                "Optativa I",
+                "Trabalho de Conclusão I"
+            ]
+        },
+        {
+            "titulo": "8º semestre · Conclusão",
+            "disciplinas": [
+                "Gestão de Riscos",
+                "Empreendedorismo Contábil",
+                "Optativa II",
+                "Atividades Complementares",
+                "Estágio Supervisionado",
+                "Trabalho de Conclusão II"
+            ]
+        }
+    ],
+    "carreiraEyebrow": "Mercado de trabalho",
+    "carreiraTitulo": "Onde você pode chegar",
+    "carreiraTexto": "Toda empresa, banco, órgão público e terceiro setor depende de informação contábil confiável. A formação abre espaço em escritórios de contabilidade, departamentos financeiros e carreira pública.",
+    "carreiraCardTitulo": "Possíveis áreas de atuação",
+    "carreiraItens": [
+        "Contador",
+        "Auditor Independente",
+        "Controller",
+        "Consultor Tributário",
+        "Perito Contábil",
+        "Analista Financeiro",
+        "Auditor Fiscal",
+        "Gestor de Controladoria"
+    ],
+    "ctaTitulo": "Pronto para começar sua jornada?",
+    "ctaTexto": "As inscrições para o próximo semestre estão abertas. Faça sua matrícula on-line e garanta sua vaga em Ciências Contábeis."
+}

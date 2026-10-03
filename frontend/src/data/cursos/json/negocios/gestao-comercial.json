@@ -1,0 +1,172 @@
+{
+    "slug": "gestao-comercial",
+    "subnavLabel": "Gestão Comercial",
+    "eyebrow": "Graduação · Tecnólogo",
+    "tituloPrincipal": "Gestão",
+    "tituloDestaque": "Comercial",
+    "descricao": "Transforme relacionamento e negociação em resultado. Aprenda a planejar vendas, formar e liderar equipes comerciais, conquistar clientes e medir o desempenho de cada canal.",
+    "acoes": [
+        {
+            "href": "#grad-matriz",
+            "texto": "Conhecer a matriz curricular"
+        },
+        {
+            "href": "#grad-carreira",
+            "texto": "Ver possibilidades de carreira"
+        }
+    ],
+    "codigoArquivo": "meta-de-vendas.calc",
+    "codigoLinhas": [
+        "<span class=\"muted\">// Meta de vendas da equipe</span>",
+        " ",
+        "<span class=\"blue\">Meta mensal</span>      R$ 300.000,00",
+        "<span class=\"blue\">Ticket médio</span>     R$     750,00",
+        "<span class=\"blue\">Vendedores</span>       6",
+        " ",
+        "<span class=\"yellow\">Meta por vendedor</span> = 50.000",
+        "<span class=\"yellow\">Negócios/vendedor</span> = 67",
+        " ",
+        "<span class=\"green\">&gt;&gt; Meta batida com 67 vendas</span><span class=\"grad-janela-cursor\" aria-hidden=\"true\"></span>"
+    ],
+    "stats": [
+        {
+            "contador": true,
+            "valor": "6",
+            "sufixo": "",
+            "label": "semestres"
+        },
+        {
+            "contador": true,
+            "valor": "2400",
+            "sufixo": "h",
+            "label": "carga horária"
+        },
+        {
+            "contador": false,
+            "valor": "Tecnólogo",
+            "sufixo": "",
+            "label": "nível superior"
+        },
+        {
+            "contador": false,
+            "valor": "Presencial",
+            "sufixo": "",
+            "label": "modalidade"
+        }
+    ],
+    "formacaoEyebrow": "Formação",
+    "formacaoTitulo": "O que você vai aprender",
+    "formacaoTexto": "Uma formação prática e voltada ao mercado, da prospecção do cliente ao pós-venda, com ênfase em negociação, gestão de equipes e indicadores comerciais.",
+    "formacaoCards": [
+        {
+            "iconeSvg": "<path d=\"M3 11l18-8-8 18-2-8-8-2Z\"></path>",
+            "titulo": "Vendas e Negociação",
+            "texto": "Técnicas de prospecção, abordagem, negociação e fechamento de vendas."
+        },
+        {
+            "iconeSvg": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"></path> <circle cx=\"9\" cy=\"7\" r=\"4\"></circle> <path d=\"M22 21v-2a4 4 0 0 0-3-3.87\"></path>",
+            "titulo": "Gestão de Equipes",
+            "texto": "Recrutamento, treinamento, metas, remuneração variável e liderança comercial."
+        },
+        {
+            "iconeSvg": "<path d=\"M3 3v18h18\"></path> <path d=\"M7 14l4-4 3 3 5-6\"></path>",
+            "titulo": "Indicadores Comerciais",
+            "texto": "Funil de vendas, ticket médio, taxa de conversão e análise de carteira."
+        },
+        {
+            "iconeSvg": "<circle cx=\"12\" cy=\"12\" r=\"9\"></circle> <circle cx=\"12\" cy=\"12\" r=\"4\"></circle> <circle cx=\"12\" cy=\"12\" r=\"1\"></circle>",
+            "titulo": "Planejamento de Metas",
+            "texto": "Definição de metas, territórios, previsão de vendas e orçamento comercial."
+        },
+        {
+            "iconeSvg": "<path d=\"M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z\"></path>",
+            "titulo": "Relacionamento com Clientes",
+            "texto": "Pós-venda, fidelização, gestão de contas-chave e atendimento omnichannel."
+        },
+        {
+            "iconeSvg": "<rect x=\"2\" y=\"4\" width=\"20\" height=\"13\" rx=\"2\"></rect> <path d=\"M8 21h8M12 17v4\"></path>",
+            "titulo": "Canais de Venda",
+            "texto": "Varejo, e-commerce, representantes e vendas diretas em múltiplos canais."
+        }
+    ],
+    "matrizEyebrow": "Matriz curricular",
+    "matrizTitulo": "Uma jornada de 6 semestres",
+    "matrizTexto": "Clique em cada semestre para visualizar as principais disciplinas.",
+    "semestres": [
+        {
+            "titulo": "1º semestre · Fundamentos",
+            "disciplinas": [
+                "Introdução à Administração",
+                "Fundamentos de Vendas",
+                "Matemática Aplicada",
+                "Comunicação Empresarial",
+                "Informática Aplicada"
+            ]
+        },
+        {
+            "titulo": "2º semestre · Prospecção",
+            "disciplinas": [
+                "Técnicas de Vendas",
+                "Psicologia do Consumidor",
+                "Contabilidade Básica",
+                "Estatística Aplicada",
+                "Direito do Consumidor"
+            ]
+        },
+        {
+            "titulo": "3º semestre · Negociação",
+            "disciplinas": [
+                "Negociação e Persuasão",
+                "Marketing para Vendas",
+                "Administração Financeira",
+                "Gestão de Pessoas",
+                "Sistemas de Gestão Comercial"
+            ]
+        },
+        {
+            "titulo": "4º semestre · Equipes",
+            "disciplinas": [
+                "Gestão de Equipes de Vendas",
+                "Planejamento Comercial",
+                "Precificação",
+                "Logística Comercial",
+                "Comércio Eletrônico"
+            ]
+        },
+        {
+            "titulo": "5º semestre · Indicadores",
+            "disciplinas": [
+                "Indicadores de Desempenho Comercial",
+                "Gestão de Carteira de Clientes",
+                "CRM e Pós-venda",
+                "Gestão de Canais",
+                "Empreendedorismo"
+            ]
+        },
+        {
+            "titulo": "6º semestre · Conclusão",
+            "disciplinas": [
+                "Gestão Estratégica de Vendas",
+                "Atividades Complementares",
+                "Estágio Supervisionado",
+                "Projeto Integrador"
+            ]
+        }
+    ],
+    "carreiraEyebrow": "Mercado de trabalho",
+    "carreiraTitulo": "Onde você pode chegar",
+    "carreiraTexto": "Toda empresa que vende precisa de quem organize e conduza o comercial. A formação prepara para atuar no varejo, na indústria, em serviços e no e-commerce, em áreas de vendas e relacionamento.",
+    "carreiraCardTitulo": "Possíveis áreas de atuação",
+    "carreiraItens": [
+        "Gerente Comercial",
+        "Supervisor de Vendas",
+        "Gestor de Contas",
+        "Coordenador de Relacionamento",
+        "Analista de Vendas",
+        "Gestor de E-commerce",
+        "Gestor de Canais",
+        "Consultor Comercial"
+    ],
+    "ctaTitulo": "Pronto para começar sua jornada?",
+    "ctaTexto": "As inscrições para o próximo semestre estão abertas. Faça sua matrícula on-line e garanta sua vaga em Gestão Comercial."
+}

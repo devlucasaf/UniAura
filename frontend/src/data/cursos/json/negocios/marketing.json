@@ -1,0 +1,194 @@
+{
+    "slug": "marketing",
+    "subnavLabel": "Marketing",
+    "eyebrow": "Graduação · Bacharelado",
+    "tituloPrincipal": "Mar",
+    "tituloDestaque": "keting",
+    "descricao": "Entenda o que move as pessoas e transforme isso em marcas, campanhas e resultados. Aprenda pesquisa de mercado, estratégia de produto, comunicação e marketing digital com base em dados.",
+    "acoes": [
+        {
+            "href": "#grad-matriz",
+            "texto": "Conhecer a matriz curricular"
+        },
+        {
+            "href": "#grad-carreira",
+            "texto": "Ver possibilidades de carreira"
+        }
+    ],
+    "codigoArquivo": "funil-de-vendas.calc",
+    "codigoLinhas": [
+        "<span class=\"muted\">// Funil de conversão digital</span>",
+        " ",
+        "<span class=\"blue\">Visitantes</span>    10.000",
+        "<span class=\"blue\">Leads</span>            1.000",
+        "<span class=\"blue\">Clientes</span>            150",
+        " ",
+        "<span class=\"yellow\">Conversão de leads</span> = 15%",
+        "<span class=\"yellow\">Taxa geral</span>          = 1,5%",
+        " ",
+        "<span class=\"green\">&gt;&gt; Otimize a etapa de leads</span><span class=\"grad-janela-cursor\" aria-hidden=\"true\"></span>"
+    ],
+    "stats": [
+        {
+            "contador": true,
+            "valor": "8",
+            "sufixo": "",
+            "label": "semestres"
+        },
+        {
+            "contador": true,
+            "valor": "3000",
+            "sufixo": "h",
+            "label": "carga horária"
+        },
+        {
+            "contador": false,
+            "valor": "Bacharelado",
+            "sufixo": "",
+            "label": "nível superior"
+        },
+        {
+            "contador": false,
+            "valor": "Presencial",
+            "sufixo": "",
+            "label": "modalidade"
+        }
+    ],
+    "formacaoEyebrow": "Formação",
+    "formacaoTitulo": "O que você vai aprender",
+    "formacaoTexto": "Da pesquisa com consumidores à execução de campanhas digitais, com foco em estratégia, criatividade e mensuração de resultados.",
+    "formacaoCards": [
+        {
+            "iconeSvg": "<circle cx=\"11\" cy=\"11\" r=\"7\"></circle> <path d=\"M21 21l-4.3-4.3\"></path>",
+            "titulo": "Pesquisa de Mercado",
+            "texto": "Levantamento de dados, segmentação de público e análise do comportamento do consumidor."
+        },
+        {
+            "iconeSvg": "<path d=\"M3 11l18-8-8 18-2-8-8-2Z\"></path>",
+            "titulo": "Estratégia de Marca",
+            "texto": "Posicionamento, identidade, narrativa e gestão do portfólio de produtos."
+        },
+        {
+            "iconeSvg": "<rect x=\"2\" y=\"4\" width=\"20\" height=\"13\" rx=\"2\"></rect> <path d=\"M8 21h8M12 17v4\"></path>",
+            "titulo": "Marketing Digital",
+            "texto": "Mídias sociais, performance, SEO, e-mail marketing e automação de campanhas."
+        },
+        {
+            "iconeSvg": "<path d=\"M3 3v18h18\"></path> <path d=\"M7 14l4-4 3 3 5-6\"></path>",
+            "titulo": "Métricas e Dados",
+            "texto": "Indicadores de desempenho, testes A/B, análise de funil e retorno sobre investimento."
+        },
+        {
+            "iconeSvg": "<path d=\"M4 4h16v12H7l-3 3V4Z\"></path> <path d=\"M8 9h8M8 12h5\"></path>",
+            "titulo": "Comunicação e Conteúdo",
+            "texto": "Redação publicitária, produção de conteúdo, relacionamento e gestão de crises."
+        },
+        {
+            "iconeSvg": "<path d=\"M12 2l2.4 6.1L21 10l-5 4.1 1.5 6.4L12 17l-5.5 3.5L8 14.1 3 10l6.6-1.9L12 2Z\"></path>",
+            "titulo": "Inovação em Produtos",
+            "texto": "Lançamento de novos produtos, experiência do cliente e pensamento de design."
+        }
+    ],
+    "matrizEyebrow": "Matriz curricular",
+    "matrizTitulo": "Uma jornada de 8 semestres",
+    "matrizTexto": "Clique em cada semestre para visualizar as principais disciplinas.",
+    "semestres": [
+        {
+            "titulo": "1º semestre · Fundamentos",
+            "disciplinas": [
+                "Introdução ao Marketing",
+                "Introdução à Administração",
+                "Psicologia do Consumidor",
+                "Comunicação e Expressão",
+                "Matemática Aplicada"
+            ]
+        },
+        {
+            "titulo": "2º semestre · Consumidor",
+            "disciplinas": [
+                "Comportamento do Consumidor",
+                "Estatística Aplicada",
+                "Economia",
+                "Sociologia do Consumo",
+                "Contabilidade Básica"
+            ]
+        },
+        {
+            "titulo": "3º semestre · Pesquisa",
+            "disciplinas": [
+                "Pesquisa de Mercado",
+                "Marketing de Serviços",
+                "Redação Publicitária",
+                "Direito do Consumidor",
+                "Sistemas de Informação"
+            ]
+        },
+        {
+            "titulo": "4º semestre · Marca",
+            "disciplinas": [
+                "Gestão de Marcas",
+                "Composto de Marketing",
+                "Design para Comunicação",
+                "Administração Financeira",
+                "Métodos Quantitativos"
+            ]
+        },
+        {
+            "titulo": "5º semestre · Digital",
+            "disciplinas": [
+                "Marketing Digital",
+                "Mídias Sociais",
+                "E-commerce",
+                "Gestão de Produtos",
+                "Análise de Dados de Marketing"
+            ]
+        },
+        {
+            "titulo": "6º semestre · Canais",
+            "disciplinas": [
+                "Marketing de Conteúdo",
+                "Gestão de Vendas",
+                "Mídia e Planejamento",
+                "Marketing Internacional",
+                "Neuromarketing"
+            ]
+        },
+        {
+            "titulo": "7º semestre · Especialização",
+            "disciplinas": [
+                "Gestão de Relacionamento com o Cliente",
+                "Branded Content",
+                "Growth Marketing",
+                "Optativa I",
+                "Trabalho de Conclusão I"
+            ]
+        },
+        {
+            "titulo": "8º semestre · Conclusão",
+            "disciplinas": [
+                "Planejamento Estratégico de Marketing",
+                "Marketing Social e Sustentabilidade",
+                "Optativa II",
+                "Atividades Complementares",
+                "Estágio Supervisionado",
+                "Trabalho de Conclusão II"
+            ]
+        }
+    ],
+    "carreiraEyebrow": "Mercado de trabalho",
+    "carreiraTitulo": "Onde você pode chegar",
+    "carreiraTexto": "Toda marca precisa de quem entenda o consumidor. A formação atua em agências, empresas de varejo, startups, veículos de comunicação e nas áreas de marketing de qualquer organização.",
+    "carreiraCardTitulo": "Possíveis áreas de atuação",
+    "carreiraItens": [
+        "Analista de Marketing",
+        "Gestor de Mídias Sociais",
+        "Gerente de Marca",
+        "Growth Hacker",
+        "Analista de Pesquisa",
+        "Planejador de Mídia",
+        "Redator Publicitário",
+        "Consultor de Marketing"
+    ],
+    "ctaTitulo": "Pronto para começar sua jornada?",
+    "ctaTexto": "As inscrições para o próximo semestre estão abertas. Faça sua matrícula on-line e garanta sua vaga em Marketing."
+}

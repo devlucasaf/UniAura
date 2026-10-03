@@ -257,6 +257,42 @@ export const cards = [
         "tag": "Bacharelado"
     },
     {
+        "slug": "ciencias-contabeis",
+        "area": "negocios",
+        "cor": "#047857",
+        "iconeSvg": "<rect x=\"4\" y=\"3\" width=\"16\" height=\"18\" rx=\"2\"></rect> <path d=\"M8 7h8M8 11h8M8 15h5\"></path>",
+        "titulo": "Ciências Contábeis",
+        "descricao": "Registro, análise e auditoria das informações financeiras que sustentam decisões e obrigações fiscais.",
+        "tag": "Bacharelado"
+    },
+    {
+        "slug": "ciencias-economicas",
+        "area": "negocios",
+        "cor": "#1d4ed8",
+        "iconeSvg": "<path d=\"M3 3v18h18\"></path> <path d=\"M7 14l4-4 3 3 5-6\"></path>",
+        "titulo": "Ciências Econômicas",
+        "descricao": "Análise de mercados, políticas públicas e cenários macroeconômicos com ferramentas quantitativas.",
+        "tag": "Bacharelado"
+    },
+    {
+        "slug": "marketing",
+        "area": "negocios",
+        "cor": "#c2410c",
+        "iconeSvg": "<path d=\"M3 11l18-8-8 18-2-8-8-2Z\"></path>",
+        "titulo": "Marketing",
+        "descricao": "Pesquisa de mercado, estratégia de marca e marketing digital voltados para resultados mensuráveis.",
+        "tag": "Bacharelado"
+    },
+    {
+        "slug": "gestao-comercial",
+        "area": "negocios",
+        "cor": "#0284c7",
+        "iconeSvg": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"></path> <circle cx=\"9\" cy=\"7\" r=\"4\"></circle> <path d=\"M22 21v-2a4 4 0 0 0-3-3.87\"></path>",
+        "titulo": "Gestão Comercial",
+        "descricao": "Planejamento de vendas, negociação e gestão de equipes e indicadores comerciais.",
+        "tag": "Tecnólogo"
+    },
+    {
         "slug": "direito",
         "area": "humanas",
         "cor": "#9f1239",
