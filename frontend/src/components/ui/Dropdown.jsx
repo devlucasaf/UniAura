@@ -107,8 +107,7 @@ export default function Dropdown({id, name, value, onChange, options, placeholde
 
     return (
         <div ref={caixaRef} className={`site-select${aberto ? " aberto" : ""}${invalid ? " invalido" : ""}`}>
-            <select id={id} name={name} value={value || ""} required={required} 
-                    hidden tabIndex={-1} onChange={() => {}} aria-hidden="true">
+            <select id={id} name={name} value={value || ""} required={required} hidden tabIndex={-1} onChange={() => {}} aria-hidden="true">
                 <option value="">{placeholder}</option>
                 {options.map((item) =>
                     item.options ? (

@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useState }       from "react";
-import { useRouter, usePathname }    from "next/navigation";
-import Link                          from "next/link";
-import { Button }                    from "primereact/button";
-import { Avatar }                    from "primereact/avatar";
-import { useAuth }                   from "@bernardo-dias/react-cloudsupport";
-import { obterUsuario, possuiPerfil, dashboardDoPerfil } from "@/lib/auth";
-import { notificar }                 from "@/lib/notificar";
-import { GRUPOS_MENU }               from "./menu";
+import { useEffect, useState }                              from "react";
+import { useRouter, usePathname }                           from "next/navigation";
+import Link                                                 from "next/link";
+import { Button }                                           from "primereact/button";
+import { Avatar }                                           from "primereact/avatar";
+import { useAuth }                                          from "@bernardo-dias/react-cloudsupport";
+import { obterUsuario, possuiPerfil, dashboardDoPerfil }    from "@/lib/auth";
+import { notificar }                                        from "@/lib/notificar";
+import { GRUPOS_MENU }                                      from "./menu";
 
 const CHAVE_TEMA = "theme";
 
@@ -17,9 +17,9 @@ export default function AppShell({ titulo, perfis, children }) {
     const auth = useAuth();
     const router = useRouter();
     const pathname = usePathname();
-    const [usuario, setUsuario] = useState(null);
-    const [pronto, setPronto] = useState(false);
-    const [menuAberto, setMenuAberto] = useState(false);
+    const [usuario,     setUsuario]     = useState(null);
+    const [pronto,      setPronto]      = useState(false);
+    const [menuAberto,  setMenuAberto]  = useState(false);
 
     useEffect(() => {
         const tema = localStorage.getItem(CHAVE_TEMA) || "light";

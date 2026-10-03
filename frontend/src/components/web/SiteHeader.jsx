@@ -7,53 +7,202 @@ import { Button }               from "primereact/button";
 
 // --- CURSOS DE GRADUAÇÃO DO SUBMENU ---
 const CURSOS_GRADUACAO = [
-    { nome: "Ciência da Computação", rota: "/tecnologia/ciencia-da-computacao" },
-    { nome: "Análise e Desenvolvimento de Sistemas", rota: "/tecnologia/analise-e-desenvolvimento-de-sistemas" },
-    { nome: "Engenharia de Software", rota: "/tecnologia/engenharia-de-software" },
-    { nome: "Ciência de Dados", rota: "/tecnologia/ciencia-de-dados" },
-    { nome: "Engenharia Mecatrônica", rota: "/engenharias/engenharia-mecatronica" },
-    { nome: "Engenharia Civil", rota: "/engenharias/engenharia-civil" },
-    { nome: "Engenharia Mecânica", rota: "/engenharias/engenharia-mecanica" },
-    { nome: "Engenharia de Produção", rota: "/engenharias/engenharia-producao" },
-    { nome: "Engenharia Elétrica", rota: "/engenharias/engenharia-eletrica" },
-    { nome: "Engenharia Química", rota: "/engenharias/engenharia-quimica" },
-    { nome: "Engenharia Florestal", rota: "/engenharias/engenharia-florestal" },
-    { nome: "Ciências Aeronáuticas", rota: "/engenharias/ciencias-aeronauticas" },
-    { nome: "Medicina", rota: "/saude/medicina" },
-    { nome: "Odontologia", rota: "/saude/odontologia" },
-    { nome: "Farmácia", rota: "/saude/farmacia" },
-    { nome: "Fisioterapia", rota: "/saude/fisioterapia" },
-    { nome: "Nutrição", rota: "/saude/nutricao" },
-    { nome: "Biomedicina", rota: "/saude/biomedicina" },
-    { nome: "Ciências Biológicas", rota: "/saude/biologia" },
-    { nome: "Educação Física", rota: "/saude/educacao-fisica" },
-    { nome: "Fonoaudiologia", rota: "/saude/fonoaudiologia" },
-    { nome: "Terapia Ocupacional", rota: "/saude/terapia-ocupacional" },
-    { nome: "Medicina Veterinária", rota: "/saude/medicina-veterinaria" },
-    { nome: "Design", rota: "/artes/design" },
-    { nome: "Publicidade e Propaganda", rota: "/artes/publicidade-propaganda" },
-    { nome: "Artes Visuais", rota: "/artes/artes-visuais" },
-    { nome: "Artes Cênicas", rota: "/artes/artes-cenicas" },
-    { nome: "Design de Moda", rota: "/artes/moda" },
-    { nome: "Fotografia", rota: "/artes/fotografia" },
-    { nome: "Administração", rota: "/negocios/administracao" },
-    { nome: "Direito", rota: "/humanas/direito" }
+    { 
+        nome: "Ciência da Computação", 
+        rota: "/tecnologia/ciencia-da-computacao" 
+    },
+    { 
+        nome: "Análise e Desenvolvimento de Sistemas", 
+        rota: "/tecnologia/analise-e-desenvolvimento-de-sistemas" 
+    },
+    { 
+        nome: "Engenharia de Software", 
+        rota: "/tecnologia/engenharia-de-software" 
+    },
+    { 
+        nome: "Ciência de Dados", 
+        rota: "/tecnologia/ciencia-de-dados" 
+    },
+    { 
+        nome: "Engenharia Mecatrônica", 
+        rota: "/engenharias/engenharia-mecatronica" 
+    },
+    { 
+        nome: "Engenharia Civil", 
+        rota: "/engenharias/engenharia-civil" 
+    },
+    { 
+        nome: "Engenharia Mecânica", 
+        rota: "/engenharias/engenharia-mecanica" 
+    },
+    { 
+        nome: "Engenharia de Produção", 
+        rota: "/engenharias/engenharia-producao" 
+    },
+    { 
+        nome: "Engenharia Elétrica", 
+        rota: "/engenharias/engenharia-eletrica" 
+    },
+    { 
+        nome: "Engenharia Química", 
+        rota: "/engenharias/engenharia-quimica" 
+    },
+    { 
+        nome: "Engenharia Florestal", 
+        rota: "/engenharias/engenharia-florestal" 
+    },
+    { 
+        nome: "Ciências Aeronáuticas", 
+        rota: "/engenharias/ciencias-aeronauticas" 
+    },
+    { 
+        nome: "Medicina", 
+        rota: "/saude/medicina" 
+    },
+    { 
+        nome: "Odontologia", 
+        rota: "/saude/odontologia" 
+    },
+    { 
+        nome: "Farmácia", 
+        rota: "/saude/farmacia" 
+    },
+    { 
+        nome: "Fisioterapia", 
+        rota: "/saude/fisioterapia" 
+    },
+    { 
+        nome: "Nutrição", 
+        rota: "/saude/nutricao" 
+    },
+    { 
+        nome: "Biomedicina", 
+        rota: "/saude/biomedicina" 
+    },
+    { 
+        nome: "Ciências Biológicas", 
+        rota: "/saude/biologia" 
+    },
+    { 
+        nome: "Educação Física", 
+        rota: "/saude/educacao-fisica" 
+    },
+    { 
+        nome: "Fonoaudiologia", 
+        rota: "/saude/fonoaudiologia" 
+    },
+    { 
+        nome: "Terapia Ocupacional", 
+        rota: "/saude/terapia-ocupacional" 
+    },
+    { 
+        nome: "Medicina Veterinária", 
+        rota: "/saude/medicina-veterinaria" 
+    },
+    { 
+        nome: "Design", 
+        rota: "/artes/design" 
+    },
+    { 
+        nome: "Publicidade e Propaganda", 
+        rota: "/artes/publicidade-propaganda" 
+    },
+    { 
+        nome: "Artes Visuais", 
+        rota: "/artes/artes-visuais" 
+    },
+    { 
+        nome: "Artes Cênicas", 
+        rota: "/artes/artes-cenicas" 
+    },
+    { 
+        nome: "Design de Moda", 
+        rota: "/artes/moda" 
+    },
+    { 
+        nome: "Fotografia", 
+        rota: "/artes/fotografia" 
+    },
+    { 
+        nome: "Administração", 
+        rota: "/negocios/administracao"
+    },
+    {
+        nome: "Ciências Contábeis",
+        rota: "/negocios/ciencias-contabeis"
+    },
+    {
+        nome: "Ciências Econômicas",
+        rota: "/negocios/ciencias-economicas"
+    },
+    {
+        nome: "Marketing",
+        rota: "/negocios/marketing"
+    },
+    {
+        nome: "Gestão Comercial",
+        rota: "/negocios/gestao-comercial" 
+    },
+    { 
+        nome: "Direito", 
+        rota: "/humanas/direito" 
+    }
 ];
 
 const MEGA_UNIVERSIDADE = [
-    { titulo: "Nossa História", descricao: "35 anos de excelência acadêmica", rota: "/sobre/historia" },
-    { titulo: "Nossa Equipe", descricao: "Quem faz a universidade", rota: "/sobre/equipe" },
-    { titulo: "Estrutura Física", descricao: "Salas, laboratórios e biblioteca", rota: null },
-    { titulo: "Regimento Universitário", descricao: "Normas e diretrizes", rota: null },
-    { titulo: "Prêmios e Rankings", descricao: "Reconhecimentos nacionais", rota: null }
+    { 
+        titulo: "Nossa História", 
+        descricao: "35 anos de excelência acadêmica", 
+        rota: "/sobre/historia" 
+    },
+    { 
+        titulo: "Nossa Equipe", 
+        descricao: "Quem faz a universidade", 
+        rota: "/sobre/equipe" 
+    },
+    { 
+        titulo: "Estrutura Física", 
+        descricao: "Salas, laboratórios e biblioteca", 
+        rota: null 
+    },
+    { 
+        titulo: "Regimento Universitário", 
+        descricao: "Normas e diretrizes", 
+        rota: null 
+    },
+    { 
+        titulo: "Prêmios e Rankings", 
+        descricao: "Reconhecimentos nacionais", 
+        rota: null 
+    }
 ];
 
 const MEGA_MODALIDADES = [
-    { titulo: "Pós-Graduação", descricao: "Especialização, mestrado e doutorado", rota: null },
-    { titulo: "Cursos Técnicos", descricao: "Formação profissional rápida", rota: null },
-    { titulo: "Idiomas", descricao: "Inglês, espanhol e libras", rota: null },
-    { titulo: "Extensão Universitária", descricao: "Projetos comunitários", rota: null },
-    { titulo: "Pesquisa", descricao: "Grupos e laboratórios", rota: null }
+    { 
+        titulo: "Pós-Graduação", 
+        descricao: "Especialização, mestrado e doutorado", 
+        rota: null 
+    },
+    { 
+        titulo: "Cursos Técnicos", 
+        descricao: "Formação profissional rápida", 
+        rota: null 
+    },
+    { 
+        titulo: "Idiomas", 
+        descricao: "Inglês, espanhol e libras", 
+        rota: null 
+    },
+    { 
+        titulo: "Extensão Universitária", 
+        descricao: "Projetos comunitários", 
+        rota: null 
+    },
+    { 
+        titulo: "Pesquisa", 
+        descricao: "Grupos e laboratórios", 
+        rota: null 
+    }
 ];
 
 // --- COMPONENTE DE CABEÇALHO DO SITE ---
@@ -141,7 +290,10 @@ export default function SiteHeader({ ancoras = false }) {
                 aria-label="Alternar tema claro e escuro"
                 onClick={alternarTema}
             />
-            <Button label="Portal do Aluno" onClick={() => router.push("/portal-do-aluno/login")} />
+            <Button 
+                label="Portal do Aluno" 
+                onClick={() => router.push("/portal-do-aluno/login")} 
+            />
         </div>
     );
 

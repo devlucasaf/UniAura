@@ -1,17 +1,12 @@
 "use client";
 
-import { Suspense } from "react";
-import { PrimeReactProvider } from "primereact/api";
-import {
-    ProfileProvider,
-    AuthAwareNetworking,
-    DefaultConfiguredNetworking,
-    ProcessingProvider
-} from "@bernardo-dias/react-cloudsupport";
-import { AuthProvider } from "@bernardo-dias/react-cloudsupport/next/client";
-import { SessionExpiredBanner, ReloadBanner, ProcessingIndicator } from "@bernardo-dias/react-cloudsupport/prime";
-import PrimeToastHost from "./PrimeToastHost";
-import ProcessingBridge from "./ProcessingBridge";
+import { Suspense }                                                                             from "react";
+import { PrimeReactProvider }                                                                   from "primereact/api";
+import { ProfileProvider, AuthAwareNetworking, DefaultConfiguredNetworking, ProcessingProvider} from "@bernardo-dias/react-cloudsupport";
+import { AuthProvider }                                                                         from "@bernardo-dias/react-cloudsupport/next/client";
+import { SessionExpiredBanner, ReloadBanner, ProcessingIndicator }                              from "@bernardo-dias/react-cloudsupport/prime";
+import PrimeToastHost                                                                           from "./PrimeToastHost";
+import ProcessingBridge                                                                         from "./ProcessingBridge";
 
 const URL_PROFILE = "/uniaura/app/.well-known/profile.json";
 
