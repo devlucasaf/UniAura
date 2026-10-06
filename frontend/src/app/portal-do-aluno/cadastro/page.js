@@ -4,10 +4,13 @@ import { useEffect, useRef, useState }                  from "react";
 import { useRouter }                                    from "next/navigation";
 import { InputText }                                    from "primereact/inputtext";
 import { Dropdown }                                     from "primereact/dropdown";
+import { Dialog }                                       from "primereact/dialog";
 import { Checkbox }                                     from "primereact/checkbox";
 import { Button }                                       from "primereact/button";
 import { Message }                                      from "primereact/message";
 import SiteChrome                                       from "@/components/web/SiteChrome";
+import CampoData                                         from "@/components/web/CampoData";
+import CampoSenha                                        from "@/components/web/CampoSenha";
 import { useEfeitosDePagina }                           from "@/hooks/useEfeitosDePagina";
 import { mascararCpf, mascararTelefone, mascararCep }   from "@/lib/mascaras";
 import { notificar }                                    from "@/lib/notificar";
@@ -172,7 +175,11 @@ const CAMPOS_CONTROLADOS_PADRAO = {
     tipoSanguineo: "",
     tipoEscolaEnsinoMedio: "",
     mesConclusaoEnsinoMedio: "",
-    racaEtnia: ""
+    racaEtnia: "",
+    publicoAlvoEducacaoEspecial: false,
+    canhoto: false,
+    necessitaAcompanhamentoInstitucional: false,
+    termoConsentimento: false
 };
 
 // --- RECUSA DATAS NO FUTURO E IDADES IMPLAUSÍVEIS ---
@@ -191,6 +198,47 @@ function idadeMinimaValida(valor) {
     return anos >= 14 && anos < 120;
 }
 
+// --- GERA ATÉ 3 SUGESTÕES DE E-MAIL INSTITUCIONAL (@uniaura.com) A PARTIR DO NOME COMPLETO ---
+function gerarSugestoesEmail(nomeCompleto) {
+    const partes = (nomeCompleto || "")
+        .normalize("NFD")
+        .replace(/[̀-ͯ]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z\s]/g, " ")
+        .split(/\s+/)
+        .filter((parte) => parte && !["de", "da", "do", "das", "dos", "e"].includes(parte));
+
+    if (partes.length < 2) {
+        return [];
+    }
+
+    const primeiro = partes[0];
+    const ultimo = partes[partes.length - 1];
+    const meio = partes.length > 2 ? partes[1] : null;
+
+    const candidatas = [
+        `${primeiro}.${ultimo}`,
+        `${primeiro[0]}${ultimo}`,
+        meio ? `${primeiro}.${meio[0]}.${ultimo}` : `${primeiro}${ultimo[0]}`
+    ];
+
+    return [...new Set(candidatas)].map((usuario) => `${usuario}@uniaura.com`);
+}
+
+// --- TRADUZ O ESTADO DE VALIDAÇÃO DE UM CAMPO NATIVO EM UMA MENSAGEM ---
+function mensagemDeErro(campo) {
+    if (campo.validity.valueMissing) {
+        return campo.type === "checkbox" ? "Você precisa aceitar para continuar." : "Campo obrigatório.";
+    }
+    if (campo.validity.typeMismatch) {
+        return "Informe um valor válido.";
+    }
+    if (campo.validity.tooShort) {
+        return `Use pelo menos ${campo.minLength} caracteres.`;
+    }
+    return "Valor inválido.";
+}
+
 // --- PÁGINA DE CADASTRO DO PORTAL DO ALUNO ---
 export default function CadastroPortalDoAlunoPage() {
     const raizRef = useEfeitosDePagina();
@@ -199,7 +247,9 @@ export default function CadastroPortalDoAlunoPage() {
 
     const [etapaAtual,                  setEtapaAtual]                  = useState(1);
     const [campos,                      setCampos]                      = useState(CAMPOS_CONTROLADOS_PADRAO);
-    const [cursoInvalido,               setCursoInvalido]               = useState(false);
+    const [erros,                       setErros]                       = useState({});
+    const [sugestoesEmail,             setSugestoesEmail]              = useState([]);
+    const [emailEscolhido,              setEmailEscolhido]              = useState("");
     const [mostrarInfoAcompanhamento,   setMostrarInfoAcompanhamento]   = useState(false);
     const [mensagem,                    setMensagem]                    = useState("");
     const [erro,                        setErro]                        = useState("");
@@ -215,6 +265,52 @@ export default function CadastroPortalDoAlunoPage() {
     // -- ATUALIZA O STATE DE CAMPOS CONTROLADOS, USADO PARA VALIDAR E MONTAR O PAYLOAD ---
     const atualizarCampo = (nome, valor) => {
         setCampos((atual) => ({ ...atual, [nome]: valor }));
+        limparErroCampo(nome);
+    };
+
+    // --- REMOVE A MENSAGEM DE ERRO DE UM CAMPO ASSIM QUE O USUÁRIO MEXE NELE ---
+    const limparErroCampo = (nome) => {
+        setErros((atual) => {
+            if (!atual[nome]) {
+                return atual;
+            }
+            const { [nome]: _removido, ...resto } = atual;
+            return resto;
+        });
+    };
+
+    // --- MENSAGEM DE ERRO EM VERMELHO ABAIXO DO CAMPO ---
+    const erroDe = (nome) => erros[nome] && <small className="ua-erro-campo" role="alert">{erros[nome]}</small>;
+    const classeErro = (nome) => (erros[nome] ? "p-invalid" : "");
+
+    // --- AO COMPLETAR O CEP, BUSCA O ENDEREÇO NO ViaCEP E PREENCHE RUA, BAIRRO, CIDADE E UF ---
+    const aoDigitarCep = async (valor) => {
+        const cepMascarado = mascararCep(valor);
+        atualizarCampo("enderecoCep", cepMascarado);
+
+        const digitos = cepMascarado.replace(/\D/g, "");
+        if (digitos.length !== 8) {
+            return;
+        }
+
+        try {
+            const resposta = await fetch(`https://viacep.com.br/ws/${digitos}/json/`);
+            const dados = await resposta.json();
+            if (dados.erro) {
+                notificar("CEP não encontrado. Preencha o endereço manualmente.", "warning");
+                return;
+            }
+
+            const formulario = formularioRef.current;
+            if (formulario) {
+                formulario.enderecoLogradouro.value = dados.logradouro || "";
+                formulario.enderecoBairro.value = dados.bairro || "";
+                formulario.cidade.value = dados.localidade || formulario.cidade.value;
+            }
+            atualizarCampo("enderecoUf", dados.uf || "");
+        } catch {
+            notificar("Não foi possível consultar o CEP agora. Preencha o endereço manualmente.", "warning");
+        }
     };
 
     // --- VALIDA SÓ OS CAMPOS VISÍVEIS NA ETAPA ATUAL, SEM TRAVAR NOS DEMAIS ---
@@ -225,28 +321,35 @@ export default function CadastroPortalDoAlunoPage() {
             return true;
         }
 
-        const camposNativos = Array.from(etapa.querySelectorAll("input, textarea"));
+        const novosErros = {};
+        const camposNativos = Array.from(etapa.querySelectorAll("input[name], textarea[name]"));
         for (const campo of camposNativos) {
-            if (!campo.checkValidity()) {
-                campo.reportValidity();
-                return false;
+            if (campo.type !== "hidden" && !campo.checkValidity()) {
+                novosErros[campo.name] = mensagemDeErro(campo);
             }
         }
 
-        if (numero === 1 && !campos.curso) {
-            setCursoInvalido(true);
+        if (numero === 1) {
+            if (!campos.curso) {
+                novosErros.curso = "Escolha o curso pretendido.";
+            }
+        }
+
+        if (etapa.querySelector('[name="dataNascimento"]') && !formulario.dataNascimento.value) {
+            novosErros.dataNascimento = "Informe sua data de nascimento.";
+        }
+
+        if (numero === 4 && !novosErros.senha && !novosErros.confirmarSenha
+                && formulario.senha.value !== formulario.confirmarSenha.value) {
+            novosErros.confirmarSenha = "As senhas informadas não conferem.";
+        }
+
+        setErros(novosErros);
+        const nomes = Object.keys(novosErros);
+        if (nomes.length > 0) {
+            setErro("Revise os campos destacados antes de continuar.");
+            formulario.querySelector(`[name="${nomes[0]}"]`)?.focus?.();
             return false;
-        }
-        setCursoInvalido(false);
-
-        if (numero === 4) {
-            const senha = formulario.senha.value;
-            const confirmar = formulario.confirmarSenha.value;
-            if (senha !== confirmar) {
-                setErro("As senhas informadas não conferem.");
-                formulario.confirmarSenha.focus();
-                return false;
-            }
         }
 
         return true;
@@ -258,8 +361,18 @@ export default function CadastroPortalDoAlunoPage() {
     const aoAvancar = () => {
         setErro("");
         if (etapaValida(etapaAtual) && etapaAtual < TOTAL_ETAPAS) {
+            if (etapaAtual === 1) {
+                setSugestoesEmail(gerarSugestoesEmail(formularioRef.current.nome.value));
+            }
             exibirEtapa(etapaAtual + 1);
         }
+    };
+
+    // --- PREENCHE O CAMPO DE E-MAIL COM A SUGESTÃO ESCOLHIDA ---
+    const escolherEmail = (sugestao) => {
+        formularioRef.current.email.value = sugestao;
+        setEmailEscolhido(sugestao);
+        limparErroCampo("email");
     };
 
     // --- VOLTA PARA A ETAPA ANTERIOR, SE NÃO ESTIVER NA PRIMEIRA ---
@@ -328,9 +441,9 @@ export default function CadastroPortalDoAlunoPage() {
 
             // --- ETAPA 5 ---
             tipoSanguineo: campos.tipoSanguineo || null,
-            publicoAlvoEducacaoEspecial: formulario.publicoAlvoEducacaoEspecial.checked,
-            canhoto: formulario.canhoto.checked,
-            necessitaAcompanhamentoInstitucional: formulario.necessitaAcompanhamentoInstitucional.checked,
+            publicoAlvoEducacaoEspecial: campos.publicoAlvoEducacaoEspecial,
+            canhoto: campos.canhoto,
+            necessitaAcompanhamentoInstitucional: campos.necessitaAcompanhamentoInstitucional,
 
             // --- ETAPA 6 ---
             instituicaoOrigem: texto("instituicaoOrigem"),
@@ -341,7 +454,7 @@ export default function CadastroPortalDoAlunoPage() {
             racaEtnia: campos.racaEtnia || null,
 
             // --- ETAPA 7 ---
-            termoConsentimento: formulario.termoConsentimento.checked
+            termoConsentimento: campos.termoConsentimento
         };
     };
 
@@ -461,12 +574,13 @@ export default function CadastroPortalDoAlunoPage() {
                                         <legend>Dados pessoais</legend>
                                         <div className="site-form-grid">
                                             <div className="field field-full">
-                                                <label htmlFor="cadNome">Nome completo *</label>
-                                                <InputText id="cadNome" name="nome" required minLength={5} autoComplete="name" />
+                                                <label htmlFor="cadNome">Nome completo <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                                                <InputText id="cadNome" name="nome" required minLength={5} autoComplete="name" className={classeErro("nome")} onInput={() => limparErroCampo("nome")} />
+                                                {erroDe("nome")}
                                             </div>
 
                                             <div className="field field-full">
-                                                <label htmlFor="cadCurso">Curso pretendido *</label>
+                                                <label htmlFor="cadCurso">Curso pretendido <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
                                                 <Dropdown
                                                     id="cadCurso"
                                                     name="curso"
@@ -476,8 +590,9 @@ export default function CadastroPortalDoAlunoPage() {
                                                     value={campos.curso}
                                                     onChange={(e) => atualizarCampo("curso", e.value)}
                                                     placeholder="Selecione o curso"
-                                                    className={cursoInvalido ? "p-invalid" : ""}
+                                                    className={classeErro("curso")}
                                                 />
+                                                {erroDe("curso")}
                                             </div>
 
                                             <div className="field">
@@ -521,8 +636,9 @@ export default function CadastroPortalDoAlunoPage() {
                                         <legend>Origem</legend>
                                         <div className="site-form-grid">
                                             <div className="field">
-                                                <label htmlFor="cadNascimento">Data de nascimento *</label>
-                                                <InputText id="cadNascimento" name="dataNascimento" type="date" required />
+                                                <label htmlFor="cadNascimento">Data de nascimento <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                                                <CampoData id="cadNascimento" name="dataNascimento" yearRange="1920:2010" required invalido={!!erros.dataNascimento} onChange={() => limparErroCampo("dataNascimento")} />
+                                                {erroDe("dataNascimento")}
                                             </div>
 
                                             <div className="field">
@@ -559,7 +675,7 @@ export default function CadastroPortalDoAlunoPage() {
                                         <legend>Identificação</legend>
                                         <div className="site-form-grid">
                                             <div className="field">
-                                                <label htmlFor="cadCpf">CPF *</label>
+                                                <label htmlFor="cadCpf">CPF <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
                                                 <InputText
                                                     id="cadCpf"
                                                     name="cpf"
@@ -569,7 +685,9 @@ export default function CadastroPortalDoAlunoPage() {
                                                     placeholder="000.000.000-00"
                                                     value={campos.cpf}
                                                     onChange={(e) => atualizarCampo("cpf", mascararCpf(e.target.value))}
+                                                    className={classeErro("cpf")}
                                                 />
+                                                {erroDe("cpf")}
                                             </div>
 
                                             <div className="field">
@@ -596,7 +714,7 @@ export default function CadastroPortalDoAlunoPage() {
 
                                             <div className="field">
                                                 <label htmlFor="cadDataExpedicao">Data de expedição da identidade</label>
-                                                <InputText id="cadDataExpedicao" name="dataExpedicaoIdentidade" type="date" />
+                                                <CampoData id="cadDataExpedicao" name="dataExpedicaoIdentidade" />
                                             </div>
 
                                             <div className="field">
@@ -670,7 +788,7 @@ export default function CadastroPortalDoAlunoPage() {
                                                     maxLength={9}
                                                     placeholder="00000-000"
                                                     value={campos.enderecoCep}
-                                                    onChange={(e) => atualizarCampo("enderecoCep", mascararCep(e.target.value))}
+                                                    onChange={(e) => aoDigitarCep(e.target.value)}
                                                 />
                                             </div>
 
@@ -707,12 +825,32 @@ export default function CadastroPortalDoAlunoPage() {
                                             </div>
 
                                             <div className="field">
-                                                <label htmlFor="cadEmail">E-mail *</label>
-                                                <InputText id="cadEmail" name="email" type="email" required autoComplete="email" />
+                                                <label htmlFor="cadEmail">E-mail <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                                                <InputText id="cadEmail" name="email" type="email" required autoComplete="email" className={classeErro("email")} onInput={() => { limparErroCampo("email"); setEmailEscolhido(""); }} />
+                                                {erroDe("email")}
+
+                                                {sugestoesEmail.length > 0 && (
+                                                    <div className="ua-sugestoes-email" role="group" aria-label="Sugestões de e-mail institucional">
+                                                        <small className="muted">Sugestões de e-mail institucional com base no seu nome:</small>
+                                                        <div className="ua-sugestoes-email__lista">
+                                                            {sugestoesEmail.map((sugestao) => (
+                                                                <button
+                                                                    key={sugestao}
+                                                                    type="button"
+                                                                    className="ua-sugestao-email"
+                                                                    aria-pressed={emailEscolhido === sugestao}
+                                                                    onClick={() => escolherEmail(sugestao)}
+                                                                >
+                                                                    {sugestao}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
                                             </div>
 
                                             <div className="field">
-                                                <label htmlFor="cadTelefone">Telefone *</label>
+                                                <label htmlFor="cadTelefone">Telefone <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
                                                 <InputText
                                                     id="cadTelefone"
                                                     name="telefone"
@@ -723,7 +861,9 @@ export default function CadastroPortalDoAlunoPage() {
                                                     autoComplete="tel"
                                                     value={campos.telefone}
                                                     onChange={(e) => atualizarCampo("telefone", mascararTelefone(e.target.value))}
+                                                    className={classeErro("telefone")}
                                                 />
+                                                {erroDe("telefone")}
                                             </div>
 
                                             <div className="field">
@@ -740,13 +880,15 @@ export default function CadastroPortalDoAlunoPage() {
                                             </div>
 
                                             <div className="field">
-                                                <label htmlFor="cadSenha">Senha de acesso *</label>
-                                                <InputText id="cadSenha" name="senha" type="password" required minLength={6} autoComplete="new-password" />
+                                                <label htmlFor="cadSenha">Senha de acesso <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                                                <CampoSenha id="cadSenha" name="senha" required minLength={6} autoComplete="new-password" className={classeErro("senha")} onInput={() => limparErroCampo("senha")} />
+                                                {erroDe("senha")}
                                             </div>
 
                                             <div className="field">
-                                                <label htmlFor="cadConfirmarSenha">Confirmar senha *</label>
-                                                <InputText id="cadConfirmarSenha" name="confirmarSenha" type="password" required minLength={6} autoComplete="new-password" />
+                                                <label htmlFor="cadConfirmarSenha">Confirmar senha <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                                                <CampoSenha id="cadConfirmarSenha" name="confirmarSenha" required minLength={6} autoComplete="new-password" className={classeErro("confirmarSenha")} onInput={() => limparErroCampo("confirmarSenha")} />
+                                                {erroDe("confirmarSenha")}
                                             </div>
                                         </div>
                                     </fieldset>
@@ -769,21 +911,21 @@ export default function CadastroPortalDoAlunoPage() {
                                         </div>
 
                                         <label className="site-form-termos">
-                                            <Checkbox id="cadEducacaoEspecial" name="publicoAlvoEducacaoEspecial" />
+                                            <Checkbox inputId="cadEducacaoEspecial" name="publicoAlvoEducacaoEspecial" checked={campos.publicoAlvoEducacaoEspecial} onChange={(e) => atualizarCampo("publicoAlvoEducacaoEspecial", e.checked)} />
                                             <span>Sou aluno público-alvo da Educação Especial.</span>
                                         </label>
 
                                         <label className="site-form-termos">
-                                            <Checkbox id="cadCanhoto" name="canhoto" />
+                                            <Checkbox inputId="cadCanhoto" name="canhoto" checked={campos.canhoto} onChange={(e) => atualizarCampo("canhoto", e.checked)} />
                                             <span>Sou canhoto(a).</span>
                                         </label>
 
                                         <label className="site-form-termos">
-                                            <Checkbox id="cadAcompanhamento" name="necessitaAcompanhamentoInstitucional" />
+                                            <Checkbox inputId="cadAcompanhamento" name="necessitaAcompanhamentoInstitucional" checked={campos.necessitaAcompanhamentoInstitucional} onChange={(e) => atualizarCampo("necessitaAcompanhamentoInstitucional", e.checked)} />
                                             <span>
                                                 Necessito de acompanhamento institucional.
                                                 <button type="button" className="site-info-btn" id="btnInfoAcompanhamento" aria-label="O que é acompanhamento institucional?"
-                                                        onClick={() => setMostrarInfoAcompanhamento((atual) => !atual)}>
+                                                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); setMostrarInfoAcompanhamento(true); }}>
                                                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
                                                             strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                                         <circle cx="12" cy="12" r="10"></circle>
@@ -793,13 +935,15 @@ export default function CadastroPortalDoAlunoPage() {
                                                 </button>
                                             </span>
                                         </label>
-                                        <p className="site-info-texto" id="infoAcompanhamento" hidden={!mostrarInfoAcompanhamento}>
+                                        <Dialog header="Acompanhamento institucional" visible={mostrarInfoAcompanhamento} onHide={() => setMostrarInfoAcompanhamento(false)} style={{ width: "min(28rem, 92vw)" }} dismissableMask draggable={false}>
+                                            <p className="site-info-texto" id="infoAcompanhamento">
                                             O acompanhamento institucional é o suporte pedagógico e psicossocial oferecido pela
                                             UniAura a alunos que precisem de apoio extra durante o curso (dificuldades de
                                             aprendizagem, questões de saúde, adaptação ou outras necessidades). Marcar esta
                                             opção não afeta sua matrícula: a coordenação apenas entrará em contato para
                                             entender como pode ajudar.
                                         </p>
+                                        </Dialog>
                                     </fieldset>
 
                                     {/* --- ETAPA 6: CENSO --- */}
@@ -886,14 +1030,15 @@ export default function CadastroPortalDoAlunoPage() {
                                         </div>
 
                                         <label className="site-form-termos">
-                                            <Checkbox id="cadTermos" name="termoConsentimento" required />
-                                            <span>Li e aceito o termo de consentimento para uso dos meus dados pessoais. *</span>
+                                            <Checkbox inputId="cadTermos" name="termoConsentimento" required className={classeErro("termoConsentimento")} checked={campos.termoConsentimento} onChange={(e) => atualizarCampo("termoConsentimento", e.checked)} />
+                                            <span>Li e aceito o termo de consentimento para uso dos meus dados pessoais. <span className="ua-obrigatorio" aria-hidden="true">*</span></span>
                                         </label>
+                                        {erroDe("termoConsentimento")}
                                     </fieldset>
 
                                     <div className="site-wizard-acoes">
                                         {etapaAtual !== 1
-                                            ? <Button type="button" id="btnVoltarEtapa" label="← Voltar" outlined onClick={aoVoltar} />
+                                            ? <Button type="button" id="btnVoltarEtapa" label="Voltar" icon="pi pi-arrow-left" className="ua-botao-seta ua-botao-seta--voltar" outlined onClick={aoVoltar} />
                                             : <span />}
 
                                         <span className="site-wizard-contador">
@@ -901,7 +1046,7 @@ export default function CadastroPortalDoAlunoPage() {
                                         </span>
 
                                         {etapaAtual !== TOTAL_ETAPAS && (
-                                            <Button type="button" id="btnAvancarEtapa" label="Próxima etapa →" onClick={aoAvancar} />
+                                            <Button type="button" id="btnAvancarEtapa" label="Próxima etapa" icon="pi pi-arrow-right" iconPos="right" className="ua-botao-seta" onClick={aoAvancar} />
                                         )}
 
                                         {etapaAtual === TOTAL_ETAPAS && (
