@@ -246,7 +246,7 @@ Você só precisa criar o **banco, o login e as permissões** uma única vez.
    (botão direito na instância > **Properties > Security**) e **reinicie o serviço** do SQL Server.
 
 > ⚠️ Confira se o nome do banco no script bate com o `databaseName` da
-> `spring.datasource.url` em `application.properties` (atualmente `ErpUniversityAcademicSystem`).
+> `spring.datasource.url` em `application.properties` (atualmente `UniAuraErpDB`).
 
 ### 3. Credenciais locais (perfil `local`)
 

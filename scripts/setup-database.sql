@@ -1,11 +1,11 @@
 -- --- CRIA O BANCO ---
-IF DB_ID('erp_academic_db') IS NULL
+IF DB_ID('UniAuraErpDB') IS NULL
 BEGIN
-    CREATE DATABASE erp_academic_db;
-    PRINT 'Banco erp_academic_db criado.';
+    CREATE DATABASE UniAuraErpDB;
+    PRINT 'Banco UniAuraErpDB criado.';
 END
 ELSE
-    PRINT 'Banco erp_academic_db ja existe. Nenhuma acao.';
+    PRINT 'Banco UniAuraErpDB ja existe. Nenhuma acao.';
 GO
 
 IF NOT EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'erp_academic_user')
@@ -13,7 +13,7 @@ BEGIN
     CREATE LOGIN erp_academic_user
         WITH PASSWORD          = 'Erp@Academic#2025!',
              CHECK_POLICY       = ON,
-             DEFAULT_DATABASE   = erp_academic_db;
+             DEFAULT_DATABASE   = UniAuraErpDB;
     PRINT 'Login erp_academic_user criado.';
 END
 ELSE
@@ -21,7 +21,7 @@ ELSE
 GO
 
 -- --- CRIA O USUÁRIO DO BANCO E CONCEDE ---
-USE erp_academic_db;
+USE UniAuraErpDB;
 GO
 
 IF NOT EXISTS (SELECT 1 FROM sys.database_principals WHERE name = 'erp_academic_user')
