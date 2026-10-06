@@ -14,7 +14,7 @@
     --transicao: 180ms ease;
 }
 
-[data-tema="escuro"] {
+[data-theme="dark"] {
     --cor-fundo: #0b1220;
     --cor-superficie: #111c2f;
     --cor-superficie-secundaria: #17243a;
@@ -159,11 +159,11 @@ svg {
 }
 
 .icone-lua,
-[data-tema="escuro"] .icone-sol {
+[data-theme="dark"] .icone-sol {
     display: none;
 }
 
-[data-tema="escuro"] .icone-lua {
+[data-theme="dark"] .icone-lua {
     display: block;
 }
 
@@ -348,10 +348,36 @@ svg {
     background: linear-gradient(135deg, #06b6d4, #4f46e5);
 }
 
+.modulo-espaco-aluno {
+    background: linear-gradient(135deg, #22c55e, #0f766e);
+}
+
+.modulo-financeiro {
+    background: linear-gradient(135deg, #f59e0b, #b45309);
+}
+
+.modulo-processos {
+    background: linear-gradient(135deg, #8b5cf6, #5b21b6);
+}
+
+.modulo-ouvidoria {
+    background: linear-gradient(135deg, #f43f5e, #9f1239);
+}
+
+.cabecalho-acoes {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.seletor-perfil {
+    min-width: 200px;
+    border-radius: 14px;
+}
+
 .modulo-matriculas {
     background: linear-gradient(135deg, #d946ef, #be185d);
 }
-
 
 .categoria {
     border-radius: 999px;
@@ -392,7 +418,7 @@ svg {
     transition: background-color var(--transicao), transform var(--transicao);
 }
 
-[data-tema="escuro"] .botao-acesso {
+[data-theme="dark"] .botao-acesso {
     color: #0f172a;
     background: #f8fafc;
 }
@@ -402,7 +428,7 @@ svg {
     transform: translateY(-1px);
 }
 
-[data-tema="escuro"] .botao-acesso:hover {
+[data-theme="dark"] .botao-acesso:hover {
     color: #0f172a;
     background: #bfdbfe;
 }

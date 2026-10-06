@@ -7,7 +7,8 @@ import { Dropdown }                         from "primereact/dropdown";
 import { Checkbox }                         from "primereact/checkbox";
 import { Button }                           from "primereact/button";
 import { Message }                          from "primereact/message";
-import SiteChrome                           from "@/components/web/SiteChrome";
+import Link                                 from "next/link";
+import CampoData                            from "@/components/web/CampoData";
 import { useEfeitosDePagina }               from "@/hooks/useEfeitosDePagina";
 import { mascararCpf, mascararTelefone }    from "@/lib/mascaras";
 
@@ -15,59 +16,59 @@ const ALFABETO_PROTOCOLO = "23456789BCDFGHJKLMNPQRSTVWXZ";
 const TAMANHO_SUFIXO = 8;
 
 const CURSOS = [
-    { 
-        value: "ciencia-da-computacao", 
-        label: "Ciência da Computação" 
+    {
+        value: "ciencia-da-computacao",
+        label: "Ciência da Computação"
     },
-    { 
-        value: "analise-e-desenvolvimento-de-sistemas", 
-        label: "Análise e Desenvolvimento de Sistemas" 
+    {
+        value: "analise-e-desenvolvimento-de-sistemas",
+        label: "Análise e Desenvolvimento de Sistemas"
     },
-    { 
-        value: "engenharia-de-software", 
-        label: "Engenharia de Software" 
+    {
+        value: "engenharia-de-software",
+        label: "Engenharia de Software"
     },
-    { 
-        value: "ciencia-de-dados", 
-        label: "Ciência de Dados" 
+    {
+        value: "ciencia-de-dados",
+        label: "Ciência de Dados"
     },
-    { 
-        value: "engenharia-mecatronica", 
-        label: "Engenharia Mecatrônica" 
+    {
+        value: "engenharia-mecatronica",
+        label: "Engenharia Mecatrônica"
     }
 ];
 
 const TURNOS = [
-    { 
-        value: "MATUTINO", 
-        label: "Matutino" 
+    {
+        value: "MATUTINO",
+        label: "Matutino"
     },
-    { 
-        value: "VESPERTINO", 
-        label: "Vespertino" 
+    {
+        value: "VESPERTINO",
+        label: "Vespertino"
     },
-    { 
+    {
         value: "NOTURNO",
-        label: "Noturno" 
+        label: "Noturno"
     }
 ];
 
 const FORMAS_INGRESSO = [
-    { 
-        value: "VESTIBULAR", 
-        label: "Vestibular" 
+    {
+        value: "VESTIBULAR",
+        label: "Vestibular"
     },
-    { 
-        value: "ENEM", 
-        label: "Nota do ENEM" 
+    {
+        value: "ENEM",
+        label: "Nota do ENEM"
     },
-    { 
-        value: "TRANSFERENCIA", 
-        label: "Transferência de outra instituição" 
+    {
+        value: "TRANSFERENCIA",
+        label: "Transferência de outra instituição"
     },
-    { 
-        value: "SEGUNDA_GRADUACAO", 
-        label: "Segunda graduação" 
+    {
+        value: "SEGUNDA_GRADUACAO",
+        label: "Segunda graduação"
     }
 ];
 
@@ -146,47 +147,96 @@ export default function MatriculasPage() {
     const [curso,           setCurso]           = useState("");
     const [turno,           setTurno]           = useState("");
     const [formaIngresso,   setFormaIngresso]   = useState("");
-    const [camposInvalidos, setCamposInvalidos] = useState({});
+    const [nascimento,      setNascimento]      = useState("");
+    const [termos,          setTermos]          = useState(false);
+    const [erros,           setErros]           = useState({});
     const [mensagem,        setMensagem]        = useState("");
     const [erro,            setErro]            = useState("");
     const [enviando,        setEnviando]        = useState(false);
+
+    // --- REMOVE O ERRO DE UM CAMPO ASSIM QUE O USUÁRIO MEXE NELE ---
+    const limparErro = (nome) => {
+        setErros((atual) => {
+            if (!atual[nome]) {
+                return atual;
+            }
+            const { [nome]: _removido, ...resto } = atual;
+            return resto;
+        });
+    };
+
+    // --- MENSAGEM DE ERRO EM VERMELHO ABAIXO DO CAMPO ---
+    const erroDe = (nome) => erros[nome] && <small className="ua-erro-campo" role="alert">{erros[nome]}</small>;
+    const classeErro = (nome) => (erros[nome] ? "p-invalid" : "");
+
+    // --- VERIFICA CADA CAMPO OBRIGATÓRIO E RETORNA UMA MENSAGEM POR CAMPO COM PROBLEMA ---
+    const validarCampos = (formulario) => {
+        const novos = {};
+        const nome = formulario.nome.value.trim();
+        const email = formulario.email.value.trim();
+
+        if (!nome) {
+            novos.nome = "Informe seu nome completo.";
+        } else if (nome.length < 5) {
+            novos.nome = "Use pelo menos 5 caracteres.";
+        }
+
+        if (!email) {
+            novos.email = "Informe seu e-mail.";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            novos.email = "Informe um e-mail válido.";
+        }
+
+        if (!cpf) {
+            novos.cpf = "Informe seu CPF.";
+        } else if (cpf.replace(/\D/g, "").length !== 11) {
+            novos.cpf = "Informe um CPF com 11 dígitos.";
+        }
+
+        if (!telefone) {
+            novos.telefone = "Informe seu telefone.";
+        } else if (telefone.replace(/\D/g, "").length < 10) {
+            novos.telefone = "Informe um telefone com DDD.";
+        }
+
+        if (!nascimento) {
+            novos.nascimento = "Informe sua data de nascimento.";
+        } else if (!idadeValida(nascimento)) {
+            novos.nascimento = "Informe uma data de nascimento válida.";
+        }
+
+        if (!curso) {
+            novos.curso = "Escolha o curso pretendido.";
+        }
+
+        if (!turno) {
+            novos.turno = "Escolha o turno.";
+        }
+
+        if (!formaIngresso) {
+            novos.formaIngresso = "Escolha a forma de ingresso.";
+        }
+
+        if (!termos) {
+            novos.termos = "Você precisa aceitar os termos para enviar.";
+        }
+
+        return novos;
+    };
 
     // --- VALIDA E PROCESSA O ENVIO DA INSCRIÇÃO DE MATRÍCULA ---
     const aoEnviar = (evento) => {
         evento.preventDefault();
         const formulario = evento.target;
         setMensagem("");
+
+        const novosErros = validarCampos(formulario);
+        setErros(novosErros);
+        if (Object.keys(novosErros).length > 0) {
+            setErro("Revise os campos destacados antes de enviar.");
+            return;
+        }
         setErro("");
-
-        if (!formulario.checkValidity()) {
-            formulario.reportValidity();
-            setErro("Revise os campos destacados antes de enviar.");
-            return;
-        }
-
-        const invalidos = {
-            curso: !curso,
-            turno: !turno,
-            formaIngresso: !formaIngresso
-        };
-        setCamposInvalidos(invalidos);
-        if (Object.values(invalidos).some(Boolean)) {
-            setErro("Revise os campos destacados antes de enviar.");
-            return;
-        }
-
-        const cpfDigitos = formulario.cpf.value.replace(/\D/g, "");
-        if (cpfDigitos.length !== 11) {
-            setErro("Informe um CPF com 11 dígitos.");
-            formulario.cpf.focus();
-            return;
-        }
-
-        if (!idadeValida(formulario.dataNascimento.value)) {
-            setErro("Informe uma data de nascimento válida.");
-            formulario.dataNascimento.focus();
-            return;
-        }
 
         setEnviando(true);
         const protocolo = gerarProtocolo();
@@ -202,13 +252,15 @@ export default function MatriculasPage() {
             setCurso("");
             setTurno("");
             setFormaIngresso("");
-            setCamposInvalidos({});
+            setNascimento("");
+            setTermos(false);
+            setErros({});
             setEnviando(false);
         }, 300);
     };
 
     return (
-        <SiteChrome>
+        <>
             <div className="grad-page" ref={raizRef}>
                 <main>
                     <section className="grad-hero">
@@ -236,7 +288,11 @@ export default function MatriculasPage() {
 
                                 <div className="grad-actions" data-entrada style={{ "--atraso": "360ms" }}>
                                     <Button label="Iniciar inscrição" onClick={() => document.getElementById("grad-inscricao")?.scrollIntoView({ behavior: "smooth" })} />
-                                    <Button label="Ver documentos exigidos" outlined onClick={() => document.getElementById("grad-documentos")?.scrollIntoView({ behavior: "smooth" })} />
+                                    <Button
+                                        label="Ver documentos exigidos"
+                                        outlined
+                                        onClick={() => document.getElementById("grad-documentos")?.scrollIntoView({ behavior: "smooth" })}
+                                    />
                                 </div>
                             </div>
 
@@ -254,23 +310,23 @@ export default function MatriculasPage() {
                                         </span>
                                         <span className="grad-janela-linha"> </span>
                                         <span className="grad-janela-linha">
-                                            <span className="blue">Inscrições</span>      
+                                            <span className="blue">Inscrições</span>
                                             <span className="green">05/01 a 28/02</span>
                                         </span>
                                         <span className="grad-janela-linha">
-                                            <span className="blue">Prova on-line</span>   
+                                            <span className="blue">Prova on-line</span>
                                             <span className="green">07/03</span>
                                         </span>
                                         <span className="grad-janela-linha">
-                                            <span className="blue">Resultado</span>       
+                                            <span className="blue">Resultado</span>
                                             <span className="green">14/03</span>
                                         </span>
                                         <span className="grad-janela-linha">
-                                            <span className="blue">Documentação</span>    
+                                            <span className="blue">Documentação</span>
                                             <span className="green">15/03 a 22/03</span>
                                         </span>
                                         <span className="grad-janela-linha">
-                                            <span className="blue">Início das aulas</span> 
+                                            <span className="blue">Início das aulas</span>
                                             <span className="green">01/04</span>
                                         </span>
                                         <span className="grad-janela-linha"> </span>
@@ -344,86 +400,113 @@ export default function MatriculasPage() {
                             <form id="formMatricula" className="site-form site-form-matricula" noValidate data-revelar onSubmit={aoEnviar}>
                                 <div className="site-form-grid">
                                     <div className="field">
-                                        <label htmlFor="matNome">Nome completo *</label>
-                                        <InputText id="matNome" name="nome" required minLength={5} autoComplete="name" />
+                                        <label htmlFor="matNome">Nome completo <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                                        <InputText
+                                            id="matNome"
+                                            name="nome"
+                                            autoComplete="name"
+                                            className={classeErro("nome")}
+                                            onInput={() => limparErro("nome")}
+                                        />
+                                        {erroDe("nome")}
                                     </div>
 
                                     <div className="field">
-                                        <label htmlFor="matEmail">E-mail *</label>
-                                        <InputText id="matEmail" name="email" type="email" required autoComplete="email" />
+                                        <label htmlFor="matEmail">E-mail <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                                        <InputText
+                                            id="matEmail"
+                                            name="email"
+                                            type="email"
+                                            autoComplete="email"
+                                            className={classeErro("email")}
+                                            onInput={() => limparErro("email")}
+                                        />
+                                        {erroDe("email")}
                                     </div>
 
                                     <div className="field">
-                                        <label htmlFor="matCpf">CPF *</label>
+                                        <label htmlFor="matCpf">CPF <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
                                         <InputText
                                             id="matCpf"
                                             name="cpf"
-                                            required
                                             inputMode="numeric"
                                             maxLength={14}
                                             placeholder="000.000.000-00"
                                             value={cpf}
-                                            onChange={(e) => setCpf(mascararCpf(e.target.value))}
+                                            onChange={(e) => { setCpf(mascararCpf(e.target.value)); limparErro("cpf"); }}
+                                            className={classeErro("cpf")}
                                         />
+                                        {erroDe("cpf")}
                                     </div>
 
                                     <div className="field">
-                                        <label htmlFor="matTelefone">Telefone *</label>
+                                        <label htmlFor="matTelefone">Telefone <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
                                         <InputText
                                             id="matTelefone"
                                             name="telefone"
                                             type="tel"
-                                            required
                                             maxLength={15}
                                             placeholder="(00) 00000-0000"
                                             autoComplete="tel"
                                             value={telefone}
-                                            onChange={(e) => setTelefone(mascararTelefone(e.target.value))}
+                                            onChange={(e) => { setTelefone(mascararTelefone(e.target.value)); limparErro("telefone"); }}
+                                            className={classeErro("telefone")}
                                         />
+                                        {erroDe("telefone")}
                                     </div>
 
                                     <div className="field">
-                                        <label htmlFor="matNascimento">Data de nascimento *</label>
-                                        <InputText id="matNascimento" name="dataNascimento" type="date" required />
+                                        <label htmlFor="matNascimento">Data de nascimento <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                                        <CampoData
+                                            id="matNascimento"
+                                            name="dataNascimento"
+                                            yearRange="1920:2010"
+                                            invalido={!!erros.nascimento}
+                                            onChange={(iso) => { setNascimento(iso); limparErro("nascimento"); }}
+                                        />
+                                        {erroDe("nascimento")}
                                     </div>
 
                                     <div className="field">
-                                        <label htmlFor="matCurso">Curso pretendido *</label>
+                                        <label htmlFor="matCurso">Curso pretendido <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
                                         <Dropdown
-                                            id="matCurso"
+                                            inputId="matCurso"
                                             name="curso"
                                             options={CURSOS}
                                             value={curso}
-                                            onChange={(e) => setCurso(e.value)}
+                                            onChange={(e) => { setCurso(e.value); limparErro("curso"); }}
                                             placeholder="Selecione o curso"
-                                            className={camposInvalidos.curso ? "p-invalid" : ""}
+                                            className={classeErro("curso")}
                                         />
+                                        {erroDe("curso")}
                                     </div>
 
                                     <div className="field">
-                                        <label htmlFor="matTurno">Turno *</label>
+                                        <label htmlFor="matTurno">Turno <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
                                         <Dropdown
-                                            id="matTurno"
+                                            inputId="matTurno"
                                             name="turno"
                                             options={TURNOS}
                                             value={turno}
-                                            onChange={(e) => setTurno(e.value)}
+                                            onChange={(e) => { setTurno(e.value); limparErro("turno"); }}
                                             placeholder="Selecione o turno"
-                                            className={camposInvalidos.turno ? "p-invalid" : ""}
+                                            className={classeErro("turno")}
                                         />
+                                        {erroDe("turno")}
                                     </div>
 
                                     <div className="field">
-                                        <label htmlFor="matIngresso">Forma de ingresso *</label>
+                                        <label htmlFor="matIngresso">Forma de ingresso <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
                                         <Dropdown
-                                            id="matIngresso"
+                                            inputId="matIngresso"
                                             name="formaIngresso"
                                             options={FORMAS_INGRESSO}
                                             value={formaIngresso}
-                                            onChange={(e) => setFormaIngresso(e.value)}
+                                            onChange={(e) => { setFormaIngresso(e.value); limparErro("formaIngresso"); }}
                                             placeholder="Selecione a forma de ingresso"
-                                            className={camposInvalidos.formaIngresso ? "p-invalid" : ""}
+                                            className={classeErro("formaIngresso")}
                                         />
+                                        {erroDe("formaIngresso")}
                                     </div>
                                 </div>
 
@@ -437,10 +520,25 @@ export default function MatriculasPage() {
                                     />
                                 </div>
 
-                                <label className="site-form-termos">
-                                    <Checkbox id="matTermos" name="termos" required />
-                                    <span>Li e aceito os termos do processo seletivo e a política de privacidade. *</span>
-                                </label>
+                                <div className="site-form-termos">
+                                    <div className="site-form-termos-linha">
+                                        <Checkbox
+                                            inputId="matTermos"
+                                            name="termos"
+                                            checked={termos}
+                                            className={classeErro("termos")}
+                                            onChange={(e) => { setTermos(e.checked); limparErro("termos"); }}
+                                        />
+                                        <label htmlFor="matTermos">
+                                            Li e aceito os{" "}
+                                            <Link href="/web/termos-processo-seletivo" className="ua-link-destaque">termos do processo seletivo</Link>
+                                            {" "}e a{" "}
+                                            <Link href="/web/privacidade" className="ua-link-destaque">política de privacidade</Link>.{" "}
+                                            <span className="ua-obrigatorio" aria-hidden="true">*</span>
+                                        </label>
+                                    </div>
+                                    {erroDe("termos")}
+                                </div>
 
                                 <Button id="btnEnviarMatricula" type="submit" label={enviando ? "Enviando..." : "Enviar inscrição"} loading={enviando} />
 
@@ -451,6 +549,6 @@ export default function MatriculasPage() {
                     </section>
                 </main>
             </div>
-        </SiteChrome>
+        </>
     );
 }

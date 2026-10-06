@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import Link          from "next/link";
 import { Button }    from "primereact/button";
-import SiteChrome    from "@/components/web/SiteChrome";
 
 const MARCOS = [
     {
@@ -72,10 +71,10 @@ export default function HistoriaPage() {
     const router = useRouter();
 
     return (
-        <SiteChrome>
+        <>
             <nav className="site-breadcrumb" aria-label="Você está aqui">
                 <div className="site-container">
-                    <Link href="/">Início</Link>
+                    <Link href="/web/home">Início</Link>
                     <span aria-hidden="true">›</span>
                     <span>Sobre</span>
                     <span aria-hidden="true">›</span>
@@ -138,9 +137,9 @@ export default function HistoriaPage() {
                 <div className="site-container site-cta-final">
                     <h2>Quer conhecer nossa história pessoalmente?</h2>
                     <p className="muted">Agende uma visita e conheça de perto a estrutura, a equipe e o dia a dia do Colégio Aura.</p>
-                    <Button label="Fale com a secretaria" size="large" onClick={() => router.push("/contato")} />
+                    <Button label="Fale com a secretaria" size="large" onClick={() => router.push("/web/contato")} />
                 </div>
             </section>
-        </SiteChrome>
+        </>
     );
 }

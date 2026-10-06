@@ -1,25 +1,46 @@
 "use client";
 
 import { useState }             from "react";
+import Link                     from "next/link";
 import { InputText }            from "primereact/inputtext";
 import { InputTextarea }        from "primereact/inputtextarea";
 import { Dropdown }             from "primereact/dropdown";
 import { Checkbox }             from "primereact/checkbox";
 import { Button }               from "primereact/button";
 import { Message }              from "primereact/message";
-import SiteChrome               from "@/components/web/SiteChrome";
 import { useEfeitosDePagina }   from "@/hooks/useEfeitosDePagina";
 import { mascararTelefone }     from "@/lib/mascaras";
 
 // --- LISTA DE ASSUNTOS ---
 const ASSUNTOS = [
-    { value: "MATRICULA",   label: "Matrícula e ingresso" },
-    { value: "SECRETARIA",  label: "Secretaria acadêmica" },
-    { value: "FINANCEIRO",  label: "Financeiro" },
-    { value: "COORDENACAO", label: "Coordenação de curso" },
-    { value: "BIBLIOTECA",  label: "Biblioteca" },
-    { value: "OUVIDORIA",   label: "Ouvidoria" },
-    { value: "OUTROS",      label: "Outros" }
+    {
+        value: "MATRICULA",
+        label: "Matrícula e ingresso"
+    },
+    {
+        value: "SECRETARIA",
+        label: "Secretaria acadêmica"
+    },
+    {
+        value: "FINANCEIRO",
+        label: "Financeiro"
+    },
+    {
+        value: "COORDENACAO",
+        label: "Coordenação de curso"
+    },
+    {
+        value: "BIBLIOTECA",
+        label: "Biblioteca"
+    },
+    {
+        value: "OUVIDORIA",
+        label: "Ouvidoria"
+    },
+    {
+        value: "OUTROS",
+        label: "Outros"
+    }
 ];
 
 // -- LISTA DE CANAIS DE CONTATO ---
@@ -32,7 +53,8 @@ const CANAIS = [
         externo: true,
         texto: "O dia a dia do campus, eventos, bastidores e as datas do vestibular.",
         icone: (
-            <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor"
+                    strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="2" y="2" width="20" height="20" rx="5"></rect>
                 <circle cx="12" cy="12" r="4"></circle>
                 <path d="M17.5 6.5h.01"></path>
@@ -47,7 +69,8 @@ const CANAIS = [
         externo: true,
         texto: "Vagas, parcerias com empresas e a trajetória dos nossos egressos.",
         icone: (
-            <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor"
+                    strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6Z"></path>
                 <rect x="2" y="9" width="4" height="12"></rect>
                 <circle cx="4" cy="4" r="2"></circle>
@@ -62,7 +85,8 @@ const CANAIS = [
         externo: true,
         texto: "O AuraCast, nosso podcast com professores, pesquisadores e alunos.",
         icone: (
-            <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor"
+                    strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M7 9c3.5-1 7.5-.6 10 1"></path>
                 <path d="M7.5 12.5c3-.8 6.3-.5 8.5 1"></path>
@@ -78,7 +102,8 @@ const CANAIS = [
         externo: true,
         texto: "A comunidade dos alunos: grupos de estudo, monitoria e avisos por curso.",
         icone: (
-            <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor"
+                    strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M8 4.5C6 4.8 4.2 5.6 3 6.5 1.6 10 1 13.6 1.3 17.4c1.7 1.3 3.4 2.1 5 2.6l1.1-1.7"></path>
                 <path d="M16 4.5c2 .3 3.8 1.1 5 2 1.4 3.5 2 7.1 1.7 10.9-1.7 1.3-3.4 2.1-5 2.6l-1.1-1.7"></path>
                 <path d="M7.5 17c3 1.3 6 1.3 9 0"></path>
@@ -95,7 +120,8 @@ const CANAIS = [
         externo: false,
         texto: "Para assuntos formais, envio de documentos e solicitações da secretaria.",
         icone: (
-            <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor"
+                    strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="2" y="4" width="20" height="16" rx="2"></rect>
                 <path d="m2 7 10 6 10-6"></path>
             </svg>
@@ -118,58 +144,110 @@ const CANAIS = [
 
 // --- LISTA DE SETORES DE CONTATO ---
 const SETORES = [
-    { nome: "Secretaria Acadêmica", descricao: "Matrícula, histórico, declarações e trancamento", email: "secretaria@uniaura.edu.br" },
-    { nome: "Financeiro", descricao: "Mensalidades, boletos, bolsas e negociação", email: "financeiro@uniaura.edu.br" },
-    { nome: "Coordenação de Curso", descricao: "Disciplinas, plano de ensino e aproveitamento", email: "coordenacao@uniaura.edu.br" },
-    { nome: "Biblioteca", descricao: "Empréstimos, reservas, multas e acervo", email: "biblioteca@uniaura.edu.br" },
-    { nome: "Ouvidoria", descricao: "Reclamações, denúncias, sugestões e elogios", email: "ouvidoria@uniaura.edu.br" }
+    {
+        nome: "Secretaria Acadêmica",
+        descricao: "Matrícula, histórico, declarações e trancamento",
+        email: "secretaria@uniaura.edu.br"
+    },
+    {
+        nome: "Financeiro",
+        descricao: "Mensalidades, boletos, bolsas e negociação",
+        email: "financeiro@uniaura.edu.br"
+    },
+    {
+        nome: "Coordenação de Curso",
+        descricao: "Disciplinas, plano de ensino e aproveitamento",
+        email: "coordenacao@uniaura.edu.br"
+    },
+    {
+        nome: "Biblioteca",
+        descricao: "Empréstimos, reservas, multas e acervo",
+        email: "biblioteca@uniaura.edu.br"
+    },
+    {
+        nome: "Ouvidoria",
+        descricao: "Reclamações, denúncias, sugestões e elogios",
+        email: "ouvidoria@uniaura.edu.br"
+    }
 ];
 
 // --- COMPONENTE DA PÁGINA DE CONTATO ---
 export default function ContatoPage() {
     const raizRef = useEfeitosDePagina();
-    const [assunto,         setAssunto]         = useState("");
-    const [assuntoInvalido, setAssuntoInvalido] = useState(false);
-    const [telefone,        setTelefone]        = useState("");
-    const [sucesso,         setSucesso]         = useState("");
-    const [erro,            setErro]            = useState("");
-    const [enviando,        setEnviando]        = useState(false);
+    const [assunto,  setAssunto]  = useState("");
+    const [termos,   setTermos]   = useState(false);
+    const [telefone, setTelefone] = useState("");
+    const [sucesso,  setSucesso]  = useState("");
+    const [erro,     setErro]     = useState("");
+    const [erros,    setErros]    = useState({});
+    const [enviando, setEnviando] = useState(false);
+
+    // --- VALIDA CADA CAMPO OBRIGATÓRIO E RETORNA UMA MENSAGEM POR CAMPO COM ERRO ---
+    const validarCampos = (formulario) => {
+        const novos = {};
+        const nome = formulario.nome.value.trim();
+        const email = formulario.email.value.trim();
+        const mensagem = formulario.mensagem.value.trim();
+
+        if (!nome) {
+            novos.nome = "Informe seu nome completo.";
+        } else if (nome.length < 5) {
+            novos.nome = "Use pelo menos 5 caracteres.";
+        }
+
+        if (!email) {
+            novos.email = "Informe seu e-mail.";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            novos.email = "Informe um e-mail válido.";
+        }
+
+        if (!assunto) {
+            novos.assunto = "Escolha o assunto da mensagem.";
+        }
+
+        if (!mensagem) {
+            novos.mensagem = "Escreva sua mensagem.";
+        } else if (mensagem.length < 20) {
+            novos.mensagem = "Escreva pelo menos 20 caracteres.";
+        }
+
+        if (!termos) {
+            novos.termos = "Você precisa autorizar o contato para enviar.";
+        }
+
+        return novos;
+    };
 
     // --- VALIDA E PROCESSA O ENVIO DO FORMULÁRIO DE CONTATO ---
     const aoEnviar = (evento) => {
         evento.preventDefault();
         const formulario = evento.target;
         setSucesso("");
-        setErro("");
 
-        if (!formulario.checkValidity()) {
-            formulario.reportValidity();
+        const novosErros = validarCampos(formulario);
+        setErros(novosErros);
+
+        if (Object.keys(novosErros).length > 0) {
             setErro("Revise os campos destacados antes de enviar.");
             return;
         }
-
-        if (!assunto) {
-            setAssuntoInvalido(true);
-            setErro("Escolha o assunto da mensagem.");
-            return;
-        }
-        setAssuntoInvalido(false);
+        setErro("");
 
         setEnviando(true);
         const primeiroNome = formulario.nome.value.trim().split(" ")[0];
         setTimeout(() => {
-            setSucesso(
-                `Mensagem enviada, ${primeiroNome}! Nossa equipe responde no e-mail informado em até um dia útil.`
-            );
+            setSucesso(`Mensagem enviada, ${primeiroNome}! Nossa equipe responde no e-mail informado em até um dia útil.`);
             formulario.reset();
             setAssunto("");
+            setTermos(false);
             setTelefone("");
+            setErros({});
             setEnviando(false);
         }, 300);
     };
 
     return (
-        <SiteChrome>
+        <>
             <div className="grad-page" ref={raizRef}>
                 <main>
                     <section className="grad-hero">
@@ -297,13 +375,30 @@ export default function ContatoPage() {
                             <form id="formContato" className="site-form" noValidate data-revelar onSubmit={aoEnviar}>
                                 <div className="site-form-grid">
                                     <div className="field">
-                                        <label htmlFor="ctNome">Nome completo *</label>
-                                        <InputText id="ctNome" name="nome" required minLength={5} autoComplete="name" />
+                                        <label htmlFor="ctNome">Nome completo <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                                        <InputText
+                                            id="ctNome"
+                                            name="nome"
+                                            autoComplete="name"
+                                            className={erros.nome ? "p-invalid" : ""}
+                                            aria-invalid={!!erros.nome}
+                                            aria-describedby={erros.nome ? "ctNomeErro" : undefined}
+                                        />
+                                        {erros.nome && <small id="ctNomeErro" className="ua-erro-campo" role="alert">{erros.nome}</small>}
                                     </div>
 
                                     <div className="field">
-                                        <label htmlFor="ctEmail">E-mail *</label>
-                                        <InputText id="ctEmail" name="email" type="email" required autoComplete="email" />
+                                        <label htmlFor="ctEmail">E-mail <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                                        <InputText
+                                            id="ctEmail"
+                                            name="email"
+                                            type="email"
+                                            autoComplete="email"
+                                            className={erros.email ? "p-invalid" : ""}
+                                            aria-invalid={!!erros.email}
+                                            aria-describedby={erros.email ? "ctEmailErro" : undefined}
+                                        />
+                                        {erros.email && <small id="ctEmailErro" className="ua-erro-campo" role="alert">{erros.email}</small>}
                                     </div>
 
                                     <div className="field">
@@ -321,35 +416,43 @@ export default function ContatoPage() {
                                     </div>
 
                                     <div className="field">
-                                        <label htmlFor="ctAssunto">Assunto *</label>
+                                        <label htmlFor="ctAssunto">Assunto <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
                                         <Dropdown
-                                            id="ctAssunto"
+                                            inputId="ctAssunto"
                                             name="assunto"
                                             options={ASSUNTOS}
                                             value={assunto}
                                             onChange={(e) => setAssunto(e.value)}
                                             placeholder="Selecione o assunto"
-                                            className={assuntoInvalido ? "p-invalid" : ""}
+                                            className={erros.assunto ? "p-invalid" : ""}
                                         />
+                                        {erros.assunto && <small className="ua-erro-campo" role="alert">{erros.assunto}</small>}
                                     </div>
                                 </div>
 
                                 <div className="field">
-                                    <label htmlFor="ctMensagem">Mensagem *</label>
+                                    <label htmlFor="ctMensagem">Mensagem <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
                                     <InputTextarea
                                         id="ctMensagem"
                                         name="mensagem"
                                         rows={5}
-                                        required
-                                        minLength={20}
                                         placeholder="Conte com detalhes como podemos ajudar."
+                                        className={erros.mensagem ? "p-invalid" : ""}
                                     />
+                                    {erros.mensagem && <small className="ua-erro-campo" role="alert">{erros.mensagem}</small>}
                                 </div>
 
-                                <label className="site-form-termos">
-                                    <Checkbox id="ctTermos" name="termos" required />
-                                    <span>Autorizo o contato da UniAura e li a política de privacidade. *</span>
-                                </label>
+                                <div className="site-form-termos">
+                                    <div className="site-form-termos-linha">
+                                        <Checkbox inputId="ctTermos" name="termos" checked={termos} onChange={(e) => setTermos(e.checked)} />
+                                        <label htmlFor="ctTermos">
+                                            Autorizo o contato da UniAura e li a{" "}
+                                            <Link href="/web/privacidade" className="ua-link-destaque">política de privacidade</Link>.{" "}
+                                            <span className="ua-obrigatorio" aria-hidden="true">*</span>
+                                        </label>
+                                    </div>
+                                    {erros.termos && <small className="ua-erro-campo" role="alert">{erros.termos}</small>}
+                                </div>
 
                                 <Button id="btnEnviarContato" type="submit" label={enviando ? "Enviando..." : "Enviar mensagem"} loading={enviando} />
 
@@ -360,6 +463,6 @@ export default function ContatoPage() {
                     </section>
                 </main>
             </div>
-        </SiteChrome>
+        </>
     );
 }

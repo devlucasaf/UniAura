@@ -1,5 +1,4 @@
 import { notFound }                         from "next/navigation";
-import SiteChrome                           from "@/components/web/SiteChrome";
 import CursoTemplate                        from "@/components/web/CursoTemplate";
 import { cursosPorSlug, areaUrlDoCurso }    from "@/data/cursos";
 
@@ -30,8 +29,8 @@ export default async function CursoPage({ params }) {
     }
 
     return (
-        <SiteChrome>
+        <>
             <CursoTemplate curso={curso} />
-        </SiteChrome>
+        </>
     );
 }

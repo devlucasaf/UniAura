@@ -3,7 +3,6 @@
 import { useState }                                         from "react";
 import Link                                                 from "next/link";
 import { SelectButton }                                     from "primereact/selectbutton";
-import SiteChrome                                           from "@/components/web/SiteChrome";
 import { tituloPagina, subtituloPagina, filtros, cards }    from "@/data/cursosCatalogo";
 import { AREA_URL_POR_VALOR }                               from "@/data/areasCursos";
 
@@ -14,7 +13,7 @@ export default function CursosPage() {
     const visiveis = cards.filter((card) => filtroAtivo === "todos" || card.area === filtroAtivo);
 
     return (
-        <SiteChrome>
+        <>
             <div className="cursos-page grad-page">
                 <div className="grad-container">
                     <header className="cursos-header">
@@ -62,7 +61,7 @@ export default function CursosPage() {
                             const areaUrl = AREA_URL_POR_VALOR[card.area] || card.area;
 
                             return card.slug ? (
-                                <Link key={card.titulo} href={`/${areaUrl}/${card.slug}`} className="curso-card" style={estilo}>
+                                <Link key={card.titulo} href={`/web/${areaUrl}/${card.slug}`} className="curso-card" style={estilo}>
                                     {conteudo}
                                 </Link>
                             ) : (
@@ -78,6 +77,6 @@ export default function CursosPage() {
                     )}
                 </div>
             </div>
-        </SiteChrome>
+        </>
     );
 }
