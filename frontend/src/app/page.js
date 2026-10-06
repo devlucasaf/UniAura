@@ -1,378 +1,373 @@
 "use client";
 
-import { useState }     from "react";
-import { useRouter }    from "next/navigation";
-import { Carousel }     from "primereact/carousel";
-import { Button }       from "primereact/button";
-import { InputText }    from "primereact/inputtext";
-import { InputTextarea } from "primereact/inputtextarea";
-import { Message }      from "primereact/message";
-import SiteChrome        from "@/components/web/SiteChrome";
-import { notificar }     from "@/lib/notificar";
+import { useEffect, useState } from "react";
+import { useRouter }           from "next/navigation";
+import { Dropdown }            from "primereact/dropdown";
 
-// --- SLIDES DE NOTÍCIAS ---
-const SLIDES = [
+// --- MÓDULOS DO ERP EXIBIDOS NA CENTRAL (a classe `modulo-<id>` define a cor do ícone em erp-central.css) ---
+// Módulos sem `rota` ainda não têm tela e aparecem como "Em breve".
+const MODULOS = [
     {
-        tag: "Vestibular 2027",
-        classeTag: "",
-        titulo: "Inscrições abertas para o vestibular da UniAura",
-        texto: "Mais de 2.000 vagas em 30 cursos de graduação. Provas em agosto e novembro. Inscreva-se e dê o primeiro passo para sua carreira.",
+        id: "web",
+        nome: "Web",
+        categoria: "Institucional",
+        descricao: "Acesse o portal institucional, notícias, cursos e informações da universidade.",
+        busca: "Portal institucional notícias cursos e contato",
+        rota: "/web/home",
         icone: (
-            <svg viewBox="0 0 24 24" width="72" height="72" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <>
+                <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                <path d="M3 9h18"></path>
+                <path d="M8 4v5"></path>
+            </>
+        )
+    },
+    {
+        id: "biblioteca",
+        nome: "Biblioteca",
+        categoria: "Acadêmico",
+        descricao: "Consulte o acervo, empréstimos, reservas, multas e exemplares disponíveis.",
+        busca: "Acervo empréstimos reservas multas livros",
+        rota: "/biblioteca/dashboard",
+        icone: (
+            <>
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"></path>
+            </>
+        )
+    },
+    {
+        id: "secretaria",
+        nome: "Secretaria",
+        categoria: "Administrativo",
+        descricao: "Gerencie alunos, documentos, vínculos, solicitações e registros acadêmicos.",
+        busca: "Alunos documentos vínculos solicitações registros",
+        rota: "/secretaria/dashboard",
+        icone: (
+            <>
+                <path d="M9 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3"></path>
+                <rect x="9" y="3" width="6" height="4" rx="1"></rect>
+                <path d="M8 12h8M8 16h6"></path>
+            </>
+        )
+    },
+    {
+        id: "coordenacao",
+        nome: "Coordenação",
+        categoria: "Gestão",
+        descricao: "Acompanhe cursos, turmas, disciplinas, matrizes curriculares e indicadores.",
+        busca: "Cursos turmas disciplinas matrizes indicadores",
+        rota: "/coordenacao/dashboard",
+        icone: (
+            <>
+                <path d="M3 3v18h18"></path>
+                <path d="M7 15l4-4 3 3 5-6"></path>
+            </>
+        )
+    },
+    {
+        id: "professor",
+        nome: "Professor",
+        categoria: "Acadêmico",
+        descricao: "Acesse turmas, conteúdos, atividades, frequência, avaliações e notas.",
+        busca: "Turmas conteúdos atividades frequência avaliações notas",
+        rota: "/professor/dashboard",
+        icone: (
+            <>
                 <path d="M22 10 12 4 2 10l10 6 10-6Z"></path>
                 <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-                <path d="M22 10v6"></path>
-            </svg>
+            </>
         )
     },
     {
-        tag: "Evento",
-        classeTag: "site-noticia-tag-accent",
-        titulo: "Semana de Ciência e Tecnologia 2026",
-        texto: "Palestras, workshops e feira de projetos com alunos de graduação e pós. Participe e compartilhe conhecimento.",
+        id: "espaco-aluno",
+        nome: "Espaço do Aluno",
+        categoria: "Acadêmico",
+        descricao: "Acompanhe notas, frequência, empréstimos e reservas em um só lugar.",
+        busca: "Aluno notas frequência empréstimos reservas painel",
+        rota: "/portal-do-aluno/dashboard",
         icone: (
-            <svg viewBox="0 0 24 24" width="72" height="72" fill="none" stroke="currentColor"
-                    strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 2v6L3.5 18a2.5 2.5 0 0 0 2.2 3.5h12.6A2.5 2.5 0 0 0 20.5 18L15 8V2"></path>
-                <path d="M8 2h8"></path>
-                <path d="M7 14h10"></path>
-            </svg>
+            <>
+                <circle cx="12" cy="8" r="4"></circle>
+                <path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path>
+            </>
         )
     },
     {
-        tag: "Conquista",
-        classeTag: "site-noticia-tag-highlight",
-        titulo: "UniAura no topo do ranking de inovação",
-        texto: "Pelo segundo ano consecutivo, nossa universidade é destaque nacional em pesquisa aplicada e parcerias com o setor produtivo.",
+        id: "financeiro",
+        nome: "Financeiro",
+        categoria: "Administrativo",
+        descricao: "Controle mensalidades, boletos, pagamentos, bolsas e relatórios financeiros.",
+        busca: "Mensalidades boletos pagamentos bolsas multas relatórios",
+        rota: "/financeiro/dashboard",
         icone: (
-            <svg viewBox="0 0 24 24" width="72" height="72" fill="none" stroke="currentColor"
-                    strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M6 9H4a2 2 0 0 1-2-2V5h4"></path>
-                <path d="M18 9h2a2 2 0 0 0 2-2V5h-4"></path>
-                <path d="M6 5h12v5a6 6 0 0 1-12 0V5Z"></path>
-                <path d="M9 21h6"></path>
-                <path d="M12 17v4"></path>
-            </svg>
+            <>
+                <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                <circle cx="12" cy="12" r="2.5"></circle>
+                <path d="M6 10v.01M18 14v.01"></path>
+            </>
+        )
+    },
+    {
+        id: "processos",
+        nome: "Processos",
+        categoria: "Gestão",
+        descricao: "Abra, tramite e responda processos da faculdade: solicitações de alunos, pedidos de férias e encaminhamentos entre áreas.",
+        busca: "Processos tramitação solicitações pedidos férias encaminhamento protocolo setores",
+        rota: null,
+        icone: (
+            <>
+                <circle cx="6" cy="6" r="2.5"></circle>
+                <circle cx="18" cy="12" r="2.5"></circle>
+                <circle cx="6" cy="18" r="2.5"></circle>
+                <path d="M8.5 6H13a3 3 0 0 1 3 3v.5M8.5 18H13a3 3 0 0 0 3-3v-.5"></path>
+            </>
+        )
+    },
+    {
+        id: "ouvidoria",
+        nome: "Ouvidoria",
+        categoria: "Serviços",
+        descricao: "Registre e acompanhe reclamações, denúncias, sugestões e elogios com protocolo.",
+        busca: "Ouvidoria reclamações denúncias sugestões elogios protocolo atendimento",
+        rota: null,
+        icone: (
+            <>
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                <path d="M8 9h8M8 13h5"></path>
+            </>
+        )
+    },
+    {
+        id: "aplicativo",
+        nome: "Aplicativo",
+        categoria: "Serviços",
+        descricao: "Conheça e acesse o aplicativo acadêmico móvel da Universidade Aura.",
+        busca: "Aplicativo acadêmico móvel download estudante",
+        rota: null,
+        icone: (
+            <>
+                <rect x="7" y="2" width="10" height="20" rx="2"></rect>
+                <path d="M11 18h2"></path>
+            </>
+        )
+    },
+    {
+        id: "matriculas",
+        nome: "Matrículas",
+        categoria: "Acadêmico",
+        descricao: "Realize matrículas, consulte ofertas e acompanhe solicitações acadêmicas.",
+        busca: "Matrículas ofertas disciplinas solicitações acadêmicas",
+        rota: "/web/matriculas",
+        icone: (
+            <>
+                <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"></path>
+                <path d="M14 3v5h5"></path>
+                <path d="m9 15 2 2 4-4"></path>
+            </>
         )
     }
 ];
 
-// --- RENDERIZAÇÃO DA PÁGINA ---
-export default function HomePage() {
+// --- PERFIS DE USO E OS MÓDULOS QUE CADA UM ACESSA (`todos` = admin enxerga tudo) ---
+const PERFIS = [
+    { value: "admin",        label: "Administrador", modulos: "todos" },
+    { value: "aluno",        label: "Aluno",         modulos: ["web", "biblioteca", "aplicativo", "matriculas", "espaco-aluno", "processos", "ouvidoria"] },
+    { value: "professor",    label: "Professor",     modulos: ["web", "professor", "aplicativo", "processos", "ouvidoria"] },
+    { value: "secretario",   label: "Secretário(a)", modulos: ["web", "secretaria", "matriculas", "processos", "ouvidoria"] },
+    { value: "coordenador",  label: "Coordenador(a)", modulos: ["coordenacao", "web", "aplicativo", "processos", "ouvidoria"] },
+    { value: "financeiro",   label: "Financeiro",    modulos: ["financeiro", "processos", "ouvidoria"] },
+    { value: "bibliotecario", label: "Bibliotecário(a)", modulos: ["web", "biblioteca", "processos", "ouvidoria"] }
+];
+
+const CHAVE_PERFIL = "perfil-central-erp";
+
+// --- NORMALIZA O TEXTO PARA PESQUISAR SEM DIFERENÇA DE ACENTOS OU MAIÚSCULAS ---
+const normalizar = (texto) => texto.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+
+// --- CENTRAL DE ACESSO AOS MÓDULOS DO ERP (RAIZ DO SISTEMA) ---
+export default function CentralErpPage() {
     const router = useRouter();
-    const [mensagemEnviada, setMensagemEnviada] = useState(false);
+    const [busca, setBusca] = useState("");
+    const [tema, setTema] = useState("light");
+    const [perfil, setPerfil] = useState(null);
 
-    // --- ROLA SUAVEMENTE PARA UMA ÂNCORA DA PÁGINA ---
-    const rolarPara = (id) => (evento) => {
-        evento.preventDefault();
-        document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    // --- CARREGA O TEMA SALVO (O MESMO DO SITE, CHAVE "theme") ---
+    useEffect(() => {
+        const salvo = localStorage.getItem("theme") || "light";
+        setTema(salvo);
+        document.documentElement.setAttribute("data-theme", salvo);
+        setPerfil(localStorage.getItem(CHAVE_PERFIL));
+    }, []);
+
+    // --- GUARDA O PERFIL ESCOLHIDO PARA A PRÓXIMA VISITA ---
+    const escolherPerfil = (valor) => {
+        setPerfil(valor);
+        localStorage.setItem(CHAVE_PERFIL, valor);
     };
 
-    // -- FUNÇÃO PARA REDIRECIONAR PARA O PORTAL DO ALUNO ---
-    const irParaPortal = () => router.push("/portal-do-aluno/login");
-
-    // --- FUNÇÃO DE ENVIO DE FORMULÁRIO DE CONTATO ---
-    const enviarContato = (evento) => {
-        evento.preventDefault();
-        const formulario = evento.target;
-
-        if (!formulario.checkValidity()) {
-            formulario.reportValidity();
-            return;
-        }
-
-        formulario.reset();
-        setMensagemEnviada(true);
-        notificar("Mensagem enviada com sucesso!", "success");
+    // --- ALTERNA ENTRE TEMA CLARO E ESCURO ---
+    const alternarTema = () => {
+        const novo = tema === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", novo);
+        localStorage.setItem("theme", novo);
+        setTema(novo);
     };
 
-    // --- TEMPLATE DE CADA SLIDE DO CARROSSEL DE NOTÍCIAS ---
-    const templateSlide = (slide) => (
-        <article className="site-noticia-slide ativo">
-            <div className="site-noticia-conteudo">
-                <span className={`site-noticia-tag ${slide.classeTag}`}>{slide.tag}</span>
-                <h1>{slide.titulo}</h1>
-                <p>{slide.texto}</p>
-                <div className="site-noticia-acoes">
-                    <Button label="Fale com a secretaria" size="large" onClick={rolarPara("contato")} />
-                    <Button label="Conheça os cursos" size="large" outlined onClick={rolarPara("ensino")} />
-                </div>
-            </div>
-            <div className="site-noticia-arte">
-                <span className="site-noticia-icone" aria-hidden="true">{slide.icone}</span>
-            </div>
-        </article>
+    const termo = normalizar(busca.trim());
+    const perfilAtual = PERFIS.find((item) => item.value === perfil);
+    const permitidos = !perfilAtual
+        ? []
+        : MODULOS.filter((modulo) => perfilAtual.modulos === "todos" || perfilAtual.modulos.includes(modulo.id));
+    const visiveis = permitidos.filter((modulo) =>
+        normalizar(`${modulo.nome} ${modulo.categoria} ${modulo.busca}`).includes(termo)
     );
 
-    // --- RENDERIZAÇÃO DA PÁGINA ---
     return (
-        <SiteChrome ancoras>
-            <section id="noticias" className="site-noticias-hero">
-                <div className="site-container">
-                    <Carousel
-                        value={SLIDES}
-                        itemTemplate={templateSlide}
-                        numVisible={1}
-                        numScroll={1}
-                        circular
-                        autoplayInterval={6000}
-                        showIndicators
-                    />
-                </div>
-            </section>
+        <div className="pagina">
+            <header className="cabecalho">
+                <div className="container cabecalho-conteudo">
+                    <a className="marca" href="/uniaura/app" aria-label="Universidade Aura de Xique Xique - Central de acesso">
+                        <span className="marca-icone" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M3 21h18"></path>
+                                <path d="M5 21V10"></path>
+                                <path d="M19 21V10"></path>
+                                <path d="M9 21v-6h6v6"></path>
+                                <path d="m3 10 9-7 9 7"></path>
+                            </svg>
+                        </span>
+                        <span className="marca-texto">
+                            <strong>Universidade Aura</strong>
+                            <small>de Xique Xique</small>
+                        </span>
+                    </a>
 
-            <section id="sobre" className="site-section site-section-alt">
-                <div className="site-container">
-                    <div className="site-section-head">
-                        <span className="site-eyebrow">Nossa universidade</span>
-                        <h2>Sobre a UniAura</h2>
-                        <p className="muted">
-                            Há mais de 35 anos formando cidadãos críticos, éticos e preparados para os desafios do mundo
-                            contemporâneo, com ensino de qualidade, pesquisa inovadora e extensão comprometida com a
-                            sociedade.
-                        </p>
-                    </div>
+                    <div className="cabecalho-acoes">
+                    <button
+                        className="botao-tema"
+                        type="button"
+                        aria-label={tema === "dark" ? "Ativar tema claro" : "Ativar tema escuro"}
+                        title="Alternar tema"
+                        onClick={alternarTema}
+                    >
+                        <span className="icone-sol" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="12" cy="12" r="4"></circle>
+                                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+                            </svg>
+                        </span>
+                        <span className="icone-lua" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                            </svg>
+                        </span>
+                    </button>
 
-                    <div className="site-sobre-grid">
-                        <div className="site-sobre-item">
-                            <div className="site-sobre-icone" data-cor="azul">
-                                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor"
-                                        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <circle cx="12" cy="12" r="6"></circle>
-                                    <circle cx="12" cy="12" r="2"></circle>
-                                </svg>
-                            </div>
-                            <h3>Missão</h3>
-                            <p className="muted">
-                                Promover o ensino, a pesquisa e a extensão para formar profissionais competentes e
-                                cidadãos comprometidos com o bem comum.
-                            </p>
-                        </div>
-
-                        <div className="site-sobre-item">
-                            <div className="site-sobre-icone" data-cor="vermelho">
-                                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor"
-                                        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                                    <path d="M9 18h6"></path>
-                                    <path d="M10 22h4"></path>
-                                    <path d="M12 2a7 7 0 0 0-4 12.7c.7.6 1 1.5 1 2.3v1h6v-1c0-.8.3-1.7 1-2.3A7 7 0 0 0 12 2Z"></path>
-                                </svg>
-                            </div>
-                            <h3>Visão</h3>
-                            <p className="muted">
-                                Ser referência em educação superior no Centro-Oeste, reconhecida pela inovação, inclusão
-                                e impacto social.
-                            </p>
-                        </div>
-
-                        <div className="site-sobre-item">
-                            <div className="site-sobre-icone" data-cor="amarelo">
-                                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor"
-                                        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                                    <path d="M12 2l3 6.5 7 1-5 4.8 1.2 7L12 17.8 5.8 21.3 7 14.3 2 9.5l7-1L12 2Z"></path>
-                                </svg>
-                            </div>
-                            <h3>Valores</h3>
-                            <p className="muted">
-                                Excelência acadêmica, ética, pluralidade, respeito à diversidade, autonomia e
-                                compromisso com a transformação social.
-                            </p>
-                        </div>
+                        <Dropdown
+                            value={perfil}
+                            options={PERFIS}
+                            onChange={(e) => escolherPerfil(e.value)}
+                            placeholder="Escolha seu perfil"
+                            className="seletor-perfil"
+                            aria-label="Tipo de usuário"
+                        />
                     </div>
                 </div>
-            </section>
+            </header>
 
-            <section id="ensino" className="site-section">
-                <div className="site-container">
-                    <div className="site-section-head">
-                        <span className="site-eyebrow">Oferta acadêmica</span>
-                        <h2>Nossos Cursos</h2>
-                        <p className="muted">Graduação, pós-graduação e extensão para todas as áreas do conhecimento.</p>
-                    </div>
-
-                    <div className="site-cards">
-                        <article className="site-card site-card-level" data-cor="azul">
-                            <div className="site-card-icon">
-                                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor"
-                                        strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                                    <path d="M12 2L2 7l10 5 10-5-10-5Z"></path>
-                                    <path d="M2 17l10 5 10-5"></path>
-                                    <path d="M2 12l10 5 10-5"></path>
-                                </svg>
-                            </div>
-                            <h3>Ciências Humanas</h3>
-                            <p className="muted">
-                                Graduação e pós em Direito, Psicologia, História, Filosofia e Educação. Formação
-                                crítica e cidadã.
-                            </p>
-                        </article>
-
-                        <article className="site-card site-card-level" data-cor="vermelho">
-                            <div className="site-card-icon">
-                                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor"
-                                        strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                                    <rect x="3" y="3" width="18" height="18" rx="2"></rect>
-                                    <path d="M3 9h18"></path>
-                                    <path d="M3 15h18"></path>
-                                    <path d="M9 3v18"></path>
-                                </svg>
-                            </div>
-                            <h3>Ciências Exatas e Tecnologia</h3>
-                            <p className="muted">
-                                Engenharias, Computação, Matemática e Física. Laboratórios modernos e parcerias com o
-                                setor produtivo.
-                            </p>
-                        </article>
-
-                        <article className="site-card site-card-level" data-cor="amarelo">
-                            <div className="site-card-icon">
-                                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor"
-                                        strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                                    <path d="M4 4h16v16H4z"></path>
-                                    <path d="M9 8h6"></path>
-                                    <path d="M9 12h10"></path>
-                                    <path d="M9 16h6"></path>
-                                </svg>
-                            </div>
-                            <h3>Ciências da Saúde e Biológicas</h3>
-                            <p className="muted">
-                                Medicina, Enfermagem, Farmácia, Biologia e Educação Física. Prática desde o primeiro
-                                semestre.
-                            </p>
-                        </article>
-                    </div>
-
-                    <div className="site-cards-acao">
-                        <Button label="Ver cursos" size="large" onClick={() => router.push("/graduacao/cursos")} />
-                    </div>
-                </div>
-            </section>
-
-            <section id="portal" className="site-section site-section-alt">
-                <div className="site-container">
-                    <div className="site-split">
-                        <div className="site-split-text">
-                            <span className="site-eyebrow">Área do aluno</span>
-                            <h2>Portal do Aluno</h2>
-                            <p className="muted">Todo o dia a dia acadêmico em um só lugar, acessível 24 horas por dia.</p>
-
-                            <ul className="site-list">
-                                <li>Notas e frequência em tempo real</li>
-                                <li>Biblioteca virtual e reserva de acervo</li>
-                                <li>Matrícula em disciplinas eletivas</li>
-                                <li>Comunicados da coordenação e professores</li>
-                                <li>Calendário de provas e eventos</li>
-                            </ul>
-
-                            <Button label="Acessar o Portal" size="large" onClick={irParaPortal} />
+            <main>
+                <section className="apresentacao">
+                    <div className="container">
+                        <div className="apresentacao-conteudo">
+                            <span className="etiqueta">Sistema integrado de gestão universitária</span>
+                            <h1>Qual ambiente você deseja acessar?</h1>
+                            <p>Selecione um dos módulos disponíveis para continuar no ERP da Universidade Aura de Xique Xique.</p>
                         </div>
 
-                        <div className="site-split-art">
-                            <div className="site-portal-mock" aria-hidden="true">
-                                <div className="site-portal-mock-bar"></div>
-                                <div className="site-portal-mock-row"></div>
-                                <div className="site-portal-mock-row short"></div>
-                                <div className="site-portal-mock-grid">
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                </div>
-                            </div>
+                        <div className="pesquisa">
+                            <label className="sr-only" htmlFor="pesquisaModulo">Pesquisar um módulo</label>
+                            <span className="pesquisa-icone" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <path d="m21 21-4.35-4.35"></path>
+                                </svg>
+                            </span>
+                            <input
+                                id="pesquisaModulo"
+                                type="search"
+                                placeholder="Pesquisar um módulo..."
+                                autoComplete="off"
+                                value={busca}
+                                onChange={(e) => setBusca(e.target.value)}
+                            />
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <section id="contato" className="site-section">
-                <div className="site-container">
-                    <div className="site-section-head">
-                        <span className="site-eyebrow">Atendimento</span>
-                        <h2>Fale Conosco</h2>
-                        <p className="muted">Tire suas dúvidas, agende uma visita ou solicite informações sobre nossos cursos.</p>
-                    </div>
+                <section className="modulos" aria-labelledby="tituloModulos">
+                    <div className="container">
+                        <div className="secao-cabecalho">
+                            <div>
+                                <span className="secao-sobretitulo">Ambientes disponíveis</span>
+                                <h2 id="tituloModulos">Central de acesso</h2>
+                            </div>
+                            <p className="contador-modulos" aria-live="polite">
+                                {visiveis.length === 1 ? "1 módulo disponível" : `${visiveis.length} módulos disponíveis`}
+                            </p>
+                        </div>
 
-                    <div className="site-split">
-                        <div className="site-split-text">
-                            <ul className="site-contact">
-                                <li>
-                                    <span className="site-contact-icone" aria-hidden="true">
-                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
-                                            <circle cx="12" cy="10" r="3"></circle>
-                                        </svg>
-                                    </span>
-                                    <div>
-                                        <strong>Endereço</strong>
-                                        <br />SGAS 000, Bloco A, Brasília - DF
+                        <div className="grade-modulos">
+                            {visiveis.map((modulo) => (
+                                <article key={modulo.id} className="cartao-modulo">
+                                    <div className="cartao-topo">
+                                        <span className={`modulo-icone modulo-${modulo.id}`} aria-hidden="true">
+                                            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                                {modulo.icone}
+                                            </svg>
+                                        </span>
+                                        <span className="categoria">{modulo.categoria}</span>
                                     </div>
-                                </li>
-                                <li>
-                                    <span className="site-contact-icone" aria-hidden="true">
-                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2Z"></path>
-                                        </svg>
-                                    </span>
-                                    <div>
-                                        <strong>Telefone</strong>
-                                        <br />(61) 3000-0000
-                                    </div>
-                                </li>
-                                <li>
-                                    <span className="site-contact-icone" aria-hidden="true">
-                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-                                            <path d="m2 7 10 6 10-6"></path>
-                                        </svg>
-                                    </span>
-                                    <div>
-                                        <strong>E-mail</strong>
-                                        <br />contato@uniaura.edu.br
-                                    </div>
-                                </li>
-                                <li>
-                                    <span className="site-contact-icone" aria-hidden="true">
-                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <circle cx="12" cy="12" r="10"></circle>
-                                            <path d="M12 6v6l4 2"></path>
-                                        </svg>
-                                    </span>
-                                    <div>
-                                        <strong>Horário</strong>
-                                        <br />Segunda a sexta, das 8h às 20h
-                                    </div>
-                                </li>
-                            </ul>
+                                    <h3>{modulo.nome}</h3>
+                                    <p>{modulo.descricao}</p>
+                                    <button
+                                        className="botao-acesso"
+                                        type="button"
+                                        disabled={!modulo.rota}
+                                        onClick={() => modulo.rota && router.push(modulo.rota)}
+                                    >
+                                        {modulo.rota ? "Acessar módulo" : "Em breve"}
+                                        {modulo.rota && <span aria-hidden="true">→</span>}
+                                    </button>
+                                </article>
+                            ))}
                         </div>
 
-                        <form id="siteForm" className="site-form" noValidate onSubmit={enviarContato}>
-                            <div className="field">
-                                <label htmlFor="siteNome">Nome completo</label>
-                                <InputText id="siteNome" name="nome" required autoComplete="name" />
+                        {visiveis.length === 0 && (
+                            <div className="mensagem-vazia">
+                                {perfilAtual ? (
+                                    <>
+                                        <strong>Nenhum módulo encontrado.</strong>
+                                        <span>Tente pesquisar utilizando outro nome ou categoria.</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <strong>Escolha seu perfil para começar.</strong>
+                                        <span>Use o seletor no topo da página para ver os módulos disponíveis para você.</span>
+                                    </>
+                                )}
                             </div>
-
-                            <div className="field">
-                                <label htmlFor="siteEmail">E-mail</label>
-                                <InputText type="email" id="siteEmail" name="email" required autoComplete="email" />
-                            </div>
-
-                            <div className="field">
-                                <label htmlFor="siteTel">Telefone</label>
-                                <InputText type="tel" id="siteTel" name="telefone" autoComplete="tel" />
-                            </div>
-
-                            <div className="field">
-                                <label htmlFor="siteMsg">Mensagem</label>
-                                <InputTextarea id="siteMsg" name="mensagem" rows={4} required />
-                            </div>
-
-                            <Button type="submit" label="Enviar mensagem" size="large" />
-                            {mensagemEnviada && <Message severity="success" text="Mensagem enviada! Em breve entraremos em contato." />}
-                        </form>
+                        )}
                     </div>
+                </section>
+            </main>
+
+            <footer className="rodape">
+                <div className="container rodape-conteudo">
+                    <p>© 2026 Universidade Aura de Xique Xique</p>
+                    <p>Central de acesso aos módulos do ERP UAXX</p>
                 </div>
-            </section>
-        </SiteChrome>
+            </footer>
+        </div>
     );
 }

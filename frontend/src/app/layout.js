@@ -3,16 +3,14 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
 
-// --- CSS DA cloudsupport-react: ESTILIZA Box/Field/InlineField/LoadingBar/SessionExpiredBanner/ReloadBanner ---
-import "@bernardo-dias/react-cloudsupport/resources/prime/theme.css";
-import "@bernardo-dias/react-cloudsupport/resources/prime/tweaks.css";
-
 import "../styles/global.css";
 import "../styles/components.css";
 import "../styles/layout.css";
 import "../styles/erp-central.css";
 import "../styles/graduacao.css";
 import "../styles/web.css";
+import "../styles/primereact-tema.css";
+import "../styles/design-system.css";
 
 import CloudsupportProviders from "@/components/providers/CloudsupportProviders";
 
@@ -26,8 +24,19 @@ export const metadata = {
 export default function RootLayout({ children }) {
     return (
         <html lang="pt-BR">
+            <head>
+                {/* --- APLICA O TEMA SALVO ANTES DA PRIMEIRA PINTURA (evita piscar em claro) --- */}
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `try{document.documentElement.setAttribute("data-theme",localStorage.getItem("theme")||"light")}catch(e){}`
+                    }}
+                />
+            </head>
             <body>
-                <CloudsupportProviders>{children}</CloudsupportProviders>
+                <a href="#conteudo" className="ua-skip-link">Pular para o conteúdo</a>
+                <CloudsupportProviders>
+                    <div id="conteudo" tabIndex={-1}>{children}</div>
+                </CloudsupportProviders>
             </body>
         </html>
     );

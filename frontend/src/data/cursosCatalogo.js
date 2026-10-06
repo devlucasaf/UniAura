@@ -30,6 +30,7 @@ export const filtros = [
         "label": "Artes e Comunicação"
     }
 ];
+
 export const cards = [
     {
         "slug": "ciencia-da-computacao",
