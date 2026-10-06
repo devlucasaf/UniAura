@@ -3,19 +3,19 @@ import Link from "next/link";
 const LINKS_INSTITUCIONAIS = [
     { 
         nome: "A Universidade", 
-        rota: "/" 
+        rota: "/web/home" 
     },
     { 
         nome: "Cursos", 
-        rota: "/graduacao/cursos" 
+        rota: "/web/graduacao/cursos" 
     },
     { 
         nome: "Matrículas", 
-        rota: "/matriculas" 
+        rota: "/web/matriculas" 
     },
     { 
         nome: "Contato", 
-        rota: "/contato" 
+        rota: "/web/contato" 
     }
 ];
 
@@ -48,7 +48,7 @@ export default function SiteFooter() {
                 <div className="site-footer-brand">
                     <div className="site-brand">
                         <img
-                            src="/img/uniaura.png"
+                            src="/uniaura/app/img/uniaura.png"
                             alt=""
                             className="site-brand-logo"
                         />
@@ -84,7 +84,8 @@ export default function SiteFooter() {
 function IconeRede({ nome }) {
     if (nome === "facebook") {
         return (
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+                    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3Z"></path>
             </svg>
         );
@@ -92,7 +93,8 @@ function IconeRede({ nome }) {
 
     if (nome === "instagram") {
         return (
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+                    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <rect x="2" y="2" width="20" height="20" rx="5"></rect>
                 <circle cx="12" cy="12" r="4"></circle>
                 <path d="M17.5 6.5h.01"></path>
