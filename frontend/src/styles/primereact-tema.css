@@ -1,0 +1,112 @@
+.p-megamenu,
+.p-megamenu-panel,
+.p-card,
+.p-dialog,
+.p-datatable,
+.p-datatable .p-datatable-thead > tr > th,
+.p-datatable .p-datatable-tbody > tr,
+.p-datatable .p-datatable-tbody > tr > td,
+.p-paginator,
+.p-accordion .p-accordion-header-link,
+.p-accordion .p-accordion-content,
+.p-selectbutton .p-button,
+.p-inputtext,
+.p-inputtextarea,
+.p-dropdown,
+.p-dropdown-panel,
+.p-inputnumber-input,
+.p-checkbox .p-checkbox-box,
+.p-avatar,
+.p-message {
+    background-color: var(--cor-superficie);
+    color: var(--cor-texto);
+    border-color: var(--cor-borda);
+}
+
+.p-megamenu .p-menuitem-link,
+.p-megamenu .p-menuitem-text,
+.p-megamenu .p-menuitem-icon,
+.p-megamenu-panel .p-menuitem-link,
+.p-megamenu-panel .p-menuitem-text,
+.p-megamenu-panel .p-menuitem-subtext,
+.p-card .p-card-title,
+.p-card .p-card-content,
+.p-dialog .p-dialog-header .p-dialog-title,
+.p-datatable .p-datatable-tbody > tr > td,
+.p-paginator .p-paginator-pages .p-paginator-page,
+.p-accordion .p-accordion-header-link,
+.p-accordion .p-accordion-content,
+.p-carousel .p-carousel-indicator button {
+    color: var(--cor-texto);
+}
+
+.p-megamenu .p-menuitem-link:hover,
+.p-megamenu-panel .p-menuitem-link:hover,
+.p-datatable .p-datatable-tbody > tr:hover,
+.p-dropdown-item:hover,
+.p-accordion .p-accordion-header:not(.p-disabled) .p-accordion-header-link:hover {
+    background-color: var(--cor-superficie-secundaria);
+    color: var(--cor-texto);
+}
+
+.p-megamenu .p-menuitem-subtext,
+.p-card .p-card-subtitle,
+.p-paginator .p-paginator-current,
+.p-inputtext::placeholder,
+.p-inputtextarea::placeholder {
+    color: var(--cor-texto-suave);
+}
+
+.p-inputtext,
+.p-inputtextarea,
+.p-dropdown,
+.p-inputnumber-input {
+    border-color: var(--cor-borda);
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+    background: var(--cor-superficie-secundaria);
+}
+
+.p-selectbutton .p-button.p-highlight,
+.p-carousel .p-carousel-indicator.p-highlight button {
+    background: var(--cor-primaria);
+    color: #fff;
+}
+
+/* --- MEGAMENU --- */
+.p-megamenu .p-megamenu-submenu-header,
+.p-megamenu-panel .p-megamenu-submenu-header,
+.p-megamenu .p-menuitem-content,
+.p-megamenu-panel .p-menuitem-content,
+.p-megamenu .p-menuitem-link.p-focus,
+.p-megamenu .p-menuitem-link:focus,
+.p-megamenu .p-menuitem-link.p-highlight,
+.p-megamenu-panel .p-menuitem-link.p-focus,
+.p-megamenu-panel .p-menuitem-link:focus,
+.p-megamenu-panel .p-menuitem-link.p-highlight {
+    background-color: var(--cor-superficie);
+    color: var(--cor-texto);
+}
+
+.p-megamenu .p-menuitem-link:hover .p-menuitem-text,
+.p-megamenu .p-menuitem-link:hover .p-menuitem-icon,
+.p-megamenu .p-menuitem-link:hover,
+.p-megamenu-panel .p-menuitem-content:hover,
+.p-megamenu .p-menuitem-content:hover {
+    background-color: var(--cor-superficie-secundaria);
+    color: var(--cor-texto);
+}
+
+.p-megamenu .p-menuitem-content:focus-within,
+.p-megamenu-panel .p-menuitem-content:focus-within {
+    background-color: var(--cor-superficie-secundaria);
+}
+
+.p-inputtext:focus,
+.p-inputtextarea:focus,
+.p-dropdown:not(.p-disabled).p-focus,
+.p-inputnumber-input:focus {
+    border-color: var(--cor-primaria);
+    box-shadow: 0 0 0 0.2rem var(--cor-foco);
+}

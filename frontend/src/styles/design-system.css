@@ -1,0 +1,1255 @@
+/* --- ACESSIBILIDADE --- */
+:focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
+/* --- ACESSIBILIDADE --- */
+.ua-skip-link {
+    position: absolute;
+    left: var(--space-md);
+    top: -100px;
+    z-index: 10000;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-primary);
+    color: #fff;
+    border-radius: var(--radius-md);
+}
+
+.ua-skip-link:focus {
+    top: var(--space-md);
+}
+
+/* --- ONDA CIRCULAR QUE COBRE A TELA AO ALTERNAR O TEMA --- */
+.site-tema-onda {
+    position: fixed;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 9999;
+    animation: site-tema-onda-expandir .7s ease-out forwards;
+}
+
+.site-tema-onda[data-tema="dark"] {
+    background: radial-gradient(circle, #0b1120 0%, #111827 60%, transparent 100%);
+}
+
+.site-tema-onda[data-tema="light"] {
+    background: radial-gradient(circle, #ffffff 0%, #f5f6fa 60%, transparent 100%);
+}
+
+@keyframes site-tema-onda-expandir {
+    0%   {
+        width: 0;
+        height: 0;
+        opacity: .9;
+    }
+
+    100% {
+        width: 300vmax;
+        height: 300vmax;
+        opacity: 0;
+    }
+}
+
+/* --- RODAPÉ COM TOKENS DE SUPERFÍCIE --- */
+.site-footer {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border-top: 1px solid var(--border-color);
+}
+
+.site-footer-brand .muted,
+.site-footer-bottom {
+    color: var(--text-muted);
+}
+
+.site-footer-bottom {
+    border-top-color: var(--border-color);
+}
+
+.site-footer-col a {
+    color: var(--text-muted);
+}
+
+.site-footer-col a:hover,
+.site-footer-col a:focus-visible {
+    color: var(--color-primary);
+}
+
+/* --- CABEÇALHO E MENUS SUSPENSOS --- */
+.ua-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding-top: var(--space-sm);
+    padding-bottom: var(--space-sm);
+}
+
+.ua-nav-lista {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ua-nav-item {
+    position: relative;
+}
+
+/* --- SETA DO MENU --- */
+.ua-nav-seta {
+    transition: transform .3s cubic-bezier(.4, 0, .2, 1);
+}
+
+/* --- PAINÉIS DE LISTA SIMPLES --- */
+.ua-nav-painel.ua-nav-painel-compacto {
+    width: 300px;
+}
+
+.ua-nav-trigger[aria-expanded="true"] .ua-nav-seta {
+    transform: rotate(180deg);
+}
+
+.ua-nav-trigger,
+.ua-nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    min-height: 44px;
+    padding: .5rem .85rem;
+    background: none;
+    border: 0;
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.ua-nav-trigger:hover,
+.ua-nav-trigger[aria-expanded="true"],
+.ua-nav-link:hover {
+    background: var(--ua-item-ativo);
+    color: var(--color-primary);
+}
+
+.ua-nav-painel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1100;
+    width: min(1100px, calc(100vw - 2rem));
+    display: flex;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+}
+
+.ua-painel-topicos {
+    width: 240px;
+    flex-shrink: 0;
+    display: grid;
+    align-content: start;
+    gap: 2px;
+    padding: var(--space-sm);
+    border-right: 1px solid var(--border-color);
+}
+
+.ua-painel-topico {
+    min-height: 44px;
+    padding: .6rem .8rem;
+    text-align: left;
+    background: none;
+    border: 0;
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.ua-painel-topico[aria-selected="true"],
+.ua-painel-topico:hover {
+    background: var(--ua-item-ativo);
+    color: var(--color-primary);
+}
+
+.ua-painel-conteudo {
+    flex: 1;
+    padding: var(--space-lg);
+    columns: 3 200px;
+    column-gap: var(--space-xl);
+}
+
+.ua-painel-lista {
+    columns: 1;
+    display: grid;
+    gap: var(--space-xs);
+}
+
+.ua-painel-bloco {
+    break-inside: avoid;
+    margin-bottom: var(--space-lg);
+}
+
+.ua-painel-bloco h3 {
+    margin-bottom: var(--space-xs);
+    font-size: var(--fs-md);
+    font-weight: 700;
+    color: var(--ua-menu-titulo);
+}
+
+.ua-painel-bloco ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2px;
+}
+
+.ua-painel-bloco a,
+.ua-painel-item {
+    display: grid;
+    padding: .3rem .6rem;
+    margin: 0 -.6rem;
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    transition: background .15s ease, color .15s ease;
+}
+
+.ua-painel-bloco a:hover,
+.ua-painel-bloco a:focus-visible,
+.ua-painel-item:hover {
+    background: var(--ua-item-ativo);
+    color: var(--color-primary);
+}
+
+.ua-painel-item small,
+.ua-painel-texto {
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+@media (max-width: 960px) {
+    .ua-nav {
+        flex-wrap: wrap;
+    }
+
+    .ua-nav-painel {
+        position: fixed;
+        left: var(--space-md);
+        right: var(--space-md);
+        width: auto;
+        flex-direction: column;
+    }
+
+    .ua-painel-topicos {
+        width: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .ua-painel-conteudo {
+        columns: 1;
+    }
+}
+
+/* --- DROPDOWNS --- */
+:root {
+    --ua-item-ativo: #eef2f7;
+}
+
+:root[data-theme="dark"] {
+    --ua-item-ativo: #1e293b;
+}
+
+.p-dropdown-panel,
+.p-dropdown-items-wrapper,
+.p-dropdown-items,
+.p-dropdown-filter-container,
+.p-dropdown-header {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+}
+
+.p-dropdown-panel {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+}
+
+.p-dropdown-items-wrapper {
+    scrollbar-color: var(--input-border) transparent;
+}
+
+.p-dropdown-item {
+    background: transparent;
+    color: var(--text-primary);
+    padding: .6rem .9rem;
+    border-radius: var(--radius-sm);
+    margin: 2px var(--space-xs);
+    transition: background .15s ease, color .15s ease;
+}
+
+.p-dropdown-item:not(.p-disabled):hover,
+.p-dropdown-item:not(.p-disabled):focus-visible,
+.p-dropdown-item.p-focus {
+    background: var(--ua-item-ativo);
+    color: var(--color-primary);
+}
+
+/* --- ABERTURA SUAVE DO PAINEL DO DROPDOWN --- */
+.p-dropdown-panel {
+    animation: ua-dropdown-abrir .22s ease-out;
+    transform-origin: top center;
+}
+
+@keyframes ua-dropdown-abrir {
+    from {
+        opacity: 0;
+        transform: translateY(-6px) scale(.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.p-dropdown-item.p-highlight,
+.p-dropdown-item.p-highlight:hover {
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+/* --- CABEÇALHO DE GRUPO EM DROPDOWNS AGRUPADOS (ex.: cursos por área) --- */
+.p-dropdown-item-group {
+    background: var(--bg-surface);
+    color: var(--ua-menu-titulo);
+    font-weight: 700;
+    padding: .7rem .9rem .3rem;
+    cursor: default;
+}
+
+.p-dropdown-empty-message {
+    color: var(--text-muted);
+    padding: .6rem .9rem;
+}
+
+.p-dropdown-filter-container .p-inputtext {
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+    border-color: var(--input-border);
+}
+
+.p-dropdown-label {
+    color: var(--text-primary);
+}
+
+.p-dropdown-label.p-placeholder {
+    color: var(--text-muted);
+}
+
+/* --- FORMULÁRIOS --- */
+.field > label,
+.site-form-termos-linha label {
+    display: block;
+}
+
+.ua-obrigatorio {
+    display: inline;
+    color: var(--color-danger);
+    font-weight: 700;
+}
+
+.ua-erro-campo {
+    display: block;
+    margin-top: var(--space-xs);
+    color: var(--color-danger);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+}
+
+.p-invalid,
+.p-inputtext.p-invalid,
+.p-inputtextarea.p-invalid,
+.p-dropdown.p-invalid {
+    border-color: var(--color-danger) !important;
+}
+
+.p-checkbox.p-invalid .p-checkbox-box,
+.ua-campo-data .p-invalid,
+.ua-campo-senha .p-invalid {
+    border-color: var(--color-danger) !important;
+}
+
+.site-form-termos {
+    display: grid;
+    gap: var(--space-xs);
+}
+
+.site-form-termos-linha {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+}
+
+.site-form-termos-linha label {
+    cursor: pointer;
+}
+
+.ua-link-destaque {
+    color: var(--color-primary);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.ua-link-destaque:hover {
+    color: var(--color-primary-hover);
+}
+
+/* --- BOTÕES --- */
+.p-button {
+    transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease, border-color .2s ease;
+}
+
+.p-button:not(.p-disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.p-button:not(.p-disabled):active {
+    transform: translateY(0) scale(.97);
+}
+
+/* --- NOTÍCIAS --- */
+.site-noticias-hero .p-carousel-indicators {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-lg);
+}
+
+.site-noticias-hero .p-carousel-indicator button {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border-radius: 999px;
+    background: var(--border-color);
+    transition: width .3s ease, background-color .3s ease;
+}
+
+.site-noticias-hero .p-carousel-indicator.p-highlight button {
+    width: 28px;
+    background: var(--color-primary);
+}
+
+/* --- SETAS DO CARROSSEL --- */
+.site-noticias-hero .p-carousel-prev,
+.site-noticias-hero .p-carousel-next {
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    box-shadow: var(--shadow);
+    transition: transform .2s ease, background-color .2s ease, color .2s ease;
+}
+
+.site-noticias-hero .p-carousel-prev:hover,
+.site-noticias-hero .p-carousel-next:hover {
+    background: var(--color-primary);
+    color: #fff;
+    transform: scale(1.08);
+}
+
+.site-noticias-hero .p-carousel-next:hover .pi {
+    animation: ua-seta-avancar .6s ease-in-out infinite alternate;
+}
+
+.site-noticias-hero .p-carousel-prev:hover .pi {
+    animation: ua-seta-voltar .6s ease-in-out infinite alternate;
+}
+
+@keyframes ua-seta-avancar {
+    from {
+        transform: translateX(0);
+    }
+
+    to   {
+        transform: translateX(4px);
+    }
+}
+
+@keyframes ua-seta-voltar {
+    from {
+        transform: translateX(0);
+    }
+
+    to   {
+        transform: translateX(-4px);
+    }
+}
+
+/* --- PÁGINA DE NOTÍCIAS --- */
+.ua-noticias-filtro {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--space-xl);
+}
+
+.ua-noticias-grade {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+}
+
+.ua-noticia {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.ua-noticia h2 {
+    font-size: var(--fs-lg);
+}
+
+.ua-noticia__categoria {
+    align-self: flex-start;
+    padding: .2rem .7rem;
+    border-radius: 999px;
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+}
+
+.ua-noticia__rodape {
+    margin-top: auto;
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+}
+
+@media (max-width: 960px) {
+    .ua-noticias-grade {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .ua-noticias-grade {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- COLUNA DE TÓPICOS DO MENU CURSOS NO MODO CLARO: TOM PRÓPRIO, COMO NO ESCURO --- */
+:root:not([data-theme="dark"]) .ua-painel-topicos {
+    background: #f4f7fc;
+}
+
+/* --- SEÇÕES ALTERNADAS NO MODO CLARO (no escuro o contraste já existe e não muda) --- */
+:root:not([data-theme="dark"]) .site-section-alt {
+    background: #eef3fa;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* --- CALENDÁRIO (CampoData.jsx): PAINEL, DIAS, HOJE E BOTÕES NOS DOIS MODOS --- */
+.ua-campo-data .p-calendar {
+    width: 100%;
+    position: relative;
+}
+
+/* --- ÍCONE DO CALENDÁRIO DENTRO DO CAMPO (como o botão de visualizar senha) --- */
+.ua-campo-data .p-calendar .p-inputtext {
+    width: 100%;
+    padding-right: 3rem;
+    border-radius: var(--radius-md);
+}
+
+.ua-campo-data .p-calendar .p-datepicker-trigger {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: .4rem;
+    margin: auto 0;
+    transform: none;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 0;
+    border-radius: 999px;
+    color: var(--text-muted);
+    box-shadow: none;
+}
+
+.ua-campo-data .p-calendar .p-datepicker-trigger .p-button-icon {
+    margin: 0;
+    line-height: 1;
+    display: block;
+}
+
+.ua-campo-data .p-calendar .p-datepicker-trigger:hover,
+.ua-campo-data .p-calendar .p-datepicker-trigger:focus-visible {
+    background: var(--ua-item-ativo);
+    color: var(--color-primary);
+    transform: none;
+    box-shadow: none;
+}
+
+/* --- SELETORES DE MÊS E ANO: UMA PÍLULA ÚNICA (o fundo fica só no contêiner) --- */
+.p-datepicker .ua-datepicker-select {
+    min-width: 128px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--input-border);
+    border-radius: 999px;
+}
+
+/* --- LISTA DE OPÇÕES DOS SELETORES: ABRE ABAIXO, POR CIMA DO CALENDÁRIO --- */
+.p-datepicker .ua-datepicker-select .p-dropdown-panel {
+    min-width: 100%;
+    z-index: 10;
+}
+
+.p-datepicker .ua-datepicker-select:not(.p-disabled):hover,
+.p-datepicker .ua-datepicker-select.p-focus {
+    border-color: var(--color-primary);
+}
+
+.p-datepicker .ua-datepicker-select .p-dropdown-label,
+.p-datepicker .ua-datepicker-select .p-dropdown-trigger {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+}
+
+.p-datepicker .ua-datepicker-select .p-dropdown-label {
+    padding: .35rem .85rem;
+    font-weight: 600;
+}
+
+.p-datepicker {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: var(--space-md);
+    width: 320px;
+    animation: ua-dropdown-abrir .22s ease-out;
+}
+
+.p-datepicker .p-datepicker-header {
+    background: transparent;
+    color: var(--text-primary);
+    border: 0;
+    padding: 0 0 var(--space-sm);
+}
+
+.p-datepicker .p-datepicker-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+}
+
+/* --- SEM CONTORNO NOS WRAPPERS DOS SELETORES DE MÊS E ANO (só os dropdowns têm borda) --- */
+.p-datepicker .p-datepicker-title .p-datepicker-month,
+.p-datepicker .p-datepicker-title .p-datepicker-year {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+}
+
+.p-datepicker .p-datepicker-title select {
+    appearance: none;
+    -webkit-appearance: none;
+    min-height: 36px;
+    padding: .3rem 2rem .3rem .75rem;
+    background-color: var(--bg-elevated);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right .75rem center;
+    color: var(--text-primary);
+    border: 1px solid var(--input-border);
+    border-radius: 999px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+
+.p-datepicker .p-datepicker-title select:hover {
+    border-color: var(--color-primary);
+}
+
+.p-datepicker .p-datepicker-title select:focus-visible {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-soft);
+}
+
+.p-datepicker .p-datepicker-title select option {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    padding: .4rem .6rem;
+}
+
+.p-datepicker .p-datepicker-title select option:checked {
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.p-datepicker .p-datepicker-prev,
+.p-datepicker .p-datepicker-next {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    color: var(--text-primary);
+    transition: background .15s ease, color .15s ease, transform .2s ease;
+}
+
+.p-datepicker .p-datepicker-prev:hover,
+.p-datepicker .p-datepicker-next:hover {
+    background: var(--ua-item-ativo);
+    color: var(--color-primary);
+    transform: scale(1.08);
+}
+
+.p-datepicker table th {
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: .4rem 0;
+    text-align: center;
+}
+
+.p-datepicker table th > span {
+    display: flex;
+    width: 36px;
+    height: 36px;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
+}
+
+.p-datepicker table td > span {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    color: var(--text-primary);
+    transition: background .15s ease, color .15s ease;
+}
+
+.p-datepicker table td > span:not(.p-disabled):hover {
+    background: var(--ua-item-ativo);
+    color: var(--color-primary);
+}
+
+.p-datepicker table td.p-datepicker-other-month > span {
+    color: var(--text-muted);
+    opacity: .6;
+}
+
+.p-datepicker table td.p-datepicker-today > span {
+    box-shadow: inset 0 0 0 2px var(--color-primary);
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.p-datepicker table td > span.p-highlight {
+    background: var(--color-primary);
+    color: #fff;
+    font-weight: 700;
+}
+
+/* --- RODAPÉ DO CALENDÁRIO (CampoData.jsx): BOTÕES "HOJE" E "LIMPAR" SEM CONTORNOS --- */
+.p-datepicker .p-datepicker-footer {
+    border: 0;
+    padding: var(--space-xs) 0 0;
+    margin: 0;
+}
+
+.ua-calendario-rodape {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-sm);
+}
+
+.ua-calendario-botao.p-button {
+    min-height: 36px;
+    padding: .35rem 1rem;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--color-primary);
+    font-weight: 600;
+    box-shadow: none;
+    transform: none;
+}
+
+.p-datepicker .ua-calendario-botao.p-button:hover {
+    background: var(--ua-item-ativo);
+    color: var(--color-primary-hover);
+    transform: none;
+    box-shadow: none;
+}
+
+.ua-calendario-botao.p-button:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+}
+
+/* --- BOTÃO COM SETA ANIMADA (ex.: "Próxima etapa") --- */
+.ua-botao-seta .p-button-icon {
+    transition: transform .25s ease;
+}
+
+.ua-botao-seta:not(.p-disabled):hover .p-button-icon {
+    animation: ua-seta-avancar .6s ease-in-out infinite alternate;
+}
+
+.ua-botao-seta--voltar:not(.p-disabled):hover .p-button-icon {
+    animation: ua-seta-voltar .6s ease-in-out infinite alternate;
+}
+
+/* --- CHECKBOXES EM LINHA COM O TEXTO (cadastro) --- */
+label.site-form-termos {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    cursor: pointer;
+}
+
+/* --- CHECKBOX DO PRIMEREACT NOS DOIS MODOS --- */
+.p-checkbox .p-checkbox-box {
+    background: var(--bg-surface);
+    border: 2px solid var(--input-border);
+    border-radius: var(--radius-sm);
+    transition: background .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+
+.p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover {
+    border-color: var(--color-primary);
+}
+
+.p-checkbox .p-checkbox-box.p-highlight,
+.p-checkbox.p-highlight .p-checkbox-box,
+.p-checkbox.p-checkbox-checked .p-checkbox-box,
+.p-checkbox .p-checkbox-box[data-p-highlight="true"] {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.p-checkbox .p-checkbox-box .p-checkbox-icon,
+.p-checkbox .p-checkbox-box svg {
+    color: #fff;
+    width: 14px;
+    height: 14px;
+}
+
+.p-checkbox .p-checkbox-box svg path {
+    fill: #fff;
+}
+
+.p-checkbox .p-checkbox-box.p-focus {
+    box-shadow: 0 0 0 3px var(--color-primary-soft);
+    border-color: var(--color-primary);
+}
+
+/* --- DIALOG (janela pequena) NOS DOIS MODOS --- */
+.p-dialog {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+}
+
+.p-dialog .p-dialog-header,
+.p-dialog .p-dialog-content,
+.p-dialog .p-dialog-footer {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+}
+
+.p-dialog .p-dialog-header .p-dialog-title {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.p-dialog .p-dialog-header .p-dialog-header-icon {
+    color: var(--text-muted);
+    border-radius: 999px;
+    transition: background .15s ease, color .15s ease;
+}
+
+.p-dialog .p-dialog-header .p-dialog-header-icon:hover {
+    background: var(--ua-item-ativo);
+    color: var(--color-primary);
+}
+
+.p-dialog .site-info-texto {
+    background: transparent;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+/* --- CAMPO DE SENHA COM BOTÃO DE VISUALIZAR (claro e escuro) --- */
+.ua-campo-senha {
+    position: relative;
+}
+
+.ua-campo-senha .p-inputtext {
+    width: 100%;
+    padding-right: 3rem;
+}
+
+.ua-campo-senha .ua-campo-senha__botao {
+    padding: 0;
+    position: absolute;
+    top: 50%;
+    right: .4rem;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    background: transparent;
+    border: 0;
+    border-radius: 999px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+}
+
+.ua-campo-senha .ua-campo-senha__botao:hover,
+.ua-campo-senha .ua-campo-senha__botao[aria-pressed="true"] {
+    background: var(--ua-item-ativo);
+    color: var(--color-primary);
+}
+
+/* --- TEXTO SÓ PARA LEITORES DE TELA --- */
+.ua-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* --- FAIXA DE INDICADORES DA HOME --- */
+.ua-faixa-confianca {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-md);
+    margin-top: calc(var(--space-lg) * -1);
+    position: relative;
+    z-index: 1;
+}
+
+@media (max-width: 768px) {
+    .ua-faixa-confianca {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* --- MOVIMENTO REDUZIDO --- */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* --- CABEÇALHO COM VIDRO --- */
+.site-header {
+    background: var(--glass-bg);
+    border-bottom: 1px solid var(--glass-border);
+    -webkit-backdrop-filter: saturate(160%) blur(14px);
+    backdrop-filter: saturate(160%) blur(14px);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* --- MEGAMENU --- */
+:root {
+    --ua-menu-titulo: #b91c1c;
+}
+
+:root[data-theme="dark"] {
+    --ua-menu-titulo: #f87171;
+}
+
+.p-megamenu .p-megamenu-submenu-header,
+.p-megamenu-panel .p-megamenu-submenu-header {
+    color: var(--ua-menu-titulo);
+    font-weight: 700;
+}
+
+/* --- MEGAMENU DE CURSOS --- */
+.ua-megamenu-cursos .p-megamenu-panel {
+    width: min(1200px, calc(100vw - 2rem));
+    max-height: none;
+    overflow: visible;
+}
+
+.ua-megamenu-cursos .p-megamenu-panel .p-megamenu-root-list {
+    overflow: visible;
+}
+
+/* --- CARTÃO PADRÃO --- */
+.ua-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    padding: var(--space-lg);
+    transition: box-shadow .2s ease, transform .2s ease;
+}
+
+.ua-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.ua-card--vidro {
+    background: var(--glass-bg);
+    border-color: var(--glass-border);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+}
+
+/* --- INDICADOR --- */
+.ua-indicador {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.ua-indicador__valor {
+    font-size: var(--fs-xl);
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1.1;
+}
+
+.ua-indicador__rotulo {
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+}
+
+/* --- ALVOS DE TOQUE --- */
+@media (pointer: coarse) {
+    .site-header .p-button,
+    .site-header .p-menuitem-link,
+    .p-button {
+        min-height: 44px;
+    }
+}
+
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 768px) {
+    .ua-card {
+        padding: var(--space-md);
+    }
+
+    .ua-indicador__valor {
+        font-size: var(--fs-lg);
+    }
+}
+
+@media (max-width: 480px) {
+    .site-header .site-brand-text {
+        display: none;
+    }
+}
+
+/* --- SELETOR DE PERFIL DA CENTRAL DO ERP --- */
+.cabecalho-acoes .seletor-perfil {
+    min-width: 220px;
+    height: 44px;
+    align-items: center;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    box-shadow: var(--shadow);
+    transition: transform .2s ease, box-shadow .25s ease, border-color .2s ease, background-color .2s ease;
+}
+
+.cabecalho-acoes .seletor-perfil:not(.p-disabled):hover {
+    transform: translateY(-2px);
+    border-color: var(--color-primary);
+    box-shadow: 0 8px 22px rgba(37, 99, 235, .22);
+}
+
+.cabecalho-acoes .seletor-perfil:not(.p-disabled):active {
+    transform: translateY(0) scale(.98);
+}
+
+.cabecalho-acoes .seletor-perfil.p-focus,
+.cabecalho-acoes .seletor-perfil.p-inputwrapper-focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px var(--color-primary-soft);
+}
+
+.cabecalho-acoes .seletor-perfil .p-dropdown-label {
+    padding: 0 .5rem 0 1.1rem;
+    background: transparent;
+    border: 0;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.cabecalho-acoes .seletor-perfil .p-dropdown-label.p-placeholder {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.cabecalho-acoes .seletor-perfil .p-dropdown-trigger {
+    width: 2.6rem;
+    background: transparent;
+    border: 0;
+    color: var(--color-primary);
+}
+
+.cabecalho-acoes .seletor-perfil .p-dropdown-trigger-icon {
+    transition: transform .3s cubic-bezier(.4, 0, .2, 1);
+}
+
+.cabecalho-acoes .seletor-perfil.p-inputwrapper-focus .p-dropdown-trigger-icon,
+.cabecalho-acoes .seletor-perfil:hover .p-dropdown-trigger-icon {
+    transform: translateY(2px);
+}
+
+.cabecalho-acoes .seletor-perfil.p-inputwrapper-focus .p-dropdown-trigger-icon {
+    transform: rotate(180deg);
+}
+
+/* --- ASSISTENTE DE CADASTRO: CONTADOR "ETAPA X DE N" CENTRALIZADO ENTRE OS BOTÕES --- */
+@media (min-width: 620px) {
+    .site-wizard-acoes {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+    }
+
+    .site-wizard-acoes > :first-child {
+        justify-self: start;
+    }
+
+    .site-wizard-acoes > :last-child {
+        justify-self: end;
+    }
+
+    .site-wizard-acoes .site-wizard-contador {
+        justify-self: center;
+        text-align: center;
+    }
+}
+
+/* --- BOTÃO "ENTRAR" DAS TELAS DE LOGIN --- */
+.ua-botao-entrar.p-button {
+    width: 100%;
+    margin-top: var(--space-md);
+    justify-content: center;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+    font-weight: 700;
+}
+
+.ua-botao-entrar.p-button:not(.p-disabled):hover {
+    background: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+}
+
+/* --- FORMULÁRIO DE LOGIN (e-mail e senha) --- */
+.ua-form-login {
+    display: grid;
+    gap: var(--space-md);
+    text-align: left;
+    margin-top: var(--space-md);
+}
+
+.ua-form-login .field {
+    margin-bottom: 0;
+}
+
+.ua-form-login .ua-botao-entrar.p-button {
+    margin-top: var(--space-xs);
+}
+
+.ua-erro-login {
+    padding: .6rem .8rem;
+    border: 1px solid var(--color-danger);
+    border-radius: var(--radius-md);
+    background: rgba(220, 38, 38, .08);
+    text-align: center;
+}
+
+/* --- SUGESTÕES DE E-MAIL INSTITUCIONAL (cadastro) --- */
+.ua-sugestoes-email {
+    display: grid;
+    gap: var(--space-xs);
+    margin-top: var(--space-xs);
+}
+
+.ua-sugestoes-email__lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
+.ua-sugestao-email {
+    padding: .4rem .9rem;
+    border: 1px solid var(--input-border);
+    border-radius: 999px;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    font: inherit;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s ease, border-color .15s ease, color .15s ease, transform .15s ease;
+}
+
+.ua-sugestao-email:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    transform: translateY(-1px);
+}
+
+.ua-sugestao-email[aria-pressed="true"] {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+}

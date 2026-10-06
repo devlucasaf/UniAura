@@ -3,12 +3,26 @@
 import { Tag } from "primereact/tag";
 
 const STATUS_POSITIVOS = [
-    "ATIVO", "ATIVA", "APROVADO", "APROVADA", "PAGA", "PAGO", "CONCLUIDO", "CONCLUÍDO",
-    "DISPONIVEL", "DISPONÍVEL", "FORMADO", "ATENDIDA", "DEVOLVIDO"
+    "ATIVO", "ATIVA",
+    "APROVADO", "APROVADA",
+    "PAGA", "PAGO",
+    "CONCLUIDO", "CONCLUÍDO",
+    "DISPONIVEL", "DISPONÍVEL",
+    "FORMADO",
+    "ATENDIDA",
+    "DEVOLVIDO"
 ];
+
 const STATUS_NEGATIVOS = [
-    "ATRASADO", "ATRASADA", "REJEITADO", "REJEITADA", "CANCELADO", "CANCELADA",
-    "REPROVADO", "REPROVADA", "EVADIDO", "VENCIDO", "EXPIRADA", "PERDIDO", "TRANCADO", "TRANCADA"
+    "ATRASADO", "ATRASADA",
+    "REJEITADO", "REJEITADA",
+    "CANCELADO", "CANCELADA",
+    "REPROVADO", "REPROVADA",
+    "EVADIDO",
+    "VENCIDO",
+    "EXPIRADA",
+    "PERDIDO",
+    "TRANCADO", "TRANCADA"
 ];
 
 // --- DEDUZ A SEVERIDADE VISUAL A PARTIR DO NOME DO STATUS ---
@@ -17,6 +31,7 @@ function severidadeDoStatus(status) {
     if (STATUS_POSITIVOS.includes(valor)) {
         return "success";
     }
+
     if (STATUS_NEGATIVOS.includes(valor)) {
         return "danger";
     }

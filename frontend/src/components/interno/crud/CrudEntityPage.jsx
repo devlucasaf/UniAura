@@ -44,7 +44,12 @@ export default function CrudEntityPage({titulo, tituloSingular, api, sort,
     async function carregar(pagina = 0, filtro = filtroValor) {
         setPaginaAtual(pagina);
         try {
-            const parametros = { page: pagina, size: 10, sort };
+            const parametros = {
+                page: pagina,
+                size: 10,
+                sort
+            };
+
             if (filtroSelect) {
                 parametros[filtroSelect.name] = filtro;
             }
@@ -148,7 +153,10 @@ export default function CrudEntityPage({titulo, tituloSingular, api, sort,
         <section className="card">
             <div className="toolbar toolbar-between">
                 <h1>{titulo}</h1>
-                <Button label={`+ Novo ${tituloSingular.toLowerCase()}`} onClick={abrirNovo} />
+                <Button
+                    label={`+ Novo ${tituloSingular.toLowerCase()}`}
+                    onClick={abrirNovo}
+                />
             </div>
 
             <Box>
@@ -183,14 +191,30 @@ export default function CrudEntityPage({titulo, tituloSingular, api, sort,
 
             <DataTable value={linhasVisiveis} emptyMessage={mensagemColunaVazia} dataKey="id">
                 {colunas.map((coluna) => (
-                    <Column key={coluna.header} header={coluna.header} body={(item) => coluna.render(item)} />
+                    <Column
+                        key={coluna.header}
+                        header={coluna.header}
+                        body={(item) => coluna.render(item)}
+                    />
                 ))}
                 <Column
                     header=""
                     body={(item) => (
                         <div className="acoes">
-                            <Button label="Editar" size="small" severity="secondary" outlined onClick={() => abrirEdicao(item)} />
-                            <Button label="Excluir" size="small" severity="danger" outlined onClick={() => excluir(item)} />
+                            <Button
+                                label="Editar"
+                                size="small"
+                                severity="secondary"
+                                outlined
+                                onClick={() => abrirEdicao(item)}
+                            />
+                            <Button
+                                label="Excluir"
+                                size="small"
+                                severity="danger"
+                                outlined
+                                onClick={() => excluir(item)}
+                            />
                         </div>
                     )}
                 />
@@ -253,8 +277,18 @@ export default function CrudEntityPage({titulo, tituloSingular, api, sort,
                     <div className="toolbar field-full toolbar-between">
                         <span />
                         <span>
-                            <Button type="button" label="Cancelar" severity="secondary" outlined onClick={() => setModalAberto(false)} />
-                            <Button type="submit" label="Salvar" loading={salvando} />
+                            <Button
+                                type="button"
+                                label="Cancelar"
+                                severity="secondary"
+                                outlined
+                                onClick={() => setModalAberto(false)}
+                            />
+                            <Button
+                                type="submit"
+                                label="Salvar"
+                                loading={salvando}
+                            />
                         </span>
                     </div>
                 </form>

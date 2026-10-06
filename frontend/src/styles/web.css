@@ -128,6 +128,7 @@
 .site-burger.ativo span:nth-child(3) {
     transform: translateY(-7px) rotate(-45deg);
 }
+
 /* --- BOTÃO DE TEMA --- */
 .site-tema-toggle {
     position: relative;
@@ -205,40 +206,6 @@
 
     100% {
         transform: rotate(360deg) scale(1);
-    }
-}
-
-/* --- ONDA CIRCULAR QUE COBRE A TELA AO ALTERNAR O TEMA --- */
-.site-tema-onda {
-    position: fixed;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    z-index: 9999;
-    animation: site-tema-onda-expandir .7s ease-out forwards;
-}
-
-.site-tema-onda[data-tema="dark"] {
-    background: radial-gradient(circle, #0b1120 0%, #111827 60%, transparent 100%);
-}
-
-.site-tema-onda[data-tema="light"] {
-    background: radial-gradient(circle, #ffffff 0%, #f5f6fa 60%, transparent 100%);
-}
-
-@keyframes site-tema-onda-expandir {
-    0%   {
-        width: 0;
-        height: 0;
-        opacity: .9;
-    }
-
-    100% {
-        width: 300vmax;
-        height: 300vmax;
-        opacity: 0;
     }
 }
 
@@ -933,7 +900,7 @@
     }
 }
 
-/* --- FORMULÁRIO DE MATRÍCULA: DOIS CAMPOS POR LINHA NO DESKTOP --- */
+/* --- FORMULÁRIO DE MATRÍCULA --- */
 .site-form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -2151,3 +2118,14 @@
     overflow-y: auto;
 }
 
+.site-header .site-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    white-space: nowrap;
+}
+
+.site-header .site-brand-logo {
+    height: 32px;
+    width: auto;
+}
