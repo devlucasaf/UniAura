@@ -1,6 +1,5 @@
-import { obterToken } from "./auth";
-
-const BASE_API = "/api";
+// --- O fetch NÃO RECEBE O basePath AUTOMATICAMENTE; O PROXY PARA O SPRING EXISTE SOB /uniaura/app/api ---
+const BASE_API = "/uniaura/app/api";
 
 let processingRef = null;
 
@@ -9,7 +8,7 @@ export function registrarProcessing(processing) {
     processingRef = processing;
 }
 
-// --- CHAMA A API ANEXANDO O ACCESS TOKEN OIDC ATUAL (KEYCLOAK) QUANDO HOUVER ---
+// --- CHAMA A API ANEXANDO O ACCESS TOKEN DA SESSÃO (JWT DO BACKEND) QUANDO HOUVER ---
 export async function api(caminho, { metodo = "GET", corpo, cabecalhos = {}, multipart = false } = {}) {
     const opcoes = {
         method: metodo,
@@ -18,7 +17,7 @@ export async function api(caminho, { metodo = "GET", corpo, cabecalhos = {}, mul
         }
     };
 
-    const token = obterToken();
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
     if (token) {
         opcoes.headers.Authorization = `Bearer ${token}`;
     }
@@ -36,9 +35,19 @@ export async function api(caminho, { metodo = "GET", corpo, cabecalhos = {}, mul
     try {
         const resposta = await fetch(`${BASE_API}${caminho}`, opcoes);
         const texto = await resposta.text();
-        const dados = texto ? JSON.parse(texto) : null;
+        let dados = null;
+        try {
+            dados = texto ? JSON.parse(texto) : null;
+        } catch {
+            throw new Error(`Não foi possível comunicar com o servidor (resposta inesperada, código ${resposta.status}).`);
+        }
 
         if (resposta.status === 401) {
+            // --- SESSÃO EXPIRADA OU CREDENCIAIS INVÁLIDAS: LIMPA A SESSÃO E, FORA DAS TELAS DE LOGIN, VOLTA PARA O LOGIN ---
+            ["token", "refreshToken", "user", "usuarioId"].forEach((chave) => localStorage.removeItem(chave));
+            if (typeof window !== "undefined" && !window.location.pathname.endsWith("/login")) {
+                window.location.href = "/uniaura/app/login";
+            }
             throw new Error((dados && dados.message) || "Sessão expirada. Faça login novamente.");
         }
 

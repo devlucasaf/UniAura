@@ -1,10 +1,12 @@
-const OIDC_AUTHORITY = "http://localhost:8081/realms/uniaura";
-const OIDC_CLIENT_ID = "uniaura-frontend";
-const CHAVE_OIDC_USER = `oidc.user:${OIDC_AUTHORITY}:${OIDC_CLIENT_ID}`;
+import { api } from "./api";
+
+const CHAVE_TOKEN = "token";
+const CHAVE_REFRESH = "refreshToken";
+const CHAVE_USUARIO = "user";
 
 // --- ROTA DE DASHBOARD DE CADA PERFIL ---
 export const DASHBOARD_POR_PERFIL = {
-    ALUNO: "/aluno/dashboard",
+    ALUNO: "/portal-do-aluno/dashboard",
     PROFESSOR: "/professor/dashboard",
     COORDENADOR: "/coordenacao/dashboard",
     SECRETARIA: "/secretaria/dashboard",
@@ -14,45 +16,81 @@ export const DASHBOARD_POR_PERFIL = {
     ADMIN: "/admin/dashboard"
 };
 
+// --- ROTA DA TELA DE LOGIN DE CADA PERFIL ---
+export const LOGIN_POR_PERFIL = {
+    ALUNO: "/portal-do-aluno/login",
+    PROFESSOR: "/professor/login",
+    COORDENADOR: "/coordenacao/login",
+    SECRETARIA: "/secretaria/login",
+    BIBLIOTECARIO: "/biblioteca/login",
+    FINANCEIRO: "/financeiro/login",
+    RESPONSAVEL: "/responsavel/login",
+    ADMIN: "/admin/login"
+};
+
+// --- RESOLVE A ROTA DA TELA DE LOGIN DE UM PERFIL ---
+export function loginDoPerfil(perfil) {
+    return LOGIN_POR_PERFIL[perfil] || "/login";
+}
+
 // --- RESOLVE A ROTA DO DASHBOARD DE UM PERFIL ---
 export function dashboardDoPerfil(perfil) {
     return DASHBOARD_POR_PERFIL[perfil] || "/login";
 }
 
-// --- LÊ O USUÁRIO OIDC QUE A BIBLIOTECA cloudsupport-react (oidc-client-ts) ARMAZENA NO SESSIONSTORAGE ---
-function lerUsuarioOidc() {
+// --- AUTENTICA NO BACKEND (POST /auth/login) E GRAVA A SESSÃO ---
+export async function autenticar(email, senha) {
+    const resposta = await api("/auth/login", {
+        metodo: "POST",
+        corpo: {
+            email,
+            senha
+        }
+    });
+    gravarSessao(resposta);
+    return resposta.usuario;
+}
+
+// --- GRAVA TOKENS E DADOS DO USUÁRIO ---
+export function gravarSessao({ token, refreshToken, usuario }) {
+    localStorage.setItem(CHAVE_TOKEN, token);
+    if (refreshToken) {
+        localStorage.setItem(CHAVE_REFRESH, refreshToken);
+    }
+
+    if (usuario) {
+        localStorage.setItem(CHAVE_USUARIO, JSON.stringify(usuario));
+        if (usuario.id) {
+            localStorage.setItem("usuarioId", usuario.id);
+        }
+    }
+}
+
+// --- ENCERRA A SESSÃO ---
+export function encerrarSessao() {
+    [CHAVE_TOKEN, CHAVE_REFRESH, CHAVE_USUARIO, "usuarioId"].forEach((chave) => localStorage.removeItem(chave));
+}
+
+// --- RETORNA O ACCESS TOKEN ARMAZENADO ---
+export function obterToken() {
     if (typeof window === "undefined") {
         return null;
     }
-    const bruto = sessionStorage.getItem(CHAVE_OIDC_USER);
+    return localStorage.getItem(CHAVE_TOKEN);
+}
+
+// --- RETORNA O USUÁRIO ARMAZENADO ---
+export function obterUsuario() {
+    if (typeof window === "undefined") {
+        return null;
+    }
+    const bruto = localStorage.getItem(CHAVE_USUARIO);
     return bruto ? JSON.parse(bruto) : null;
 }
 
-// --- RETORNA O ACCESS TOKEN ATUAL (USADO PELO wrapper de fetch em lib/api.js) ---
-export function obterToken() {
-    return lerUsuarioOidc()?.access_token || null;
-}
-
-// --- RETORNA OS DADOS DO USUÁRIO LOGADO, A PARTIR DAS CLAIMS DO TOKEN OIDC ---
-export function obterUsuario() {
-    const profile = lerUsuarioOidc()?.profile;
-    if (!profile) {
-        return null;
-    }
-    const roles = Array.isArray(profile.roles) ? profile.roles : [];
-    return {
-        id: profile.sub,
-        nome: profile.name || profile.preferred_username,
-        email: profile.email,
-        role: roles[0],
-        roles
-    };
-}
-
-// --- INDICA SE HÁ SESSÃO ATIVA E NÃO EXPIRADA ---
+// --- INDICA SE HÁ SESSÃO ATIVA ---
 export function estaAutenticado() {
-    const oidcUser = lerUsuarioOidc();
-    return !!oidcUser && !oidcUser.expired;
+    return !!obterToken();
 }
 
 // --- VERIFICA SE O USUÁRIO POSSUI ALGUM DOS PERFIS INFORMADOS ---
@@ -62,5 +100,5 @@ export function possuiPerfil(perfis) {
         return false;
     }
     const lista = Array.isArray(perfis) ? perfis : [perfis];
-    return lista.some((perfil) => usuario.roles.includes(perfil));
+    return lista.includes(usuario.role);
 }

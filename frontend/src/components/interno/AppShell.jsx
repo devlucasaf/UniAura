@@ -5,8 +5,7 @@ import { useRouter, usePathname }                           from "next/navigatio
 import Link                                                 from "next/link";
 import { Button }                                           from "primereact/button";
 import { Avatar }                                           from "primereact/avatar";
-import { useAuth }                                          from "@bernardo-dias/react-cloudsupport";
-import { obterUsuario, possuiPerfil, dashboardDoPerfil }    from "@/lib/auth";
+import { obterUsuario, possuiPerfil, dashboardDoPerfil, loginDoPerfil, estaAutenticado, encerrarSessao } from "@/lib/auth";
 import { notificar }                                        from "@/lib/notificar";
 import { GRUPOS_MENU }                                      from "./menu";
 
@@ -14,7 +13,6 @@ const CHAVE_TEMA = "theme";
 
 // --- SHELL DA ÁREA INTERNA, COM GUARDA DE AUTENTICAÇÃO E PERFIL ---
 export default function AppShell({ titulo, perfis, children }) {
-    const auth = useAuth();
     const router = useRouter();
     const pathname = usePathname();
     const [usuario,     setUsuario]     = useState(null);
@@ -25,12 +23,8 @@ export default function AppShell({ titulo, perfis, children }) {
         const tema = localStorage.getItem(CHAVE_TEMA) || "light";
         document.documentElement.setAttribute("data-theme", tema);
 
-        if (auth.isLoading) {
-            return;
-        }
-
-        if (!auth.isAuthenticated) {
-            auth.signinRedirect();
+        if (!estaAutenticado()) {
+            router.replace(loginDoPerfil(perfis?.[0]));
             return;
         }
 
@@ -44,7 +38,7 @@ export default function AppShell({ titulo, perfis, children }) {
 
         setUsuario(usuarioAtual);
         setPronto(true);
-    }, [pathname, auth.isLoading, auth.isAuthenticated]);
+    }, [pathname]);
 
     const alternarTema = () => {
         const atual = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
@@ -53,8 +47,10 @@ export default function AppShell({ titulo, perfis, children }) {
         localStorage.setItem(CHAVE_TEMA, novo);
     };
 
+    // --- ENCERRA A SESSÃO E VOLTA PARA A TELA DE LOGIN DA ÁREA ---
     const sair = () => {
-        auth.signoutRedirect();
+        encerrarSessao();
+        router.replace(loginDoPerfil(usuario?.role));
     };
 
     if (!pronto) {
@@ -93,13 +89,35 @@ export default function AppShell({ titulo, perfis, children }) {
 
             <div className="app-main">
                 <header className="topbar">
-                    <Button icon="pi pi-bars" rounded text aria-label="Abrir menu" onClick={() => setMenuAberto((v) => !v)} />
+                    <Button
+                        icon="pi pi-bars"
+                        rounded
+                        text
+                        aria-label="Abrir menu"
+                        onClick={() => setMenuAberto((v) => !v)}
+                    />
                     <div className="topbar-title">{titulo}</div>
                     <div className="topbar-actions">
-                        <Button icon="pi pi-circle-half" rounded text aria-label="Alternar tema" title="Alternar tema claro/escuro" onClick={alternarTema} />
-                        <Avatar label={iniciaisUsuario} shape="circle" />
+                        <Button
+                            icon="pi pi-circle-half"
+                            rounded
+                            text
+                            aria-label="Alternar tema"
+                            title="Alternar tema claro/escuro"
+                            onClick={alternarTema}
+                        />
+                        <Avatar
+                            label={iniciaisUsuario}
+                            shape="circle"
+                        />
                         <span className="user-nome">{usuario?.nome || ""}</span>
-                        <Button label="Sair" size="small" severity="danger" outlined onClick={sair} />
+                        <Button
+                            label="Sair"
+                            size="small"
+                            severity="danger"
+                            outlined
+                            onClick={sair}
+                        />
                     </div>
                 </header>
                 <main className="content">{children}</main>

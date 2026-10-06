@@ -1,8 +1,0 @@
-{
-    "appVersion": "1",
-    "oidcAuthority": "http://localhost:8081/realms/uniaura",
-    "oidcClientId": "uniaura-frontend",
-    "oidcScope": "openid profile email",
-    "defaultLoginSuccessUrl": "http://localhost:3000/uniaura/app/login/callback",
-    "defaultLogoutSuccessUrl": "http://localhost:3000/uniaura/app"
-}
