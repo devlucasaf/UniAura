@@ -1,4 +1,4 @@
-package erp.uniaura.modules.usuario.dto;
+package erp.uniaura.dto.auth;
 
 import erp.uniaura.modules.usuario.model.TipoUsuario;
 
@@ -20,30 +20,28 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UsuarioRequestDTO {
+public class RegisterRequestDTO {
 
     @NotBlank(message = "O nome é obrigatório.")
-    @Size(max = 150, message = "O nome deve ter no máximo 150 caracteres.")
+    @Size(max = 150)
     private String nome;
 
     @NotBlank(message = "O e-mail é obrigatório.")
     @Email(message = "E-mail inválido.")
-    @Size(max = 150, message = "O e-mail deve ter no máximo 150 caracteres.")
+    @Size(max = 150)
     private String email;
 
     @NotBlank(message = "A senha é obrigatória.")
     @Size(min = 6, max = 100, message = "A senha deve ter entre 6 e 100 caracteres.")
     private String senha;
 
-    @Size(max = 14, message = "CPF deve ter no máximo 14 caracteres.")
+    @Size(max = 14)
     private String cpf;
 
-    @Size(max = 20, message = "Telefone deve ter no máximo 20 caracteres.")
+    @Size(max = 20)
     private String telefone;
 
     private LocalDate dataNascimento;
-
-    private Boolean ativo;
 
     @NotNull(message = "A role é obrigatória.")
     private TipoUsuario role;

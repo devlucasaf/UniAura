@@ -2,6 +2,8 @@ package erp.uniaura.modules.usuario.service;
 
 import erp.uniaura.exception.BusinessException;
 import erp.uniaura.exception.ResourceNotFoundException;
+import erp.uniaura.infra.email.EmailService;
+import erp.uniaura.infra.security.GeradorSenhaTemporaria;
 import erp.uniaura.modules.usuario.dto.UsuarioRequestDTO;
 import erp.uniaura.modules.usuario.dto.UsuarioResponseDTO;
 import erp.uniaura.modules.usuario.model.Usuario;
@@ -11,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final GeradorSenhaTemporaria geradorSenhaTemporaria;
+    private final EmailService emailService;
 
     // --- LISTA USUÁRIOS PAGINADOS ---
     @Transactional(readOnly = true)
@@ -39,16 +45,20 @@ public class UsuarioService {
         return toResponse(criarEntidade(dto));
     }
 
-    // --- CRIA UM NOVO USUÁRIO E RETORNA A ENTIDADE (CREDENCIAIS DE LOGIN SÃO CRIADAS NO KEYCLOAK, SEPARADAMENTE) ---
+    // --- CRIA UM NOVO USUÁRIO E RETORNA A ENTIDADE ---
     @Transactional
     public Usuario criarEntidade(UsuarioRequestDTO dto) {
         if (usuarioRepository.existsByEmail(dto.getEmail())) {
             throw new BusinessException("Já existe um usuário cadastrado com o e-mail: " + dto.getEmail());
         }
 
+        boolean senhaGerada = dto.getSenha() == null || dto.getSenha().isBlank();
+        String senhaFinal = senhaGerada ? geradorSenhaTemporaria.gerar() : dto.getSenha();
+
         Usuario usuario = Usuario.builder()
                 .nome(dto.getNome())
                 .email(dto.getEmail())
+                .senha(passwordEncoder.encode(senhaFinal))
                 .cpf(dto.getCpf())
                 .telefone(dto.getTelefone())
                 .dataNascimento(dto.getDataNascimento())
@@ -56,7 +66,13 @@ public class UsuarioService {
                 .role(dto.getRole())
                 .build();
 
-        return usuarioRepository.save(usuario);
+        Usuario salvo = usuarioRepository.save(usuario);
+
+        if (senhaGerada) {
+            emailService.enviarSenhaTemporaria(salvo.getEmail(), salvo.getNome(), senhaFinal);
+        }
+
+        return salvo;
     }
 
     // --- ATUALIZA UM USUÁRIO EXISTENTE ---
@@ -77,6 +93,10 @@ public class UsuarioService {
 
         if (dto.getAtivo() != null) {
             usuario.setAtivo(dto.getAtivo());
+        }
+
+        if (dto.getSenha() != null && !dto.getSenha().isBlank()) {
+            usuario.setSenha(passwordEncoder.encode(dto.getSenha()));
         }
 
         return toResponse(usuarioRepository.save(usuario));

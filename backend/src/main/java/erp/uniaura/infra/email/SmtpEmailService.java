@@ -18,6 +18,14 @@ public class SmtpEmailService implements EmailService {
 
     private final JavaMailSender javaMailSender;
 
+    // --- ENVIA SENHA TEMPORÁRIA ---
+    @Override
+    public void enviarSenhaTemporaria(String destinatario, String nome, String senhaTemporaria) {
+        enviar(destinatario, "Bem-vindo ao ERP Acadêmico - Acesso ao sistema",
+                "Olá, %s!\n\nSua conta foi criada. Use a senha temporária abaixo para o primeiro acesso e altere-a assim que possível:\n\nSenha temporária: %s"
+                        .formatted(nome, senhaTemporaria));
+    }
+
     // --- AVISA O ALUNO QUE UMA MENSALIDADE VENCEU E ESTÁ EM ATRASO ---
     @Override
     public void notificarMensalidadeAtrasada(String destinatario, String nome, String competencia, BigDecimal valor) {

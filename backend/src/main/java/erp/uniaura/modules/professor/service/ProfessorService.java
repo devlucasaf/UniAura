@@ -51,6 +51,7 @@ public class ProfessorService {
         Usuario usuario = usuarioService.criarEntidade(UsuarioRequestDTO.builder()
                 .nome(dto.getNome())
                 .email(dto.getEmail())
+                .senha(dto.getSenha())
                 .cpf(dto.getCpf())
                 .telefone(dto.getTelefone())
                 .dataNascimento(dto.getDataNascimento())

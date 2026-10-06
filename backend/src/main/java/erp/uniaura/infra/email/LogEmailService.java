@@ -12,6 +12,23 @@ import java.math.BigDecimal;
 @ConditionalOnProperty(prefix = "app.email", name = "provider", havingValue = "log", matchIfMissing = true)
 public class LogEmailService implements EmailService {
 
+    // --- ENVIA SENHA TEMPORÁRIA ---
+    @Override
+    public void enviarSenhaTemporaria(String destinatario, String nome, String senhaTemporaria) {
+        log.info("""
+
+                Para: {} <{}>
+                Assunto: Bem-vindo ao ERP Acadêmico - Acesso ao sistema
+
+                Olá, {}!
+                Sua conta foi criada. Use a senha temporária abaixo para o primeiro acesso
+                e altere-a assim que possível:
+
+                    Senha temporária: {}
+
+                """, nome, destinatario, nome, senhaTemporaria);
+    }
+
     // --- AVISA O ALUNO QUE UMA MENSALIDADE VENCEU E ESTÁ EM ATRASO ---
     @Override
     public void notificarMensalidadeAtrasada(String destinatario, String nome, String competencia, BigDecimal valor) {
