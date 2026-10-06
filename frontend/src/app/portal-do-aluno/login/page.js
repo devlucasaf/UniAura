@@ -1,22 +1,11 @@
 "use client";
 
-import { useEffect }    from "react";
 import Link             from "next/link";
 import SiteChrome       from "@/components/web/SiteChrome";
-import { useAuth }      from "@bernardo-dias/react-cloudsupport";
-import { LoggedOut }    from "@bernardo-dias/react-cloudsupport/prime";
+import FormularioLogin from "@/components/interno/FormularioLogin";
 
-// --- LOGIN DO PORTAL DO ALUNO: REDIRECIONA PARA O KEYCLOAK ---
+// --- LOGIN DO PORTAL DO ALUNO (E-MAIL E SENHA) ---
 export default function PortalAlunoLoginPage() {
-    const auth = useAuth();
-
-    // --- REDIRECIONA AUTOMATICAMENTE PARA A TELA DE LOGIN DO KEYCLOAK ---
-    useEffect(() => {
-        if (!auth.isLoading && !auth.isAuthenticated && !auth.activeNavigator) {
-            auth.signinRedirect();
-        }
-    }, [auth.isLoading, auth.isAuthenticated, auth.activeNavigator]);
-
     return (
         <SiteChrome>
             <div className="grad-page">
@@ -27,7 +16,9 @@ export default function PortalAlunoLoginPage() {
                                 <span className="grad-eyebrow">Portal do Aluno</span>
                                 <h1>Acesse sua conta</h1>
 
-                                <LoggedOut message="Sua sessão foi encerrada. Entre novamente para continuar." label="Entrar" />
+                                <p className="muted">Informe seu e-mail e sua senha para acompanhar notas, frequência, biblioteca e muito mais.</p>
+
+                                <FormularioLogin />
 
                                 <p className="site-auth-rodape">
                                     Ainda não é aluno da UniAura?{" "}
@@ -36,7 +27,7 @@ export default function PortalAlunoLoginPage() {
                                     </Link>
                                 </p>
                                 <p className="site-auth-rodape">
-                                    <Link className="site-link-voltar" href="/">
+                                    <Link className="site-link-voltar" href="/web/home">
                                         <span className="site-seta-voltar" aria-hidden="true">←</span> Voltar ao site
                                     </Link>
                                 </p>
