@@ -11,7 +11,7 @@ import { notificar }                    from "@/lib/notificar";
 
 const TURNOS = { MANHA: "Manhã", TARDE: "Tarde", NOITE: "Noite" };
 
-// --- LINHA DE INFORMAÇÃO DO ALUNO (ÍCONE + RÓTULO + VALOR) ---
+// --- LINHA DE INFORMAÇÃO DO ALUNO ---
 const LinhaInfo = ({ icone, rotulo, valor }) => (
     <div className="ua-perfil-linha">
         <i className={icone} aria-hidden="true" />
@@ -27,7 +27,7 @@ export default function MenuPerfilAluno({ usuario, sair }) {
     const [perfil, setPerfil] = useState(null);
     const [senhaAberta, setSenhaAberta] = useState(false);
 
-    // --- BUSCA NO BACKEND OS DADOS DO ALUNO LOGADO (CURSO, TURNO, RA E SEMESTRE) ---
+    // --- BUSCA NO BACKEND OS DADOS DO ALUNO LOGADO ---
     useEffect(() => {
         api("/alunos/me").then(setPerfil).catch(() => setPerfil(null));
     }, []);
@@ -37,19 +37,51 @@ export default function MenuPerfilAluno({ usuario, sair }) {
             template: () => (
                 <div className="ua-perfil-cabecalho">
                     <strong className="ua-perfil-nome">{perfil?.nome || usuario?.nome || "Aluno"}</strong>
-                    <LinhaInfo icone="pi pi-book" rotulo="Curso" valor={perfil?.curso} />
-                    <LinhaInfo icone="pi pi-clock" rotulo="Turno" valor={TURNOS[perfil?.turno]} />
-                    <LinhaInfo icone="pi pi-hashtag" rotulo="RA" valor={perfil?.matriculaRA} />
-                    <LinhaInfo icone="pi pi-calendar" rotulo="Semestre" valor={perfil?.semestreAtual ? `${perfil.semestreAtual}º semestre` : null} />
+                    <LinhaInfo 
+                        icone="pi pi-book" 
+                        rotulo="Curso" 
+                        valor={perfil?.curso} 
+                    />
+                    <LinhaInfo 
+                        icone="pi pi-clock" 
+                        rotulo="Turno" 
+                        valor={TURNOS[perfil?.turno]} 
+                    />
+                    <LinhaInfo 
+                        icone="pi pi-hashtag" 
+                        rotulo="RA" 
+                        valor={perfil?.matriculaRA} 
+                    />
+                    <LinhaInfo 
+                        icone="pi pi-calendar" 
+                        rotulo="Semestre" 
+                        valor={perfil?.semestreAtual ? `${perfil.semestreAtual}º semestre` : null} 
+                    />
                 </div>
             )
         },
-        { separator: true },
-        { label: "Meu perfil", icon: "pi pi-chart-bar", command: () => router.push("/portal-do-aluno/perfil") },
-        { label: "Dados pessoais", icon: "pi pi-id-card", command: () => router.push("/portal-do-aluno/cadastro?editar=1") },
-        { label: "Alterar senha", icon: "pi pi-key", command: () => setSenhaAberta(true) },
-        { separator: true },
-        { label: "Sair", icon: "pi pi-sign-out", className: "ua-menu-item-sair", command: sair }
+        { 
+            separator: true 
+        },
+        { 
+            label: "Meu perfil", 
+            icon: "pi pi-chart-bar", command: () => router.push("/portal-do-aluno/perfil") 
+        },
+        { 
+            label: "Dados pessoais", 
+            icon: "pi pi-id-card", command: () => router.push("/portal-do-aluno/cadastro?editar=1") 
+        },
+        { 
+            label: "Alterar senha", 
+            icon: "pi pi-key", command: () => setSenhaAberta(true) 
+        },
+        { 
+            separator: true 
+        },
+        { 
+            label: "Sair", 
+            icon: "pi pi-sign-out", className: "ua-menu-item-sair", command: sair 
+        }
     ];
 
     return (
@@ -69,14 +101,14 @@ export default function MenuPerfilAluno({ usuario, sair }) {
     );
 }
 
-// --- DIÁLOGO DE TROCA DE SENHA (PUT /auth/senha): EXIGE A SENHA ATUAL E CONFIRMAÇÃO DA NOVA ---
+// --- DIÁLOGO DE TROCA DE SENHA ---
 function DialogAlterarSenha({ visivel, aoFechar }) {
-    const [atual, setAtual] = useState("");
-    const [nova, setNova] = useState("");
-    const [confirmar, setConfirmar] = useState("");
-    const [erros, setErros] = useState({});
-    const [erro, setErro] = useState("");
-    const [salvando, setSalvando] = useState(false);
+    const [atual,       setAtual]       = useState("");
+    const [nova,        setNova]        = useState("");
+    const [confirmar,   setConfirmar]   = useState("");
+    const [erros,       setErros]       = useState({});
+    const [erro,        setErro]        = useState("");
+    const [salvando,    setSalvando]    = useState(false);
 
     // --- LIMPA O FORMULÁRIO AO FECHAR ---
     const fechar = () => {
@@ -100,16 +132,19 @@ function DialogAlterarSenha({ visivel, aoFechar }) {
         if (!atual) {
             novos.atual = "Informe a senha atual.";
         }
+
         if (!nova) {
             novos.nova = "Informe a nova senha.";
         } else if (nova.length < 6) {
             novos.nova = "Use pelo menos 6 caracteres.";
         }
+
         if (!confirmar) {
             novos.confirmar = "Confirme a nova senha.";
         } else if (nova && confirmar !== nova) {
             novos.confirmar = "As senhas informadas não conferem.";
         }
+
         setErros(novos);
         if (Object.keys(novos).length > 0) {
             return;
@@ -130,7 +165,9 @@ function DialogAlterarSenha({ visivel, aoFechar }) {
         <Dialog header="Alterar senha" visible={visivel} onHide={fechar} style={{ width: "min(26rem, 92vw)" }} draggable={false} dismissableMask>
             <form className="ua-form-login" noValidate onSubmit={salvar}>
                 <div className="field">
-                    <label htmlFor="senhaAtual">Senha atual <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                    <label htmlFor="senhaAtual">
+                        Senha atual <span className="ua-obrigatorio" aria-hidden="true">*</span>
+                    </label>
                     <CampoSenha
                         id="senhaAtual"
                         name="senhaAtual"
@@ -143,7 +180,9 @@ function DialogAlterarSenha({ visivel, aoFechar }) {
                 </div>
 
                 <div className="field">
-                    <label htmlFor="novaSenha">Nova senha <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                    <label htmlFor="novaSenha">
+                        Nova senha <span className="ua-obrigatorio" aria-hidden="true">*</span>
+                    </label>
                     <CampoSenha
                         id="novaSenha"
                         name="novaSenha"
@@ -156,7 +195,9 @@ function DialogAlterarSenha({ visivel, aoFechar }) {
                 </div>
 
                 <div className="field">
-                    <label htmlFor="confirmarNovaSenha">Confirmar nova senha <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                    <label htmlFor="confirmarNovaSenha">
+                        Confirmar nova senha <span className="ua-obrigatorio" aria-hidden="true">*</span>
+                    </label>
                     <CampoSenha
                         id="confirmarNovaSenha"
                         name="confirmarNovaSenha"

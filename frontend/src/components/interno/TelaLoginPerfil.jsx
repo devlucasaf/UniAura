@@ -3,7 +3,7 @@
 import Link             from "next/link";
 import FormularioLogin from "./FormularioLogin";
 
-// --- TELA DE LOGIN DE UMA ÁREA INTERNA (E-MAIL E SENHA) ---
+// --- TELA DE LOGIN DE UMA ÁREA INTERNA ---
 export default function TelaLoginPerfil({ area }) {
     return (
         <div className="auth-screen">

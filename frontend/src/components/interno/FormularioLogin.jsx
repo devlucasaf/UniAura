@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState }  from "react";
-import { useRouter }            from "next/navigation";
-import { Button }               from "primereact/button";
-import { InputText }            from "primereact/inputtext";
-import CampoSenha               from "@/components/web/CampoSenha";
+import { useEffect, useState }                                          from "react";
+import { useRouter }                                                    from "next/navigation";
+import { Button }                                                       from "primereact/button";
+import { InputText }                                                    from "primereact/inputtext";
+import CampoSenha                                                       from "@/components/web/CampoSenha";
 import { autenticar, dashboardDoPerfil, estaAutenticado, obterUsuario } from "@/lib/auth";
 
-// --- FORMULÁRIO DE LOGIN COM E-MAIL E SENHA (VALIDADOS NO BACKEND, CONTRA O SQL SERVER) ---
+// --- FORMULÁRIO DE LOGIN COM E-MAIL E SENHA ---
 export default function FormularioLogin() {
     const router = useRouter();
     const [email,    setEmail]    = useState("");
@@ -23,7 +23,6 @@ export default function FormularioLogin() {
         }
     }, []);
 
-    // --- MENSAGEM DE ERRO EM VERMELHO ABAIXO DO CAMPO ---
     const erroDe = (nome) => erros[nome] && <small className="ua-erro-campo" role="alert">{erros[nome]}</small>;
 
     // --- VALIDA OS CAMPOS OBRIGATÓRIOS ANTES DE ENVIAR ---
@@ -34,6 +33,7 @@ export default function FormularioLogin() {
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
             novos.email = "Informe um e-mail válido.";
         }
+
         if (!senha) {
             novos.senha = "Informe sua senha.";
         }
@@ -64,7 +64,9 @@ export default function FormularioLogin() {
     return (
         <form className="ua-form-login" noValidate onSubmit={entrar}>
             <div className="field">
-                <label htmlFor="loginEmail">E-mail <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                <label htmlFor="loginEmail">
+                    E-mail <span className="ua-obrigatorio" aria-hidden="true">*</span>
+                </label>
                 <InputText
                     id="loginEmail"
                     type="email"
@@ -77,7 +79,9 @@ export default function FormularioLogin() {
             </div>
 
             <div className="field">
-                <label htmlFor="loginSenha">Senha <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                <label htmlFor="loginSenha">
+                    Senha <span className="ua-obrigatorio" aria-hidden="true">*</span>
+                </label>
                 <CampoSenha
                     id="loginSenha"
                     name="senha"

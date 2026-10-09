@@ -1,9 +1,9 @@
 "use client";
 
-import { useState }                 from "react";
-import { Calendar }                 from "primereact/calendar";
+import { useState }             from "react";
+import { Calendar }             from "primereact/calendar";
+import { EVENTOS, chaveDoDia }  from "./dados";
 import "@/lib/localePt";
-import { EVENTOS, chaveDoDia }      from "./dados";
 
 // --- CHAVES DOS DIAS QUE TÊM EVENTO, PARA MARCAR NO CALENDÁRIO ---
 const DIAS_COM_EVENTO = new Set(EVENTOS.map((evento) => chaveDoDia(evento.data)));

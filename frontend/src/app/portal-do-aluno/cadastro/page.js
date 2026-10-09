@@ -1,21 +1,21 @@
 "use client";
 
-import { Suspense, useCallback, useEffect, useRef, useState } from "react";
-import { useRouter, useSearchParams }                   from "next/navigation";
-import { InputText }                                    from "primereact/inputtext";
-import { Dropdown }                                     from "primereact/dropdown";
-import { Dialog }                                       from "primereact/dialog";
-import { Checkbox }                                     from "primereact/checkbox";
-import { Button }                                       from "primereact/button";
-import { Message }                                      from "primereact/message";
-import SiteChrome                                       from "@/components/web/SiteChrome";
-import MolduraAluno                                     from "@/screens/portal-do-aluno/MolduraAluno";
-import CampoData                                         from "@/components/web/CampoData";
-import CampoSenha                                        from "@/components/web/CampoSenha";
-import { useEfeitosDePagina }                           from "@/hooks/useEfeitosDePagina";
-import { mascararCpf, mascararTelefone, mascararCep }   from "@/lib/mascaras";
-import { notificar }                                    from "@/lib/notificar";
-import { api }                                          from "@/lib/api";
+import { Suspense, useCallback, useEffect, useRef, useState }   from "react";
+import { useRouter, useSearchParams }                           from "next/navigation";
+import { InputText }                                            from "primereact/inputtext";
+import { Dropdown }                                             from "primereact/dropdown";
+import { Dialog }                                               from "primereact/dialog";
+import { Checkbox }                                             from "primereact/checkbox";
+import { Button }                                               from "primereact/button";
+import { Message }                                              from "primereact/message";
+import SiteChrome                                               from "@/components/web/SiteChrome";
+import MolduraAluno                                             from "@/screens/portal-do-aluno/MolduraAluno";
+import CampoData                                                from "@/components/web/CampoData";
+import CampoSenha                                               from "@/components/web/CampoSenha";
+import { useEfeitosDePagina }                                   from "@/hooks/useEfeitosDePagina";
+import { mascararCpf, mascararTelefone, mascararCep }           from "@/lib/mascaras";
+import { notificar }                                            from "@/lib/notificar";
+import { api }                                                  from "@/lib/api";
 
 
 // --- ESTADOS BRASILEIROS ---
@@ -89,12 +89,20 @@ const OPCOES_CURSO = [
     }
 ];
 
-// --- OPÇÕES DE SEXO ---
 // --- TURNOS DO CURSO ---
 const OPCOES_TURNO = [
-    { value: "MANHA", label: "Manhã" },
-    { value: "TARDE", label: "Tarde" },
-    { value: "NOITE", label: "Noite" }
+    { 
+        value: "MANHA", 
+        label: "Manhã" 
+    },
+    { 
+        value: "TARDE", 
+        label: "Tarde" 
+    },
+    { 
+        value: "NOITE", 
+        label: "Noite" 
+    }
 ];
 
 // --- CAMPOS DE TEXTO NÃO CONTROLADOS, PREENCHIDOS PELO REF QUANDO O FORMULÁRIO ESTÁ EM MODO DE EDIÇÃO ---
@@ -105,44 +113,108 @@ const CAMPOS_TEXTO_EDICAO = [
     "enderecoComplemento", "enderecoBairro", "instituicaoOrigem", "nomeInstituicaoConclusao", "anoConclusaoEnsinoMedio"
 ];
 
+// --- OPÇÕES DE SEXO ---
 const OPCOES_SEXO = [
-    { value: "FEMININO", label: "Feminino" },
-    { value: "MASCULINO", label: "Masculino" },
-    { value: "OUTRO", label: "Outro" },
-    { value: "PREFIRO_NAO_INFORMAR", label: "Prefiro não informar" }
+    { 
+        value: "FEMININO", 
+        label: "Feminino" 
+    },
+    { 
+        value: "MASCULINO", 
+        label: "Masculino" 
+    },
+    { 
+        value: "OUTRO", 
+        label: "Outro" 
+    },
+    { 
+        value: "PREFIRO_NAO_INFORMAR", 
+        label: "Prefiro não informar" 
+    }
 ];
 
 // --- OPÇÕES DE ESTADO CÍVIL ---
 const OPCOES_ESTADO_CIVIL = [
-    { value: "SOLTEIRO", label: "Solteiro(a)" },
-    { value: "CASADO", label: "Casado(a)" },
-    { value: "DIVORCIADO", label: "Divorciado(a)" },
-    { value: "VIUVO", label: "Viúvo(a)" },
-    { value: "UNIAO_ESTAVEL", label: "União estável" }
+    { 
+        value: "SOLTEIRO", 
+        label: "Solteiro(a)" 
+    },
+    { 
+        value: "CASADO", 
+        label: "Casado(a)" 
+    },
+    { 
+        value: "DIVORCIADO", 
+        label: "Divorciado(a)" 
+    },
+    { 
+        value: "VIUVO", 
+        label: "Viúvo(a)" 
+    },
+    { 
+        value: "UNIAO_ESTAVEL", 
+        label: "União estável" 
+    }
 ];
 
 // -- OPÇÕES DE TIPO DE ENDEREÇO ---
 const OPCOES_TIPO_ENDERECO = [
-    { value: "RESIDENCIAL", label: "Residencial" },
-    { value: "PROFISSIONAL", label: "Profissional" }
+    { 
+        value: "RESIDENCIAL", 
+        label: "Residencial" 
+    },
+    { 
+        value: "PROFISSIONAL", 
+        label: "Profissional" 
+    }
 ];
 
 // -- OPÇÕES DE TIPO SANGUÍNEO ---
 const OPCOES_TIPO_SANGUINEO = [
-    { value: "A_POSITIVO", label: "A+" },
-    { value: "A_NEGATIVO", label: "A-" },
-    { value: "B_POSITIVO", label: "B+" },
-    { value: "B_NEGATIVO", label: "B-" },
-    { value: "AB_POSITIVO", label: "AB+" },
-    { value: "AB_NEGATIVO", label: "AB-" },
-    { value: "O_POSITIVO", label: "O+" },
-    { value: "O_NEGATIVO", label: "O-" }
+    { 
+        value: "A_POSITIVO", 
+        label: "A+" 
+    },
+    { 
+        value: "A_NEGATIVO", 
+        label: "A-" 
+    },
+    { 
+        value: "B_POSITIVO", 
+        label: "B+" 
+    },
+    { 
+        value: "B_NEGATIVO", 
+        label: "B-" 
+    },
+    { 
+        value: "AB_POSITIVO", 
+        label: "AB+" 
+    },
+    { 
+        value: "AB_NEGATIVO", 
+        label: "AB-" 
+    },
+    { 
+        value: "O_POSITIVO", 
+        label: "O+" 
+    },
+    { 
+        value: "O_NEGATIVO", 
+        label: "O-" 
+    }
 ];
 
 // -- OPÇÕES DE TIPO DE ESCOLA DE ENSINO MÉDIO ---
 const OPCOES_TIPO_ESCOLA = [
-    { value: "PUBLICA", label: "Pública" },
-    { value: "PARTICULAR", label: "Particular" }
+    { 
+        value: "PUBLICA", 
+        label: "Pública" 
+    },
+    { 
+        value: "PARTICULAR", 
+        label: "Particular" 
+    }
 ];
 
 // -- OPÇÕES DE MESES ---
@@ -153,24 +225,105 @@ const OPCOES_MES = [
 
 // -- OPÇÕES DE RAÇA/ETNIA ---
 const OPCOES_RACA_ETNIA = [
-    { value: "BRANCA", label: "Branca" },
-    { value: "PRETA", label: "Preta" },
-    { value: "PARDA", label: "Parda" },
-    { value: "AMARELA", label: "Amarela" },
-    { value: "INDIGENA", label: "Indígena" },
-    { value: "NAO_DECLARADA", label: "Prefiro não declarar" }
+    { 
+        value: "BRANCA", 
+        label: "Branca" 
+    },
+    { 
+        value: "PRETA", 
+        label: "Preta" 
+    },
+    { 
+        value: "PARDA", 
+        label: "Parda" 
+    },
+    { 
+        value: "AMARELA", 
+        label: "Amarela" 
+    },
+    { 
+        value: "INDIGENA", 
+        label: "Indígena" 
+    },
+    { 
+        value: "NAO_DECLARADA", 
+        label: "Prefiro não declarar" 
+    }
 ];
 
 // --- PASSOS DO FORMULÁRIO DE CADASTRO ---
 const PASSOS = [
-    { nome: "Dados pessoais", icone: (<><circle cx="12" cy="8" r="4"></circle><path d="M4 21v-1a8 8 0 0 1 16 0v1"></path></>) },
-    { nome: "Origem", icone: (<><path d="M12 22s7-7.58 7-12A7 7 0 0 0 5 10c0 4.42 7 12 7 12Z"></path><circle cx="12" cy="10" r="2.5"></circle></>) },
-    { nome: "Identificação", icone: (<><rect x="2" y="5" width="20" height="14" rx="2"></rect><circle cx="8.5" cy="12" r="2"></circle><path d="M5.5 16.5c.5-1.6 1.6-2.4 3-2.4s2.5.8 3 2.4"></path><path d="M14 10h5M14 14h3"></path></>) },
-    { nome: "Endereço", icone: (<><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path></>) },
-    { nome: "Informações gerais", icone: <path d="M22 12h-4l-3 8-4-16-3 8H2"></path> },
-    { nome: "Censo", icone: (<><path d="M22 10 12 5 2 10l10 5 10-5Z"></path><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"></path></>) },
-    { nome: "E-mail institucional", icone: (<><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m2 7 10 6 10-6"></path></>) },
-    { nome: "Consentimento", icone: (<><path d="M12 2 4 5v6c0 5 3.5 8.5 8 11 4.5-2.5 8-6 8-11V5Z"></path><path d="m9 12 2 2 4-4"></path></>) }
+    { 
+        nome: "Dados pessoais", 
+        icone: (
+            <>
+                <circle cx="12" cy="8" r="4"></circle>
+                <path d="M4 21v-1a8 8 0 0 1 16 0v1"></path>
+            </>
+        ) 
+    },
+    { 
+        nome: "Origem", 
+        icone: (
+            <>
+                <path d="M12 22s7-7.58 7-12A7 7 0 0 0 5 10c0 4.42 7 12 7 12Z"></path>
+                <circle cx="12" cy="10" r="2.5"></circle>
+            </>
+        ) 
+    },
+    { 
+        nome: "Identificação", 
+        icone: (
+            <>
+                <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                <circle cx="8.5" cy="12" r="2"></circle>
+                <path d="M5.5 16.5c.5-1.6 1.6-2.4 3-2.4s2.5.8 3 2.4"></path>
+                <path d="M14 10h5M14 14h3"></path>
+            </>
+        ) 
+    },
+    { 
+        nome: "Endereço", 
+        icone: (
+            <>
+                <path d="M3 10.5 12 3l9 7.5"></path>
+                <path d="M5 9.5V21h14V9.5"></path>
+            </>
+        ) 
+    },
+    { 
+        nome: "Informações gerais", 
+        icone: (
+            <path d="M22 12h-4l-3 8-4-16-3 8H2"></path>
+        ) 
+    },
+    { 
+        nome: "Censo", 
+        icone: (
+            <>
+                <path d="M22 10 12 5 2 10l10 5 10-5Z"></path>
+                <path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"></path>
+            </>
+        ) 
+    },
+    { 
+        nome: "E-mail institucional", 
+        icone: (
+            <>
+                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                <path d="m2 7 10 6 10-6"></path>
+            </>
+        ) 
+    },
+    { 
+        nome: "Consentimento", 
+        icone: (
+            <>
+                <path d="M12 2 4 5v6c0 5 3.5 8.5 8 11 4.5-2.5 8-6 8-11V5Z"></path>
+                <path d="m9 12 2 2 sift=4-4"></path>
+            </>
+        ) 
+    }
 ];
 
 // --- CAMPOS CONTROLADOS PADRÃO, USADOS PARA INICIALIZAR O STATE DE CAMPOS ---
@@ -243,7 +396,7 @@ function camposDoPerfil(dados) {
     };
 }
 
-// --- GERA ATÉ 3 SUGESTÕES DE E-MAIL INSTITUCIONAL (@uniaura.com) A PARTIR DO NOME COMPLETO ---
+// --- GERA ATÉ 3 SUGESTÕES DE E-MAIL INSTITUCIONAL A PARTIR DO NOME COMPLETO ---
 function gerarSugestoesEmail(nomeCompleto) {
     const partes = (nomeCompleto || "")
         .normalize("NFD")
@@ -279,9 +432,11 @@ function mensagemDeErro(campo) {
     if (campo.validity.valueMissing) {
         return campo.type === "checkbox" ? "Você precisa aceitar para continuar." : "Campo obrigatório.";
     }
+
     if (campo.validity.typeMismatch) {
         return "Informe um valor válido.";
     }
+
     if (campo.validity.tooShort) {
         return `Use pelo menos ${campo.minLength} caracteres.`;
     }
@@ -293,7 +448,6 @@ function CadastroConteudo() {
     const raizRef = useEfeitosDePagina();
     const router = useRouter();
 
-    // --- MODO DE EDIÇÃO (?editar=1): O ALUNO LOGADO ALTERA OS PRÓPRIOS DADOS PESSOAIS ---
     const editando = useSearchParams().get("editar") === "1";
     const totalEtapas = editando ? 6 : 8;
     const passos = editando ? PASSOS.slice(0, 6) : PASSOS;
@@ -302,7 +456,7 @@ function CadastroConteudo() {
     const [perfil, setPerfil] = useState(null);
     const [formularioMontado, setFormularioMontado] = useState(false);
 
-    // --- GUARDA O <form> NO REF E AVISA QUANDO ELE FOI MONTADO (NECESSÁRIO PARA PREENCHER OS CAMPOS DA EDIÇÃO) ---
+    // --- GUARDA O <form> NO REF E AVISA QUANDO ELE FOI MONTADO ---
     const definirFormulario = useCallback((no) => {
         formularioRef.current = no;
         setFormularioMontado(!!no);
@@ -311,8 +465,8 @@ function CadastroConteudo() {
     const [etapaAtual,                  setEtapaAtual]                  = useState(1);
     const [campos,                      setCampos]                      = useState(CAMPOS_CONTROLADOS_PADRAO);
     const [erros,                       setErros]                       = useState({});
-    const [chaveFormulario,            setChaveFormulario]             = useState(0);
-    const [sugestoesEmail,             setSugestoesEmail]              = useState([]);
+    const [chaveFormulario,             setChaveFormulario]             = useState(0);
+    const [sugestoesEmail,              setSugestoesEmail]              = useState([]);
     const [emailEscolhido,              setEmailEscolhido]              = useState("");
     const [mostrarInfoAcompanhamento,   setMostrarInfoAcompanhamento]   = useState(false);
     const [mensagem,                    setMensagem]                    = useState("");
@@ -346,6 +500,7 @@ function CadastroConteudo() {
         if (!editando || !perfil || !formularioMontado || !formulario) {
             return;
         }
+
         CAMPOS_TEXTO_EDICAO.forEach((nome) => {
             if (formulario[nome]) {
                 formulario[nome].value = perfil[nome] ?? "";
@@ -424,6 +579,7 @@ function CadastroConteudo() {
             if (!campos.curso) {
                 novosErros.curso = "Escolha o curso pretendido.";
             }
+
             if (!campos.turno) {
                 novosErros.turno = "Escolha o turno.";
             }
@@ -468,7 +624,7 @@ function CadastroConteudo() {
         }
     };
 
-    // --- GUARDA O E-MAIL INSTITUCIONAL ESCOLHIDO (SERÁ O E-MAIL DE LOGIN DO ALUNO) ---
+    // --- GUARDA O E-MAIL INSTITUCIONAL ESCOLHIDO ---
     const escolherEmail = (sugestao) => {
         setEmailEscolhido(sugestao);
         limparErroCampo("email");
@@ -571,7 +727,7 @@ function CadastroConteudo() {
             return;
         }
 
-        // --- EDIÇÃO: ENVIA SÓ OS DADOS PESSOAIS (CURSO, TURNO, RA, CPF E E-MAIL INSTITUCIONAL NÃO MUDAM) ---
+        // --- ENVIA SÓ OS DADOS PESSOAIS ---
         if (editando) {
             const { senha, email, cpf, curso, turno, termoConsentimento, ...dadosPessoais } =
                 montarPayload(formulario, formulario.cpf.value.replace(/\D/g, ""));
@@ -614,7 +770,7 @@ function CadastroConteudo() {
             setMensagem(texto);
             notificar("Matrícula realizada com sucesso!", "success");
 
-            // --- LIMPA TODO O FORMULÁRIO (A NOVA key REMONTA OS CAMPOS NÃO CONTROLADOS, INCLUSIVE AS DATAS) ---
+            // --- LIMPA TODO O FORMULÁRIO ---
             setCampos(CAMPOS_CONTROLADOS_PADRAO);
             setErros({});
             setSugestoesEmail([]);
@@ -702,8 +858,18 @@ function CadastroConteudo() {
                                         <legend>Dados pessoais</legend>
                                         <div className="site-form-grid">
                                             <div className="field field-full">
-                                                <label htmlFor="cadNome">Nome completo <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
-                                                <InputText id="cadNome" name="nome" required minLength={5} autoComplete="name" className={classeErro("nome")} onInput={() => limparErroCampo("nome")} />
+                                                <label htmlFor="cadNome">
+                                                    Nome completo <span className="ua-obrigatorio" aria-hidden="true">*</span>
+                                                </label>
+                                                <InputText 
+                                                    id="cadNome" 
+                                                    name="nome" 
+                                                    required 
+                                                    minLength={5} 
+                                                    autoComplete="name" 
+                                                    className={classeErro("nome")} 
+                                                    onInput={() => limparErroCampo("nome")} 
+                                                />
                                                 {erroDe("nome")}
                                             </div>
 
@@ -741,12 +907,18 @@ function CadastroConteudo() {
 
                                             <div className="field">
                                                 <label htmlFor="cadNomePai">Nome do pai</label>
-                                                <InputText id="cadNomePai" name="nomePai" />
+                                                <InputText 
+                                                    id="cadNomePai" 
+                                                    name="nomePai" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadNomeMae">Nome da mãe</label>
-                                                <InputText id="cadNomeMae" name="nomeMae" />
+                                                <InputText 
+                                                    id="cadNomeMae" 
+                                                    name="nomeMae" 
+                                                />
                                             </div>
 
                                             <div className="field">
@@ -781,18 +953,32 @@ function CadastroConteudo() {
                                         <div className="site-form-grid">
                                             <div className="field">
                                                 <label htmlFor="cadNascimento">Data de nascimento <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
-                                                <CampoData id="cadNascimento" name="dataNascimento" yearRange="1920:2010" valorInicial={perfil?.dataNascimento} required invalido={!!erros.dataNascimento} onChange={() => limparErroCampo("dataNascimento")} />
+                                                <CampoData 
+                                                    id="cadNascimento" 
+                                                    name="dataNascimento" 
+                                                    yearRange="1920:2010" 
+                                                    valorInicial={perfil?.dataNascimento} 
+                                                    required 
+                                                    invalido={!!erros.dataNascimento} 
+                                                    onChange={() => limparErroCampo("dataNascimento")} 
+                                                />
                                                 {erroDe("dataNascimento")}
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadMunicipioNascimento">Município de nascimento</label>
-                                                <InputText id="cadMunicipioNascimento" name="municipioNascimento" />
+                                                <InputText 
+                                                    id="cadMunicipioNascimento" 
+                                                    name="municipioNascimento" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadCidade">Cidade</label>
-                                                <InputText id="cadCidade" name="cidade" />
+                                                <InputText 
+                                                    id="cadCidade" 
+                                                    name="cidade" 
+                                                />
                                             </div>
 
                                             <div className="field">
@@ -809,7 +995,11 @@ function CadastroConteudo() {
 
                                             <div className="field">
                                                 <label htmlFor="cadNacionalidade">Nacionalidade</label>
-                                                <InputText id="cadNacionalidade" name="nacionalidade" defaultValue="Brasileira" />
+                                                <InputText 
+                                                    id="cadNacionalidade" 
+                                                    name="nacionalidade" 
+                                                    defaultValue="Brasileira" 
+                                                />
                                             </div>
                                         </div>
                                     </fieldset>
@@ -837,12 +1027,19 @@ function CadastroConteudo() {
 
                                             <div className="field">
                                                 <label htmlFor="cadNumeroIdentidade">Número da identidade (RG)</label>
-                                                <InputText id="cadNumeroIdentidade" name="documentoNumero" />
+                                                <InputText 
+                                                    id="cadNumeroIdentidade" 
+                                                    name="documentoNumero" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadOrgaoEmissor">Órgão emissor da identidade</label>
-                                                <InputText id="cadOrgaoEmissor" name="documentoOrgaoEmissor" placeholder="SSP" />
+                                                <InputText 
+                                                    id="cadOrgaoEmissor" 
+                                                    name="documentoOrgaoEmissor" 
+                                                    placeholder="SSP" 
+                                                />
                                             </div>
 
                                             <div className="field">
@@ -859,17 +1056,29 @@ function CadastroConteudo() {
 
                                             <div className="field">
                                                 <label htmlFor="cadDataExpedicao">Data de expedição da identidade</label>
-                                                <CampoData id="cadDataExpedicao" name="dataExpedicaoIdentidade" valorInicial={perfil?.dataExpedicaoIdentidade} />
+                                                <CampoData 
+                                                    id="cadDataExpedicao" 
+                                                    name="dataExpedicaoIdentidade" 
+                                                    valorInicial={perfil?.dataExpedicaoIdentidade} 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadTituloEleitor">Número do título de eleitor</label>
-                                                <InputText id="cadTituloEleitor" name="numeroTituloEleitor" inputMode="numeric" />
+                                                <InputText 
+                                                    id="cadTituloEleitor" 
+                                                    name="numeroTituloEleitor" 
+                                                    inputMode="numeric" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadZonaEleitoral">Número da zona eleitoral</label>
-                                                <InputText id="cadZonaEleitoral" name="numeroZonaEleitoral" inputMode="numeric" />
+                                                <InputText 
+                                                    id="cadZonaEleitoral" 
+                                                    name="numeroZonaEleitoral" 
+                                                    inputMode="numeric" 
+                                                />
                                             </div>
 
                                             <div className="field">
@@ -886,12 +1095,18 @@ function CadastroConteudo() {
 
                                             <div className="field">
                                                 <label htmlFor="cadCertificadoReservista">Número do certificado de reservista (opcional)</label>
-                                                <InputText id="cadCertificadoReservista" name="numeroCertificadoReservista" />
+                                                <InputText 
+                                                    id="cadCertificadoReservista" 
+                                                    name="numeroCertificadoReservista" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadOrgaoReservista">Órgão emissor do certificado de reservista (opcional)</label>
-                                                <InputText id="cadOrgaoReservista" name="orgaoEmissorCertificadoReservista" />
+                                                <InputText 
+                                                    id="cadOrgaoReservista" 
+                                                    name="orgaoEmissorCertificadoReservista" 
+                                                />
                                             </div>
 
                                             <div className="field">
@@ -939,22 +1154,35 @@ function CadastroConteudo() {
 
                                             <div className="field">
                                                 <label htmlFor="cadRua">Rua</label>
-                                                <InputText id="cadRua" name="enderecoLogradouro" />
+                                                <InputText 
+                                                    id="cadRua" 
+                                                    name="enderecoLogradouro" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadNumeroEndereco">Número</label>
-                                                <InputText id="cadNumeroEndereco" name="enderecoNumero" />
+                                                <InputText 
+                                                    id="cadNumeroEndereco" 
+                                                    name="enderecoNumero" 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadComplemento">Complemento</label>
-                                                <InputText id="cadComplemento" name="enderecoComplemento" placeholder="Apto, bloco..." />
+                                                <InputText 
+                                                    id="cadComplemento" 
+                                                    name="enderecoComplemento" 
+                                                    placeholder="Apto, bloco..." 
+                                                />
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadBairro">Bairro</label>
-                                                <InputText id="cadBairro" name="enderecoBairro" />
+                                                <InputText 
+                                                    id="cadBairro" 
+                                                    name="enderecoBairro" 
+                                                />
                                             </div>
 
                                             <div className="field">
@@ -970,8 +1198,18 @@ function CadastroConteudo() {
                                             </div>
 
                                             <div className="field">
-                                                <label htmlFor="cadEmailPessoal">E-mail pessoal <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
-                                                <InputText id="cadEmailPessoal" name="emailPessoal" type="email" required autoComplete="email" className={classeErro("emailPessoal")} onInput={() => limparErroCampo("emailPessoal")} />
+                                                <label htmlFor="cadEmailPessoal">
+                                                    E-mail pessoal <span className="ua-obrigatorio" aria-hidden="true">*</span>
+                                                </label>
+                                                <InputText 
+                                                    id="cadEmailPessoal" 
+                                                    name="emailPessoal" 
+                                                    type="email" 
+                                                    required 
+                                                    autoComplete="email" 
+                                                    className={classeErro("emailPessoal")} 
+                                                    onInput={() => limparErroCampo("emailPessoal")} 
+                                                />
                                                 {erroDe("emailPessoal")}
                                             </div>
 
@@ -1009,13 +1247,29 @@ function CadastroConteudo() {
                                                 <>
                                             <div className="field">
                                                 <label htmlFor="cadSenha">Senha de acesso <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
-                                                <CampoSenha id="cadSenha" name="senha" required minLength={6} autoComplete="new-password" className={classeErro("senha")} onInput={() => limparErroCampo("senha")} />
+                                                <CampoSenha 
+                                                    id="cadSenha" 
+                                                    name="senha" 
+                                                    required 
+                                                    minLength={6} 
+                                                    autoComplete="new-password" 
+                                                    className={classeErro("senha")} 
+                                                    onInput={() => limparErroCampo("senha")} 
+                                                />
                                                 {erroDe("senha")}
                                             </div>
 
                                             <div className="field">
                                                 <label htmlFor="cadConfirmarSenha">Confirmar senha <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
-                                                <CampoSenha id="cadConfirmarSenha" name="confirmarSenha" required minLength={6} autoComplete="new-password" className={classeErro("confirmarSenha")} onInput={() => limparErroCampo("confirmarSenha")} />
+                                                <CampoSenha 
+                                                    id="cadConfirmarSenha" 
+                                                    name="confirmarSenha" 
+                                                    required 
+                                                    minLength={6} 
+                                                    autoComplete="new-password" 
+                                                    className={classeErro("confirmarSenha")} 
+                                                    onInput={() => limparErroCampo("confirmarSenha")} 
+                                                />
                                                 {erroDe("confirmarSenha")}
                                             </div>
                                                 </>
@@ -1041,17 +1295,32 @@ function CadastroConteudo() {
                                         </div>
 
                                         <label className="site-form-termos">
-                                            <Checkbox inputId="cadEducacaoEspecial" name="publicoAlvoEducacaoEspecial" checked={campos.publicoAlvoEducacaoEspecial} onChange={(e) => atualizarCampo("publicoAlvoEducacaoEspecial", e.checked)} />
+                                            <Checkbox 
+                                                inputId="cadEducacaoEspecial" 
+                                                name="publicoAlvoEducacaoEspecial" 
+                                                checked={campos.publicoAlvoEducacaoEspecial} 
+                                                onChange={(e) => atualizarCampo("publicoAlvoEducacaoEspecial", e.checked)} 
+                                            />
                                             <span>Sou aluno público-alvo da Educação Especial.</span>
                                         </label>
 
                                         <label className="site-form-termos">
-                                            <Checkbox inputId="cadCanhoto" name="canhoto" checked={campos.canhoto} onChange={(e) => atualizarCampo("canhoto", e.checked)} />
+                                            <Checkbox 
+                                                inputId="cadCanhoto" 
+                                                name="canhoto" 
+                                                checked={campos.canhoto} 
+                                                onChange={(e) => atualizarCampo("canhoto", e.checked)} 
+                                            />
                                             <span>Sou canhoto(a).</span>
                                         </label>
 
                                         <label className="site-form-termos">
-                                            <Checkbox inputId="cadAcompanhamento" name="necessitaAcompanhamentoInstitucional" checked={campos.necessitaAcompanhamentoInstitucional} onChange={(e) => atualizarCampo("necessitaAcompanhamentoInstitucional", e.checked)} />
+                                            <Checkbox 
+                                                inputId="cadAcompanhamento" 
+                                                name="necessitaAcompanhamentoInstitucional" 
+                                                checked={campos.necessitaAcompanhamentoInstitucional} 
+                                                onChange={(e) => atualizarCampo("necessitaAcompanhamentoInstitucional", e.checked)} 
+                                            />
                                             <span>
                                                 Necessito de acompanhamento institucional.
                                                 <button type="button" className="site-info-btn" id="btnInfoAcompanhamento" aria-label="O que é acompanhamento institucional?"
@@ -1082,7 +1351,10 @@ function CadastroConteudo() {
                                         <div className="site-form-grid">
                                             <div className="field">
                                                 <label htmlFor="cadInstituicaoOrigem">Instituição de origem</label>
-                                                <InputText id="cadInstituicaoOrigem" name="instituicaoOrigem" />
+                                                <InputText 
+                                                    id="cadInstituicaoOrigem" 
+                                                    name="instituicaoOrigem" 
+                                                />
                                             </div>
 
                                             <div className="field">
@@ -1099,7 +1371,10 @@ function CadastroConteudo() {
 
                                             <div className="field">
                                                 <label htmlFor="cadNomeInstituicao">Nome da instituição (conclusão do ensino médio)</label>
-                                                <InputText id="cadNomeInstituicao" name="nomeInstituicaoConclusao" />
+                                                <InputText 
+                                                    id="cadNomeInstituicao" 
+                                                    name="nomeInstituicaoConclusao" 
+                                                />
                                             </div>
 
                                             <div className="field">
@@ -1213,11 +1488,24 @@ function CadastroConteudo() {
                                         </span>
 
                                         {etapaAtual !== totalEtapas && (
-                                            <Button type="button" id="btnAvancarEtapa" label="Próxima etapa" icon="pi pi-arrow-right" iconPos="right" className="ua-botao-seta" onClick={aoAvancar} />
+                                            <Button 
+                                                type="button" 
+                                                id="btnAvancarEtapa" 
+                                                label="Próxima etapa" 
+                                                icon="pi pi-arrow-right" 
+                                                iconPos="right" 
+                                                className="ua-botao-seta" 
+                                                onClick={aoAvancar} 
+                                            />
                                         )}
 
                                         {etapaAtual === totalEtapas && (
-                                            <Button type="submit" id="btnConcluirCadastro" label={enviando ? "Enviando..." : (editando ? "Salvar alterações" : "Concluir matrícula")} loading={enviando} />
+                                            <Button 
+                                                type="submit" 
+                                                id="btnConcluirCadastro" 
+                                                label={enviando ? "Enviando..." : (editando ? "Salvar alterações" : "Concluir matrícula")} 
+                                                loading={enviando} 
+                                            />
                                         )}
                                     </div>
 

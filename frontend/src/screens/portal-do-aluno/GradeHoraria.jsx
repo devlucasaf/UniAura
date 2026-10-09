@@ -2,7 +2,7 @@
 
 import { GRADE, HORARIOS } from "./dados";
 
-// --- NOMES DOS DIAS NA ORDEM DE Date.getDay() (DOMINGO = 0), PARA DESTACAR O DIA DE HOJE ---
+// --- NOMES DOS DIAS NA ORDEM DE Date.getDay(), PARA DESTACAR O DIA DE HOJE ---
 const DIAS_DA_SEMANA = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
 
 // --- TABELA DE AULAS DA SEMANA: O DIA DA SEMANA FICA NA PRIMEIRA COLUNA, À ESQUERDA ---

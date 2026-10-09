@@ -51,7 +51,7 @@ export async function autenticar(email, senha) {
         throw new Error("Resposta de login inválida do servidor.");
     }
 
-    // --- O BACKEND DEVOLVE O USUÁRIO NO CAMPO usuarioDTO (LoginResponseDTO) ---
+    // --- O BACKEND DEVOLVE O USUÁRIO NO CAMPO usuarioDTO ---
     gravarSessao({ token: resposta.token, refreshToken: resposta.refreshToken, usuario: resposta.usuarioDTO });
     return resposta.usuarioDTO;
 }
@@ -97,7 +97,7 @@ export function obterUsuario() {
     }
 }
 
-// --- INDICA SE HÁ SESSÃO ATIVA: EXIGE TOKEN E USUÁRIO COM PERFIL (SESSÃO PELA METADE É DESCARTADA) ---
+// --- INDICA SE HÁ SESSÃO ATIVA ---
 export function estaAutenticado() {
     if (typeof window === "undefined") {
         return false;

@@ -1,7 +1,7 @@
 "use client";
 
-import { Tag }          from "primereact/tag";
-import { NOTICIAS }     from "./dados";
+import { Tag }      from "primereact/tag";
+import { NOTICIAS } from "./dados";
 
 // --- FORMATA A DATA DE PUBLICAÇÃO DA NOTÍCIA ---
 const formatarData = (data) => data.toLocaleDateString("pt-BR", { day: "2-digit", month: "short" });

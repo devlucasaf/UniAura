@@ -10,7 +10,13 @@ import { Tag }                  from "primereact/tag";
 import AppShell                 from "@/components/interno/AppShell";
 import { livroApi, reservaApi } from "@/lib/api/biblioteca";
 
-const FILTRO_VAZIO = { titulo: "", autor: "", categoria: "", isbn: "" };
+const FILTRO_VAZIO = { 
+    titulo: "", 
+    autor: "", 
+    categoria: "", 
+    isbn: "" 
+};
+
 const TAMANHO_PAGINA = 10;
 
 // --- PÁGINA DE CONSULTA DE LIVROS DO ACERVO DA BIBLIOTECA ---

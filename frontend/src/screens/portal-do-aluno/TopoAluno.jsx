@@ -2,7 +2,7 @@
 
 import MenuDashboards from "./MenuDashboards";
 
-// --- PARTE ESQUERDA DO CABEÇALHO DO ALUNO: BOTÃO DE 3 BARRAS (DASHBOARDS) E A SAUDAÇÃO ---
+// --- PARTE ESQUERDA DO CABEÇALHO DO ALUNO ---
 export default function TopoAluno({ usuario }) {
     const primeiroNome = (usuario?.nome || "aluno").split(" ")[0];
 

@@ -184,7 +184,12 @@ export default function CursoTemplate({ curso }) {
                                 <h2>{curso.ctaTitulo}</h2>
                                 <p>{curso.ctaTexto}</p>
                             </div>
-                            <Button label="Fazer minha matrícula" icon="pi pi-arrow-right" iconPos="right" onClick={() => router.push("/web/matriculas")} />
+                            <Button 
+                                label="Fazer minha matrícula" 
+                                icon="pi pi-arrow-right" 
+                                iconPos="right" 
+                                onClick={() => router.push("/web/matriculas")} 
+                            />
                         </div>
                     </div>
                 </section>

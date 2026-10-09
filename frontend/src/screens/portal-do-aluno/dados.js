@@ -1,5 +1,3 @@
-// --- DADOS DE EXEMPLO DA HOME DO ALUNO (SUBSTITUIR PELA API QUANDO OS ENDPOINTS DO ALUNO ESTIVEREM PRONTOS) ---
-
 // --- SOMA DIAS A HOJE, PARA OS EVENTOS DE EXEMPLO SEMPRE CAÍREM PERTO DA DATA ATUAL ---
 const emDias = (dias) => {
     const data = new Date();
@@ -59,7 +57,7 @@ export const EVENTOS = [
 // --- HORÁRIOS DAS AULAS (COLUNAS DA GRADE) ---
 export const HORARIOS = ["08:00 – 09:40", "10:00 – 11:40", "19:00 – 20:40", "21:00 – 22:40"];
 
-// --- GRADE SEMANAL: UMA LINHA POR DIA DA SEMANA, UM ITEM POR HORÁRIO (null = SEM AULA) ---
+// --- GRADE SEMANAL: UMA LINHA POR DIA DA SEMANA, UM ITEM POR HORÁRIO ---
 export const GRADE = [
     { dia: "Segunda-feira", aulas: [{ disciplina: "Banco de Dados", sala: "Lab 03" }, { disciplina: "Banco de Dados", sala: "Lab 03" }, null, null] },
     { dia: "Terça-feira", aulas: [null, null, { disciplina: "Engenharia de Software", sala: "B-204" }, { disciplina: "Engenharia de Software", sala: "B-204" }] },
@@ -79,7 +77,7 @@ export const DESEMPENHO = [
     { disciplina: "Projeto Integrador",     nota1: 9.5, nota2: 9.5, aulas: 20, faltas: 2 }
 ];
 
-// --- TÓPICOS E INDICADORES DOS DASHBOARDS (ABERTOS PELO BOTÃO DE 3 BARRAS) ---
+// --- TÓPICOS E INDICADORES DOS DASHBOARDS ---
 export const DASHBOARDS = [
     {
         id: "academico",

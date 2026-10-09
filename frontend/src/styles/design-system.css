@@ -333,7 +333,7 @@
     font-weight: 600;
 }
 
-/* --- CABEÇALHO DE GRUPO EM DROPDOWNS AGRUPADOS (ex.: cursos por área) --- */
+/* --- CABEÇALHO DE GRUPO EM DROPDOWNS AGRUPADOS --- */
 .p-dropdown-item-group {
     background: var(--bg-surface);
     color: var(--ua-menu-titulo);
@@ -562,7 +562,7 @@
     background: #f4f7fc;
 }
 
-/* --- SEÇÕES ALTERNADAS NO MODO CLARO (no escuro o contraste já existe e não muda) --- */
+/* --- SEÇÕES ALTERNADAS NO MODO CLARO --- */
 :root:not([data-theme="dark"]) .site-section-alt {
     background: #eef3fa;
     border-top: 1px solid var(--border-color);
@@ -575,7 +575,7 @@
     position: relative;
 }
 
-/* --- ÍCONE DO CALENDÁRIO DENTRO DO CAMPO (como o botão de visualizar senha) --- */
+/* --- ÍCONE DO CALENDÁRIO DENTRO DO CAMPO --- */
 .ua-campo-data .p-calendar .p-inputtext {
     width: 100%;
     padding-right: 3rem;
@@ -616,7 +616,7 @@
     box-shadow: none;
 }
 
-/* --- SELETORES DE MÊS E ANO: UMA PÍLULA ÚNICA (o fundo fica só no contêiner) --- */
+/* --- SELETORES DE MÊS E ANO: UMA PÍLULA ÚNICA --- */
 .p-datepicker .ua-datepicker-select {
     min-width: 128px;
     background: var(--bg-elevated);
@@ -624,7 +624,7 @@
     border-radius: 999px;
 }
 
-/* --- LISTA DE OPÇÕES DOS SELETORES: ABRE ABAIXO, POR CIMA DO CALENDÁRIO --- */
+/* --- LISTA DE OPÇÕES DOS SELETORES --- */
 .p-datepicker .ua-datepicker-select .p-dropdown-panel {
     min-width: 100%;
     z-index: 10;
@@ -672,7 +672,7 @@
     gap: var(--space-sm);
 }
 
-/* --- SEM CONTORNO NOS WRAPPERS DOS SELETORES DE MÊS E ANO (só os dropdowns têm borda) --- */
+/* --- SEM CONTORNO NOS WRAPPERS DOS SELETORES DE MÊS E ANO --- */
 .p-datepicker .p-datepicker-title .p-datepicker-month,
 .p-datepicker .p-datepicker-title .p-datepicker-year {
     border: 0;
@@ -784,7 +784,7 @@
     font-weight: 700;
 }
 
-/* --- RODAPÉ DO CALENDÁRIO (CampoData.jsx): BOTÕES "HOJE" E "LIMPAR" SEM CONTORNOS --- */
+/* --- RODAPÉ DO CALENDÁRIO --- */
 .p-datepicker .p-datepicker-footer {
     border: 0;
     padding: var(--space-xs) 0 0;
@@ -821,7 +821,7 @@
     outline-offset: 2px;
 }
 
-/* --- BOTÃO COM SETA ANIMADA (ex.: "Próxima etapa") --- */
+/* --- BOTÃO COM SETA ANIMADA --- */
 .ua-botao-seta .p-button-icon {
     transition: transform .25s ease;
 }
@@ -834,7 +834,7 @@
     animation: ua-seta-voltar .6s ease-in-out infinite alternate;
 }
 
-/* --- CHECKBOXES EM LINHA COM O TEXTO (cadastro) --- */
+/* --- CHECKBOXES EM LINHA COM O TEXTO --- */
 label.site-form-termos {
     display: flex;
     align-items: center;
@@ -878,7 +878,7 @@ label.site-form-termos {
     border-color: var(--color-primary);
 }
 
-/* --- DIALOG (janela pequena) NOS DOIS MODOS --- */
+/* --- DIALOG NOS DOIS MODOS --- */
 .p-dialog {
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
@@ -914,7 +914,7 @@ label.site-form-termos {
     margin: 0;
 }
 
-/* --- CAMPO DE SENHA COM BOTÃO DE VISUALIZAR (claro e escuro) --- */
+/* --- CAMPO DE SENHA COM BOTÃO DE VISUALIZAR --- */
 .ua-campo-senha {
     position: relative;
 }
@@ -1154,7 +1154,7 @@ label.site-form-termos {
     transform: rotate(180deg);
 }
 
-/* --- ASSISTENTE DE CADASTRO: CONTADOR "ETAPA X DE N" CENTRALIZADO ENTRE OS BOTÕES --- */
+/* --- ASSISTENTE DE CADASTRO --- */
 @media (min-width: 620px) {
     .site-wizard-acoes {
         display: grid;
@@ -1192,7 +1192,7 @@ label.site-form-termos {
     border-color: var(--color-primary-hover);
 }
 
-/* --- FORMULÁRIO DE LOGIN (e-mail e senha) --- */
+/* --- FORMULÁRIO DE LOGIN --- */
 .ua-form-login {
     display: grid;
     gap: var(--space-md);
@@ -1216,7 +1216,7 @@ label.site-form-termos {
     text-align: center;
 }
 
-/* --- SUGESTÕES DE E-MAIL INSTITUCIONAL (cadastro) --- */
+/* --- SUGESTÕES DE E-MAIL INSTITUCIONAL --- */
 .ua-sugestoes-email {
     display: grid;
     gap: var(--space-xs);
@@ -1254,7 +1254,7 @@ label.site-form-termos {
     color: #fff;
 }
 
-/* --- CAMPOS DO FORMULÁRIO: NÃO ESTICAR O CONTEÚDO QUANDO O VIZINHO DA LINHA É MAIS ALTO --- */
+/* --- CAMPOS DO FORMULÁRIO --- */
 .site-form .field {
     align-content: start;
 }

@@ -6,7 +6,7 @@ import { ProcessingIndicator }                  from "@bernardo-dias/react-cloud
 import PrimeToastHost                           from "./PrimeToastHost";
 import ProcessingBridge                         from "./ProcessingBridge";
 
-// --- ENVOLVE A APLICAÇÃO COM PRIMEREACT, AVISOS (TOAST) E A BARRA DE CARREGAMENTO GLOBAL ---
+// --- ENVOLVE A APLICAÇÃO COM PRIMEREACT, AVISOS E A BARRA DE CARREGAMENTO GLOBAL ---
 export default function CloudsupportProviders({ children }) {
     return (
         <PrimeReactProvider>

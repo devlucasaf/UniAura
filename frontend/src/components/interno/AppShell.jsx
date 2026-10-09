@@ -1,21 +1,18 @@
 "use client";
 
-import { useEffect, useState }                              from "react";
-import { useRouter, usePathname }                           from "next/navigation";
-import Link                                                 from "next/link";
-import { Button }                                           from "primereact/button";
-import { Avatar }                                           from "primereact/avatar";
-import { obterUsuario, possuiPerfil, dashboardDoPerfil, loginDoPerfil, estaAutenticado, encerrarSessao } from "@/lib/auth";
-import { alternarTemaComOnda }                              from "@/lib/tema";
-import { notificar }                                        from "@/lib/notificar";
-import { GRUPOS_MENU }                                      from "./menu";
+import { useEffect, useState }                                                                              from "react";
+import { useRouter, usePathname }                                                                           from "next/navigation";
+import Link                                                                                                 from "next/link";
+import { Button }                                                                                           from "primereact/button";
+import { Avatar }                                                                                           from "primereact/avatar";
+import { obterUsuario, possuiPerfil, dashboardDoPerfil, loginDoPerfil, estaAutenticado, encerrarSessao }    from "@/lib/auth";
+import { alternarTemaComOnda }                                                                              from "@/lib/tema";
+import { notificar }                                                                                        from "@/lib/notificar";
+import { GRUPOS_MENU }                                                                                      from "./menu";
 
 const CHAVE_TEMA = "theme";
 
 // --- SHELL DA ÁREA INTERNA, COM GUARDA DE AUTENTICAÇÃO E PERFIL ---
-// semMenuLateral: esconde a barra lateral "ERP Acadêmico" (usado pelo portal do aluno).
-// topoEsquerda: função (usuario) => JSX exibida no cabeçalho no lugar do título.
-// topoDireita: função (usuario, sair) => JSX que substitui o avatar, o nome e o botão "Sair".
 export default function AppShell({ titulo, perfis, semMenuLateral = false, topoEsquerda, topoDireita, children }) {
     const router = useRouter();
     const pathname = usePathname();
@@ -46,7 +43,7 @@ export default function AppShell({ titulo, perfis, semMenuLateral = false, topoE
         setPronto(true);
     }, [pathname]);
 
-    // --- ALTERNA O TEMA COM A MESMA ONDA CIRCULAR DO SITE (lib/tema.js) ---
+    // --- ALTERNA O TEMA COM A MESMA ONDA CIRCULAR DO SITE ---
     const alternarTema = (evento) => {
         alternarTemaComOnda(evento.currentTarget, temaEscuro ? "dark" : "light", (novo) => setTemaEscuro(novo === "dark"));
     };
@@ -81,7 +78,8 @@ export default function AppShell({ titulo, perfis, semMenuLateral = false, topoE
                             <div key={`${grupo.secao || "dash"}-${indice}`}>
                                 {grupo.secao && <span className="nav-section">{grupo.secao}</span>}
                                 {itens.map((item) => (
-                                    <Link key={item.rota} href={item.rota} className={`nav-link${pathname === item.rota ? " active" : ""}`} onClick={() => setMenuAberto(false)}>
+                                    <Link key={item.rota} href={item.rota} 
+                                            className={`nav-link${pathname === item.rota ? " active" : ""}`} onClick={() => setMenuAberto(false)}>
                                         {item.label}
                                     </Link>
                                 ))}
@@ -116,7 +114,13 @@ export default function AppShell({ titulo, perfis, semMenuLateral = false, topoE
                             <>
                                 <Avatar label={iniciaisUsuario} shape="circle" />
                                 <span className="user-nome">{usuario?.nome || ""}</span>
-                                <Button label="Sair" size="small" severity="danger" outlined onClick={sair} />
+                                <Button 
+                                    label="Sair" 
+                                    size="small" 
+                                    severity="danger" 
+                                    outlined 
+                                    onClick={sair} 
+                                />
                             </>
                         )}
                     </div>

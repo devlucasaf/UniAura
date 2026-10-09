@@ -1,14 +1,13 @@
-// --- O fetch NÃO RECEBE O basePath AUTOMATICAMENTE; O PROXY PARA O SPRING EXISTE SOB /uniaura/app/api ---
 const BASE_API = "/uniaura/app/api";
 
 let processingRef = null;
 
-// --- REGISTRA O ProcessingContext (notifyStart/notifyEnd) PARA ESTA FUNÇÃO PODER SINALIZAR O ProcessingIndicator ---
+// --- REGISTRA O ProcessingContext PARA ESTA FUNÇÃO PODER SINALIZAR O ProcessingIndicator ---
 export function registrarProcessing(processing) {
     processingRef = processing;
 }
 
-// --- CHAMA A API ANEXANDO O ACCESS TOKEN DA SESSÃO (JWT DO BACKEND) QUANDO HOUVER ---
+// --- CHAMA A API ANEXANDO O ACCESS TOKEN DA SESSÃO QUANDO HOUVER ---
 export async function api(caminho, { metodo = "GET", corpo, cabecalhos = {}, multipart = false } = {}) {
     const opcoes = {
         method: metodo,
@@ -43,7 +42,6 @@ export async function api(caminho, { metodo = "GET", corpo, cabecalhos = {}, mul
         }
 
         if (resposta.status === 401) {
-            // --- SESSÃO EXPIRADA OU CREDENCIAIS INVÁLIDAS: LIMPA A SESSÃO E, FORA DAS TELAS DE LOGIN, VOLTA PARA O LOGIN ---
             ["token", "refreshToken", "user", "usuarioId"].forEach((chave) => localStorage.removeItem(chave));
             if (typeof window !== "undefined" && !window.location.pathname.endsWith("/login")) {
                 window.location.href = "/uniaura/app/login";

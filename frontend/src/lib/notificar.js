@@ -12,7 +12,7 @@ const SEVERIDADE_POR_TIPO = {
     warning: "warn"
 };
 
-// --- EXIBE UMA NOTIFICAÇÃO (TOAST DO PRIMEREACT) ---
+// --- EXIBE UMA NOTIFICAÇÃO ---
 export function notificar(mensagem, tipo = "info", tempo = 3500) {
     if (!toastRef) {
         return;

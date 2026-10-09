@@ -1842,7 +1842,7 @@
     }
 }
 
-/* --- PORTAL DO ALUNO: TELA DE LOGIN --- */
+/* --- PORTAL DO ALUNO --- */
 .site-auth-section {
     display: grid;
     place-items: center;
@@ -1944,7 +1944,8 @@
 }
 
 @keyframes setaVoltarPulso {
-    0%, 100% {
+    0%, 
+    100% {
         transform: translateX(0);
     }
 

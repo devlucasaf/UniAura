@@ -99,6 +99,7 @@ export default function CrudEntityPage({titulo, tituloSingular, api, sort,
         if (!confirm(`Excluir ${tituloSingular.toLowerCase()} "${item.usuario?.nome || item.nome}"?`)) {
             return;
         }
+
         try {
             await api.excluir(item.id);
             notificar(`${tituloSingular} excluído.`, "success");
@@ -185,7 +186,11 @@ export default function CrudEntityPage({titulo, tituloSingular, api, sort,
                             placeholder="nome, e-mail..."
                         />
                     </label>
-                    <Button type="submit" label="Aplicar" outlined />
+                    <Button 
+                        type="submit" 
+                        label="Aplicar" 
+                        outlined 
+                    />
                 </form>
             </Box>
 

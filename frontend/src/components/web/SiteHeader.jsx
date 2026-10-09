@@ -328,7 +328,7 @@ function PainelCursos({ fechar }) {
 // --- COMPONENTE DE CABEÇALHO DO SITE ---
 export default function SiteHeader() {
     const router = useRouter();
-    const [tema, setTema] = useState("light");
+    const [tema,        setTema]        = useState("light");
     const [abertoChave, setAbertoChave] = useState(null);
 
     // --- CARREGA O TEMA SALVO ---
@@ -443,8 +443,12 @@ export default function SiteHeader() {
                                 )}
                             </MenuSuspenso>
                         </li>
-                        <li><Link className="ua-nav-link" href="/web/noticias">Notícias</Link></li>
-                        <li><Link className="ua-nav-link" href="/web/contato">Contato</Link></li>
+                        <li>
+                            <Link className="ua-nav-link" href="/web/noticias">Notícias</Link>
+                        </li>
+                        <li>
+                            <Link className="ua-nav-link" href="/web/contato">Contato</Link>
+                        </li>
                     </ul>
                 </nav>
 

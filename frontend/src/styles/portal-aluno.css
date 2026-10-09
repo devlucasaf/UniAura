@@ -1,6 +1,4 @@
-/* --- HOME DO PORTAL DO ALUNO (src/screens/portal-do-aluno) ---
-   Só usa os tokens de global.css, então vale para o modo claro e o escuro. */
-
+/* --- HOME DO PORTAL DO ALUNO --- */
 .ua-aluno-home {
     display: grid;
     gap: var(--space-xl);
@@ -103,7 +101,7 @@
     text-transform: uppercase;
 }
 
-/* --- TABELA DE CURSOS: DIA DA SEMANA NA PRIMEIRA COLUNA, À ESQUERDA --- */
+/* --- TABELA DE CURSOS --- */
 .ua-aluno-tabela-caixa {
     padding: 0;
     overflow-x: auto;
@@ -168,8 +166,7 @@
     text-transform: uppercase;
 }
 
-/* --- BOTÃO DE 3 BARRAS ANIMADO ---
-   Em repouso as barras "respiram" de leve; no hover viram uma onda; ao abrir formam um X. */
+/* --- BOTÃO DE 3 BARRAS ANIMADO --- */
 .ua-hamburguer {
     flex-shrink: 0;
     display: inline-flex;
@@ -204,36 +201,74 @@
     animation: ua-barra-respirar 3.2s ease-in-out infinite;
 }
 
-.ua-hamburguer__barra:nth-child(1) { width: 24px; animation-delay: 0s; }
-.ua-hamburguer__barra:nth-child(2) { width: 18px; animation-delay: .25s; }
-.ua-hamburguer__barra:nth-child(3) { width: 12px; animation-delay: .5s; }
+.ua-hamburguer__barra:nth-child(1) { 
+    width: 24px; 
+    animation-delay: 0s; 
+}
+
+.ua-hamburguer__barra:nth-child(2) { 
+    width: 18px; 
+    animation-delay: .25s; 
+}
+
+.ua-hamburguer__barra:nth-child(3) { 
+    width: 12px; 
+    animation-delay: .5s; 
+}
 
 .ua-hamburguer:hover .ua-hamburguer__barra {
     animation: ua-barra-onda .7s ease-in-out infinite;
 }
 
-.ua-hamburguer:hover .ua-hamburguer__barra:nth-child(2) { animation-delay: .1s; }
-.ua-hamburguer:hover .ua-hamburguer__barra:nth-child(3) { animation-delay: .2s; }
+.ua-hamburguer:hover .ua-hamburguer__barra:nth-child(2) { 
+    animation-delay: .1s; 
+}
+
+.ua-hamburguer:hover .ua-hamburguer__barra:nth-child(3) { 
+    animation-delay: .2s; 
+}
 
 .ua-hamburguer--aberto .ua-hamburguer__barra {
     animation: none;
 }
 
-.ua-hamburguer--aberto .ua-hamburguer__barra:nth-child(1) { width: 24px; transform: translateY(9px) rotate(45deg); }
-.ua-hamburguer--aberto .ua-hamburguer__barra:nth-child(2) { opacity: 0; }
-.ua-hamburguer--aberto .ua-hamburguer__barra:nth-child(3) { width: 24px; transform: translateY(-9px) rotate(-45deg); }
+.ua-hamburguer--aberto .ua-hamburguer__barra:nth-child(1) { 
+    width: 24px; 
+    transform: translateY(9px) rotate(45deg); 
+}
+
+.ua-hamburguer--aberto .ua-hamburguer__barra:nth-child(2) { 
+    opacity: 0; 
+}
+
+.ua-hamburguer--aberto .ua-hamburguer__barra:nth-child(3) { 
+    width: 24px; 
+    transform: translateY(-9px) rotate(-45deg); 
+}
 
 @keyframes ua-barra-respirar {
-    0%, 100% { transform: scaleX(1); }
-    50%      { transform: scaleX(.78); }
+    0%, 
+    100% { 
+        transform: scaleX(1); 
+    }
+
+    50% { 
+        transform: scaleX(.78); 
+    }
 }
 
 @keyframes ua-barra-onda {
-    0%, 100% { transform: translateX(0); }
-    50%      { transform: translateX(6px); }
+    0%, 
+    100% { 
+        transform: translateX(0); 
+    }
+
+    50% { 
+        transform: translateX(6px); 
+    }
 }
 
-/* --- PAINEL LATERAL DOS DASHBOARDS (PrimeReact Sidebar) NOS DOIS MODOS --- */
+/* --- PAINEL LATERAL DOS DASHBOARDS NOS DOIS MODOS --- */
 .ua-aluno-sidebar.p-sidebar {
     width: min(420px, 92vw);
     background: var(--bg-surface);
@@ -320,7 +355,7 @@
     width: 100%;
 }
 
-/* --- PARTE ESQUERDA DO CABEÇALHO: BOTÃO DE 3 BARRAS + "OLÁ, NOME!" --- */
+/* --- PARTE ESQUERDA DO CABEÇALHO --- */
 .ua-aluno-topo-cabecalho {
     display: flex;
     align-items: center;
@@ -362,7 +397,7 @@
     background: var(--color-primary-hover);
 }
 
-/* --- MENU DO BOTÃO DE PERFIL (PrimeReact Menu popup) NOS DOIS MODOS --- */
+/* --- MENU DO BOTÃO DE PERFIL NOS DOIS MODOS --- */
 .p-menu.p-menu-overlay {
     background: var(--bg-surface);
     color: var(--text-primary);
@@ -402,7 +437,7 @@
     word-break: break-all;
 }
 
-/* --- CALENDÁRIO DENTRO DO CARTÃO: SEM BARRA DE ROLAGEM (CÉLULAS MAIS ESTREITAS CABEM NOS 360px) --- */
+/* --- CALENDÁRIO DENTRO DO CARTÃO: SEM BARRA DE ROLAGEM --- */
 .ua-aluno-calendario .p-datepicker .p-datepicker-calendar-container {
     overflow: visible;
 }
@@ -422,7 +457,7 @@
     margin: 0 auto;
 }
 
-/* --- BOTÃO DE TEMA DO TOPO: MESMA ONDA E MESMO ÍCONE DO SITE (.site-tema-toggle) --- */
+/* --- BOTÃO DE TEMA DO TOPO: MESMA ONDA E MESMO ÍCONE DO SITE --- */
 .topbar .site-tema-toggle.p-button {
     width: 40px;
     height: 40px;
@@ -474,7 +509,7 @@
     color: var(--color-primary);
 }
 
-/* --- "SAIR": VERMELHO, COM ANIMAÇÃO (A SETA DE SAÍDA SE MOVE NO HOVER) --- */
+/* --- "SAIR": VERMELHO, COM ANIMAÇÃO --- */
 .p-menu .ua-menu-item-sair .p-menuitem-link,
 .p-menu .ua-menu-item-sair .p-menuitem-link .p-menuitem-text,
 .p-menu .ua-menu-item-sair .p-menuitem-link .p-menuitem-icon {
@@ -503,8 +538,14 @@
 }
 
 @keyframes ua-sair-seta {
-    0%, 100% { transform: translateX(0); }
-    50%      { transform: translateX(6px); }
+    0%, 
+    100% { 
+        transform: translateX(0); 
+    }
+
+    50% { 
+        transform: translateX(6px); 
+    }
 }
 
 /* --- PÁGINA "MEU PERFIL" --- */

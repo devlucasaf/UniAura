@@ -1,6 +1,6 @@
 const CHAVE_TEMA = "theme";
 
-// --- LÊ O TEMA SALVO (claro por padrão) ---
+// --- LÊ O TEMA SALVO ---
 export function temaSalvo() {
     if (typeof window === "undefined") {
         return "light";
@@ -14,8 +14,7 @@ export function aplicarTema(tema) {
     localStorage.setItem(CHAVE_TEMA, tema);
 }
 
-// --- ALTERNA O TEMA COM UMA ONDA CIRCULAR EXPANSIVA A PARTIR DO BOTÃO (A MESMA DO SITE) ---
-// Recebe o botão clicado e o tema atual; chama aoMudar(novoTema) quando o tema é de fato trocado.
+// --- ALTERNA O TEMA COM UMA ONDA CIRCULAR EXPANSIVA A PARTIR DO BOTÃO ---
 export function alternarTemaComOnda(botao, temaAtual, aoMudar) {
     const novo = temaAtual === "dark" ? "light" : "dark";
     const retangulo = botao.getBoundingClientRect();

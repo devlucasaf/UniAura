@@ -44,7 +44,7 @@ const paraIso = (data) => {
     return `${ano}-${mes}-${dia}`;
 };
 
-// --- CONVERTE aaaa-mm-dd EM Date NO FUSO LOCAL (NÃO USAR new Date("aaaa-mm-dd"), QUE É UTC) ---
+// --- CONVERTE aaaa-mm-dd EM Date NO FUSO LOCAL ---
 const deIso = (iso) => {
     if (!iso) {
         return null;

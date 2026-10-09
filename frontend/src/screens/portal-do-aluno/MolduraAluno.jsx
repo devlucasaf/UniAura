@@ -4,7 +4,7 @@ import AppShell         from "@/components/interno/AppShell";
 import TopoAluno        from "./TopoAluno";
 import MenuPerfilAluno  from "./MenuPerfilAluno";
 
-// --- MOLDURA PADRÃO DAS TELAS DO ALUNO: SEM BARRA LATERAL, COM AS 3 BARRAS E O "OLÁ" À ESQUERDA E O PERFIL À DIREITA ---
+// --- MOLDURA PADRÃO DAS TELAS DO ALUNO ---
 export default function MolduraAluno({ titulo = "Portal do Aluno", children }) {
     return (
         <AppShell

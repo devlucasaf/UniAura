@@ -2,9 +2,9 @@
 
 import Link             from "next/link";
 import SiteChrome       from "@/components/web/SiteChrome";
-import FormularioLogin from "@/components/interno/FormularioLogin";
+import FormularioLogin  from "@/components/interno/FormularioLogin";
 
-// --- LOGIN DO PORTAL DO ALUNO (E-MAIL E SENHA) ---
+// --- LOGIN DO PORTAL DO ALUNO ---
 export default function PortalAlunoLoginPage() {
     return (
         <SiteChrome>

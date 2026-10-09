@@ -9,7 +9,7 @@ const media = (disciplina) => (disciplina.nota1 + disciplina.nota2) / 2;
 const frequencia = (disciplina) => Math.round(((disciplina.aulas - disciplina.faltas) / disciplina.aulas) * 100);
 const formatar = (numero) => numero.toFixed(1).replace(".", ",");
 
-// --- "MEU PERFIL": ESTATÍSTICAS DO ALUNO COM INDICADORES, NOTAS E PRESENÇA POR DISCIPLINA ---
+// --- ESTATÍSTICAS DO ALUNO COM INDICADORES, NOTAS E PRESENÇA POR DISCIPLINA ---
 export default function PerfilAluno() {
     const resumo = DASHBOARDS.find((item) => item.id === "academico");
 
@@ -26,7 +26,11 @@ export default function PerfilAluno() {
                         <span className="ua-indicador__valor">{indicador.valor}</span>
                         <span className="ua-indicador__rotulo">{indicador.rotulo}</span>
                         {indicador.progresso !== undefined && (
-                            <ProgressBar value={indicador.progresso} showValue={false} style={{ height: "6px" }} />
+                            <ProgressBar 
+                                value={indicador.progresso} 
+                                showValue={false} 
+                                style={{ height: "6px" }} 
+                            />
                         )}
                     </div>
                 ))}
@@ -53,7 +57,9 @@ export default function PerfilAluno() {
                                     <th scope="row">{disciplina.disciplina}</th>
                                     <td>{formatar(disciplina.nota1)}</td>
                                     <td>{formatar(disciplina.nota2)}</td>
-                                    <td><strong>{formatar(media(disciplina))}</strong></td>
+                                    <td>
+                                        <strong>{formatar(media(disciplina))}</strong>
+                                    </td>
                                     <td>
                                         <Tag
                                             value={media(disciplina) >= 7 ? "Aprovado" : "Em recuperação"}
@@ -89,7 +95,11 @@ export default function PerfilAluno() {
                                     <td>{disciplina.aulas}</td>
                                     <td>{disciplina.faltas}</td>
                                     <td className="ua-aluno-freq">
-                                        <ProgressBar value={frequencia(disciplina)} showValue={false} style={{ height: "8px" }} />
+                                        <ProgressBar 
+                                            value={frequencia(disciplina)} 
+                                            showValue={false} 
+                                            style={{ height: "8px" }} 
+                                        />
                                         <span>{frequencia(disciplina)}%</span>
                                     </td>
                                 </tr>
