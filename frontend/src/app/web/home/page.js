@@ -66,11 +66,70 @@ const INDICADORES = [
     { valor: "1º", rotulo: "em inovação no ranking nacional" }
 ];
 
+// --- CANAIS DE CONTATO DA SEÇÃO "FALE CONOSCO" (href = null: informação sem link) ---
+const CANAIS_CONTATO = [
+    {
+        rotulo: "Telefone",
+        valor: "(61) 3000-0000",
+        href: "tel:+556130000000",
+        icone: <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2Z"></path>
+    },
+    {
+        rotulo: "E-mail",
+        valor: "contato@uniaura.edu.br",
+        href: "mailto:contato@uniaura.edu.br",
+        icone: (<><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m2 7 10 6 10-6"></path></>)
+    },
+    {
+        rotulo: "Instagram",
+        valor: "@uniaura",
+        href: "https://www.instagram.com/__.fr3it4s.__/",
+        externo: true,
+        icone: (<><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><path d="M17.5 6.5h.01"></path></>)
+    },
+    {
+        rotulo: "Threads",
+        valor: "@uniaura",
+        href: "https://www.threads.net/@__.fr3it4s.__",
+        externo: true,
+        icone: (<><circle cx="12" cy="12" r="4"></circle><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"></path></>)
+    },
+    {
+        rotulo: "Endereço",
+        valor: "SGAS 000, Bloco A, Brasília - DF",
+        href: "https://www.google.com/maps/search/?api=1&query=SGAS+000+Bloco+A+Bras%C3%ADlia+DF",
+        externo: true,
+        icone: (<><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></>)
+    },
+    {
+        rotulo: "Horário",
+        valor: "Segunda a sexta, das 8h às 20h",
+        href: null,
+        icone: (<><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></>)
+    }
+];
+
 // --- RENDERIZAÇÃO DA PÁGINA ---
 export default function HomeInstitucionalPage() {
     const router = useRouter();
     const [mensagemEnviada, setMensagemEnviada] = useState(false);
     const [telefone, setTelefone] = useState("");
+    const [erros, setErros] = useState({});
+
+    // --- REMOVE O ERRO DE UM CAMPO ASSIM QUE O USUÁRIO MEXE NELE ---
+    const limparErro = (nome) => {
+        setErros((atual) => {
+            if (!atual[nome]) {
+                return atual;
+            }
+            const { [nome]: _removido, ...resto } = atual;
+            return resto;
+        });
+    };
+
+    // --- MENSAGEM DE ERRO EM VERMELHO ABAIXO DO CAMPO ---
+    const erroDe = (nome) => erros[nome] && <small className="ua-erro-campo" role="alert">{erros[nome]}</small>;
+    const classeErro = (nome) => (erros[nome] ? "p-invalid" : "");
 
     // --- ROLA SUAVEMENTE PARA UMA ÂNCORA DA PÁGINA ---
     const rolarPara = (id) => (evento) => {
@@ -86,8 +145,31 @@ export default function HomeInstitucionalPage() {
         evento.preventDefault();
         const formulario = evento.target;
 
-        if (!formulario.checkValidity()) {
-            formulario.reportValidity();
+        // --- VALIDA OS CAMPOS OBRIGATÓRIOS E MOSTRA UMA MENSAGEM POR CAMPO ---
+        const novos = {};
+        const nome = formulario.nome.value.trim();
+        const email = formulario.email.value.trim();
+        const mensagem = formulario.mensagem.value.trim();
+
+        if (!nome) {
+            novos.nome = "Informe seu nome completo.";
+        } else if (nome.length < 5) {
+            novos.nome = "Use pelo menos 5 caracteres.";
+        }
+
+        if (!email) {
+            novos.email = "Informe seu e-mail.";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            novos.email = "Informe um e-mail válido.";
+        }
+
+        if (!mensagem) {
+            novos.mensagem = "Escreva sua mensagem.";
+        }
+
+        setErros(novos);
+        if (Object.keys(novos).length > 0) {
+            setMensagemEnviada(false);
             return;
         }
 
@@ -317,66 +399,55 @@ export default function HomeInstitucionalPage() {
 
                     <div className="site-split">
                         <div className="site-split-text">
-                            <ul className="site-contact">
-                                <li>
-                                    <span className="site-contact-icone" aria-hidden="true">
-                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
-                                            <circle cx="12" cy="10" r="3"></circle>
-                                        </svg>
-                                    </span>
-                                    <div>
-                                        <strong>Endereço</strong>
-                                        <br />SGAS 000, Bloco A, Brasília - DF
-                                    </div>
-                                </li>
-                                <li>
-                                    <span className="site-contact-icone" aria-hidden="true">
-                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.6a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2Z"></path>
-                                        </svg>
-                                    </span>
-                                    <div>
-                                        <strong>Telefone</strong>
-                                        <br />(61) 3000-0000
-                                    </div>
-                                </li>
-                                <li>
-                                    <span className="site-contact-icone" aria-hidden="true">
-                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-                                            <path d="m2 7 10 6 10-6"></path>
-                                        </svg>
-                                    </span>
-                                    <div>
-                                        <strong>E-mail</strong>
-                                        <br />contato@uniaura.edu.br
-                                    </div>
-                                </li>
-                                <li>
-                                    <span className="site-contact-icone" aria-hidden="true">
-                                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                            <circle cx="12" cy="12" r="10"></circle>
-                                            <path d="M12 6v6l4 2"></path>
-                                        </svg>
-                                    </span>
-                                    <div>
-                                        <strong>Horário</strong>
-                                        <br />Segunda a sexta, das 8h às 20h
-                                    </div>
-                                </li>
+                            <ul className="ua-contato-links">
+                                {CANAIS_CONTATO.map((canal) => {
+                                    const conteudo = (
+                                        <>
+                                            <span className="ua-contato-link__icone" aria-hidden="true">
+                                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                                    {canal.icone}
+                                                </svg>
+                                            </span>
+                                            <span className="ua-contato-link__texto">
+                                                <small>{canal.rotulo}</small>
+                                                <strong>{canal.valor}</strong>
+                                            </span>
+                                            {canal.href && <i className="pi pi-arrow-up-right ua-contato-link__seta" aria-hidden="true" />}
+                                        </>
+                                    );
+
+                                    return (
+                                        <li key={canal.rotulo}>
+                                            {canal.href ? (
+                                                <a
+                                                    className="ua-contato-link"
+                                                    href={canal.href}
+                                                    target={canal.externo ? "_blank" : undefined}
+                                                    rel={canal.externo ? "noopener noreferrer" : undefined}
+                                                    aria-label={`${canal.rotulo}: ${canal.valor}`}
+                                                >
+                                                    {conteudo}
+                                                </a>
+                                            ) : (
+                                                <div className="ua-contato-link ua-contato-link--estatico">{conteudo}</div>
+                                            )}
+                                        </li>
+                                    );
+                                })}
                             </ul>
                         </div>
 
                         <form id="siteForm" className="site-form" noValidate onSubmit={enviarContato}>
                             <div className="field">
-                                <label htmlFor="siteNome">Nome completo</label>
-                                <InputText id="siteNome" name="nome" required autoComplete="name" />
+                                <label htmlFor="siteNome">Nome completo <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                                <InputText id="siteNome" name="nome" autoComplete="name" className={classeErro("nome")} onInput={() => limparErro("nome")} />
+                                {erroDe("nome")}
                             </div>
 
                             <div className="field">
-                                <label htmlFor="siteEmail">E-mail</label>
-                                <InputText type="email" id="siteEmail" name="email" required autoComplete="email" />
+                                <label htmlFor="siteEmail">E-mail <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                                <InputText type="email" id="siteEmail" name="email" autoComplete="email" className={classeErro("email")} onInput={() => limparErro("email")} />
+                                {erroDe("email")}
                             </div>
 
                             <div className="field">
@@ -394,8 +465,9 @@ export default function HomeInstitucionalPage() {
                             </div>
 
                             <div className="field">
-                                <label htmlFor="siteMsg">Mensagem</label>
-                                <InputTextarea id="siteMsg" name="mensagem" rows={4} required />
+                                <label htmlFor="siteMsg">Mensagem <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                                <InputTextarea id="siteMsg" name="mensagem" rows={4} className={classeErro("mensagem")} onInput={() => limparErro("mensagem")} />
+                                {erroDe("mensagem")}
                             </div>
 
                             <Button type="submit" label="Enviar mensagem" size="large" />

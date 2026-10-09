@@ -1258,3 +1258,207 @@ label.site-form-termos {
 .site-form .field {
     align-content: start;
 }
+
+/* --- NOTÍCIAS DA HOME: CONTEÚDO CENTRALIZADO NO CARROSSEL --- */
+.site-noticias-hero .site-noticia-slide {
+    grid-template-columns: minmax(0, 560px) auto;
+    justify-content: center;
+    gap: var(--space-xl) 5rem;
+}
+
+.site-noticias-hero .site-noticia-conteudo {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+}
+
+.site-noticias-hero .site-noticia-conteudo p {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.site-noticias-hero .site-noticia-acoes {
+    justify-content: center;
+}
+
+@media (max-width: 960px) {
+    .site-noticias-hero .site-noticia-slide {
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
+}
+
+/* --- CANAIS DE CONTATO DA HOME: LINHAS CLICÁVEIS (ÍCONE, RÓTULO E VALOR) --- */
+.ua-contato-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.ua-contato-links li {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.ua-contato-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-sm);
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: background .2s ease, color .2s ease, padding-left .2s ease;
+}
+
+a.ua-contato-link:hover,
+a.ua-contato-link:focus-visible {
+    background: var(--ua-item-ativo);
+    color: var(--color-primary);
+    padding-left: var(--space-md);
+}
+
+.ua-contato-link__icone {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+}
+
+.ua-contato-link__texto {
+    flex: 1;
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+}
+
+.ua-contato-link__texto small {
+    color: var(--text-muted);
+    font-size: .7rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.ua-contato-link__texto strong {
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.ua-contato-link__seta {
+    color: var(--text-muted);
+    font-size: .85rem;
+    opacity: 0;
+    transform: translate(-4px, 4px);
+    transition: opacity .2s ease, transform .2s ease, color .2s ease;
+}
+
+a.ua-contato-link:hover .ua-contato-link__seta,
+a.ua-contato-link:focus-visible .ua-contato-link__seta {
+    opacity: 1;
+    transform: translate(0, 0);
+    color: var(--color-primary);
+}
+
+/* --- PAINEL DO PORTAL DO ALUNO (HOME): FLUTUA, A BARRA "CARREGA", AS LINHAS BRILHAM E OS CARTÕES PULSAM EM CASCATA --- */
+.site-portal-mock {
+    animation: ua-painel-flutuar 5s ease-in-out infinite;
+    transition: box-shadow .3s ease;
+}
+
+.site-portal-mock:hover {
+    box-shadow: 0 24px 56px rgba(37, 99, 235, .28);
+}
+
+.site-portal-mock-bar {
+    transform-origin: left center;
+    animation: ua-painel-barra 4s ease-in-out infinite;
+}
+
+.site-portal-mock-row {
+    position: relative;
+    overflow: hidden;
+}
+
+.site-portal-mock-row::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .45), transparent);
+    transform: translateX(-100%);
+    animation: ua-painel-brilho 2.6s ease-in-out infinite;
+}
+
+.site-portal-mock-row.short::after {
+    animation-delay: .6s;
+}
+
+.site-portal-mock-grid span {
+    position: relative;
+    overflow: hidden;
+    animation: ua-painel-cartao 3.2s ease-in-out infinite;
+}
+
+.site-portal-mock-grid span::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, .22) 50%, transparent 70%);
+    transform: translateX(-120%);
+    animation: ua-painel-brilho 3.2s ease-in-out infinite;
+}
+
+.site-portal-mock-grid span:nth-child(1),
+.site-portal-mock-grid span:nth-child(1)::after { animation-delay: 0s; }
+.site-portal-mock-grid span:nth-child(2),
+.site-portal-mock-grid span:nth-child(2)::after { animation-delay: .4s; }
+.site-portal-mock-grid span:nth-child(3),
+.site-portal-mock-grid span:nth-child(3)::after { animation-delay: .8s; }
+.site-portal-mock-grid span:nth-child(4),
+.site-portal-mock-grid span:nth-child(4)::after { animation-delay: 1.2s; }
+
+@keyframes ua-painel-flutuar {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+}
+
+@keyframes ua-painel-barra {
+    0%       { transform: scaleX(.25); }
+    55%, 80% { transform: scaleX(1); }
+    100%     { transform: scaleX(.25); }
+}
+
+@keyframes ua-painel-brilho {
+    0%       { transform: translateX(-120%); }
+    60%, 100% { transform: translateX(120%); }
+}
+
+@keyframes ua-painel-cartao {
+    0%, 100% { transform: scale(1);    opacity: .85; }
+    50%      { transform: scale(1.04); opacity: 1; }
+}
+
+/* --- MENU "A UNIVERSIDADE": PAINEL MÉDIO, COM LISTAS DE LINKS (SOBRE E INSTITUCIONAL) --- */
+.ua-nav-painel.ua-nav-painel-medio {
+    width: min(720px, calc(100vw - 2rem));
+}
+
+.ua-painel-conteudo--lista {
+    columns: 1;
+}
+
+.ua-painel-bloco ul.ua-painel-lista-2col {
+    columns: 2 240px;
+    column-gap: var(--space-xl);
+}
+
+.ua-painel-bloco ul.ua-painel-lista-2col li {
+    break-inside: avoid;
+}
+
+.ua-painel-bloco a small {
+    color: var(--text-muted);
+    font-weight: 400;
+}

@@ -4,6 +4,7 @@ import { useEffect, useState }  from "react";
 import Link                     from "next/link";
 import { useRouter }            from "next/navigation";
 import { Button }               from "primereact/button";
+import { INSTITUCIONAL, rotaInstitucional } from "@/data/institucional";
 
 // --- CURSOS DE GRADUAÇÃO PRESENCIAL AGRUPADOS POR ÁREA ---
 const AREAS_CURSOS = [
@@ -325,6 +326,60 @@ function PainelCursos({ fechar }) {
     );
 }
 
+// --- TÓPICOS DO MENU "A UNIVERSIDADE" (à esquerda do painel) ---
+const TOPICOS_UNIVERSIDADE = [
+    { id: "sobre", titulo: "Sobre a UniAura" },
+    { id: "institucional", titulo: "Institucional" }
+];
+
+// --- PAINEL DE "A UNIVERSIDADE": TÓPICOS À ESQUERDA E OS LINKS DO TÓPICO ESCOLHIDO À DIREITA ---
+function PainelUniversidade({ fechar }) {
+    const [topicoId, setTopicoId] = useState("sobre");
+    const topico = TOPICOS_UNIVERSIDADE.find((item) => item.id === topicoId);
+
+    return (
+        <>
+            <div className="ua-painel-topicos" role="tablist" aria-label="Tópicos de A Universidade">
+                {TOPICOS_UNIVERSIDADE.map((item) => (
+                    <button key={item.id} type="button" role="tab" aria-selected={item.id === topicoId} className="ua-painel-topico"
+                            onMouseEnter={() => setTopicoId(item.id)} onFocus={() => setTopicoId(item.id)} onClick={() => setTopicoId(item.id)}>
+                        {item.titulo}
+                    </button>
+                ))}
+            </div>
+
+            <div className="ua-painel-conteudo ua-painel-conteudo--lista">
+                <section className="ua-painel-bloco">
+                    <h3>{topico.titulo}</h3>
+
+                    {topico.id === "sobre" && (
+                        <ul>
+                            {MEGA_UNIVERSIDADE.map((item) => (
+                                <li key={item.rota}>
+                                    <Link href={item.rota} onClick={fechar}>
+                                        <strong>{item.titulo}</strong>
+                                        <small>{item.descricao}</small>
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+
+                    {topico.id === "institucional" && (
+                        <ul className="ua-painel-lista-2col">
+                            {INSTITUCIONAL.map((item) => (
+                                <li key={item.slug}>
+                                    <Link href={rotaInstitucional(item)} onClick={fechar}>{item.titulo}</Link>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </section>
+            </div>
+        </>
+    );
+}
+
 // --- COMPONENTE DE CABEÇALHO DO SITE ---
 export default function SiteHeader() {
     const router = useRouter();
@@ -405,17 +460,8 @@ export default function SiteHeader() {
                 <nav aria-label="Principal">
                     <ul className="ua-nav-lista">
                         <li>
-                            <MenuSuspenso chave="universidade" rotulo="A Universidade" classe="ua-nav-painel-compacto" abertoChave={abertoChave} definirAberto={setAbertoChave}>
-                                {(fechar) => (
-                                    <div className="ua-painel-conteudo ua-painel-lista">
-                                        {MEGA_UNIVERSIDADE.map((item) => (
-                                            <Link key={item.rota} href={item.rota} onClick={fechar} className="ua-painel-item">
-                                                <strong>{item.titulo}</strong>
-                                                <small>{item.descricao}</small>
-                                            </Link>
-                                        ))}
-                                    </div>
-                                )}
+                            <MenuSuspenso chave="universidade" rotulo="A Universidade" classe="ua-nav-painel-medio" abertoChave={abertoChave} definirAberto={setAbertoChave}>
+                                {(fechar) => <PainelUniversidade fechar={fechar} />}
                             </MenuSuspenso>
                         </li>
                         <li>
