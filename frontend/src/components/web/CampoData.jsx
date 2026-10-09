@@ -4,7 +4,7 @@ import { useState }     from "react";
 import { Calendar }     from "primereact/calendar";
 import { Dropdown }     from "primereact/dropdown";
 import { Button }       from "primereact/button";
-import { addLocale }    from "primereact/api";
+import "@/lib/localePt";
 
 // --- SELETORES DE MÊS E ANO DO CABEÇALHO, COM DROPDOWN DO PRIMEREACT ---
 const SeletorMes = (opcoes) => (
@@ -31,75 +31,6 @@ const SeletorAno = (opcoes) => (
     />
 );
 
-// --- IDIOMA PORTUGUÊS DO CALENDÁRIO ---
-addLocale("pt", {
-    firstDayOfWeek: 0,
-    dayNames: [
-        "domingo",
-        "segunda-feira",
-        "terça-feira",
-        "quarta-feira",
-        "quinta-feira",
-        "sexta-feira",
-        "sábado"
-    ],
-    dayNamesShort: [
-        "dom",
-        "seg",
-        "ter",
-        "qua",
-        "qui",
-        "sex",
-        "sáb"
-    ],
-    dayNamesMin: [
-        "D",
-        "S",
-        "T",
-        "Q",
-        "Q",
-        "S",
-        "S"
-    ],
-    monthNames: [
-        "janeiro",
-        "fevereiro",
-        "março",
-        "abril",
-        "maio",
-        "junho",
-        "julho",
-        "agosto",
-        "setembro",
-        "outubro",
-        "novembro",
-        "dezembro"
-    ],
-    monthNamesShort: [
-        "jan",
-        "fev",
-        "mar",
-        "abr",
-        "mai",
-        "jun",
-        "jul",
-        "ago",
-        "set",
-        "out",
-        "nov",
-        "dez"
-    ],
-    today: "Hoje",
-    clear: "Limpar",
-    weekHeader: "Sem",
-    dateFormat: "dd/mm/yy",
-    chooseDate: "Escolha a data",
-    prevMonth: "Mês anterior",
-    nextMonth: "Próximo mês",
-    prevYear: "Ano anterior",
-    nextYear: "Próximo ano"
-});
-
 // --- CONVERTE A DATA PARA ISO, O MESMO FORMATO QUE ENTREGA AO FORMULÁRIO ---
 const paraIso = (data) => {
     if (!data) {
@@ -113,9 +44,18 @@ const paraIso = (data) => {
     return `${ano}-${mes}-${dia}`;
 };
 
+// --- CONVERTE aaaa-mm-dd EM Date NO FUSO LOCAL (NÃO USAR new Date("aaaa-mm-dd"), QUE É UTC) ---
+const deIso = (iso) => {
+    if (!iso) {
+        return null;
+    }
+    const [ano, mes, dia] = iso.split("-").map(Number);
+    return new Date(ano, mes - 1, dia);
+};
+
 // --- CAMPO DE DATA COM MÁSCARA, CALENDÁRIO COM MÊS E ANO ---
-export default function CampoData({ id, name, onChange, invalido = false, yearRange = "1920:2030", required = false }) {
-    const [data, setData] = useState(null);
+export default function CampoData({ id, name, onChange, invalido = false, yearRange = "1920:2030", required = false, valorInicial = "" }) {
+    const [data, setData] = useState(() => deIso(valorInicial));
 
     const limiteHoje = new Date();
     limiteHoje.setHours(23, 59, 59, 999);

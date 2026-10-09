@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState }                  from "react";
-import { useRouter }                                    from "next/navigation";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams }                   from "next/navigation";
 import { InputText }                                    from "primereact/inputtext";
 import { Dropdown }                                     from "primereact/dropdown";
 import { Dialog }                                       from "primereact/dialog";
@@ -9,6 +9,7 @@ import { Checkbox }                                     from "primereact/checkbo
 import { Button }                                       from "primereact/button";
 import { Message }                                      from "primereact/message";
 import SiteChrome                                       from "@/components/web/SiteChrome";
+import MolduraAluno                                     from "@/screens/portal-do-aluno/MolduraAluno";
 import CampoData                                         from "@/components/web/CampoData";
 import CampoSenha                                        from "@/components/web/CampoSenha";
 import { useEfeitosDePagina }                           from "@/hooks/useEfeitosDePagina";
@@ -16,7 +17,6 @@ import { mascararCpf, mascararTelefone, mascararCep }   from "@/lib/mascaras";
 import { notificar }                                    from "@/lib/notificar";
 import { api }                                          from "@/lib/api";
 
-const TOTAL_ETAPAS = 7;
 
 // --- ESTADOS BRASILEIROS ---
 const ESTADOS_BRASIL = [
@@ -90,6 +90,21 @@ const OPCOES_CURSO = [
 ];
 
 // --- OPÇÕES DE SEXO ---
+// --- TURNOS DO CURSO ---
+const OPCOES_TURNO = [
+    { value: "MANHA", label: "Manhã" },
+    { value: "TARDE", label: "Tarde" },
+    { value: "NOITE", label: "Noite" }
+];
+
+// --- CAMPOS DE TEXTO NÃO CONTROLADOS, PREENCHIDOS PELO REF QUANDO O FORMULÁRIO ESTÁ EM MODO DE EDIÇÃO ---
+const CAMPOS_TEXTO_EDICAO = [
+    "nome", "emailPessoal", "nomePai", "nomeMae", "municipioNascimento", "cidade", "nacionalidade",
+    "documentoNumero", "documentoOrgaoEmissor", "numeroTituloEleitor", "numeroZonaEleitoral",
+    "numeroCertificadoReservista", "orgaoEmissorCertificadoReservista", "enderecoLogradouro", "enderecoNumero",
+    "enderecoComplemento", "enderecoBairro", "instituicaoOrigem", "nomeInstituicaoConclusao", "anoConclusaoEnsinoMedio"
+];
+
 const OPCOES_SEXO = [
     { value: "FEMININO", label: "Feminino" },
     { value: "MASCULINO", label: "Masculino" },
@@ -154,6 +169,7 @@ const PASSOS = [
     { nome: "Endereço", icone: (<><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path></>) },
     { nome: "Informações gerais", icone: <path d="M22 12h-4l-3 8-4-16-3 8H2"></path> },
     { nome: "Censo", icone: (<><path d="M22 10 12 5 2 10l10 5 10-5Z"></path><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"></path></>) },
+    { nome: "E-mail institucional", icone: (<><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m2 7 10 6 10-6"></path></>) },
     { nome: "Consentimento", icone: (<><path d="M12 2 4 5v6c0 5 3.5 8.5 8 11 4.5-2.5 8-6 8-11V5Z"></path><path d="m9 12 2 2 4-4"></path></>) }
 ];
 
@@ -176,6 +192,7 @@ const CAMPOS_CONTROLADOS_PADRAO = {
     tipoEscolaEnsinoMedio: "",
     mesConclusaoEnsinoMedio: "",
     racaEtnia: "",
+    turno: "",
     publicoAlvoEducacaoEspecial: false,
     canhoto: false,
     necessitaAcompanhamentoInstitucional: false,
@@ -198,6 +215,34 @@ function idadeMinimaValida(valor) {
     return anos >= 14 && anos < 120;
 }
 
+// --- CONVERTE O PERFIL DEVOLVIDO POR GET /alunos/me NOS CAMPOS CONTROLADOS DO FORMULÁRIO ---
+function camposDoPerfil(dados) {
+    const texto = (valor) => valor ?? "";
+    return {
+        cpf: mascararCpf(texto(dados.cpf)),
+        telefone: mascararTelefone(texto(dados.telefone)),
+        telefoneEmergencia: mascararTelefone(texto(dados.telefoneEmergencia)),
+        enderecoCep: mascararCep(texto(dados.enderecoCep)),
+        curso: texto(dados.curso),
+        turno: texto(dados.turno),
+        sexo: texto(dados.sexo),
+        estadoCivil: texto(dados.estadoCivil),
+        estado: texto(dados.estado),
+        ufExpedicaoIdentidade: texto(dados.ufExpedicaoIdentidade),
+        ufZonaEleitoral: texto(dados.ufZonaEleitoral),
+        ufReservista: texto(dados.ufReservista),
+        tipoEndereco: texto(dados.tipoEndereco),
+        enderecoUf: texto(dados.enderecoUf),
+        tipoSanguineo: texto(dados.tipoSanguineo),
+        tipoEscolaEnsinoMedio: texto(dados.tipoEscolaEnsinoMedio),
+        mesConclusaoEnsinoMedio: dados.mesConclusaoEnsinoMedio ? String(dados.mesConclusaoEnsinoMedio) : "",
+        racaEtnia: texto(dados.racaEtnia),
+        publicoAlvoEducacaoEspecial: !!dados.publicoAlvoEducacaoEspecial,
+        canhoto: !!dados.canhoto,
+        necessitaAcompanhamentoInstitucional: !!dados.necessitaAcompanhamentoInstitucional
+    };
+}
+
 // --- GERA ATÉ 3 SUGESTÕES DE E-MAIL INSTITUCIONAL (@uniaura.com) A PARTIR DO NOME COMPLETO ---
 function gerarSugestoesEmail(nomeCompleto) {
     const partes = (nomeCompleto || "")
@@ -208,8 +253,12 @@ function gerarSugestoesEmail(nomeCompleto) {
         .split(/\s+/)
         .filter((parte) => parte && !["de", "da", "do", "das", "dos", "e"].includes(parte));
 
-    if (partes.length < 2) {
+    if (partes.length === 0) {
         return [];
+    }
+
+    if (partes.length === 1) {
+        return [`${partes[0]}@uniaura.com`];
     }
 
     const primeiro = partes[0];
@@ -240,14 +289,29 @@ function mensagemDeErro(campo) {
 }
 
 // --- PÁGINA DE CADASTRO DO PORTAL DO ALUNO ---
-export default function CadastroPortalDoAlunoPage() {
+function CadastroConteudo() {
     const raizRef = useEfeitosDePagina();
     const router = useRouter();
+
+    // --- MODO DE EDIÇÃO (?editar=1): O ALUNO LOGADO ALTERA OS PRÓPRIOS DADOS PESSOAIS ---
+    const editando = useSearchParams().get("editar") === "1";
+    const totalEtapas = editando ? 6 : 8;
+    const passos = editando ? PASSOS.slice(0, 6) : PASSOS;
+    const Moldura = editando ? MolduraAluno : SiteChrome;
     const formularioRef = useRef(null);
+    const [perfil, setPerfil] = useState(null);
+    const [formularioMontado, setFormularioMontado] = useState(false);
+
+    // --- GUARDA O <form> NO REF E AVISA QUANDO ELE FOI MONTADO (NECESSÁRIO PARA PREENCHER OS CAMPOS DA EDIÇÃO) ---
+    const definirFormulario = useCallback((no) => {
+        formularioRef.current = no;
+        setFormularioMontado(!!no);
+    }, []);
 
     const [etapaAtual,                  setEtapaAtual]                  = useState(1);
     const [campos,                      setCampos]                      = useState(CAMPOS_CONTROLADOS_PADRAO);
     const [erros,                       setErros]                       = useState({});
+    const [chaveFormulario,            setChaveFormulario]             = useState(0);
     const [sugestoesEmail,             setSugestoesEmail]              = useState([]);
     const [emailEscolhido,              setEmailEscolhido]              = useState("");
     const [mostrarInfoAcompanhamento,   setMostrarInfoAcompanhamento]   = useState(false);
@@ -261,6 +325,33 @@ export default function CadastroPortalDoAlunoPage() {
             ?.querySelector(`.site-wizard-etapa[data-etapa="${etapaAtual}"]`)
             ?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, [etapaAtual]);
+
+    // --- NA EDIÇÃO, BUSCA OS DADOS DO ALUNO E REMONTA O FORMULÁRIO COM OS VALORES CONTROLADOS ---
+    useEffect(() => {
+        if (!editando) {
+            return;
+        }
+        api("/alunos/me")
+            .then((dados) => {
+                setPerfil(dados);
+                setCampos((atual) => ({ ...atual, ...camposDoPerfil(dados) }));
+                setChaveFormulario((atual) => atual + 1);
+            })
+            .catch((excecao) => setErro(excecao.message));
+    }, [editando]);
+
+    // --- NA EDIÇÃO, PREENCHE OS CAMPOS DE TEXTO NÃO CONTROLADOS QUANDO O FORMULÁRIO JÁ ESTÁ NA TELA ---
+    useEffect(() => {
+        const formulario = formularioRef.current;
+        if (!editando || !perfil || !formularioMontado || !formulario) {
+            return;
+        }
+        CAMPOS_TEXTO_EDICAO.forEach((nome) => {
+            if (formulario[nome]) {
+                formulario[nome].value = perfil[nome] ?? "";
+            }
+        });
+    }, [editando, perfil, formularioMontado, chaveFormulario]);
 
     // -- ATUALIZA O STATE DE CAMPOS CONTROLADOS, USADO PARA VALIDAR E MONTAR O PAYLOAD ---
     const atualizarCampo = (nome, valor) => {
@@ -329,9 +420,12 @@ export default function CadastroPortalDoAlunoPage() {
             }
         }
 
-        if (numero === 1) {
+        if (numero === 1 && !editando) {
             if (!campos.curso) {
                 novosErros.curso = "Escolha o curso pretendido.";
+            }
+            if (!campos.turno) {
+                novosErros.turno = "Escolha o turno.";
             }
         }
 
@@ -339,7 +433,11 @@ export default function CadastroPortalDoAlunoPage() {
             novosErros.dataNascimento = "Informe sua data de nascimento.";
         }
 
-        if (numero === 4 && !novosErros.senha && !novosErros.confirmarSenha
+        if (numero === 7 && !emailEscolhido) {
+            novosErros.email = "Escolha um e-mail institucional para continuar.";
+        }
+
+        if (numero === 4 && !editando && !novosErros.senha && !novosErros.confirmarSenha
                 && formulario.senha.value !== formulario.confirmarSenha.value) {
             novosErros.confirmarSenha = "As senhas informadas não conferem.";
         }
@@ -360,17 +458,18 @@ export default function CadastroPortalDoAlunoPage() {
     // --- AVANÇA PARA A PRÓXIMA ETAPA, SE A ATUAL ESTIVER VÁLIDA ---
     const aoAvancar = () => {
         setErro("");
-        if (etapaValida(etapaAtual) && etapaAtual < TOTAL_ETAPAS) {
+        if (etapaValida(etapaAtual) && etapaAtual < totalEtapas) {
             if (etapaAtual === 1) {
-                setSugestoesEmail(gerarSugestoesEmail(formularioRef.current.nome.value));
+                const novas = gerarSugestoesEmail(formularioRef.current.nome.value);
+                setSugestoesEmail(novas);
+                setEmailEscolhido((atual) => (novas.includes(atual) ? atual : ""));
             }
             exibirEtapa(etapaAtual + 1);
         }
     };
 
-    // --- PREENCHE O CAMPO DE E-MAIL COM A SUGESTÃO ESCOLHIDA ---
+    // --- GUARDA O E-MAIL INSTITUCIONAL ESCOLHIDO (SERÁ O E-MAIL DE LOGIN DO ALUNO) ---
     const escolherEmail = (sugestao) => {
-        formularioRef.current.email.value = sugestao;
         setEmailEscolhido(sugestao);
         limparErroCampo("email");
     };
@@ -398,11 +497,13 @@ export default function CadastroPortalDoAlunoPage() {
         return {
             // --- ACESSO ---
             nome: formulario.nome.value.trim(),
-            email: formulario.email.value.trim(),
-            senha: formulario.senha.value,
+            email: emailEscolhido,
+            emailPessoal: formulario.emailPessoal.value.trim(),
+            senha: formulario.senha?.value,
 
             // --- ETAPA 1 ---
             curso: campos.curso,
+            turno: campos.turno,
             nomePai: texto("nomePai"),
             nomeMae: texto("nomeMae"),
             sexo: campos.sexo || null,
@@ -466,7 +567,26 @@ export default function CadastroPortalDoAlunoPage() {
         setErro("");
 
         const formulario = formularioRef.current;
-        if (!etapaValida(7)) {
+        if (!etapaValida(totalEtapas)) {
+            return;
+        }
+
+        // --- EDIÇÃO: ENVIA SÓ OS DADOS PESSOAIS (CURSO, TURNO, RA, CPF E E-MAIL INSTITUCIONAL NÃO MUDAM) ---
+        if (editando) {
+            const { senha, email, cpf, curso, turno, termoConsentimento, ...dadosPessoais } =
+                montarPayload(formulario, formulario.cpf.value.replace(/\D/g, ""));
+
+            setEnviando(true);
+            try {
+                await api("/alunos/me", { metodo: "PUT", corpo: { ...dadosPessoais, emailPessoal: formulario.emailPessoal.value.trim() } });
+                notificar("Dados pessoais atualizados com sucesso!", "success");
+                router.push("/portal-do-aluno/dashboard");
+            } catch (erroRequisicao) {
+                setErro(erroRequisicao.message);
+                notificar(erroRequisicao.message, "error");
+            } finally {
+                setEnviando(false);
+            }
             return;
         }
 
@@ -490,13 +610,17 @@ export default function CadastroPortalDoAlunoPage() {
             const resposta = await api("/pre-matricula", { metodo: "POST", corpo: payload });
 
             const texto = `Matrícula concluída! Seu número de matrícula (RA) é ${resposta.matriculaRA}. ` +
-                "Guarde essa informação e faça login no Portal do Aluno com o e-mail e a senha cadastrados.";
+                `Entre no Portal do Aluno com o e-mail institucional ${resposta.email} e a senha cadastrada.`;
             setMensagem(texto);
             notificar("Matrícula realizada com sucesso!", "success");
 
-            formulario.reset();
+            // --- LIMPA TODO O FORMULÁRIO (A NOVA key REMONTA OS CAMPOS NÃO CONTROLADOS, INCLUSIVE AS DATAS) ---
             setCampos(CAMPOS_CONTROLADOS_PADRAO);
-            setCursoInvalido(false);
+            setErros({});
+            setSugestoesEmail([]);
+            setEmailEscolhido("");
+            setMostrarInfoAcompanhamento(false);
+            setChaveFormulario((atual) => atual + 1);
             setEtapaAtual(1);
 
             setTimeout(() => router.push("/portal-do-aluno/login"), 3500);
@@ -509,10 +633,10 @@ export default function CadastroPortalDoAlunoPage() {
     };
 
     return (
-        <SiteChrome>
+        <Moldura>
             <div className="grad-page" ref={raizRef}>
                 <main>
-                    <section className="grad-hero">
+                    {!editando && <section className="grad-hero">
                         <span className="grad-hero-brilho grad-hero-brilho-a" aria-hidden="true"></span>
                         <span className="grad-hero-brilho grad-hero-brilho-b" aria-hidden="true"></span>
 
@@ -531,25 +655,29 @@ export default function CadastroPortalDoAlunoPage() {
                                 <h1 data-entrada style={{ "--atraso": "160ms" }}>Crie sua <span>matrícula</span></h1>
 
                                 <p data-entrada style={{ "--atraso": "260ms" }}>
-                                    Preencha o formulário em 7 etapas para se matricular na UniAura. Ao concluir, você
+                                    Preencha o formulário em 8 etapas para se matricular na UniAura. Ao concluir, você
                                     recebe seu número de matrícula (RA) e já pode acessar o Portal do Aluno com o
                                     e-mail e a senha cadastrados aqui.
                                 </p>
                             </div>
                         </div>
-                    </section>
+                    </section>}
 
                     <section className="grad-section" id="grad-cadastro">
                         <div className="grad-container">
                             <div className="grad-section-title" data-revelar>
-                                <span className="grad-eyebrow">Matrícula</span>
-                                <h2>Preencha seus dados</h2>
-                                <p>Os campos marcados com asterisco são obrigatórios.</p>
+                                <span className="grad-eyebrow">{editando ? "Meus dados" : "Matrícula"}</span>
+                                <h2>{editando ? "Alterar dados pessoais" : "Preencha seus dados"}</h2>
+                                <p>
+                                    {editando
+                                        ? "Atualize suas informações. Curso, turno, RA, CPF e e-mail institucional não podem ser alterados aqui."
+                                        : "Os campos marcados com asterisco são obrigatórios."}
+                                </p>
                             </div>
 
                             <div className="site-wizard" data-revelar>
                                 <ol className="site-wizard-passos" aria-label="Etapas do cadastro">
-                                    {PASSOS.map((passo, indice) => {
+                                    {passos.map((passo, indice) => {
                                         const numero = indice + 1;
                                         return (
                                             <li key={passo.nome} className={`site-wizard-passo${numero === etapaAtual ? " ativo" : ""}${numero < etapaAtual ? " concluida" : ""}`}
@@ -567,7 +695,7 @@ export default function CadastroPortalDoAlunoPage() {
                                     })}
                                 </ol>
 
-                                <form id="formCadastroAluno" className="site-form" noValidate ref={formularioRef} onSubmit={aoSubmeter}>
+                                <form key={chaveFormulario} id="formCadastroAluno" className="site-form" noValidate ref={definirFormulario} onSubmit={aoSubmeter}>
 
                                     {/* --- ETAPA 1: DADOS PESSOAIS --- */}
                                     <fieldset className="site-wizard-etapa" data-etapa="1" hidden={etapaAtual !== 1}>
@@ -590,9 +718,25 @@ export default function CadastroPortalDoAlunoPage() {
                                                     value={campos.curso}
                                                     onChange={(e) => atualizarCampo("curso", e.value)}
                                                     placeholder="Selecione o curso"
+                                                    disabled={editando}
                                                     className={classeErro("curso")}
                                                 />
                                                 {erroDe("curso")}
+                                            </div>
+
+                                            <div className="field field-full">
+                                                <label htmlFor="cadTurno">Turno <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                                                <Dropdown
+                                                    inputId="cadTurno"
+                                                    name="turno"
+                                                    options={OPCOES_TURNO}
+                                                    value={campos.turno}
+                                                    onChange={(e) => atualizarCampo("turno", e.value)}
+                                                    placeholder="Selecione o turno"
+                                                    disabled={editando}
+                                                    className={classeErro("turno")}
+                                                />
+                                                {erroDe("turno")}
                                             </div>
 
                                             <div className="field">
@@ -637,7 +781,7 @@ export default function CadastroPortalDoAlunoPage() {
                                         <div className="site-form-grid">
                                             <div className="field">
                                                 <label htmlFor="cadNascimento">Data de nascimento <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
-                                                <CampoData id="cadNascimento" name="dataNascimento" yearRange="1920:2010" required invalido={!!erros.dataNascimento} onChange={() => limparErroCampo("dataNascimento")} />
+                                                <CampoData id="cadNascimento" name="dataNascimento" yearRange="1920:2010" valorInicial={perfil?.dataNascimento} required invalido={!!erros.dataNascimento} onChange={() => limparErroCampo("dataNascimento")} />
                                                 {erroDe("dataNascimento")}
                                             </div>
 
@@ -680,6 +824,7 @@ export default function CadastroPortalDoAlunoPage() {
                                                     id="cadCpf"
                                                     name="cpf"
                                                     required
+                                                    readOnly={editando}
                                                     inputMode="numeric"
                                                     maxLength={14}
                                                     placeholder="000.000.000-00"
@@ -714,7 +859,7 @@ export default function CadastroPortalDoAlunoPage() {
 
                                             <div className="field">
                                                 <label htmlFor="cadDataExpedicao">Data de expedição da identidade</label>
-                                                <CampoData id="cadDataExpedicao" name="dataExpedicaoIdentidade" />
+                                                <CampoData id="cadDataExpedicao" name="dataExpedicaoIdentidade" valorInicial={perfil?.dataExpedicaoIdentidade} />
                                             </div>
 
                                             <div className="field">
@@ -825,28 +970,9 @@ export default function CadastroPortalDoAlunoPage() {
                                             </div>
 
                                             <div className="field">
-                                                <label htmlFor="cadEmail">E-mail <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
-                                                <InputText id="cadEmail" name="email" type="email" required autoComplete="email" className={classeErro("email")} onInput={() => { limparErroCampo("email"); setEmailEscolhido(""); }} />
-                                                {erroDe("email")}
-
-                                                {sugestoesEmail.length > 0 && (
-                                                    <div className="ua-sugestoes-email" role="group" aria-label="Sugestões de e-mail institucional">
-                                                        <small className="muted">Sugestões de e-mail institucional com base no seu nome:</small>
-                                                        <div className="ua-sugestoes-email__lista">
-                                                            {sugestoesEmail.map((sugestao) => (
-                                                                <button
-                                                                    key={sugestao}
-                                                                    type="button"
-                                                                    className="ua-sugestao-email"
-                                                                    aria-pressed={emailEscolhido === sugestao}
-                                                                    onClick={() => escolherEmail(sugestao)}
-                                                                >
-                                                                    {sugestao}
-                                                                </button>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                )}
+                                                <label htmlFor="cadEmailPessoal">E-mail pessoal <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                                                <InputText id="cadEmailPessoal" name="emailPessoal" type="email" required autoComplete="email" className={classeErro("emailPessoal")} onInput={() => limparErroCampo("emailPessoal")} />
+                                                {erroDe("emailPessoal")}
                                             </div>
 
                                             <div className="field">
@@ -879,6 +1005,8 @@ export default function CadastroPortalDoAlunoPage() {
                                                 />
                                             </div>
 
+                                            {!editando && (
+                                                <>
                                             <div className="field">
                                                 <label htmlFor="cadSenha">Senha de acesso <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
                                                 <CampoSenha id="cadSenha" name="senha" required minLength={6} autoComplete="new-password" className={classeErro("senha")} onInput={() => limparErroCampo("senha")} />
@@ -890,6 +1018,8 @@ export default function CadastroPortalDoAlunoPage() {
                                                 <CampoSenha id="cadConfirmarSenha" name="confirmarSenha" required minLength={6} autoComplete="new-password" className={classeErro("confirmarSenha")} onInput={() => limparErroCampo("confirmarSenha")} />
                                                 {erroDe("confirmarSenha")}
                                             </div>
+                                                </>
+                                            )}
                                         </div>
                                     </fieldset>
 
@@ -1011,8 +1141,43 @@ export default function CadastroPortalDoAlunoPage() {
                                         </div>
                                     </fieldset>
 
-                                    {/* --- ETAPA 7: TERMO DE CONSENTIMENTO --- */}
+                                    {!editando && (
+                                <>
+                                    {/* --- ETAPA 7: ESCOLHA DO E-MAIL INSTITUCIONAL --- */}
                                     <fieldset className="site-wizard-etapa" data-etapa="7" hidden={etapaAtual !== 7}>
+                                        <legend>E-mail institucional</legend>
+
+                                        <p className="muted">
+                                            Escolha o e-mail <strong>@uniaura.com</strong> que será o seu acesso ao Portal do Aluno.
+                                            As opções foram geradas a partir do seu nome.
+                                        </p>
+
+                                        {sugestoesEmail.length > 0 ? (
+                                            <div className="ua-sugestoes-email" role="group" aria-label="Opções de e-mail institucional">
+                                                <div className="ua-sugestoes-email__lista">
+                                                    {sugestoesEmail.map((sugestao) => (
+                                                        <button
+                                                            key={sugestao}
+                                                            type="button"
+                                                            className="ua-sugestao-email"
+                                                            aria-pressed={emailEscolhido === sugestao}
+                                                            onClick={() => escolherEmail(sugestao)}
+                                                        >
+                                                            {sugestao}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <p className="muted">Volte à primeira etapa e informe seu nome completo para ver as opções.</p>
+                                        )}
+
+                                        {erroDe("email")}
+                                        {emailEscolhido && <small className="muted">Você entrará no portal com <strong>{emailEscolhido}</strong>.</small>}
+                                    </fieldset>
+
+                                    {/* --- ETAPA 8: TERMO DE CONSENTIMENTO --- */}
+                                    <fieldset className="site-wizard-etapa" data-etapa="8" hidden={etapaAtual !== 8}>
                                         <legend>Termo de consentimento</legend>
 
                                         <div className="site-consentimento">
@@ -1035,6 +1200,8 @@ export default function CadastroPortalDoAlunoPage() {
                                         </label>
                                         {erroDe("termoConsentimento")}
                                     </fieldset>
+                                </>
+                            )}
 
                                     <div className="site-wizard-acoes">
                                         {etapaAtual !== 1
@@ -1042,15 +1209,15 @@ export default function CadastroPortalDoAlunoPage() {
                                             : <span />}
 
                                         <span className="site-wizard-contador">
-                                            Etapa <span id="wizardEtapaAtual">{etapaAtual}</span> de {TOTAL_ETAPAS}
+                                            Etapa <span id="wizardEtapaAtual">{etapaAtual}</span> de {totalEtapas}
                                         </span>
 
-                                        {etapaAtual !== TOTAL_ETAPAS && (
+                                        {etapaAtual !== totalEtapas && (
                                             <Button type="button" id="btnAvancarEtapa" label="Próxima etapa" icon="pi pi-arrow-right" iconPos="right" className="ua-botao-seta" onClick={aoAvancar} />
                                         )}
 
-                                        {etapaAtual === TOTAL_ETAPAS && (
-                                            <Button type="submit" id="btnConcluirCadastro" label={enviando ? "Enviando..." : "Concluir matrícula"} loading={enviando} />
+                                        {etapaAtual === totalEtapas && (
+                                            <Button type="submit" id="btnConcluirCadastro" label={enviando ? "Enviando..." : (editando ? "Salvar alterações" : "Concluir matrícula")} loading={enviando} />
                                         )}
                                     </div>
 
@@ -1062,6 +1229,15 @@ export default function CadastroPortalDoAlunoPage() {
                     </section>
                 </main>
             </div>
-        </SiteChrome>
+        </Moldura>
+    );
+}
+
+// --- O useSearchParams EXIGE UM LIMITE DE SUSPENSE NO APP ROUTER ---
+export default function CadastroPortalDoAlunoPage() {
+    return (
+        <Suspense fallback={null}>
+            <CadastroConteudo />
+        </Suspense>
     );
 }

@@ -107,6 +107,13 @@ public class Aluno extends SqlServerBaseEntity {
     @Column(name = "ufReservista", length = 2)
     private String ufReservista;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "turno", length = 10)
+    private Turno turno;
+
+    @Column(name = "emailPessoal", length = 150)
+    private String emailPessoal;
+
     @Column(name = "nomePai", length = 150)
     private String nomePai;
 

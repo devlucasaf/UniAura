@@ -1,14 +1,18 @@
 package erp.uniaura.modules.aluno.services.web.rest.v1;
 
+import erp.uniaura.modules.aluno.dto.AlunoPerfilDTO;
 import erp.uniaura.modules.aluno.dto.AlunoRequestDTO;
 import erp.uniaura.modules.aluno.dto.AlunoResponseDTO;
 import erp.uniaura.modules.aluno.model.StatusAluno;
+import erp.uniaura.modules.aluno.service.AlunoPerfilService;
 import erp.uniaura.modules.aluno.service.AlunoService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import cloudsupport.security.HasAnyAuthority;
+import cloudsupport.security.HasAuthority;
+import cloudsupport.security.LoggedInUserId;
 import cloudsupport.services.web.Ws;
 
 import jakarta.validation.Valid;
@@ -34,6 +38,23 @@ import java.net.URI;
 public class AlunoWsV1 {
 
     private final AlunoService alunoService;
+    private final AlunoPerfilService alunoPerfilService;
+
+    // --- DADOS COMPLETOS DO PRÓPRIO ALUNO LOGADO ---
+    @GetMapping("/me")
+    @Operation(summary = "Retorna o perfil completo do aluno autenticado")
+    @HasAuthority("ROLE_ALUNO")
+    public ResponseEntity<AlunoPerfilDTO> meuPerfil(@LoggedInUserId String usuarioId) {
+        return ResponseEntity.ok(alunoPerfilService.obter(Long.valueOf(usuarioId)));
+    }
+
+    // --- O ALUNO ATUALIZA OS PRÓPRIOS DADOS PESSOAIS ---
+    @PutMapping("/me")
+    @Operation(summary = "Atualiza os dados pessoais do aluno autenticado")
+    @HasAuthority("ROLE_ALUNO")
+    public ResponseEntity<AlunoPerfilDTO> atualizarMeuPerfil(@LoggedInUserId String usuarioId, @Valid @RequestBody AlunoPerfilDTO dto) {
+        return ResponseEntity.ok(alunoPerfilService.atualizar(Long.valueOf(usuarioId), dto));
+    }
 
     // --- LISTA OS ALUNOS DE FORMA PAGINADA, PERMITINDO A FILTRAGEM OPCIONAL POR STATUS ---
     @GetMapping

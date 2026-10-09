@@ -1,5 +1,6 @@
 package erp.uniaura.modules.autenticacao.services.web.rest.v1;
 
+import erp.uniaura.dto.auth.AlterarSenhaRequestDTO;
 import erp.uniaura.dto.auth.LoginRequestDTO;
 import erp.uniaura.dto.auth.LoginResponseDTO;
 import erp.uniaura.dto.auth.RefreshTokenRequestDTO;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Ws("/auth")
@@ -51,6 +53,15 @@ public class AutenticacaoWsV1 {
     @Operation(summary = "Gera um novo access token a partir de um refresh token válido")
     public ResponseEntity<LoginResponseDTO> refresh(@Valid @RequestBody RefreshTokenRequestDTO dto) {
         return ResponseEntity.ok(autenticacaoService.refresh(dto));
+    }
+
+    // --- O USUÁRIO AUTENTICADO TROCA A PRÓPRIA SENHA ---
+    @PutMapping("/senha")
+    @SecurityRequirement(name = "JWT")
+    @Operation(summary = "Altera a senha do usuário autenticado (exige a senha atual)")
+    public ResponseEntity<Void> alterarSenha(@LoggedInUserId String usuarioId, @Valid @RequestBody AlterarSenhaRequestDTO dto) {
+        autenticacaoService.alterarSenha(Long.valueOf(usuarioId), dto);
+        return ResponseEntity.noContent().build();
     }
 
     // --- RETORNA OS DADOS DO USUÁRIO AUTENTICADO ---

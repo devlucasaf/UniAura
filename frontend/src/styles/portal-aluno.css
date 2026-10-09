@@ -1,0 +1,528 @@
+/* --- HOME DO PORTAL DO ALUNO (src/screens/portal-do-aluno) ---
+   Só usa os tokens de global.css, então vale para o modo claro e o escuro. */
+
+.ua-aluno-home {
+    display: grid;
+    gap: var(--space-xl);
+}
+
+.ua-aluno-secao-cabecalho {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+.ua-aluno-secao-cabecalho h2 {
+    margin: 0;
+}
+
+/* --- MURAL À ESQUERDA E CALENDÁRIO À DIREITA --- */
+.ua-aluno-colunas {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: var(--space-xl);
+    align-items: start;
+}
+
+.ua-aluno-mural {
+    display: grid;
+    gap: var(--space-md);
+}
+
+.ua-aluno-noticia {
+    display: grid;
+    gap: var(--space-sm);
+}
+
+.ua-aluno-noticia h3 {
+    margin: 0;
+    font-size: var(--fs-lg);
+}
+
+.ua-aluno-noticia__topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+}
+
+/* --- CALENDÁRIO --- */
+.ua-aluno-calendario .p-calendar-inline,
+.ua-aluno-calendario .p-datepicker {
+    width: 100%;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+    animation: none;
+}
+
+.ua-aluno-dia-evento {
+    position: relative;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.ua-aluno-dia-evento::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -4px;
+    width: 5px;
+    height: 5px;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    background: var(--color-accent);
+}
+
+.ua-aluno-eventos-titulo {
+    margin: var(--space-md) 0 var(--space-sm);
+    font-size: var(--fs-md);
+}
+
+.ua-aluno-eventos {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-sm);
+}
+
+.ua-aluno-eventos li {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: var(--space-sm);
+    align-items: baseline;
+    font-size: var(--fs-sm);
+}
+
+.ua-aluno-eventos strong {
+    color: var(--color-primary);
+    text-transform: uppercase;
+}
+
+/* --- TABELA DE CURSOS: DIA DA SEMANA NA PRIMEIRA COLUNA, À ESQUERDA --- */
+.ua-aluno-tabela-caixa {
+    padding: 0;
+    overflow-x: auto;
+}
+
+.ua-aluno-tabela {
+    width: 100%;
+    min-width: 720px;
+    border-collapse: collapse;
+}
+
+.ua-aluno-tabela th,
+.ua-aluno-tabela td {
+    padding: var(--space-md);
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+.ua-aluno-tabela thead th {
+    background: var(--ua-item-ativo);
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+}
+
+.ua-aluno-tabela tbody th {
+    width: 170px;
+    background: var(--ua-item-ativo);
+    color: var(--text-primary);
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.ua-aluno-tabela tbody tr:last-child th,
+.ua-aluno-tabela tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.ua-aluno-aula {
+    display: grid;
+    gap: 2px;
+}
+
+.ua-aluno-aula small,
+.ua-aluno-sem-aula {
+    color: var(--text-muted);
+}
+
+.ua-aluno-hoje td {
+    background: var(--color-primary-soft);
+}
+
+.ua-aluno-hoje-rotulo {
+    margin-left: var(--space-sm);
+    padding: .1rem .5rem;
+    border-radius: 999px;
+    background: var(--color-primary);
+    color: #fff;
+    font-size: .7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* --- BOTÃO DE 3 BARRAS ANIMADO ---
+   Em repouso as barras "respiram" de leve; no hover viram uma onda; ao abrir formam um X. */
+.ua-hamburguer {
+    flex-shrink: 0;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 6px;
+    width: 48px;
+    height: 48px;
+    padding: 0 12px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+
+.ua-hamburguer:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 6px 18px rgba(37, 99, 235, .22);
+    transform: translateY(-1px);
+}
+
+.ua-hamburguer__barra {
+    display: block;
+    height: 3px;
+    border-radius: 999px;
+    background: var(--color-primary);
+    transform-origin: left center;
+    transition: width .3s ease, transform .35s cubic-bezier(.4, 0, .2, 1), opacity .25s ease;
+    animation: ua-barra-respirar 3.2s ease-in-out infinite;
+}
+
+.ua-hamburguer__barra:nth-child(1) { width: 24px; animation-delay: 0s; }
+.ua-hamburguer__barra:nth-child(2) { width: 18px; animation-delay: .25s; }
+.ua-hamburguer__barra:nth-child(3) { width: 12px; animation-delay: .5s; }
+
+.ua-hamburguer:hover .ua-hamburguer__barra {
+    animation: ua-barra-onda .7s ease-in-out infinite;
+}
+
+.ua-hamburguer:hover .ua-hamburguer__barra:nth-child(2) { animation-delay: .1s; }
+.ua-hamburguer:hover .ua-hamburguer__barra:nth-child(3) { animation-delay: .2s; }
+
+.ua-hamburguer--aberto .ua-hamburguer__barra {
+    animation: none;
+}
+
+.ua-hamburguer--aberto .ua-hamburguer__barra:nth-child(1) { width: 24px; transform: translateY(9px) rotate(45deg); }
+.ua-hamburguer--aberto .ua-hamburguer__barra:nth-child(2) { opacity: 0; }
+.ua-hamburguer--aberto .ua-hamburguer__barra:nth-child(3) { width: 24px; transform: translateY(-9px) rotate(-45deg); }
+
+@keyframes ua-barra-respirar {
+    0%, 100% { transform: scaleX(1); }
+    50%      { transform: scaleX(.78); }
+}
+
+@keyframes ua-barra-onda {
+    0%, 100% { transform: translateX(0); }
+    50%      { transform: translateX(6px); }
+}
+
+/* --- PAINEL LATERAL DOS DASHBOARDS (PrimeReact Sidebar) NOS DOIS MODOS --- */
+.ua-aluno-sidebar.p-sidebar {
+    width: min(420px, 92vw);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border-right: 1px solid var(--border-color);
+}
+
+.ua-aluno-sidebar .p-sidebar-header,
+.ua-aluno-sidebar .p-sidebar-content {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+}
+
+.ua-aluno-sidebar .p-sidebar-close {
+    color: var(--text-muted);
+    border-radius: 999px;
+}
+
+.ua-aluno-sidebar .p-sidebar-close:hover {
+    background: var(--ua-item-ativo);
+    color: var(--color-primary);
+}
+
+.ua-aluno-sidebar-titulo {
+    margin: 0;
+    font-size: var(--fs-lg);
+}
+
+.ua-aluno-topicos {
+    display: grid;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-lg);
+}
+
+.ua-aluno-topico {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    min-height: 44px;
+    padding: .6rem .9rem;
+    background: transparent;
+    border: 0;
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font: inherit;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+}
+
+.ua-aluno-topico:hover,
+.ua-aluno-topico[aria-selected="true"] {
+    background: var(--ua-item-ativo);
+    color: var(--color-primary);
+}
+
+.ua-aluno-indicadores {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-md);
+    animation: ua-dropdown-abrir .25s ease-out;
+}
+
+/* --- RESPONSIVO --- */
+@media (max-width: 960px) {
+    .ua-aluno-colunas {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .ua-aluno-indicadores {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- PORTAL DO ALUNO SEM A BARRA LATERAL "ERP ACADÊMICO" --- */
+.app-shell--sem-menu {
+    grid-template-columns: 1fr;
+}
+
+.app-shell--sem-menu .app-main {
+    width: 100%;
+}
+
+/* --- PARTE ESQUERDA DO CABEÇALHO: BOTÃO DE 3 BARRAS + "OLÁ, NOME!" --- */
+.ua-aluno-topo-cabecalho {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.topbar .ua-hamburguer {
+    width: 44px;
+    height: 44px;
+}
+
+.ua-aluno-ola {
+    font-size: var(--fs-lg);
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* --- BOTÕES DE TEMA E DE PERFIL NO CABEÇALHO --- */
+.topbar .ua-botao-tema-topo.p-button {
+    color: var(--text-primary);
+    width: 40px;
+    height: 40px;
+}
+
+.topbar .ua-botao-tema-topo.p-button:hover {
+    background: var(--ua-item-ativo);
+    color: var(--color-primary);
+}
+
+.topbar .ua-botao-perfil.p-button {
+    width: 40px;
+    height: 40px;
+    background: var(--color-primary);
+    border: 0;
+    color: #fff;
+}
+
+.topbar .ua-botao-perfil.p-button:hover {
+    background: var(--color-primary-hover);
+}
+
+/* --- MENU DO BOTÃO DE PERFIL (PrimeReact Menu popup) NOS DOIS MODOS --- */
+.p-menu.p-menu-overlay {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    min-width: 220px;
+}
+
+.p-menu .p-menuitem-link {
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+}
+
+.p-menu .p-menuitem-link .p-menuitem-text,
+.p-menu .p-menuitem-link .p-menuitem-icon {
+    color: var(--text-primary);
+}
+
+.p-menu .p-menuitem:not(.p-highlight):not(.p-disabled) > .p-menuitem-content:hover,
+.p-menu .p-menuitem:not(.p-highlight):not(.p-disabled) > .p-menuitem-content:hover .p-menuitem-link {
+    background: var(--ua-item-ativo);
+}
+
+.p-menu .p-menu-separator {
+    border-top: 1px solid var(--border-color);
+}
+
+.ua-perfil-cabecalho {
+    display: grid;
+    gap: 2px;
+    padding: .6rem .9rem;
+}
+
+.ua-perfil-cabecalho small {
+    color: var(--text-muted);
+    word-break: break-all;
+}
+
+/* --- CALENDÁRIO DENTRO DO CARTÃO: SEM BARRA DE ROLAGEM (CÉLULAS MAIS ESTREITAS CABEM NOS 360px) --- */
+.ua-aluno-calendario .p-datepicker .p-datepicker-calendar-container {
+    overflow: visible;
+}
+
+.ua-aluno-calendario .p-datepicker table {
+    width: 100%;
+    table-layout: fixed;
+    margin: 0;
+}
+
+.ua-aluno-calendario .p-datepicker table th,
+.ua-aluno-calendario .p-datepicker table td {
+    padding: 2px 0;
+}
+
+.ua-aluno-calendario .p-datepicker table td > span {
+    margin: 0 auto;
+}
+
+/* --- BOTÃO DE TEMA DO TOPO: MESMA ONDA E MESMO ÍCONE DO SITE (.site-tema-toggle) --- */
+.topbar .site-tema-toggle.p-button {
+    width: 40px;
+    height: 40px;
+    color: var(--text-primary);
+}
+
+.topbar .site-tema-toggle.p-button:hover {
+    background: var(--ua-item-ativo);
+    color: var(--color-primary);
+}
+
+/* --- INFORMAÇÕES DO ALUNO NO MENU DE PERFIL --- */
+.ua-perfil-cabecalho {
+    display: grid;
+    gap: 6px;
+    padding: .8rem .9rem;
+    min-width: 260px;
+}
+
+.ua-perfil-nome {
+    font-size: var(--fs-md);
+    line-height: 1.3;
+    padding-bottom: 2px;
+}
+
+.ua-perfil-linha {
+    display: grid;
+    grid-template-columns: 18px auto 1fr;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: var(--fs-sm);
+}
+
+.ua-perfil-linha i {
+    color: var(--color-primary);
+}
+
+.ua-perfil-linha__rotulo {
+    color: var(--text-muted);
+}
+
+.ua-perfil-linha strong {
+    text-align: right;
+    font-weight: 600;
+}
+
+/* --- ÍCONES DOS ATALHOS EM AZUL --- */
+.p-menu .p-menuitem:not(.ua-menu-item-sair) .p-menuitem-link .p-menuitem-icon {
+    color: var(--color-primary);
+}
+
+/* --- "SAIR": VERMELHO, COM ANIMAÇÃO (A SETA DE SAÍDA SE MOVE NO HOVER) --- */
+.p-menu .ua-menu-item-sair .p-menuitem-link,
+.p-menu .ua-menu-item-sair .p-menuitem-link .p-menuitem-text,
+.p-menu .ua-menu-item-sair .p-menuitem-link .p-menuitem-icon {
+    color: var(--color-danger);
+    font-weight: 700;
+}
+
+.p-menu .ua-menu-item-sair > .p-menuitem-content {
+    transition: background .2s ease, transform .15s ease;
+}
+
+.p-menu .ua-menu-item-sair > .p-menuitem-content:hover {
+    background: rgba(220, 38, 38, .12);
+}
+
+.p-menu .ua-menu-item-sair > .p-menuitem-content:active {
+    transform: scale(.97);
+}
+
+.p-menu .ua-menu-item-sair .p-menuitem-icon {
+    display: inline-block;
+}
+
+.p-menu .ua-menu-item-sair:hover .p-menuitem-icon {
+    animation: ua-sair-seta .7s ease-in-out infinite;
+}
+
+@keyframes ua-sair-seta {
+    0%, 100% { transform: translateX(0); }
+    50%      { transform: translateX(6px); }
+}
+
+/* --- PÁGINA "MEU PERFIL" --- */
+.ua-aluno-indicadores--linha {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    animation: none;
+}
+
+.ua-aluno-freq {
+    display: grid;
+    grid-template-columns: 1fr 48px;
+    align-items: center;
+    gap: var(--space-sm);
+    min-width: 200px;
+}
+
+@media (max-width: 960px) {
+    .ua-aluno-indicadores--linha {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}

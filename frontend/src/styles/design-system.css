@@ -1253,3 +1253,8 @@ label.site-form-termos {
     border-color: var(--color-primary);
     color: #fff;
 }
+
+/* --- CAMPOS DO FORMULÁRIO: NÃO ESTICAR O CONTEÚDO QUANDO O VIZINHO DA LINHA É MAIS ALTO --- */
+.site-form .field {
+    align-content: start;
+}

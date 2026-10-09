@@ -47,8 +47,13 @@ export async function autenticar(email, senha) {
             senha
         }
     });
-    gravarSessao(resposta);
-    return resposta.usuario;
+    if (!resposta?.token || !resposta?.usuarioDTO) {
+        throw new Error("Resposta de login inválida do servidor.");
+    }
+
+    // --- O BACKEND DEVOLVE O USUÁRIO NO CAMPO usuarioDTO (LoginResponseDTO) ---
+    gravarSessao({ token: resposta.token, refreshToken: resposta.refreshToken, usuario: resposta.usuarioDTO });
+    return resposta.usuarioDTO;
 }
 
 // --- GRAVA TOKENS E DADOS DO USUÁRIO ---
@@ -84,13 +89,25 @@ export function obterUsuario() {
     if (typeof window === "undefined") {
         return null;
     }
-    const bruto = localStorage.getItem(CHAVE_USUARIO);
-    return bruto ? JSON.parse(bruto) : null;
+    try {
+        const bruto = localStorage.getItem(CHAVE_USUARIO);
+        return bruto ? JSON.parse(bruto) : null;
+    } catch {
+        return null;
+    }
 }
 
-// --- INDICA SE HÁ SESSÃO ATIVA ---
+// --- INDICA SE HÁ SESSÃO ATIVA: EXIGE TOKEN E USUÁRIO COM PERFIL (SESSÃO PELA METADE É DESCARTADA) ---
 export function estaAutenticado() {
-    return !!obterToken();
+    if (typeof window === "undefined") {
+        return false;
+    }
+
+    const valida = !!obterToken() && !!obterUsuario()?.role;
+    if (!valida && (localStorage.getItem(CHAVE_TOKEN) || localStorage.getItem(CHAVE_USUARIO))) {
+        encerrarSessao();
+    }
+    return valida;
 }
 
 // --- VERIFICA SE O USUÁRIO POSSUI ALGUM DOS PERFIS INFORMADOS ---

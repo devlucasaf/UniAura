@@ -11,6 +11,7 @@ import "../styles/graduacao.css";
 import "../styles/web.css";
 import "../styles/primereact-tema.css";
 import "../styles/design-system.css";
+import "../styles/portal-aluno.css";
 
 import CloudsupportProviders from "@/components/providers/CloudsupportProviders";
 

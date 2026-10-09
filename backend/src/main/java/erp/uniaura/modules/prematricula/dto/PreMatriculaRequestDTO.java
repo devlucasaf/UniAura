@@ -6,6 +6,7 @@ import erp.uniaura.modules.aluno.model.Sexo;
 import erp.uniaura.modules.aluno.model.TipoEndereco;
 import erp.uniaura.modules.aluno.model.TipoEscola;
 import erp.uniaura.modules.aluno.model.TipoSanguineo;
+import erp.uniaura.modules.aluno.model.Turno;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
@@ -33,10 +34,18 @@ public class PreMatriculaRequestDTO {
     @Size(max = 150)
     private String nome;
 
-    @NotBlank(message = "O e-mail é obrigatório.")
+    @NotBlank(message = "O e-mail institucional é obrigatório.")
     @Email(message = "E-mail inválido.")
     @Size(max = 150)
     private String email;
+
+    @NotBlank(message = "O e-mail pessoal é obrigatório.")
+    @Email(message = "E-mail pessoal inválido.")
+    @Size(max = 150)
+    private String emailPessoal;
+
+    @NotNull(message = "O turno é obrigatório.")
+    private Turno turno;
 
     @NotBlank(message = "A senha é obrigatória.")
     @Size(min = 6, max = 100, message = "A senha deve ter entre 6 e 100 caracteres.")

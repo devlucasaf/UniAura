@@ -1,6 +1,5 @@
 package erp.uniaura.modules.prematricula.service;
 
-import erp.uniaura.infra.protocolo.GeradorProtocolo;
 import erp.uniaura.modules.auditoria.service.AuditoriaService;
 import erp.uniaura.modules.aluno.model.Aluno;
 import erp.uniaura.modules.aluno.model.StatusAluno;
@@ -17,17 +16,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
 public class PreMatriculaService {
 
-    private static final String PREFIXO_RA = "RA";
-
     private final AlunoRepository alunoRepository;
     private final UsuarioService usuarioService;
-    private final GeradorProtocolo geradorProtocolo;
+    private final SecureRandom random = new SecureRandom();
     private final AuditoriaService auditoriaService;
 
     // --- CRIA O USUÁRIO E O REGISTRO ACADÊMICO A PARTIR DO FORMULÁRIO PÚBLICO ---
@@ -50,6 +48,8 @@ public class PreMatriculaService {
                 .dataIngresso(LocalDate.now())
                 .status(StatusAluno.ATIVO)
                 .curso(dto.getCurso())
+                .turno(dto.getTurno())
+                .emailPessoal(dto.getEmailPessoal())
                 .nomePai(dto.getNomePai())
                 .nomeMae(dto.getNomeMae())
                 .sexo(dto.getSexo())
@@ -102,11 +102,11 @@ public class PreMatriculaService {
                 .build();
     }
 
-    // --- GERA UM RA NO FORMATO RA-ANO-XXXXXXXX E GARANTE QUE É INÉDITO ---
+    // --- GERA UM RA DE 8 NÚMEROS E GARANTE QUE É INÉDITO ---
     private String gerarMatriculaRAUnica() {
         String ra;
         do {
-            ra = geradorProtocolo.gerar(PREFIXO_RA);
+            ra = String.valueOf(10_000_000 + random.nextInt(90_000_000));
         } while (alunoRepository.existsByMatriculaRA(ra));
         return ra;
     }

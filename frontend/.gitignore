@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# --- CONFIGURAÇÃO LOCAL DO NPM (registro privado e credenciais; não versionar) ---
+.npmrc

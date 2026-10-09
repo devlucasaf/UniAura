@@ -1,5 +1,6 @@
 package erp.uniaura.modules.autenticacao.service;
 
+import erp.uniaura.dto.auth.AlterarSenhaRequestDTO;
 import erp.uniaura.dto.auth.LoginRequestDTO;
 import erp.uniaura.dto.auth.LoginResponseDTO;
 import erp.uniaura.dto.auth.RefreshTokenRequestDTO;
@@ -21,6 +22,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +35,25 @@ public class AutenticacaoService {
     private final UsuarioService usuarioService;
     private final UsuarioRepository usuarioRepository;
     private final LoginRateLimiter loginRateLimiter;
+    private final PasswordEncoder passwordEncoder;
+
+    // --- TROCA A SENHA DO USUÁRIO AUTENTICADO ---
+    @Transactional
+    public void alterarSenha(Long usuarioId, AlterarSenhaRequestDTO dto) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário", usuarioId));
+
+        if (!passwordEncoder.matches(dto.getSenhaAtual(), usuario.getSenha())) {
+            throw new BusinessException("A senha atual está incorreta.");
+        }
+
+        if (passwordEncoder.matches(dto.getNovaSenha(), usuario.getSenha())) {
+            throw new BusinessException("A nova senha deve ser diferente da senha atual.");
+        }
+
+        usuario.setSenha(passwordEncoder.encode(dto.getNovaSenha()));
+        usuarioRepository.save(usuario);
+    }
 
     // --- AUTENTICA O USUÁRIO POR E-MAIL/SENHA E DEVOLVE OS TOKENS ---
     @Transactional(readOnly = true)
@@ -56,7 +77,7 @@ public class AutenticacaoService {
     // --- REGISTRA UM NOVO USUÁRIO ---
     @Transactional
     public UsuarioResponseDTO register(RegisterRequestDTO dto) {
-        UsuarioRequestDTO request = UsuarioRequestDTO.builder()
+        UsuarioRequestDTO usuarioRequest = UsuarioRequestDTO.builder()
                 .nome(dto.getNome())
                 .email(dto.getEmail())
                 .senha(dto.getSenha())
@@ -67,7 +88,7 @@ public class AutenticacaoService {
                 .role(dto.getRole())
                 .build();
 
-        return usuarioService.criar(request);
+        return usuarioService.criar(usuarioRequest);
     }
 
     // --- VALIDA UM REFRESH TOKEN ---

@@ -306,6 +306,31 @@ navegador. Defina `START_FRONTEND=false` para rodar o frontend separadamente.
 
 ### 6. Frontend
 
+#### Pacote privado da cloudsupport
+
+O frontend depende de `@bernardo-dias/react-cloudsupport`, que **não é público**: ele fica num registro
+privado do GitLab e o acesso é concedido pelo Bernardo (dono da arquitetura). O `frontend/.npmrc` está no
+`.gitignore` de propósito: ele é uma configuração local, **nunca** faça commit dele nem de credenciais.
+
+Escolha uma das opções:
+
+**A) Pelo registro do GitLab, com o seu token pessoal**
+1. Peça acesso ao Bernardo e gere um token com permissão de leitura de pacotes (`read_api`/`read_package_registry`).
+2. Configure o registro e o token no `.npmrc` do **seu usuário**, fora do repositório:
+   ```powershell
+   npm config set @bernardo-dias:registry https://gitlab.com/api/v4/projects/46082054/packages/npm/
+   npm config set //gitlab.com/api/v4/projects/46082054/packages/npm/:_authToken SEU_TOKEN
+   ```
+
+**B) Pelo clone local da arquitetura (sem token)**
+1. No clone da cloudsupport-react, gere o pacote: `npm pack` (rode o build do clone antes, se ele exigir).
+2. No `frontend`, instale o arquivo gerado sem alterar o `package.json`:
+   ```powershell
+   npm install --no-save C:\caminho\do\clone\bernardo-dias-react-cloudsupport-1.7.0.tgz
+   ```
+
+#### Instalar e rodar
+
 ```powershell
 cd frontend
 npm install
