@@ -1,14 +1,13 @@
 package erp.uniaura.infra.seed;
 
-import erp.uniaura.modules.usuario.model.TipoUsuario;
-import erp.uniaura.modules.usuario.model.Usuario;
-import erp.uniaura.modules.usuario.repository.UsuarioRepository;
+import erp.uniaura.persistence.entities.TipoUsuario;
+import erp.uniaura.services.common.usuario.ConsultarUsuarioComponent;
+import erp.uniaura.services.common.usuario.CriarUsuarioComponent;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -19,26 +18,18 @@ public class AdminSeeder implements CommandLineRunner {
     private static final String ADMIN_EMAIL = "admin@escola.com";
     private static final String ADMIN_SENHA = "admin123";
 
-    private final UsuarioRepository usuarioRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final ConsultarUsuarioComponent consultarUsuarioComponent;
+    private final CriarUsuarioComponent     criarUsuarioComponent;
 
     // --- CRIA O USUÁRIO ADMINISTRADOR INICIAL CASO ELE AINDA NÃO ESTEJA CADASTRADO ---
     @Override
     public void run(String... args) {
-        if (usuarioRepository.existsByEmail(ADMIN_EMAIL)) {
+        if (consultarUsuarioComponent.porEmail(ADMIN_EMAIL).isPresent()) {
             return;
         }
 
-        Usuario usuarioAdmin = Usuario.builder()
-                .nome("Administrador")
-                .email(ADMIN_EMAIL)
-                .senha(passwordEncoder.encode(ADMIN_SENHA))
-                .ativo(true)
-                .role(TipoUsuario.ADMIN)
-                .build();
+        criarUsuarioComponent.criar("Administrador", ADMIN_EMAIL, ADMIN_SENHA, null, null, null, true, TipoUsuario.ADMIN);
 
-        usuarioRepository.save(usuarioAdmin);
         log.info("Usuario usuarioAdmin inicial criado: {} / {}", ADMIN_EMAIL, ADMIN_SENHA);
     }
 }
-

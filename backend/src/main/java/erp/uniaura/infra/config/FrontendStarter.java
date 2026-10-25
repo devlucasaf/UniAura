@@ -103,9 +103,9 @@ public class FrontendStarter {
 
         // --- MONTA O COMANDO PARA WINDOWS ---
         ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", "npm run dev");
+
         processBuilder.directory(frontendDir);
         processBuilder.redirectErrorStream(true);
-
         processBuilder.environment().putAll(System.getenv());
 
         Process process = processBuilder.start();

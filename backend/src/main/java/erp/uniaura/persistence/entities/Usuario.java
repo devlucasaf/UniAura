@@ -1,0 +1,58 @@
+package erp.uniaura.persistence.entities;
+
+import erp.uniaura.infra.persistence.SqlServerBaseEntity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "usuario")
+public class Usuario extends SqlServerBaseEntity {
+
+    @Column(name = "nome", nullable = false, length = 150)
+    private String nome;
+
+    @Column(name = "email", nullable = false, unique = true, length = 150)
+    private String email;
+
+    @JsonIgnore
+    @Column(name = "senha", nullable = false, length = 255)
+    private String senha;
+
+    @Column(name = "cpf", length = 14)
+    private String cpf;
+
+    @Column(name = "telefone", length = 20)
+    private String telefone;
+
+    @Column(name = "dataNascimento")
+    private LocalDate dataNascimento;
+
+    @Column(name = "ativo", nullable = false)
+    private Boolean ativo;
+    @Column(name = "role", nullable = false, length = 30)
+    private TipoUsuario role;
+
+    @CreationTimestamp
+    @Column(name = "criadoEm", nullable = false, updatable = false)
+    private LocalDateTime criadoEm;
+
+    @UpdateTimestamp
+    @Column(name = "atualizadoEm", nullable = false)
+    private LocalDateTime atualizadoEm;
+}
+
