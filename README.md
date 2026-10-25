@@ -3,9 +3,10 @@
     src="https://capsule-render.vercel.app/api?type=waving&color=A020F0&height=120&section=header"
 />
 
+
 <p align="center">
     <img 
-        src="https://img.shields.io/badge/status-em%20progresso-yellow?style=for-the-badge" 
+        src="https://img.shields.io/badge/status-em%20desenvolvimento-yellow?style=for-the-badge" 
     />
     <img 
         src="https://img.shields.io/badge/Java-17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" 
@@ -22,10 +23,17 @@
     <img 
         src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black" 
     />
+    <a href="https://cloudsupport.dev/manual/introducao/" target="_blank" rel="noopener noreferrer">
+        <img 
+            src="https://img.shields.io/badge/arquitetura-cloudsupport-1E40AF?style=for-the-badge" 
+            alt="Cloudsupport"
+        />
+    </a>
     <img 
         src="https://img.shields.io/badge/license-MIT-A020F0?style=for-the-badge" 
     />
 </p>
+
 
 
 # UniAura — ERP Acadêmico Universitário
@@ -42,7 +50,7 @@ frequência, biblioteca, financeiro, coordenação, ouvidoria e comunicação.
 - **Java 17** + **Spring Boot 3.5**
 - **Spring Web**, **Spring Data JPA**, **Spring Security**, **Spring Validation**, **Spring Mail**
 - **SQL Server** (driver `mssql-jdbc`)
-- **Hibernate `ddl-auto=update`** (schema gerado a partir das entidades)
+- **Liquibase** (`backend/src/main/resources/db/changelog`) cria e altera o banco; o Hibernate roda com `ddl-auto=validate`
 - **Lombok**, **ModelMapper**
 - **SpringDoc OpenAPI** (Swagger UI)
 - **java-jwt (Auth0)** para autenticação JWT (access token + refresh token)
@@ -50,7 +58,7 @@ frequência, biblioteca, financeiro, coordenação, ouvidoria e comunicação.
 
 ### Frontend
 - **Next.js 16** (App Router) + **React 19**
-- JavaScript + CSS puro (sem TypeScript e sem framework de CSS)
+- JavaScript + CSS 
 - **ESLint** (`eslint-config-next`)
 
 ### Banco de dados
@@ -230,13 +238,13 @@ ERP-Academic-School-System/
 
 ### 1. Clonar o repositório
 ```powershell
-git clone https://github.com/devlucasaf/ERP-Academic-School-System.git
-cd ERP-Academic-School-System
+git clone https://github.com/devlucasaf/UniAura.git
+cd UniAura
 ```
 
 ### 2. Banco de dados (SQL Server + SSMS)
 
-O schema é gerado automaticamente pelo **Hibernate** (`spring.jpa.hibernate.ddl-auto=update`).
+O schema é criado pelo **Liquibase** na primeira subida do backend (changelog em `backend/src/main/resources/db/changelog`). Crie o banco `UniAuraErpDB` vazio; não rode scripts à mão.
 Você só precisa criar o **banco, o login e as permissões** uma única vez.
 
 1. Abra o **SSMS** e conecte-se à instância como administrador (ex.: login `sa`).
@@ -285,8 +293,8 @@ Ao subir o Spring Boot:
 
   Troque essa senha após o primeiro login.
 
-> ⚠️ `ddl-auto=update` é ideal para **desenvolvimento**. Para produção, considere migrations
-> versionadas (ex.: Flyway/Liquibase).
+> ⚠️ O banco muda só por migrations do Liquibase: para alterar uma tabela, crie um novo arquivo em
+> `db/changelog/changes/` (ex.: `002-...sql`) e inclua no `db.changelog-master.xml`. Nunca edite um já executado.
 
 ### 5. Backend
 

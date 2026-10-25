@@ -1,15 +1,18 @@
-// --- SOMA DIAS A HOJE, PARA OS EVENTOS DE EXEMPLO SEMPRE CAÍREM PERTO DA DATA ATUAL ---
+// --- SOMA DIAS A HOJE ---
 const emDias = (dias) => {
     const data = new Date();
+
     data.setHours(0, 0, 0, 0);
     data.setDate(data.getDate() + dias);
+
     return data;
 };
 
-// --- CHAVE aaaa-mm-dd DE UMA DATA, USADA PARA COMPARAR DIAS ---
+// --- CHAVE aaaa-mm-dd DE UMA DATA ---
 export const chaveDoDia = (data) => {
     const mes = String(data.getMonth() + 1).padStart(2, "0");
     const dia = String(data.getDate()).padStart(2, "0");
+    
     return `${data.getFullYear()}-${mes}-${dia}`;
 };
 
@@ -45,36 +48,54 @@ export const NOTICIAS = [
     }
 ];
 
-// --- EVENTOS DO CALENDÁRIO ACADÊMICO ---
-export const EVENTOS = [
-    { data: emDias(2),  titulo: "Entrega do trabalho de Banco de Dados" },
-    { data: emDias(5),  titulo: "Prova de Engenharia de Software" },
-    { data: emDias(9),  titulo: "Palestra: carreiras em tecnologia" },
-    { data: emDias(14), titulo: "Fim do prazo da rematrícula" },
-    { data: emDias(14), titulo: "Prova de Redes de Computadores" }
+// --- DIAS DA GRADE, DE SEGUNDA A SÁBADO ---
+const DIAS_DA_GRADE = [
+    "Segunda-feira",
+    "Terça-feira",
+    "Quarta-feira",
+    "Quinta-feira",
+    "Sexta-feira",
+    "Sábado"
 ];
 
-// --- HORÁRIOS DAS AULAS (COLUNAS DA GRADE) ---
-export const HORARIOS = ["08:00 – 09:40", "10:00 – 11:40", "19:00 – 20:40", "21:00 – 22:40"];
-
-// --- GRADE SEMANAL: UMA LINHA POR DIA DA SEMANA, UM ITEM POR HORÁRIO ---
-export const GRADE = [
-    { dia: "Segunda-feira", aulas: [{ disciplina: "Banco de Dados", sala: "Lab 03" }, { disciplina: "Banco de Dados", sala: "Lab 03" }, null, null] },
-    { dia: "Terça-feira", aulas: [null, null, { disciplina: "Engenharia de Software", sala: "B-204" }, { disciplina: "Engenharia de Software", sala: "B-204" }] },
-    { dia: "Quarta-feira", aulas: [{ disciplina: "Redes de Computadores", sala: "A-102" }, { disciplina: "Redes de Computadores", sala: "A-102" }, null, null] },
-    { dia: "Quinta-feira", aulas: [null, null, { disciplina: "Estrutura de Dados", sala: "Lab 01" }, { disciplina: "Estrutura de Dados", sala: "Lab 01" }] },
-    { dia: "Sexta-feira", aulas: [{ disciplina: "Inglês Técnico", sala: "C-010" }, null, { disciplina: "Projeto Integrador", sala: "Lab 02" }, null] },
-    { dia: "Sábado", aulas: [null, { disciplina: "Atividades Complementares", sala: "Auditório" }, null, null] }
+// --- HORÁRIOS DAS AULAS ---
+export const HORARIOS = [
+    "08:00 – 09:40",
+    "10:00 – 11:40",
+    "19:00 – 20:40",
+    "21:00 – 22:40"
 ];
 
-// --- NOTAS E PRESENÇA POR DISCIPLINA (PÁGINA "MEU PERFIL") ---
-export const DESEMPENHO = [
-    { disciplina: "Banco de Dados",         nota1: 8.5, nota2: 9.0, aulas: 40, faltas: 2 },
-    { disciplina: "Engenharia de Software", nota1: 7.5, nota2: 8.0, aulas: 40, faltas: 4 },
-    { disciplina: "Redes de Computadores",  nota1: 6.0, nota2: 7.0, aulas: 40, faltas: 6 },
-    { disciplina: "Estrutura de Dados",     nota1: 9.0, nota2: 9.5, aulas: 40, faltas: 0 },
-    { disciplina: "Inglês Técnico",         nota1: 8.0, nota2: 8.5, aulas: 20, faltas: 1 },
-    { disciplina: "Projeto Integrador",     nota1: 9.5, nota2: 9.5, aulas: 20, faltas: 2 }
+// --- NOTIFICAÇÕES DO SININHO DO CABEÇALHO ---
+export const NOTIFICACOES = [
+    {
+        id: 1,
+        icone: "pi pi-megaphone",
+        titulo: "Rematrícula aberta",
+        texto: "Confirme sua rematrícula até o fim do mês.",
+        quando: "há 1 dia"
+    },
+    {
+        id: 2,
+        icone: "pi pi-calendar",
+        titulo: "Avaliações do semestre",
+        texto: "Acompanhe as datas das provas com os seus professores.",
+        quando: "há 2 dias"
+    },
+    {
+        id: 3,
+        icone: "pi pi-book",
+        titulo: "Devolução de livro",
+        texto: "O livro emprestado vence em 5 dias.",
+        quando: "há 3 dias"
+    },
+    {
+        id: 4,
+        icone: "pi pi-wallet",
+        titulo: "Mensalidade",
+        texto: "Seu próximo vencimento é dia 10.",
+        quando: "há 4 dias"
+    }
 ];
 
 // --- TÓPICOS E INDICADORES DOS DASHBOARDS ---
@@ -84,10 +105,22 @@ export const DASHBOARDS = [
         titulo: "Desempenho acadêmico",
         icone: "pi pi-chart-line",
         indicadores: [
-            { rotulo: "Média geral", valor: "8,4" },
-            { rotulo: "Frequência", valor: "92%", progresso: 92 },
-            { rotulo: "Disciplinas em curso", valor: "6" },
-            { rotulo: "Créditos concluídos", valor: "128 / 200", progresso: 64 }
+            {
+                rotulo: "Média geral",
+                valor: "—"
+            },
+            {
+                rotulo: "Frequência",
+                valor: "—"
+            },
+            {
+                rotulo: "Disciplinas em curso",
+                valor: "—"
+            },
+            {
+                rotulo: "Créditos concluídos",
+                valor: "—"
+            }
         ]
     },
     {
@@ -95,10 +128,23 @@ export const DASHBOARDS = [
         titulo: "Financeiro",
         icone: "pi pi-wallet",
         indicadores: [
-            { rotulo: "Situação", valor: "Em dia" },
-            { rotulo: "Próximo vencimento", valor: "10/11" },
-            { rotulo: "Valor da mensalidade", valor: "R$ 890,00" },
-            { rotulo: "Parcelas pagas no ano", valor: "10 / 12", progresso: 83 }
+            {
+                rotulo: "Situação",
+                valor: "Em dia"
+            },
+            {
+                rotulo: "Próximo vencimento",
+                valor: "10/11"
+            },
+            {
+                rotulo: "Valor da mensalidade",
+                valor: "R$ 890,00"
+            },
+            {
+                rotulo: "Parcelas pagas no ano",
+                valor: "10 / 12",
+                progresso: 83
+            }
         ]
     },
     {
@@ -106,10 +152,62 @@ export const DASHBOARDS = [
         titulo: "Biblioteca",
         icone: "pi pi-book",
         indicadores: [
-            { rotulo: "Empréstimos ativos", valor: "2" },
-            { rotulo: "Reservas", valor: "1" },
-            { rotulo: "Próxima devolução", valor: "em 5 dias" },
-            { rotulo: "Multas", valor: "R$ 0,00" }
+            {
+                rotulo: "Empréstimos ativos",
+                valor: "2"
+            },
+            {
+                rotulo: "Reservas",
+                valor: "1"
+            },
+            {
+                rotulo: "Próxima devolução",
+                valor: "em 5 dias"
+            },
+            {
+                rotulo: "Multas",
+                valor: "R$ 0,00"
+            }
         ]
     }
 ];
+
+// --- GRADE DA SEMANA COM AS DISCIPLINAS DO CURSO DO ALUNO ---
+export const montarGrade = (disciplinas) => {
+    const grade = DIAS_DA_GRADE.map((dia) => ({ dia, aulas: [null, null, null, null] }));
+
+    disciplinas.forEach((nome, posicao) => {
+        const linha = grade[posicao % 5];
+        const inicio = Math.floor(posicao / 5) % 2 === 0 ? 0 : 2;
+        const sala = `Sala ${String(posicao + 1).padStart(2, "0")}`;
+
+        linha.aulas[inicio] = { disciplina: nome, sala };
+        linha.aulas[inicio + 1] = { disciplina: nome, sala };
+    });
+
+    return grade;
+};
+
+// --- EVENTOS DO CALENDÁRIO COM AS DISCIPLINAS DO CURSO DO ALUNO ---
+export const montarEventos = (disciplinas) => {
+    const eventos = [
+        {
+            data: emDias(14),
+            titulo: "Fim do prazo da rematrícula"
+        }
+    ];
+
+    if (disciplinas[0]) {
+        eventos.push({ data: emDias(2), titulo: `Entrega de trabalho de ${disciplinas[0]}` });
+    }
+
+    if (disciplinas[1]) {
+        eventos.push({ data: emDias(5), titulo: `Avaliação de ${disciplinas[1]}` });
+    }
+
+    if (disciplinas[2]) {
+        eventos.push({ data: emDias(14), titulo: `Avaliação de ${disciplinas[2]}` });
+    }
+
+    return eventos.sort((a, b) => a.data - b.data);
+};

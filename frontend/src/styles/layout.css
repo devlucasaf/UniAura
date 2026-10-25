@@ -112,6 +112,12 @@
         var(--bg-body);
 }
 
+/* --- COM O CABEÇALHO E O RODAPÉ DO SITE, O CARTÃO OCUPA SÓ O ESPAÇO ENTRE OS DOIS --- */
+.site .auth-screen {
+    min-height: 70vh;
+    padding-block: var(--space-xl);
+}
+
 .auth-card {
     width: 100%;
     max-width: 380px;

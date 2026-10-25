@@ -1,9 +1,9 @@
 // --- FORMATA DATA/DATA-HORA ISO PARA O PADRÃO BR ---
-export function formatarData(iso) {
-    if (!iso) {
+export function formatarData(dataIso) {
+    if (!dataIso) {
         return "-";
     }
-    return new Date(iso).toLocaleString("pt-BR");
+    return new Date(dataIso).toLocaleString("pt-BR");
 }
 
 // --- FORMATA VALOR MONETÁRIO EM BRL ---

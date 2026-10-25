@@ -1,10 +1,10 @@
 const BASE_API = "/uniaura/app/api";
 
-let processingRef = null;
+let processamentoReferencia = null;
 
 // --- REGISTRA O ProcessingContext PARA ESTA FUNÇÃO PODER SINALIZAR O ProcessingIndicator ---
 export function registrarProcessing(processing) {
-    processingRef = processing;
+    processamentoReferencia = processing;
 }
 
 // --- CHAMA A API ANEXANDO O ACCESS TOKEN DA SESSÃO QUANDO HOUVER ---
@@ -30,7 +30,7 @@ export async function api(caminho, { metodo = "GET", corpo, cabecalhos = {}, mul
         }
     }
 
-    processingRef?.notifyStart();
+    processamentoReferencia?.notifyStart();
     try {
         const resposta = await fetch(`${BASE_API}${caminho}`, opcoes);
         const texto = await resposta.text();
@@ -50,33 +50,35 @@ export async function api(caminho, { metodo = "GET", corpo, cabecalhos = {}, mul
         }
 
         if (!resposta.ok) {
-            throw new Error((dados && (dados.message || dados.error)) || `Erro ${resposta.status}`);
+            const mensagensDosCampos = (dados?.fieldMessages || []).map((item) => item.message).join(" ");
+
+            throw new Error(mensagensDosCampos || (dados && (dados.message || dados.error)) || `Erro ${resposta.status}`);
         }
 
         return resposta.status === 204 ? null : dados;
     } finally {
-        processingRef?.notifyEnd();
+        processamentoReferencia?.notifyEnd();
     }
 }
 
 // --- MONTA UMA QUERY STRING IGNORANDO VALORES VAZIOS ---
 export function query(parametros) {
-    const p = new URLSearchParams();
+    const parametrosDaUrl = new URLSearchParams();
     Object.entries(parametros || {}).forEach(([chave, valor]) => {
         if (valor !== undefined && valor !== null && valor !== "") {
-            p.append(chave, valor);
+            parametrosDaUrl.append(chave, valor);
         }
     });
-    const texto = p.toString();
+    const texto = parametrosDaUrl.toString();
     return texto ? `?${texto}` : "";
 }
 
 // --- MONTA O FORMDATA MULTIPART ---
 export function corpoMultipart(dadosObjeto, arquivo, campoArquivo = "arquivo", campoDados = "dados") {
-    const formData = new FormData();
-    formData.append(campoDados, new Blob([JSON.stringify(dadosObjeto)], { type: "application/json" }));
+    const dadosDoFormulario = new FormData();
+    dadosDoFormulario.append(campoDados, new Blob([JSON.stringify(dadosObjeto)], { type: "application/json" }));
     if (arquivo) {
-        formData.append(campoArquivo, arquivo);
+        dadosDoFormulario.append(campoArquivo, arquivo);
     }
-    return formData;
+    return dadosDoFormulario;
 }

@@ -15,7 +15,9 @@ import CampoSenha                                               from "@/componen
 import { useEfeitosDePagina }                                   from "@/hooks/useEfeitosDePagina";
 import { mascararCpf, mascararTelefone, mascararCep }           from "@/lib/mascaras";
 import { notificar }                                            from "@/lib/notificar";
-import { api }                                                  from "@/lib/api";
+import { consultarMeuPerfilDeAluno }  from "@/app/remotes/uniaura/aluno/consultarMeuPerfilDeAlunoRemote";
+import { alterarMeuPerfilDeAluno }    from "@/app/remotes/uniaura/aluno/alterarMeuPerfilDeAlunoRemote";
+import { realizarPreMatricula }       from "@/app/remotes/uniaura/preMatricula/realizarPreMatriculaRemote";
 
 
 // --- ESTADOS BRASILEIROS ---
@@ -31,10 +33,10 @@ const ESTADOS_BRASIL = [
 
 const OPCOES_UF = ESTADOS_BRASIL.map(([sigla, nome]) => ({ value: sigla, label: `${sigla} — ${nome}` }));
 
-// --- CURSOS AGRUPADOS POR ÁREA ---
+// --- CURSOS AGRUPADOS POR TEMA (O CAMPO NÃO PODE SE CHAMAR "group": O DROPDOWN DO PRIMEREACT USA ESSE NOME INTERNAMENTE E SOBRESCREVE O TEXTO) ---
 const OPCOES_CURSO = [
     {
-        group: "Tecnologia da Informação",
+        tema: "Tecnologia",
         options: [
             "Ciência da Computação",
             "Análise e Desenvolvimento de Sistemas",
@@ -43,7 +45,7 @@ const OPCOES_CURSO = [
         ].map((nome) => ({ value: nome, label: nome }))
     },
     {
-        group: "Engenharias",
+        tema: "Engenharias",
         options: [
             "Engenharia Mecatrônica",
             "Engenharia Civil",
@@ -57,7 +59,7 @@ const OPCOES_CURSO = [
         ].map((nome) => ({ value: nome, label: nome }))
     },
     {
-        group: "Saúde",
+        tema: "Saúde",
         options: [
             "Medicina",
             "Odontologia",
@@ -73,11 +75,11 @@ const OPCOES_CURSO = [
         ].map((nome) => ({ value: nome, label: nome }))
     },
     {
-        group: "Negócios e Humanas",
+        tema: "Negócios e Humanas",
         options: ["Administração", "Direito"].map((nome) => ({ value: nome, label: nome }))
     },
     {
-        group: "Artes e Comunicação",
+        tema: "Artes e Comunicação",
         options: [
             "Design",
             "Publicidade e Propaganda",
@@ -105,7 +107,7 @@ const OPCOES_TURNO = [
     }
 ];
 
-// --- CAMPOS DE TEXTO NÃO CONTROLADOS, PREENCHIDOS PELO REF QUANDO O FORMULÁRIO ESTÁ EM MODO DE EDIÇÃO ---
+// --- CAMPOS DE TEXTO NÃO CONTROLADOS ---
 const CAMPOS_TEXTO_EDICAO = [
     "nome", "emailPessoal", "nomePai", "nomeMae", "municipioNascimento", "cidade", "nacionalidade",
     "documentoNumero", "documentoOrgaoEmissor", "numeroTituloEleitor", "numeroZonaEleitoral",
@@ -368,7 +370,7 @@ function idadeMinimaValida(valor) {
     return anos >= 14 && anos < 120;
 }
 
-// --- CONVERTE O PERFIL DEVOLVIDO POR GET /alunos/me NOS CAMPOS CONTROLADOS DO FORMULÁRIO ---
+// --- CONVERTE O PERFIL DEVOLVIDO POR GET /consultarMeuPerfilDeAluno.v1 NOS CAMPOS CONTROLADOS DO FORMULÁRIO ---
 function camposDoPerfil(dados) {
     const texto = (valor) => valor ?? "";
     return {
@@ -445,21 +447,20 @@ function mensagemDeErro(campo) {
 
 // --- PÁGINA DE CADASTRO DO PORTAL DO ALUNO ---
 function CadastroConteudo() {
-    const raizRef = useEfeitosDePagina();
+    const raizReferencia = useEfeitosDePagina();
     const router = useRouter();
-
     const editando = useSearchParams().get("editar") === "1";
     const totalEtapas = editando ? 6 : 8;
     const passos = editando ? PASSOS.slice(0, 6) : PASSOS;
     const Moldura = editando ? MolduraAluno : SiteChrome;
-    const formularioRef = useRef(null);
-    const [perfil, setPerfil] = useState(null);
-    const [formularioMontado, setFormularioMontado] = useState(false);
+    const formularioReferencia = useRef(null);
+    const [perfil,              setPerfil]              = useState(null);
+    const [formularioMontado,   setFormularioMontado]   = useState(false);
 
     // --- GUARDA O <form> NO REF E AVISA QUANDO ELE FOI MONTADO ---
-    const definirFormulario = useCallback((no) => {
-        formularioRef.current = no;
-        setFormularioMontado(!!no);
+    const definirFormulario = useCallback((elemento) => {
+        formularioReferencia.current = elemento;
+        setFormularioMontado(!!elemento);
     }, []);
 
     const [etapaAtual,                  setEtapaAtual]                  = useState(1);
@@ -475,17 +476,17 @@ function CadastroConteudo() {
 
     // -- SCROLLA PARA A ETAPA ATUAL, QUANDO O USUÁRIO AVANÇA OU VOLTA ---
     useEffect(() => {
-        formularioRef.current
+        formularioReferencia.current
             ?.querySelector(`.site-wizard-etapa[data-etapa="${etapaAtual}"]`)
             ?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, [etapaAtual]);
 
-    // --- NA EDIÇÃO, BUSCA OS DADOS DO ALUNO E REMONTA O FORMULÁRIO COM OS VALORES CONTROLADOS ---
+    // --- BUSCA OS DADOS DO ALUNO E REMONTA O FORMULÁRIO COM OS VALORES CONTROLADOS ---
     useEffect(() => {
         if (!editando) {
             return;
         }
-        api("/alunos/me")
+        consultarMeuPerfilDeAluno()
             .then((dados) => {
                 setPerfil(dados);
                 setCampos((atual) => ({ ...atual, ...camposDoPerfil(dados) }));
@@ -494,9 +495,9 @@ function CadastroConteudo() {
             .catch((excecao) => setErro(excecao.message));
     }, [editando]);
 
-    // --- NA EDIÇÃO, PREENCHE OS CAMPOS DE TEXTO NÃO CONTROLADOS QUANDO O FORMULÁRIO JÁ ESTÁ NA TELA ---
+    // --- PREENCHE OS CAMPOS DE TEXTO NÃO CONTROLADOS QUANDO O FORMULÁRIO JÁ ESTÁ NA TELA ---
     useEffect(() => {
-        const formulario = formularioRef.current;
+        const formulario = formularioReferencia.current;
         if (!editando || !perfil || !formularioMontado || !formulario) {
             return;
         }
@@ -508,7 +509,7 @@ function CadastroConteudo() {
         });
     }, [editando, perfil, formularioMontado, chaveFormulario]);
 
-    // -- ATUALIZA O STATE DE CAMPOS CONTROLADOS, USADO PARA VALIDAR E MONTAR O PAYLOAD ---
+    // -- ATUALIZA O STATE DE CAMPOS CONTROLADOS ---
     const atualizarCampo = (nome, valor) => {
         setCampos((atual) => ({ ...atual, [nome]: valor }));
         limparErroCampo(nome);
@@ -547,7 +548,7 @@ function CadastroConteudo() {
                 return;
             }
 
-            const formulario = formularioRef.current;
+            const formulario = formularioReferencia.current;
             if (formulario) {
                 formulario.enderecoLogradouro.value = dados.logradouro || "";
                 formulario.enderecoBairro.value = dados.bairro || "";
@@ -559,9 +560,9 @@ function CadastroConteudo() {
         }
     };
 
-    // --- VALIDA SÓ OS CAMPOS VISÍVEIS NA ETAPA ATUAL, SEM TRAVAR NOS DEMAIS ---
+    // --- VALIDA SÓ OS CAMPOS VISÍVEIS NA ETAPA ATUAL ---
     const etapaValida = (numero) => {
-        const formulario = formularioRef.current;
+        const formulario = formularioReferencia.current;
         const etapa = formulario?.querySelector(`.site-wizard-etapa[data-etapa="${numero}"]`);
         if (!etapa) {
             return true;
@@ -616,7 +617,7 @@ function CadastroConteudo() {
         setErro("");
         if (etapaValida(etapaAtual) && etapaAtual < totalEtapas) {
             if (etapaAtual === 1) {
-                const novas = gerarSugestoesEmail(formularioRef.current.nome.value);
+                const novas = gerarSugestoesEmail(formularioReferencia.current.nome.value);
                 setSugestoesEmail(novas);
                 setEmailEscolhido((atual) => (novas.includes(atual) ? atual : ""));
             }
@@ -715,14 +716,14 @@ function CadastroConteudo() {
         };
     };
 
-    // -- ENVIA O FORMULÁRIO PARA O ENDPOINT PÚBLICO DE PRÉ-MATRÍCULA, SE TUDO ESTIVER VÁLIDO ---
+    // -- ENVIA O FORMULÁRIO PARA O ENDPOINT PÚBLICO DE PRÉ-MATRÍCULA ---
     const aoSubmeter = async (evento) => {
         evento.preventDefault();
 
         setMensagem("");
         setErro("");
 
-        const formulario = formularioRef.current;
+        const formulario = formularioReferencia.current;
         if (!etapaValida(totalEtapas)) {
             return;
         }
@@ -734,9 +735,9 @@ function CadastroConteudo() {
 
             setEnviando(true);
             try {
-                await api("/alunos/me", { metodo: "PUT", corpo: { ...dadosPessoais, emailPessoal: formulario.emailPessoal.value.trim() } });
+                await alterarMeuPerfilDeAluno({ ...dadosPessoais, emailPessoal: formulario.emailPessoal.value.trim() });
                 notificar("Dados pessoais atualizados com sucesso!", "success");
-                router.push("/portal-do-aluno/dashboard");
+                router.push("/portal-do-aluno/home");
             } catch (erroRequisicao) {
                 setErro(erroRequisicao.message);
                 notificar(erroRequisicao.message, "error");
@@ -763,7 +764,7 @@ function CadastroConteudo() {
 
         setEnviando(true);
         try {
-            const resposta = await api("/pre-matricula", { metodo: "POST", corpo: payload });
+            const resposta = await realizarPreMatricula(payload);
 
             const texto = `Matrícula concluída! Seu número de matrícula (RA) é ${resposta.matriculaRA}. ` +
                 `Entre no Portal do Aluno com o e-mail institucional ${resposta.email} e a senha cadastrada.`;
@@ -790,7 +791,7 @@ function CadastroConteudo() {
 
     return (
         <Moldura>
-            <div className="grad-page" ref={raizRef}>
+            <div className="grad-page" ref={raizReferencia}>
                 <main>
                     {!editando && <section className="grad-hero">
                         <span className="grad-hero-brilho grad-hero-brilho-a" aria-hidden="true"></span>
@@ -808,7 +809,7 @@ function CadastroConteudo() {
                                     Portal do Aluno
                                 </span>
 
-                                <h1 data-entrada style={{ "--atraso": "160ms" }}>Crie sua <span>matrícula</span></h1>
+                                <h1 className="ua-titulo-matricula" data-entrada style={{ "--atraso": "160ms" }}>Crie sua <span>matrícula</span></h1>
 
                                 <p data-entrada style={{ "--atraso": "260ms" }}>
                                     Preencha o formulário em 8 etapas para se matricular na UniAura. Ao concluir, você
@@ -879,10 +880,11 @@ function CadastroConteudo() {
                                                     id="cadCurso"
                                                     name="curso"
                                                     options={OPCOES_CURSO}
-                                                    optionGroupLabel="group"
+                                                    optionGroupLabel="tema"
                                                     optionGroupChildren="options"
+                                                    panelClassName="ua-curso-grupos"
                                                     value={campos.curso}
-                                                    onChange={(e) => atualizarCampo("curso", e.value)}
+                                                    onChange={(evento) => atualizarCampo("curso", evento.value)}
                                                     placeholder="Selecione o curso"
                                                     disabled={editando}
                                                     className={classeErro("curso")}
@@ -897,7 +899,7 @@ function CadastroConteudo() {
                                                     name="turno"
                                                     options={OPCOES_TURNO}
                                                     value={campos.turno}
-                                                    onChange={(e) => atualizarCampo("turno", e.value)}
+                                                    onChange={(evento) => atualizarCampo("turno", evento.value)}
                                                     placeholder="Selecione o turno"
                                                     disabled={editando}
                                                     className={classeErro("turno")}
@@ -928,7 +930,7 @@ function CadastroConteudo() {
                                                     name="sexo"
                                                     options={OPCOES_SEXO}
                                                     value={campos.sexo}
-                                                    onChange={(e) => atualizarCampo("sexo", e.value)}
+                                                    onChange={(evento) => atualizarCampo("sexo", evento.value)}
                                                     placeholder="Selecione"
                                                 />
                                             </div>
@@ -940,7 +942,7 @@ function CadastroConteudo() {
                                                     name="estadoCivil"
                                                     options={OPCOES_ESTADO_CIVIL}
                                                     value={campos.estadoCivil}
-                                                    onChange={(e) => atualizarCampo("estadoCivil", e.value)}
+                                                    onChange={(evento) => atualizarCampo("estadoCivil", evento.value)}
                                                     placeholder="Selecione"
                                                 />
                                             </div>
@@ -988,7 +990,7 @@ function CadastroConteudo() {
                                                     name="estado"
                                                     options={OPCOES_UF}
                                                     value={campos.estado}
-                                                    onChange={(e) => atualizarCampo("estado", e.value)}
+                                                    onChange={(evento) => atualizarCampo("estado", evento.value)}
                                                     placeholder="Selecione"
                                                 />
                                             </div>
@@ -1019,7 +1021,7 @@ function CadastroConteudo() {
                                                     maxLength={14}
                                                     placeholder="000.000.000-00"
                                                     value={campos.cpf}
-                                                    onChange={(e) => atualizarCampo("cpf", mascararCpf(e.target.value))}
+                                                    onChange={(evento) => atualizarCampo("cpf", mascararCpf(evento.target.value))}
                                                     className={classeErro("cpf")}
                                                 />
                                                 {erroDe("cpf")}
@@ -1049,7 +1051,7 @@ function CadastroConteudo() {
                                                     name="ufExpedicaoIdentidade"
                                                     options={OPCOES_UF}
                                                     value={campos.ufExpedicaoIdentidade}
-                                                    onChange={(e) => atualizarCampo("ufExpedicaoIdentidade", e.value)}
+                                                    onChange={(evento) => atualizarCampo("ufExpedicaoIdentidade", evento.value)}
                                                     placeholder="Selecione"
                                                 />
                                             </div>
@@ -1088,7 +1090,7 @@ function CadastroConteudo() {
                                                     name="ufZonaEleitoral"
                                                     options={OPCOES_UF}
                                                     value={campos.ufZonaEleitoral}
-                                                    onChange={(e) => atualizarCampo("ufZonaEleitoral", e.value)}
+                                                    onChange={(evento) => atualizarCampo("ufZonaEleitoral", evento.value)}
                                                     placeholder="Selecione"
                                                 />
                                             </div>
@@ -1116,7 +1118,7 @@ function CadastroConteudo() {
                                                     name="ufReservista"
                                                     options={OPCOES_UF}
                                                     value={campos.ufReservista}
-                                                    onChange={(e) => atualizarCampo("ufReservista", e.value)}
+                                                    onChange={(evento) => atualizarCampo("ufReservista", evento.value)}
                                                     placeholder="Selecione"
                                                 />
                                             </div>
@@ -1134,7 +1136,7 @@ function CadastroConteudo() {
                                                     name="tipoEndereco"
                                                     options={OPCOES_TIPO_ENDERECO}
                                                     value={campos.tipoEndereco}
-                                                    onChange={(e) => atualizarCampo("tipoEndereco", e.value)}
+                                                    onChange={(evento) => atualizarCampo("tipoEndereco", evento.value)}
                                                     placeholder="Selecione"
                                                 />
                                             </div>
@@ -1148,7 +1150,7 @@ function CadastroConteudo() {
                                                     maxLength={9}
                                                     placeholder="00000-000"
                                                     value={campos.enderecoCep}
-                                                    onChange={(e) => aoDigitarCep(e.target.value)}
+                                                    onChange={(evento) => aoDigitarCep(evento.target.value)}
                                                 />
                                             </div>
 
@@ -1192,7 +1194,7 @@ function CadastroConteudo() {
                                                     name="enderecoUf"
                                                     options={OPCOES_UF}
                                                     value={campos.enderecoUf}
-                                                    onChange={(e) => atualizarCampo("enderecoUf", e.value)}
+                                                    onChange={(evento) => atualizarCampo("enderecoUf", evento.value)}
                                                     placeholder="Selecione"
                                                 />
                                             </div>
@@ -1224,7 +1226,7 @@ function CadastroConteudo() {
                                                     placeholder="(00) 00000-0000"
                                                     autoComplete="tel"
                                                     value={campos.telefone}
-                                                    onChange={(e) => atualizarCampo("telefone", mascararTelefone(e.target.value))}
+                                                    onChange={(evento) => atualizarCampo("telefone", mascararTelefone(evento.target.value))}
                                                     className={classeErro("telefone")}
                                                 />
                                                 {erroDe("telefone")}
@@ -1239,7 +1241,7 @@ function CadastroConteudo() {
                                                     maxLength={15}
                                                     placeholder="(00) 00000-0000"
                                                     value={campos.telefoneEmergencia}
-                                                    onChange={(e) => atualizarCampo("telefoneEmergencia", mascararTelefone(e.target.value))}
+                                                    onChange={(evento) => atualizarCampo("telefoneEmergencia", mascararTelefone(evento.target.value))}
                                                 />
                                             </div>
 
@@ -1288,7 +1290,7 @@ function CadastroConteudo() {
                                                     name="tipoSanguineo"
                                                     options={OPCOES_TIPO_SANGUINEO}
                                                     value={campos.tipoSanguineo}
-                                                    onChange={(e) => atualizarCampo("tipoSanguineo", e.value)}
+                                                    onChange={(evento) => atualizarCampo("tipoSanguineo", evento.value)}
                                                     placeholder="Selecione"
                                                 />
                                             </div>
@@ -1299,7 +1301,7 @@ function CadastroConteudo() {
                                                 inputId="cadEducacaoEspecial" 
                                                 name="publicoAlvoEducacaoEspecial" 
                                                 checked={campos.publicoAlvoEducacaoEspecial} 
-                                                onChange={(e) => atualizarCampo("publicoAlvoEducacaoEspecial", e.checked)} 
+                                                onChange={(evento) => atualizarCampo("publicoAlvoEducacaoEspecial", evento.checked)} 
                                             />
                                             <span>Sou aluno público-alvo da Educação Especial.</span>
                                         </label>
@@ -1309,7 +1311,7 @@ function CadastroConteudo() {
                                                 inputId="cadCanhoto" 
                                                 name="canhoto" 
                                                 checked={campos.canhoto} 
-                                                onChange={(e) => atualizarCampo("canhoto", e.checked)} 
+                                                onChange={(evento) => atualizarCampo("canhoto", evento.checked)} 
                                             />
                                             <span>Sou canhoto(a).</span>
                                         </label>
@@ -1319,12 +1321,12 @@ function CadastroConteudo() {
                                                 inputId="cadAcompanhamento" 
                                                 name="necessitaAcompanhamentoInstitucional" 
                                                 checked={campos.necessitaAcompanhamentoInstitucional} 
-                                                onChange={(e) => atualizarCampo("necessitaAcompanhamentoInstitucional", e.checked)} 
+                                                onChange={(evento) => atualizarCampo("necessitaAcompanhamentoInstitucional", evento.checked)} 
                                             />
                                             <span>
                                                 Necessito de acompanhamento institucional.
                                                 <button type="button" className="site-info-btn" id="btnInfoAcompanhamento" aria-label="O que é acompanhamento institucional?"
-                                                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); setMostrarInfoAcompanhamento(true); }}>
+                                                        onClick={(evento) => { evento.preventDefault(); evento.stopPropagation(); setMostrarInfoAcompanhamento(true); }}>
                                                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
                                                             strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                                                         <circle cx="12" cy="12" r="10"></circle>
@@ -1364,7 +1366,7 @@ function CadastroConteudo() {
                                                     name="tipoEscolaEnsinoMedio"
                                                     options={OPCOES_TIPO_ESCOLA}
                                                     value={campos.tipoEscolaEnsinoMedio}
-                                                    onChange={(e) => atualizarCampo("tipoEscolaEnsinoMedio", e.value)}
+                                                    onChange={(evento) => atualizarCampo("tipoEscolaEnsinoMedio", evento.value)}
                                                     placeholder="Selecione"
                                                 />
                                             </div>
@@ -1384,7 +1386,7 @@ function CadastroConteudo() {
                                                     name="mesConclusaoEnsinoMedio"
                                                     options={OPCOES_MES}
                                                     value={campos.mesConclusaoEnsinoMedio}
-                                                    onChange={(e) => atualizarCampo("mesConclusaoEnsinoMedio", e.value)}
+                                                    onChange={(evento) => atualizarCampo("mesConclusaoEnsinoMedio", evento.value)}
                                                     placeholder="Selecione"
                                                 />
                                             </div>
@@ -1409,7 +1411,7 @@ function CadastroConteudo() {
                                                     name="racaEtnia"
                                                     options={OPCOES_RACA_ETNIA}
                                                     value={campos.racaEtnia}
-                                                    onChange={(e) => atualizarCampo("racaEtnia", e.value)}
+                                                    onChange={(evento) => atualizarCampo("racaEtnia", evento.value)}
                                                     placeholder="Selecione"
                                                 />
                                             </div>
@@ -1470,7 +1472,7 @@ function CadastroConteudo() {
                                         </div>
 
                                         <label className="site-form-termos">
-                                            <Checkbox inputId="cadTermos" name="termoConsentimento" required className={classeErro("termoConsentimento")} checked={campos.termoConsentimento} onChange={(e) => atualizarCampo("termoConsentimento", e.checked)} />
+                                            <Checkbox inputId="cadTermos" name="termoConsentimento" required className={classeErro("termoConsentimento")} checked={campos.termoConsentimento} onChange={(evento) => atualizarCampo("termoConsentimento", evento.checked)} />
                                             <span>Li e aceito o termo de consentimento para uso dos meus dados pessoais. <span className="ua-obrigatorio" aria-hidden="true">*</span></span>
                                         </label>
                                         {erroDe("termoConsentimento")}

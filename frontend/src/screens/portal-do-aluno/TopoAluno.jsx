@@ -3,13 +3,11 @@
 import MenuDashboards from "./MenuDashboards";
 
 // --- PARTE ESQUERDA DO CABEÇALHO DO ALUNO ---
-export default function TopoAluno({ usuario }) {
-    const primeiroNome = (usuario?.nome || "aluno").split(" ")[0];
-
+export default function TopoAluno() {
     return (
         <div className="ua-aluno-topo-cabecalho">
             <MenuDashboards />
-            <span className="ua-aluno-ola">Olá, {primeiroNome}!</span>
+            <span className="ua-aluno-marca">UniAura</span>
         </div>
     );
 }

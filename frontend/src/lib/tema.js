@@ -1,17 +1,36 @@
 const CHAVE_TEMA = "theme";
 
-// --- LÊ O TEMA SALVO ---
+// --- O VISUAL NOVO VALE SÓ NAS TELAS INTERNAS DO PORTAL DO ALUNO ---
+export function ehPortalDoAluno(caminho = typeof window !== "undefined" ? window.location.pathname : "") {
+    return caminho.includes("/portal-do-aluno/") && !/\/portal-do-aluno\/(login|cadastro)\/?$/.test(caminho);
+}
+
+// --- LÊ O TEMA SALVO; NA PRIMEIRA VISITA, O PORTAL DO ALUNO SEGUE O SISTEMA OPERACIONAL E O RESTO COMEÇA CLARO ---
 export function temaSalvo() {
     if (typeof window === "undefined") {
         return "light";
     }
-    return localStorage.getItem(CHAVE_TEMA) || "light";
+
+    const salvo = localStorage.getItem(CHAVE_TEMA);
+    if (salvo === "light" || salvo === "dark") {
+        return salvo;
+    }
+    return ehPortalDoAluno() && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
 // --- APLICA O TEMA NO <html> E GUARDA A ESCOLHA ---
-export function aplicarTema(tema) {
-    document.documentElement.setAttribute("data-theme", tema);
-    localStorage.setItem(CHAVE_TEMA, tema);
+export function aplicarTema(tema, { salvar = true, animar = false } = {}) {
+    const raiz = document.documentElement;
+
+    if (animar) {
+        raiz.classList.add("ua-trocando-tema");
+        setTimeout(() => raiz.classList.remove("ua-trocando-tema"), 500);
+    }
+
+    raiz.setAttribute("data-theme", tema);
+    if (salvar) {
+        localStorage.setItem(CHAVE_TEMA, tema);
+    }
 }
 
 // --- ALTERNA O TEMA COM UMA ONDA CIRCULAR EXPANSIVA A PARTIR DO BOTÃO ---
@@ -31,7 +50,7 @@ export function alternarTemaComOnda(botao, temaAtual, aoMudar) {
     setTimeout(() => botao.classList.remove("girando"), 600);
 
     setTimeout(() => {
-        aplicarTema(novo);
+        aplicarTema(novo, { animar: true });
         aoMudar?.(novo);
     }, 150);
 }

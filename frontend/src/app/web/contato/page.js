@@ -173,7 +173,7 @@ const SETORES = [
 
 // --- COMPONENTE DA PÁGINA DE CONTATO ---
 export default function ContatoPage() {
-    const raizRef = useEfeitosDePagina();
+    const raizReferencia = useEfeitosDePagina();
     const [assunto,  setAssunto]  = useState("");
     const [termos,   setTermos]   = useState(false);
     const [telefone, setTelefone] = useState("");
@@ -248,7 +248,7 @@ export default function ContatoPage() {
 
     return (
         <>
-            <div className="grad-page" ref={raizRef}>
+            <div className="grad-page" ref={raizReferencia}>
                 <main>
                     <section className="grad-hero">
                         <span className="grad-hero-brilho grad-hero-brilho-a" aria-hidden="true"></span>
@@ -273,8 +273,15 @@ export default function ContatoPage() {
                                 </p>
 
                                 <div className="grad-actions" data-entrada style={{ "--atraso": "360ms" }}>
-                                    <Button label="Ver nossos canais" onClick={() => document.getElementById("cc-canais")?.scrollIntoView({ behavior: "smooth" })} />
-                                    <Button label="Enviar uma mensagem" outlined onClick={() => document.getElementById("cc-mensagem")?.scrollIntoView({ behavior: "smooth" })} />
+                                    <Button 
+                                        label="Ver nossos canais" 
+                                        onClick={() => document.getElementById("cc-canais")?.scrollIntoView({ behavior: "smooth" })} 
+                                    />
+                                    <Button 
+                                        label="Enviar uma mensagem" 
+                                        outlined 
+                                        onClick={() => document.getElementById("cc-mensagem")?.scrollIntoView({ behavior: "smooth" })} 
+                                    />
                                 </div>
                             </div>
 
@@ -375,7 +382,9 @@ export default function ContatoPage() {
                             <form id="formContato" className="site-form" noValidate data-revelar onSubmit={aoEnviar}>
                                 <div className="site-form-grid">
                                     <div className="field">
-                                        <label htmlFor="ctNome">Nome completo <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                                        <label htmlFor="ctNome">
+                                            Nome completo <span className="ua-obrigatorio" aria-hidden="true">*</span>
+                                        </label>
                                         <InputText
                                             id="ctNome"
                                             name="nome"
@@ -388,7 +397,9 @@ export default function ContatoPage() {
                                     </div>
 
                                     <div className="field">
-                                        <label htmlFor="ctEmail">E-mail <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                                        <label htmlFor="ctEmail">
+                                            E-mail <span className="ua-obrigatorio" aria-hidden="true">*</span>
+                                        </label>
                                         <InputText
                                             id="ctEmail"
                                             name="email"
@@ -411,18 +422,20 @@ export default function ContatoPage() {
                                             placeholder="(00) 00000-0000"
                                             autoComplete="tel"
                                             value={telefone}
-                                            onChange={(e) => setTelefone(mascararTelefone(e.target.value))}
+                                            onChange={(evento) => setTelefone(mascararTelefone(evento.target.value))}
                                         />
                                     </div>
 
                                     <div className="field">
-                                        <label htmlFor="ctAssunto">Assunto <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                                        <label htmlFor="ctAssunto">
+                                            Assunto <span className="ua-obrigatorio" aria-hidden="true">*</span>
+                                        </label>
                                         <Dropdown
                                             inputId="ctAssunto"
                                             name="assunto"
                                             options={ASSUNTOS}
                                             value={assunto}
-                                            onChange={(e) => setAssunto(e.value)}
+                                            onChange={(evento) => setAssunto(evento.value)}
                                             placeholder="Selecione o assunto"
                                             className={erros.assunto ? "p-invalid" : ""}
                                         />
@@ -431,7 +444,9 @@ export default function ContatoPage() {
                                 </div>
 
                                 <div className="field">
-                                    <label htmlFor="ctMensagem">Mensagem <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
+                                    <label htmlFor="ctMensagem">
+                                        Mensagem <span className="ua-obrigatorio" aria-hidden="true">*</span>
+                                    </label>
                                     <InputTextarea
                                         id="ctMensagem"
                                         name="mensagem"
@@ -444,7 +459,7 @@ export default function ContatoPage() {
 
                                 <div className="site-form-termos">
                                     <div className="site-form-termos-linha">
-                                        <Checkbox inputId="ctTermos" name="termos" checked={termos} onChange={(e) => setTermos(e.checked)} />
+                                        <Checkbox inputId="ctTermos" name="termos" checked={termos} onChange={(evento) => setTermos(evento.checked)} />
                                         <label htmlFor="ctTermos">
                                             Autorizo o contato da UniAura e li a{" "}
                                             <Link href="/web/privacidade" className="ua-link-destaque">política de privacidade</Link>.{" "}
@@ -454,7 +469,12 @@ export default function ContatoPage() {
                                     {erros.termos && <small className="ua-erro-campo" role="alert">{erros.termos}</small>}
                                 </div>
 
-                                <Button id="btnEnviarContato" type="submit" label={enviando ? "Enviando..." : "Enviar mensagem"} loading={enviando} />
+                                <Button 
+                                    id="btnEnviarContato" 
+                                    type="submit" 
+                                    label={enviando ? "Enviando..." : "Enviar mensagem"} 
+                                    loading={enviando} 
+                                />
 
                                 {sucesso && <Message severity="success" text={sucesso} />}
                                 {erro && <Message severity="error" text={erro} />}

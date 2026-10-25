@@ -6,69 +6,90 @@ import { funcionariosApi }  from "@/lib/api/funcionarios";
 import { formatarData }     from "@/lib/formato";
 
 // --- CARGOS PARA FUNCIONÁRIOS ---
-const CARGOS = ["COORDENADOR", "SECRETARIA", "BIBLIOTECARIO", "FINANCEIRO", "ADMIN"];
+const CARGOS = [
+    "COORDENADOR",
+    "SECRETARIA",
+    "BIBLIOTECARIO",
+    "FINANCEIRO",
+    "ADMIN"
+];
 
 // --- CAMPOS DO FORMULÁRIO DE FUNCIONÁRIOS ---
 const CAMPOS = [
-    { 
-        name: "nome", 
-        label: "Nome", 
-        origem: "usuario", 
-        required: true 
+    {
+        name: "nome",
+        label: "Nome",
+        origem: "usuario",
+        required: true
     },
-    { 
-        name: "email", 
-        label: "E-mail", 
-        origem: "usuario", 
-        type: "email", 
-        required: true 
+    {
+        name: "email",
+        label: "E-mail",
+        origem: "usuario",
+        type: "email",
+        required: true
     },
-    { 
-        name: "cpf", 
-        label: "CPF", 
-        origem: "usuario" 
+    {
+        name: "cpf",
+        label: "CPF",
+        origem: "usuario"
     },
-    { 
-        name: "telefone", 
-        label: "Telefone", 
-        origem: "usuario" 
+    {
+        name: "telefone",
+        label: "Telefone",
+        origem: "usuario"
     },
-    { 
-        name: "dataNascimento", 
-        label: "Nascimento", 
-        origem: "usuario", 
-        type: "date" 
+    {
+        name: "dataNascimento",
+        label: "Nascimento",
+        origem: "usuario",
+        type: "date"
     },
-    { 
-        name: "cargo", 
-        label: "Cargo", 
-        origem: "entidade", 
-        type: "select", 
-        required: true, 
-        options: CARGOS, 
-        default: "SECRETARIA" 
+    {
+        name: "cargo",
+        label: "Cargo",
+        origem: "entidade",
+        type: "select",
+        required: true,
+        options: CARGOS,
+        default: "SECRETARIA"
     },
-    { 
-        name: "dataAdmissao", 
-        label: "Data de admissão", 
-        origem: "entidade", 
-        type: "date", 
-        required: true 
+    {
+        name: "dataAdmissao",
+        label: "Data de admissão",
+        origem: "entidade",
+        type: "date",
+        required: true
     },
-    { 
-        name: "departamento", 
-        label: "Departamento", 
-        origem: "entidade" 
+    {
+        name: "departamento",
+        label: "Departamento",
+        origem: "entidade"
     }
 ];
 
 // --- COLUNAS DA TABELA DE FUNCIONÁRIOS ---
 const COLUNAS = [
-    { header: "Nome", render: (item) => item.usuario?.nome || "-" },
-    { header: "E-mail", render: (item) => item.usuario?.email || "-" },
-    { header: "Cargo", render: (item) => item.cargo },
-    { header: "Departamento", render: (item) => item.departamento || "-" },
-    { header: "Admissão", render: (item) => formatarData(item.dataAdmissao) }
+    {
+        header: "Nome",
+        render: (item) => item.usuario?.nome || "-"
+    },
+    {
+        header: "E-mail",
+        render: (item) => item.usuario?.email || "-"
+    },
+    {
+        header: "Cargo",
+        render: (item) => item.cargo
+    },
+    {
+        header: "Departamento",
+        render: (item) => item.departamento || "-"
+    },
+    {
+        header: "Admissão",
+        render: (item) => formatarData(item.dataAdmissao)
+    }
 ];
 
 // --- PÁGINA DE LISTAGEM DE FUNCIONÁRIOS ---

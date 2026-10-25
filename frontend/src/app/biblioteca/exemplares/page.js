@@ -1,15 +1,19 @@
 "use client";
 
-import { useState }                 from "react";
-import { InputText }                from "primereact/inputtext";
-import { Button }                   from "primereact/button";
-import { Message }                  from "primereact/message";
-import { DataTable }                from "primereact/datatable";
-import { Column }                   from "primereact/column";
-import AppShell                     from "@/components/interno/AppShell";
-import Badge                        from "@/components/interno/Badge";
-import { livroApi, exemplarApi }    from "@/lib/api/biblioteca";
-import { formatarData }             from "@/lib/formato";
+import { useState }                     from "react";
+import { InputText }                    from "primereact/inputtext";
+import { Button }                       from "primereact/button";
+import { Message }                      from "primereact/message";
+import { DataTable }                    from "primereact/datatable";
+import { Column }                       from "primereact/column";
+import AppShell                         from "@/components/interno/AppShell";
+import Badge                            from "@/components/interno/Badge";
+import { pesquisarLivros }              from "@/app/remotes/uniaura/biblioteca/pesquisarLivrosRemote";
+import { pesquisarExemplaresDoLivro }   from "@/app/remotes/uniaura/biblioteca/pesquisarExemplaresDoLivroRemote";
+import { gerarCodigoDeBarras }          from "@/app/remotes/uniaura/biblioteca/gerarCodigoDeBarrasRemote";
+import { cadastrarExemplar }            from "@/app/remotes/uniaura/biblioteca/cadastrarExemplarRemote";
+import { removerExemplar }              from "@/app/remotes/uniaura/biblioteca/removerExemplarRemote";
+import { formatarData }                 from "@/lib/formato";
 
 // --- COMPONENTE DE GESTÃO DE EXEMPLARES DA BIBLIOTECA ---
 export default function BibliotecaExemplaresPage() {
@@ -28,8 +32,8 @@ export default function BibliotecaExemplaresPage() {
         setErroBusca("");
         setResultados(null);
         try {
-            const page = await livroApi.buscar({ titulo: tituloBusca, size: 10 });
-            setResultados(page.content || []);
+            const resultado = await pesquisarLivros({ titulo: tituloBusca, qtd: 10 });
+            setResultados(resultado.lista || []);
         } catch (erro) {
             setErroBusca(erro.message);
         }
@@ -37,49 +41,55 @@ export default function BibliotecaExemplaresPage() {
 
     // --- SELECIONA O LIVRO E CARREGA SEUS EXEMPLARES ---
     async function selecionarLivro(livro) {
-        setLivroSelecionado({ id: livro.id, titulo: livro.titulo });
-        await listarExemplares(livro.id);
+        setLivroSelecionado({ uid: livro.uid, titulo: livro.titulo });
+        await listarExemplares(livro.uid);
     }
 
     // --- LISTA OS EXEMPLARES DE UM LIVRO ---
-    async function listarExemplares(livroId) {
-        const page = await exemplarApi.listarPorLivro(livroId, { size: 50 });
-        setExemplares(page.content || []);
+    async function listarExemplares(livroUid) {
+        const resultado = await pesquisarExemplaresDoLivro(livroUid, { qtd: 50 });
+        setExemplares(resultado.lista || []);
     }
 
     // --- GERA UM CÓDIGO DE BARRAS PARA O NOVO EXEMPLAR ---
     async function gerarCodigo() {
-        const r = await exemplarApi.gerarCodigoBarras();
-        setCodigoBarras(r.codigoBarras);
+        const resultado = await gerarCodigoDeBarras();
+        setCodigoBarras(resultado.codigoBarras);
     }
 
     // --- ADICIONA UM NOVO EXEMPLAR AO LIVRO SELECIONADO ---
     async function adicionarExemplar(evento) {
         evento.preventDefault();
         try {
-            await exemplarApi.criar({
-                livroId: livroSelecionado.id,
+            await cadastrarExemplar({
+                livroUid: livroSelecionado.uid,
                 codigoBarras: codigoBarras || null,
                 localizacao: localizacao || null
             });
             setCodigoBarras("");
             setLocalizacao("");
-            setMensagemExemplar({ texto: "Exemplar criado.", tipo: "ok" });
-            listarExemplares(livroSelecionado.id);
+            setMensagemExemplar({
+                texto: "Exemplar criado.",
+                tipo: "ok"
+            });
+            listarExemplares(livroSelecionado.uid);
         } catch (erro) {
-            setMensagemExemplar({ texto: erro.message, tipo: "error" });
+            setMensagemExemplar({
+                texto: erro.message,
+                tipo: "error"
+            });
         }
     }
 
     // --- EXCLUI UM EXEMPLAR APÓS CONFIRMAÇÃO DO USUÁRIO ---
-    async function excluirExemplar(id) {
+    async function excluirExemplar(uid) {
         if (!confirm("Excluir exemplar?")) {
             return;
         }
 
         try {
-            await exemplarApi.deletar(id);
-            listarExemplares(livroSelecionado.id);
+            await removerExemplar(uid);
+            listarExemplares(livroSelecionado.uid);
         } catch (erro) {
             alert(erro.message);
         }
@@ -95,18 +105,21 @@ export default function BibliotecaExemplaresPage() {
                         <InputText
                             value={tituloBusca}
                             required
-                            onChange={(e) => setTituloBusca(e.target.value)}
+                            onChange={(evento) => setTituloBusca(evento.target.value)}
                         />
                     </label>
-                    <Button type="submit" label="Buscar" />
+                    <Button 
+                        type="submit" 
+                        label="Buscar" 
+                    />
                 </form>
                 {erroBusca && <Message severity="error" text={erroBusca} />}
                 {resultados && (
                     <ul>
                         {resultados.length === 0 && <li>Nenhum livro encontrado.</li>}
                         {resultados.map((livro) => (
-                            <li key={livro.id}>
-                                <a href="#" onClick={(e) => { e.preventDefault(); selecionarLivro(livro); }}>
+                            <li key={livro.uid}>
+                                <a href="#" onClick={(evento) => { evento.preventDefault(); selecionarLivro(livro); }}>
                                     {livro.titulo} — {livro.autor}
                                 </a>
                             </li>
@@ -123,26 +136,35 @@ export default function BibliotecaExemplaresPage() {
                             <InputText
                                 placeholder="deixe vazio para gerar"
                                 value={codigoBarras}
-                                onChange={(e) => setCodigoBarras(e.target.value)}
+                                onChange={(evento) => setCodigoBarras(evento.target.value)}
                             />
                         </label>
                         <label className="field">Localização
                             <InputText
                                 placeholder="ex.: Estante A3"
                                 value={localizacao}
-                                onChange={(e) => setLocalizacao(e.target.value)}
+                                onChange={(evento) => setLocalizacao(evento.target.value)}
                             />
                         </label>
-                        <Button type="button" label="Gerar código" severity="secondary" outlined onClick={gerarCodigo} />
-                        <Button type="submit" label="Adicionar exemplar" />
+                        <Button
+                            type="button"
+                            label="Gerar código"
+                            severity="secondary"
+                            outlined
+                            onClick={gerarCodigo}
+                        />
+                        <Button 
+                            type="submit" 
+                            label="Adicionar exemplar" 
+                        />
                         {mensagemExemplar.texto && <Message severity={mensagemExemplar.tipo === "error" ? "error" : "success"} text={mensagemExemplar.texto} />}
                     </form>
-                    <DataTable value={exemplares} emptyMessage="Sem exemplares." dataKey="id">
-                        <Column header="Código" body={(ex) => ex.codigoBarras} />
-                        <Column header="Localização" body={(ex) => ex.localizacao || "-"} />
-                        <Column header="Status" body={(ex) => <Badge status={ex.status} />} />
-                        <Column header="Criado" body={(ex) => formatarData(ex.criadoEm)} />
-                        <Column header="" body={(ex) => <Button label="Excluir" size="small" severity="danger" outlined onClick={() => excluirExemplar(ex.id)} />} />
+                    <DataTable value={exemplares} emptyMessage="Sem exemplares." dataKey="uid">
+                        <Column header="Código" body={(exemplar) => exemplar.codigoBarras} />
+                        <Column header="Localização" body={(exemplar) => exemplar.localizacao || "-"} />
+                        <Column header="Status" body={(exemplar) => <Badge status={exemplar.status} />} />
+                        <Column header="Criado" body={(exemplar) => formatarData(exemplar.criadoEm)} />
+                        <Column header="" body={(exemplar) => <Button label="Excluir" size="small" severity="danger" outlined onClick={() => excluirExemplar(exemplar.uid)} />} />
                     </DataTable>
                 </section>
             )}

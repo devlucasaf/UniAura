@@ -36,6 +36,7 @@ function configurarAcordeaoMatriz(raiz) {
         if (!botao) {
             return;
         }
+        
         const aoClicar = () => {
             const abrindo = !semestre.classList.contains("aberto");
 
@@ -52,7 +53,7 @@ function configurarAcordeaoMatriz(raiz) {
         botao.addEventListener("click", aoClicar);
         remocoes.push(() => botao.removeEventListener("click", aoClicar));
     });
-    return () => remocoes.forEach((r) => r());
+    return () => remocoes.forEach((remover) => remover());
 }
 
 // --- ROLAGEM SUAVE PARA AS SEÇÕES INTERNAS DA PÁGINA ---
@@ -73,7 +74,7 @@ function configurarRolagemSuave(raiz) {
         remocoes.push(() => link.removeEventListener("click", aoClicar));
     });
 
-    return () => remocoes.forEach((r) => r());
+    return () => remocoes.forEach((remover) => remover());
 }
 
 // --- ENTRADA ESCALONADA DO HERO ASSIM QUE A PÁGINA MONTA ---
@@ -207,7 +208,7 @@ function configurarBrilhoDosCartoes(raiz) {
         cartao.addEventListener("pointermove", aoMover);
         remocoes.push(() => cartao.removeEventListener("pointermove", aoMover));
     });
-    return () => remocoes.forEach((r) => r());
+    return () => remocoes.forEach((remover) => remover());
 }
 
 // --- CARTÃO DE CÓDIGO QUE INCLINA ACOMPANHANDO O MOUSE ---
@@ -265,7 +266,7 @@ function configurarOndaNosBotoes(raiz) {
         botao.addEventListener("pointerdown", aoPressionar);
         remocoes.push(() => botao.removeEventListener("pointerdown", aoPressionar));
     });
-    return () => remocoes.forEach((r) => r());
+    return () => remocoes.forEach((remover) => remover());
 }
 
 // --- BARRA DE PROGRESSO, PARALAXE DO HERO E SEÇÃO ATIVA NA SUBNAVEGAÇÃO ---

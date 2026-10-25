@@ -1,8 +1,8 @@
-import Link             from "next/link";
-import { notFound }     from "next/navigation";
-import { INSTITUCIONAL } from "@/data/institucional";
+import Link                 from "next/link";
+import { notFound }         from "next/navigation";
+import { INSTITUCIONAL }    from "@/data/institucional";
 
-// --- BUSCA O ITEM PELO SLUG (SÓ OS ITENS SEM PÁGINA PRÓPRIA USAM ESTA PÁGINA GENÉRICA) ---
+// --- BUSCA O ITEM PELO SLUG ---
 const buscarItem = (slug) => INSTITUCIONAL.find((item) => item.slug === slug && !item.rota);
 
 // --- GERA OS PARÂMETROS ESTÁTICOS DAS PÁGINAS DO INSTITUCIONAL ---
@@ -11,15 +11,15 @@ export function generateStaticParams() {
 }
 
 // --- METADADOS DA PÁGINA ---
-export async function generateMetadata({ params }) {
-    const { slug } = await params;
+export async function generateMetadata({ params: parametros }) {
+    const { slug } = await parametros;
     const item = buscarItem(slug);
     return item ? { title: `${item.titulo} — Universidade Aura` } : {};
 }
 
 // --- PÁGINA GENÉRICA DE UM ITEM DO INSTITUCIONAL ---
-export default async function InstitucionalPage({ params }) {
-    const { slug } = await params;
+export default async function InstitucionalPage({ params: parametros }) {
+    const { slug } = await parametros;
     const item = buscarItem(slug);
 
     if (!item) {

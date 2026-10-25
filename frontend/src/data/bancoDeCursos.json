@@ -1,0 +1,3789 @@
+{
+  "geradoDe": "pagina de cursos (data/cursos/json)",
+  "total": 36,
+  "cursos": [
+    {
+      "slug": "artes-cenicas",
+      "titulo": "Artes Cênicas",
+      "area": "artes",
+      "pastaArea": "artes",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 8,
+      "cargaHoraria": 3000,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos da cena",
+          "disciplinas": [
+            "Interpretação I",
+            "Expressão Corporal I",
+            "Técnica Vocal I",
+            "História do Teatro I",
+            "Improvisação Teatral"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Corpo e voz",
+          "disciplinas": [
+            "Interpretação II",
+            "Expressão Corporal II",
+            "Técnica Vocal II",
+            "História do Teatro II",
+            "Análise de Texto Dramático"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Linguagens cênicas",
+          "disciplinas": [
+            "Interpretação III",
+            "Dança e Movimento Cênico",
+            "Dramaturgia I",
+            "Maquiagem e Caracterização",
+            "Teatro Brasileiro"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Espaço e imagem",
+          "disciplinas": [
+            "Interpretação IV",
+            "Cenografia",
+            "Figurino e Indumentária",
+            "Dramaturgia II",
+            "Teatro Contemporâneo"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Luz e som",
+          "disciplinas": [
+            "Iluminação Cênica",
+            "Sonoplastia",
+            "Laboratório de Criação Cênica",
+            "Teatro de Formas Animadas",
+            "Estética e Crítica Teatral"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Direção",
+          "disciplinas": [
+            "Direção Teatral I",
+            "Pedagogia do Teatro",
+            "Preparação de Elenco",
+            "Interpretação para Câmera",
+            "Produção Cultural"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Montagem",
+          "disciplinas": [
+            "Direção Teatral II",
+            "Montagem de Espetáculo I",
+            "Estágio Supervisionado I",
+            "Políticas Culturais e Legislação",
+            "Trabalho de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Conclusão",
+          "disciplinas": [
+            "Montagem de Espetáculo II",
+            "Estágio Supervisionado II",
+            "Empreendedorismo nas Artes",
+            "Atividades Complementares",
+            "Trabalho de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "artes-visuais",
+      "titulo": "Artes Visuais",
+      "area": "artes",
+      "pastaArea": "artes",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 8,
+      "cargaHoraria": 3000,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Desenho I — Observação",
+            "Teoria da Cor",
+            "História da Arte I — Antiga e Medieval",
+            "Introdução às Artes Visuais",
+            "Linguagem Visual e Composição"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Ateliê inicial",
+          "disciplinas": [
+            "Desenho II — Figura Humana",
+            "Pintura I",
+            "História da Arte II — Renascimento ao Barroco",
+            "Estética",
+            "Fotografia I"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Linguagens",
+          "disciplinas": [
+            "Desenho III — Experimentação",
+            "Gravura I — Xilogravura",
+            "História da Arte III — Moderna",
+            "Pintura II",
+            "Antropologia da Arte"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Tridimensional",
+          "disciplinas": [
+            "Escultura I",
+            "Gravura II — Metal e Serigrafia",
+            "Arte Digital I",
+            "Fotografia II",
+            "Arte Contemporânea"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Novas mídias",
+          "disciplinas": [
+            "Arte Digital II — Vídeo e Animação",
+            "Escultura II — Instalação",
+            "Crítica de Arte",
+            "Ateliê de Projeto I",
+            "Arte e Tecnologia"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Curadoria",
+          "disciplinas": [
+            "Curadoria e Montagem de Exposições",
+            "Conservação e Restauro",
+            "Ateliê de Projeto II",
+            "Arte Brasileira",
+            "Pesquisa em Artes Visuais"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Poética própria",
+          "disciplinas": [
+            "Ateliê de Projeto III",
+            "Produção e Gestão Cultural",
+            "Arte-Educação",
+            "Estágio Supervisionado",
+            "Trabalho de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Conclusão",
+          "disciplinas": [
+            "Ateliê de Projeto IV",
+            "Mercado de Arte e Portfólio",
+            "Optativa em Artes Visuais",
+            "Atividades Complementares",
+            "Trabalho de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "design",
+      "titulo": "Design",
+      "area": "artes",
+      "pastaArea": "artes",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 8,
+      "cargaHoraria": 3000,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Desenho de Observação",
+            "Fundamentos do Design",
+            "Teoria da Cor",
+            "História do Design",
+            "Geometria Aplicada ao Design"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Linguagem visual",
+          "disciplinas": [
+            "Tipografia I",
+            "Computação Gráfica",
+            "Desenho Técnico e Projetivo",
+            "Composição e Linguagem Visual",
+            "Sociologia e Cultura Visual"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Imagem e editorial",
+          "disciplinas": [
+            "Tipografia II",
+            "Fotografia",
+            "Design Editorial",
+            "Ilustração Digital",
+            "Metodologia de Projeto"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Marca e embalagem",
+          "disciplinas": [
+            "Identidade Visual",
+            "Design de Embalagem",
+            "Semiótica Aplicada",
+            "Produção Gráfica",
+            "Pesquisa em Design"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Digital",
+          "disciplinas": [
+            "Design de Interface",
+            "Experiência do Usuário",
+            "Ergonomia",
+            "Animação e Motion Design",
+            "Projeto Integrado de Design Digital"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Produto",
+          "disciplinas": [
+            "Design de Produto",
+            "Materiais e Processos de Fabricação",
+            "Modelagem 3D",
+            "Prototipagem e Modelos",
+            "Design e Sustentabilidade"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Estratégia",
+          "disciplinas": [
+            "Design de Serviços",
+            "Gestão de Design",
+            "Direção de Arte",
+            "Estágio Supervisionado",
+            "Trabalho de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Conclusão",
+          "disciplinas": [
+            "Portfólio",
+            "Empreendedorismo e Inovação",
+            "Ética e Legislação em Design",
+            "Atividades Complementares",
+            "Trabalho de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "fotografia",
+      "titulo": "Fotografia",
+      "area": "artes",
+      "pastaArea": "artes",
+      "nivel": "Tecnólogo",
+      "modalidade": "Presencial",
+      "semestres": 5,
+      "cargaHoraria": 1800,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "História da Fotografia",
+            "Técnica Fotográfica I",
+            "Óptica e Equipamentos",
+            "Composição e Linguagem Visual",
+            "Introdução ao Tratamento de Imagem"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Luz e estúdio",
+          "disciplinas": [
+            "Técnica Fotográfica II",
+            "Iluminação I",
+            "Fotografia de Estúdio",
+            "Tratamento de Imagem",
+            "Retrato"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Narrativa visual",
+          "disciplinas": [
+            "Iluminação II",
+            "Fotojornalismo",
+            "Ensaio Documental",
+            "Fluxo de Trabalho Digital",
+            "Direção de Arte"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Mercado",
+          "disciplinas": [
+            "Fotografia Publicitária",
+            "Fotografia de Moda",
+            "Produção Fotográfica",
+            "Empreendedorismo em Fotografia",
+            "Projeto Integrador"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Autoria e conclusão",
+          "disciplinas": [
+            "Curadoria e Portfólio",
+            "Fotografia Autoral",
+            "Tratamento Avançado de Imagem",
+            "Estágio Supervisionado",
+            "Trabalho de Conclusão de Curso"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "moda",
+      "titulo": "Design de Moda",
+      "area": "artes",
+      "pastaArea": "artes",
+      "nivel": "Tecnólogo",
+      "modalidade": "Presencial",
+      "semestres": 5,
+      "cargaHoraria": 1800,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Repertório",
+          "disciplinas": [
+            "História da Moda",
+            "Desenho de Moda",
+            "Teoria da Cor",
+            "Materiais Têxteis",
+            "Introdução ao Design de Moda"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Técnica",
+          "disciplinas": [
+            "Modelagem Plana I",
+            "Costura Industrial",
+            "Ergonomia e Antropometria",
+            "Ilustração Digital de Moda",
+            "Malharia e Tecelagem"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Construção",
+          "disciplinas": [
+            "Modelagem Plana II",
+            "Moulage",
+            "Estamparia",
+            "Pesquisa de Tendências",
+            "Custos e Ficha Técnica"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Coleção",
+          "disciplinas": [
+            "Desenvolvimento de Coleção",
+            "Moda Sustentável",
+            "Marketing de Moda",
+            "Visual Merchandising",
+            "Projeto Integrador"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Conclusão",
+          "disciplinas": [
+            "Produção de Desfile",
+            "Empreendedorismo em Moda",
+            "Consultoria de Imagem e Styling",
+            "Estágio Supervisionado",
+            "Trabalho de Conclusão de Curso"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "publicidade-propaganda",
+      "titulo": "Publicidade e Propaganda",
+      "area": "artes",
+      "pastaArea": "artes",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 8,
+      "cargaHoraria": 3000,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Teoria da Comunicação",
+            "História da Publicidade",
+            "Língua Portuguesa e Redação",
+            "Fundamentos do Marketing",
+            "Sociologia da Comunicação"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Repertório",
+          "disciplinas": [
+            "Semiótica e Linguagens",
+            "Psicologia Aplicada à Comunicação",
+            "Fotografia Publicitária",
+            "Computação Gráfica",
+            "Comportamento do Consumidor"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Criação",
+          "disciplinas": [
+            "Redação Publicitária I",
+            "Direção de Arte I",
+            "Pesquisa de Mercado",
+            "Produção Gráfica",
+            "Estatística Aplicada à Comunicação"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Estratégia",
+          "disciplinas": [
+            "Redação Publicitária II",
+            "Direção de Arte II",
+            "Planejamento de Campanha",
+            "Mídia I",
+            "Marketing Digital"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Mídia e produção",
+          "disciplinas": [
+            "Mídia II",
+            "Produção Audiovisual",
+            "Rádio e Áudio Publicitário",
+            "Branding",
+            "Atendimento e Planejamento de Contas"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Integração",
+          "disciplinas": [
+            "Campanhas Integradas",
+            "Mídias Sociais e Conteúdo",
+            "Métricas e Análise de Dados",
+            "Ética e Legislação Publicitária",
+            "Empreendedorismo em Comunicação"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Prática de agência",
+          "disciplinas": [
+            "Agência Experimental",
+            "Estágio Supervisionado I",
+            "Comunicação Corporativa e Assessoria",
+            "Projeto Experimental I",
+            "Optativa I"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Conclusão",
+          "disciplinas": [
+            "Trabalho de Conclusão de Curso",
+            "Estágio Supervisionado II",
+            "Gestão de Agência e Negociação",
+            "Atividades Complementares",
+            "Optativa II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "ciencias-aeronauticas",
+      "titulo": "Ciências Aeronáuticas",
+      "area": "engenharias",
+      "pastaArea": "engenharias",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 8,
+      "cargaHoraria": 3000,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Matemática Aplicada à Aviação",
+            "Física Geral",
+            "Introdução às Ciências Aeronáuticas",
+            "Inglês Técnico Aeronáutico I",
+            "Teoria de Voo I"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Bases do voo",
+          "disciplinas": [
+            "Teoria de Voo II",
+            "Aerodinâmica Aplicada",
+            "Meteorologia Aeronáutica I",
+            "Conhecimentos Técnicos de Aeronaves",
+            "Inglês Técnico Aeronáutico II"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Navegação",
+          "disciplinas": [
+            "Navegação Aérea Estimada",
+            "Meteorologia Aeronáutica II",
+            "Regulamentos de Tráfego Aéreo",
+            "Motores e Grupos Motopropulsores",
+            "Cartografia Aeronáutica"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Instrumentos",
+          "disciplinas": [
+            "Sistemas de Instrumentos de Voo",
+            "Radionavegação e Comunicações",
+            "Voo por Instrumentos (IFR) I",
+            "Desempenho e Performance de Aeronaves",
+            "Legislação Aérea e RBAC"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Operações",
+          "disciplinas": [
+            "Voo por Instrumentos (IFR) II",
+            "Peso, Balanceamento e Carregamento",
+            "Planejamento e Despacho de Voo",
+            "Sistemas Elétricos e Hidráulicos de Aeronaves",
+            "Fraseologia Aeronáutica"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Fatores humanos",
+          "disciplinas": [
+            "Fatores Humanos na Aviação",
+            "CRM — Gerenciamento de Recursos de Tripulação",
+            "Fisiologia e Medicina de Aviação",
+            "Aviônica e Sistemas de Navegação",
+            "Voo Multimotor"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Segurança e gestão",
+          "disciplinas": [
+            "Segurança de Voo e Prevenção de Acidentes",
+            "Sistema de Gerenciamento da Segurança Operacional (SGSO)",
+            "Gestão de Empresas Aéreas",
+            "Operações Aeroportuárias",
+            "Voo em Aeronaves de Alto Desempenho"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Conclusão",
+          "disciplinas": [
+            "Treinamento em Simulador de Voo",
+            "Economia do Transporte Aéreo",
+            "Atividades Complementares",
+            "Estágio Supervisionado",
+            "Trabalho de Conclusão de Curso"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "engenharia-civil",
+      "titulo": "Engenharia Civil",
+      "area": "engenharias",
+      "pastaArea": "engenharias",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 10,
+      "cargaHoraria": 3600,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Cálculo Diferencial e Integral I",
+            "Geometria Analítica",
+            "Química Geral",
+            "Introdução à Engenharia Civil",
+            "Desenho Técnico"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Exatas",
+          "disciplinas": [
+            "Cálculo Diferencial e Integral II",
+            "Álgebra Linear",
+            "Física I — Mecânica",
+            "Algoritmos e Programação",
+            "Topografia I"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Mecânica",
+          "disciplinas": [
+            "Cálculo Diferencial e Integral III",
+            "Física II — Fluidos e Calor",
+            "Estática das Estruturas",
+            "Probabilidade e Estatística",
+            "Topografia II"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Materiais",
+          "disciplinas": [
+            "Resistência dos Materiais I",
+            "Materiais de Construção I",
+            "Mecânica dos Fluidos",
+            "Equações Diferenciais",
+            "Geologia Aplicada"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Estruturas",
+          "disciplinas": [
+            "Resistência dos Materiais II",
+            "Materiais de Construção II",
+            "Hidráulica",
+            "Teoria das Estruturas I",
+            "Mecânica dos Solos I"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Concreto",
+          "disciplinas": [
+            "Teoria das Estruturas II",
+            "Concreto Armado I",
+            "Mecânica dos Solos II",
+            "Hidrologia",
+            "Construção Civil I"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Projeto",
+          "disciplinas": [
+            "Concreto Armado II",
+            "Estruturas Metálicas e de Madeira",
+            "Fundações",
+            "Saneamento Básico",
+            "Construção Civil II"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Infraestrutura",
+          "disciplinas": [
+            "Estradas e Pavimentação",
+            "Instalações Prediais",
+            "Sistemas Estruturais",
+            "Engenharia de Custos e Orçamento",
+            "Projeto Integrado I"
+          ]
+        },
+        {
+          "semestre": 9,
+          "titulo": "9º semestre · Gestão",
+          "disciplinas": [
+            "Planejamento e Controle de Obras",
+            "Engenharia Ambiental",
+            "Patologia das Construções",
+            "Optativa I",
+            "Trabalho de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 10,
+          "titulo": "10º semestre · Conclusão",
+          "disciplinas": [
+            "Gerenciamento de Obras",
+            "Segurança do Trabalho",
+            "Optativa II",
+            "Atividades Complementares",
+            "Estágio Supervisionado",
+            "Trabalho de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "engenharia-eletrica",
+      "titulo": "Engenharia Elétrica",
+      "area": "engenharias",
+      "pastaArea": "engenharias",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 10,
+      "cargaHoraria": 3600,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Cálculo Diferencial e Integral I",
+            "Geometria Analítica e Álgebra Vetorial",
+            "Química Geral e Tecnológica",
+            "Introdução à Engenharia Elétrica",
+            "Desenho Técnico e Representação Gráfica"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Exatas",
+          "disciplinas": [
+            "Cálculo Diferencial e Integral II",
+            "Álgebra Linear",
+            "Física I — Mecânica",
+            "Algoritmos e Programação",
+            "Ciência dos Materiais Elétricos"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Eletricidade e Magnetismo",
+          "disciplinas": [
+            "Cálculo Diferencial e Integral III",
+            "Física II — Eletricidade e Magnetismo",
+            "Circuitos Elétricos I",
+            "Probabilidade e Estatística",
+            "Programação Aplicada à Engenharia"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Circuitos",
+          "disciplinas": [
+            "Circuitos Elétricos II",
+            "Física III — Ondas e Óptica",
+            "Equações Diferenciais",
+            "Eletromagnetismo Aplicado",
+            "Medidas Elétricas e Metrologia"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Eletrônica",
+          "disciplinas": [
+            "Eletrônica Analógica",
+            "Eletrônica Digital",
+            "Sinais e Sistemas",
+            "Conversão Eletromecânica de Energia",
+            "Sensores e Transdutores"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Máquinas Elétricas",
+          "disciplinas": [
+            "Máquinas Elétricas I",
+            "Sistemas de Controle I",
+            "Microcontroladores e Sistemas Embarcados",
+            "Instalações Elétricas Prediais",
+            "Materiais e Isolamentos Elétricos"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Potência e Controle",
+          "disciplinas": [
+            "Máquinas Elétricas II e Acionamentos",
+            "Sistemas de Controle II",
+            "Eletrônica de Potência",
+            "Instalações Elétricas Industriais",
+            "Instrumentação e Automação"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Sistemas de Energia",
+          "disciplinas": [
+            "Sistemas de Energia Elétrica I",
+            "Geração, Transmissão e Distribuição",
+            "Subestações e Equipamentos",
+            "Projeto Elétrico Integrador I",
+            "Engenharia Econômica"
+          ]
+        },
+        {
+          "semestre": 9,
+          "titulo": "9º semestre · Proteção e Renováveis",
+          "disciplinas": [
+            "Sistemas de Energia Elétrica II",
+            "Proteção de Sistemas Elétricos",
+            "Energias Renováveis e Geração Distribuída",
+            "Optativa I",
+            "Trabalho de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 10,
+          "titulo": "10º semestre · Conclusão",
+          "disciplinas": [
+            "Segurança em Instalações Elétricas (NR-10)",
+            "Eficiência Energética e Qualidade de Energia",
+            "Optativa II",
+            "Atividades Complementares",
+            "Estágio Supervisionado",
+            "Trabalho de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "engenharia-florestal",
+      "titulo": "Engenharia Florestal",
+      "area": "engenharias",
+      "pastaArea": "engenharias",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 10,
+      "cargaHoraria": 3600,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Cálculo Diferencial e Integral I",
+            "Química Geral",
+            "Biologia Vegetal",
+            "Introdução à Engenharia Florestal",
+            "Desenho Técnico e Geometria Descritiva"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Ciências básicas",
+          "disciplinas": [
+            "Cálculo Diferencial e Integral II",
+            "Física Aplicada",
+            "Química Orgânica e Analítica",
+            "Botânica Florestal",
+            "Estatística Básica"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Meio físico",
+          "disciplinas": [
+            "Gênese e Física do Solo",
+            "Dendrologia",
+            "Meteorologia e Climatologia Florestal",
+            "Topografia",
+            "Experimentação Florestal"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Ecologia",
+          "disciplinas": [
+            "Ecologia Florestal",
+            "Fisiologia Vegetal",
+            "Fertilidade e Nutrição Florestal",
+            "Genética Florestal",
+            "Geologia e Geomorfologia"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Silvicultura",
+          "disciplinas": [
+            "Silvicultura",
+            "Viveiros e Produção de Mudas",
+            "Sementes Florestais",
+            "Dendrometria",
+            "Microbiologia do Solo"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Inventário",
+          "disciplinas": [
+            "Inventário Florestal",
+            "Entomologia e Patologia Florestal",
+            "Hidrologia e Manejo de Bacias Hidrográficas",
+            "Sensoriamento Remoto e SIG",
+            "Anatomia e Identificação da Madeira"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Manejo",
+          "disciplinas": [
+            "Manejo Florestal Sustentável",
+            "Melhoramento Genético Florestal",
+            "Tecnologia da Madeira",
+            "Mecanização Florestal",
+            "Conservação da Natureza e Fauna Silvestre"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Produção",
+          "disciplinas": [
+            "Colheita e Transporte Florestal",
+            "Produtos Florestais e Celulose",
+            "Economia e Política Florestal",
+            "Sistemas Agroflorestais",
+            "Legislação e Licenciamento Ambiental"
+          ]
+        },
+        {
+          "semestre": 9,
+          "titulo": "9º semestre · Restauração",
+          "disciplinas": [
+            "Recuperação de Áreas Degradadas",
+            "Prevenção e Combate a Incêndios Florestais",
+            "Avaliação de Impactos e Perícia Ambiental",
+            "Optativa I",
+            "Trabalho de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 10,
+          "titulo": "10º semestre · Conclusão",
+          "disciplinas": [
+            "Certificação Florestal e Auditoria",
+            "Empreendedorismo e Inovação",
+            "Optativa II",
+            "Atividades Complementares",
+            "Estágio Supervisionado",
+            "Trabalho de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "engenharia-mecanica",
+      "titulo": "Engenharia Mecânica",
+      "area": "engenharias",
+      "pastaArea": "engenharias",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 10,
+      "cargaHoraria": 3600,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Cálculo Diferencial e Integral I",
+            "Geometria Analítica",
+            "Química Geral",
+            "Introdução à Engenharia Mecânica",
+            "Desenho Técnico"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Exatas",
+          "disciplinas": [
+            "Cálculo Diferencial e Integral II",
+            "Álgebra Linear",
+            "Física I — Mecânica",
+            "Algoritmos e Programação",
+            "Desenho Assistido por Computador (CAD)"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Mecânica geral",
+          "disciplinas": [
+            "Cálculo Diferencial e Integral III",
+            "Física II — Fluidos e Termologia",
+            "Estática dos Corpos Rígidos",
+            "Ciência dos Materiais",
+            "Probabilidade e Estatística"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Sólidos e calor",
+          "disciplinas": [
+            "Equações Diferenciais",
+            "Física III — Eletromagnetismo",
+            "Dinâmica dos Corpos Rígidos",
+            "Resistência dos Materiais I",
+            "Termodinâmica I"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Fluidos",
+          "disciplinas": [
+            "Mecânica dos Fluidos",
+            "Resistência dos Materiais II",
+            "Termodinâmica II",
+            "Metrologia e Ensaios Mecânicos",
+            "Circuitos Elétricos e Eletrotécnica"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Manufatura",
+          "disciplinas": [
+            "Transferência de Calor",
+            "Processos de Fabricação",
+            "Elementos de Máquinas I",
+            "Métodos Numéricos Aplicados",
+            "Pneumática e Hidráulica"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Máquinas",
+          "disciplinas": [
+            "Máquinas Térmicas",
+            "Máquinas de Fluxo",
+            "Elementos de Máquinas II",
+            "Sistemas de Controle",
+            "Usinagem e Comando Numérico (CNC)"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Simulação",
+          "disciplinas": [
+            "Método dos Elementos Finitos",
+            "Vibrações Mecânicas",
+            "Refrigeração e Ar-Condicionado",
+            "Projeto Mecânico I",
+            "Engenharia Econômica"
+          ]
+        },
+        {
+          "semestre": 9,
+          "titulo": "9º semestre · Manutenção e projeto",
+          "disciplinas": [
+            "Manutenção Industrial e Confiabilidade",
+            "Automação e Manufatura Integrada",
+            "Projeto Mecânico II",
+            "Optativa I",
+            "Trabalho de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 10,
+          "titulo": "10º semestre · Conclusão",
+          "disciplinas": [
+            "Segurança do Trabalho",
+            "Empreendedorismo e Inovação",
+            "Optativa II",
+            "Atividades Complementares",
+            "Estágio Supervisionado",
+            "Trabalho de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "engenharia-mecatronica",
+      "titulo": "Engenharia Mecatrônica",
+      "area": "engenharias",
+      "pastaArea": "engenharias",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 10,
+      "cargaHoraria": 3600,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Cálculo Diferencial e Integral I",
+            "Geometria Analítica",
+            "Química Geral",
+            "Introdução à Engenharia Mecatrônica",
+            "Desenho Técnico"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Exatas",
+          "disciplinas": [
+            "Cálculo Diferencial e Integral II",
+            "Álgebra Linear",
+            "Física I — Mecânica",
+            "Algoritmos e Programação",
+            "Ciência dos Materiais"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Mecânica",
+          "disciplinas": [
+            "Cálculo Diferencial e Integral III",
+            "Física II — Eletromagnetismo",
+            "Estática e Dinâmica",
+            "Probabilidade e Estatística",
+            "Programação Aplicada à Engenharia"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Eletricidade",
+          "disciplinas": [
+            "Circuitos Elétricos",
+            "Resistência dos Materiais",
+            "Equações Diferenciais",
+            "Termodinâmica",
+            "Metrologia"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Eletrônica",
+          "disciplinas": [
+            "Eletrônica Analógica",
+            "Eletrônica Digital",
+            "Mecânica dos Fluidos",
+            "Elementos de Máquinas",
+            "Sensores e Transdutores"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Embarcados",
+          "disciplinas": [
+            "Microcontroladores e Sistemas Embarcados",
+            "Sistemas de Controle I",
+            "Eletrônica de Potência",
+            "Pneumática e Hidráulica",
+            "Processos de Fabricação"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Controle",
+          "disciplinas": [
+            "Sistemas de Controle II",
+            "Acionamentos Elétricos",
+            "Automação Industrial e CLP",
+            "Instrumentação Industrial",
+            "Modelagem e Simulação de Sistemas"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Robótica",
+          "disciplinas": [
+            "Robótica Industrial",
+            "Visão Computacional",
+            "Redes Industriais",
+            "Projeto Mecatrônico I",
+            "Engenharia Econômica"
+          ]
+        },
+        {
+          "semestre": 9,
+          "titulo": "9º semestre · Integração",
+          "disciplinas": [
+            "Manufatura Integrada por Computador",
+            "Indústria 4.0 e IoT Industrial",
+            "Projeto Mecatrônico II",
+            "Optativa I",
+            "Trabalho de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 10,
+          "titulo": "10º semestre · Conclusão",
+          "disciplinas": [
+            "Segurança do Trabalho",
+            "Empreendedorismo e Inovação",
+            "Optativa II",
+            "Atividades Complementares",
+            "Estágio Supervisionado",
+            "Trabalho de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "engenharia-producao",
+      "titulo": "Engenharia de Produção",
+      "area": "engenharias",
+      "pastaArea": "engenharias",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 10,
+      "cargaHoraria": 3600,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Cálculo Diferencial e Integral I",
+            "Geometria Analítica",
+            "Química Geral",
+            "Introdução à Engenharia de Produção",
+            "Desenho Técnico"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Exatas",
+          "disciplinas": [
+            "Cálculo Diferencial e Integral II",
+            "Álgebra Linear",
+            "Física I — Mecânica",
+            "Algoritmos e Programação",
+            "Ciência dos Materiais"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Métodos quantitativos",
+          "disciplinas": [
+            "Cálculo Diferencial e Integral III",
+            "Física II — Eletromagnetismo",
+            "Probabilidade e Estatística",
+            "Mecânica dos Sólidos Aplicada",
+            "Teoria Geral da Administração"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Processos e custos",
+          "disciplinas": [
+            "Estatística Aplicada",
+            "Processos de Fabricação",
+            "Contabilidade e Custos Industriais",
+            "Metrologia e Normalização",
+            "Programação Aplicada à Engenharia"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Pesquisa operacional",
+          "disciplinas": [
+            "Pesquisa Operacional I",
+            "Engenharia Econômica",
+            "Gestão da Qualidade",
+            "Engenharia de Métodos e Tempos",
+            "Gestão de Pessoas nas Organizações"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Produção",
+          "disciplinas": [
+            "Pesquisa Operacional II",
+            "Planejamento e Controle da Produção I",
+            "Controle Estatístico do Processo",
+            "Ergonomia",
+            "Automação e Sistemas Produtivos"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Logística",
+          "disciplinas": [
+            "Planejamento e Controle da Produção II",
+            "Logística Empresarial",
+            "Simulação de Sistemas Produtivos",
+            "Engenharia de Segurança do Trabalho",
+            "Gestão de Estoques e Suprimentos"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Gestão",
+          "disciplinas": [
+            "Gestão da Cadeia de Suprimentos",
+            "Produção Enxuta (Lean Manufacturing)",
+            "Gestão de Projetos",
+            "Análise de Dados e Processos",
+            "Gestão Ambiental e Sustentabilidade"
+          ]
+        },
+        {
+          "semestre": 9,
+          "titulo": "9º semestre · Integração",
+          "disciplinas": [
+            "Six Sigma e Melhoria Contínua",
+            "Projeto de Fábrica e Arranjo Físico",
+            "Gestão de Operações em Serviços",
+            "Optativa I",
+            "Trabalho de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 10,
+          "titulo": "10º semestre · Conclusão",
+          "disciplinas": [
+            "Empreendedorismo e Inovação",
+            "Estratégia e Competitividade Industrial",
+            "Optativa II",
+            "Atividades Complementares",
+            "Estágio Supervisionado",
+            "Trabalho de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "engenharia-quimica",
+      "titulo": "Engenharia Química",
+      "area": "engenharias",
+      "pastaArea": "engenharias",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 10,
+      "cargaHoraria": 3600,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Cálculo Diferencial e Integral I",
+            "Geometria Analítica",
+            "Química Geral",
+            "Introdução à Engenharia Química",
+            "Desenho Técnico"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Exatas e Química",
+          "disciplinas": [
+            "Cálculo Diferencial e Integral II",
+            "Álgebra Linear",
+            "Física I — Mecânica",
+            "Química Inorgânica",
+            "Algoritmos e Programação"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Química Analítica",
+          "disciplinas": [
+            "Cálculo Diferencial e Integral III",
+            "Física II — Fluidos e Termologia",
+            "Química Orgânica I",
+            "Química Analítica",
+            "Probabilidade e Estatística"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Balanços",
+          "disciplinas": [
+            "Equações Diferenciais",
+            "Física III — Eletromagnetismo",
+            "Química Orgânica II",
+            "Físico-Química I",
+            "Balanços de Massa e Energia"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Transporte",
+          "disciplinas": [
+            "Fenômenos de Transporte",
+            "Mecânica dos Fluidos",
+            "Físico-Química II",
+            "Cálculo Numérico",
+            "Ciência dos Materiais"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Operações Unitárias",
+          "disciplinas": [
+            "Transferência de Calor",
+            "Operações Unitárias I",
+            "Termodinâmica Aplicada",
+            "Instrumentação e Medição",
+            "Microbiologia Industrial"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Reatores",
+          "disciplinas": [
+            "Transferência de Massa",
+            "Operações Unitárias II",
+            "Cinética Química e Reatores I",
+            "Processos Químicos Industriais",
+            "Modelagem e Simulação de Processos"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Controle de Processos",
+          "disciplinas": [
+            "Cinética Química e Reatores II",
+            "Controle de Processos",
+            "Bioprocessos",
+            "Engenharia Econômica",
+            "Laboratório de Engenharia Química I"
+          ]
+        },
+        {
+          "semestre": 9,
+          "titulo": "9º semestre · Projeto de Plantas",
+          "disciplinas": [
+            "Projeto de Plantas Químicas",
+            "Tratamento de Efluentes",
+            "Laboratório de Engenharia Química II",
+            "Optativa I",
+            "Trabalho de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 10,
+          "titulo": "10º semestre · Conclusão",
+          "disciplinas": [
+            "Segurança de Processos Industriais",
+            "Gestão Ambiental e Sustentabilidade",
+            "Optativa II",
+            "Atividades Complementares",
+            "Estágio Supervisionado",
+            "Trabalho de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "direito",
+      "titulo": "Direito",
+      "area": "humanas",
+      "pastaArea": "humanas",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 10,
+      "cargaHoraria": 3700,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Introdução ao Estudo do Direito",
+            "Teoria Geral do Estado",
+            "Sociologia Jurídica",
+            "Filosofia do Direito",
+            "Linguagem e Argumentação Jurídica"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Constitucional",
+          "disciplinas": [
+            "Direito Constitucional I",
+            "Direito Civil I — Parte Geral",
+            "Ciência Política",
+            "História do Direito",
+            "Hermenêutica Jurídica"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Civil e Penal",
+          "disciplinas": [
+            "Direito Constitucional II",
+            "Direito Civil II — Obrigações",
+            "Direito Penal I",
+            "Economia Política",
+            "Metodologia da Pesquisa Jurídica"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Teoria do Processo",
+          "disciplinas": [
+            "Direito Civil III — Contratos",
+            "Direito Penal II",
+            "Teoria Geral do Processo",
+            "Direito Administrativo I",
+            "Direito Empresarial I"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Processual",
+          "disciplinas": [
+            "Direito Processual Civil I",
+            "Direito Processual Penal I",
+            "Direito Civil IV — Coisas",
+            "Direito Administrativo II",
+            "Direito Empresarial II"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Trabalho",
+          "disciplinas": [
+            "Direito Processual Civil II",
+            "Direito Processual Penal II",
+            "Direito do Trabalho I",
+            "Direito Tributário I",
+            "Direito Civil V — Família"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Tributário",
+          "disciplinas": [
+            "Direito Processual do Trabalho",
+            "Direito do Trabalho II",
+            "Direito Tributário II",
+            "Direito Civil VI — Sucessões",
+            "Direito Internacional"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Prática",
+          "disciplinas": [
+            "Prática Jurídica I",
+            "Direito Previdenciário",
+            "Direito Ambiental",
+            "Direito do Consumidor",
+            "Medicina Legal"
+          ]
+        },
+        {
+          "semestre": 9,
+          "titulo": "9º semestre · Especialização",
+          "disciplinas": [
+            "Prática Jurídica II",
+            "Direito Digital e Proteção de Dados",
+            "Direitos Humanos",
+            "Optativa I",
+            "Trabalho de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 10,
+          "titulo": "10º semestre · Conclusão",
+          "disciplinas": [
+            "Prática Jurídica III",
+            "Ética Profissional e Estatuto da OAB",
+            "Optativa II",
+            "Atividades Complementares",
+            "Estágio Supervisionado",
+            "Trabalho de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "relacoes-internacionais",
+      "titulo": "Relações Internacionais",
+      "area": "humanas",
+      "pastaArea": "humanas",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 8,
+      "cargaHoraria": 3200,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Introdução às Relações Internacionais",
+            "História das Relações Internacionais",
+            "Economia Política Internacional",
+            "Teoria Política",
+            "Língua Estrangeira Instrumental I"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Teoria e Política",
+          "disciplinas": [
+            "Teoria das Relações Internacionais I",
+            "Direito Internacional Público",
+            "História do Pensamento Político",
+            "Macroeconomia",
+            "Língua Estrangeira Instrumental II"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Instituições Globais",
+          "disciplinas": [
+            "Organizações Internacionais",
+            "Política Externa Brasileira",
+            "Direitos Humanos e Direito Humanitário",
+            "Estatística Aplicada",
+            "Língua Estrangeira Instrumental III"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Economia e Comércio",
+          "disciplinas": [
+            "Economia Internacional",
+            "Comércio Exterior I",
+            "Negociações Internacionais",
+            "Geopolítica",
+            "Teoria das Relações Internacionais II"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Segurança e Meio Ambiente",
+          "disciplinas": [
+            "Segurança Internacional",
+            "Política Ambiental Global",
+            "Comércio Exterior II",
+            "Metodologia da Pesquisa em RI",
+            "Integração Regional"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Análise de Conjuntura",
+          "disciplinas": [
+            "Análise de Conjuntura Internacional",
+            "Política Comparada",
+            "Direito Internacional dos Tratados",
+            "Comunicação e Diplomacia",
+            "Optativa I"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Prática e Pesquisa",
+          "disciplinas": [
+            "Simulações Diplomáticas",
+            "Política Comercial e Tarifária",
+            "Optativa II",
+            "Trabalho de Conclusão I",
+            "Estágio Supervisionado I"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Conclusão",
+          "disciplinas": [
+            "Tópicos Especiais em RI",
+            "Optativa III",
+            "Atividades Complementares",
+            "Estágio Supervisionado II",
+            "Trabalho de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "administracao",
+      "titulo": "Administração",
+      "area": "negocios",
+      "pastaArea": "negocios",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 8,
+      "cargaHoraria": 3000,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Introdução à Administração",
+            "Teoria Geral da Administração",
+            "Matemática Aplicada à Gestão",
+            "Contabilidade Geral",
+            "Comunicação Empresarial"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Economia",
+          "disciplinas": [
+            "Economia",
+            "Estatística Aplicada",
+            "Direito Empresarial",
+            "Contabilidade de Custos",
+            "Comportamento Organizacional"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Processos",
+          "disciplinas": [
+            "Administração de Recursos Humanos",
+            "Marketing",
+            "Métodos Quantitativos",
+            "Sistemas de Informação Gerencial",
+            "Ética e Responsabilidade Social"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Operações",
+          "disciplinas": [
+            "Administração da Produção",
+            "Administração Financeira I",
+            "Gestão de Pessoas",
+            "Pesquisa de Mercado",
+            "Direito Trabalhista e Tributário"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Finanças",
+          "disciplinas": [
+            "Administração Financeira II",
+            "Logística e Cadeia de Suprimentos",
+            "Gestão de Projetos",
+            "Análise de Investimentos",
+            "Empreendedorismo"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Estratégia",
+          "disciplinas": [
+            "Planejamento Estratégico",
+            "Gestão da Qualidade",
+            "Negociação e Liderança",
+            "Business Intelligence",
+            "Comércio Exterior"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Especialização",
+          "disciplinas": [
+            "Governança Corporativa e Compliance",
+            "Gestão da Inovação",
+            "Consultoria Empresarial",
+            "Optativa I",
+            "Trabalho de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Conclusão",
+          "disciplinas": [
+            "Jogos de Empresas",
+            "Gestão de Crises",
+            "Optativa II",
+            "Atividades Complementares",
+            "Estágio Supervisionado",
+            "Trabalho de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "ciencias-contabeis",
+      "titulo": "Ciências Contábeis",
+      "area": "negocios",
+      "pastaArea": "negocios",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 8,
+      "cargaHoraria": 3000,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Introdução à Contabilidade",
+            "Matemática Financeira",
+            "Introdução à Administração",
+            "Economia",
+            "Comunicação Empresarial"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Escrituração",
+          "disciplinas": [
+            "Contabilidade Geral I",
+            "Estatística Aplicada",
+            "Direito Empresarial",
+            "Métodos Quantitativos",
+            "Informática Contábil"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Demonstrações",
+          "disciplinas": [
+            "Contabilidade Geral II",
+            "Contabilidade de Custos I",
+            "Legislação Tributária I",
+            "Direito Trabalhista",
+            "Sistemas de Informação Gerencial"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Custos",
+          "disciplinas": [
+            "Contabilidade de Custos II",
+            "Legislação Tributária II",
+            "Contabilidade Societária",
+            "Análise de Balanços",
+            "Administração Financeira"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Análise",
+          "disciplinas": [
+            "Contabilidade Avançada",
+            "Orçamento Empresarial",
+            "Auditoria I",
+            "Contabilidade Pública",
+            "Ética Profissional"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Controle",
+          "disciplinas": [
+            "Auditoria II",
+            "Controladoria",
+            "Perícia Contábil",
+            "Planejamento Tributário",
+            "Contabilidade Internacional"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Especialização",
+          "disciplinas": [
+            "Governança Corporativa",
+            "Contabilidade Gerencial",
+            "Consultoria Contábil",
+            "Optativa I",
+            "Trabalho de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Conclusão",
+          "disciplinas": [
+            "Gestão de Riscos",
+            "Empreendedorismo Contábil",
+            "Optativa II",
+            "Atividades Complementares",
+            "Estágio Supervisionado",
+            "Trabalho de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "ciencias-economicas",
+      "titulo": "Ciências Econômicas",
+      "area": "negocios",
+      "pastaArea": "negocios",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 8,
+      "cargaHoraria": 3000,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Introdução à Economia",
+            "Matemática para Economistas",
+            "História Econômica",
+            "Introdução à Administração",
+            "Comunicação e Expressão"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Teoria",
+          "disciplinas": [
+            "Microeconomia I",
+            "Cálculo para Economia",
+            "Contabilidade Básica",
+            "Filosofia e Ética",
+            "Sociologia Econômica"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Análise",
+          "disciplinas": [
+            "Microeconomia II",
+            "Macroeconomia I",
+            "Estatística I",
+            "Álgebra Linear",
+            "Direito e Legislação Econômica"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Macro",
+          "disciplinas": [
+            "Macroeconomia II",
+            "Estatística II",
+            "Economia Brasileira",
+            "Matemática Financeira",
+            "Teoria Monetária"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Métodos",
+          "disciplinas": [
+            "Econometria I",
+            "Economia Internacional",
+            "Finanças Públicas",
+            "Teoria dos Jogos",
+            "Economia do Trabalho"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Políticas",
+          "disciplinas": [
+            "Econometria II",
+            "Políticas Públicas",
+            "Economia Monetária e Bancária",
+            "Economia Industrial",
+            "Economia do Setor Público"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Especialização",
+          "disciplinas": [
+            "Economia Ambiental",
+            "Desenvolvimento Econômico",
+            "Análise de Mercados Financeiros",
+            "Optativa I",
+            "Trabalho de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Conclusão",
+          "disciplinas": [
+            "Avaliação de Projetos",
+            "Economia Digital",
+            "Optativa II",
+            "Atividades Complementares",
+            "Estágio Supervisionado",
+            "Trabalho de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "gestao-comercial",
+      "titulo": "Gestão Comercial",
+      "area": "negocios",
+      "pastaArea": "negocios",
+      "nivel": "Tecnólogo",
+      "modalidade": "Presencial",
+      "semestres": 6,
+      "cargaHoraria": 2400,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Introdução à Administração",
+            "Fundamentos de Vendas",
+            "Matemática Aplicada",
+            "Comunicação Empresarial",
+            "Informática Aplicada"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Prospecção",
+          "disciplinas": [
+            "Técnicas de Vendas",
+            "Psicologia do Consumidor",
+            "Contabilidade Básica",
+            "Estatística Aplicada",
+            "Direito do Consumidor"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Negociação",
+          "disciplinas": [
+            "Negociação e Persuasão",
+            "Marketing para Vendas",
+            "Administração Financeira",
+            "Gestão de Pessoas",
+            "Sistemas de Gestão Comercial"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Equipes",
+          "disciplinas": [
+            "Gestão de Equipes de Vendas",
+            "Planejamento Comercial",
+            "Precificação",
+            "Logística Comercial",
+            "Comércio Eletrônico"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Indicadores",
+          "disciplinas": [
+            "Indicadores de Desempenho Comercial",
+            "Gestão de Carteira de Clientes",
+            "CRM e Pós-venda",
+            "Gestão de Canais",
+            "Empreendedorismo"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Conclusão",
+          "disciplinas": [
+            "Gestão Estratégica de Vendas",
+            "Atividades Complementares",
+            "Estágio Supervisionado",
+            "Projeto Integrador"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "marketing",
+      "titulo": "Marketing",
+      "area": "negocios",
+      "pastaArea": "negocios",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 8,
+      "cargaHoraria": 3000,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Introdução ao Marketing",
+            "Introdução à Administração",
+            "Psicologia do Consumidor",
+            "Comunicação e Expressão",
+            "Matemática Aplicada"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Consumidor",
+          "disciplinas": [
+            "Comportamento do Consumidor",
+            "Estatística Aplicada",
+            "Economia",
+            "Sociologia do Consumo",
+            "Contabilidade Básica"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Pesquisa",
+          "disciplinas": [
+            "Pesquisa de Mercado",
+            "Marketing de Serviços",
+            "Redação Publicitária",
+            "Direito do Consumidor",
+            "Sistemas de Informação"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Marca",
+          "disciplinas": [
+            "Gestão de Marcas",
+            "Composto de Marketing",
+            "Design para Comunicação",
+            "Administração Financeira",
+            "Métodos Quantitativos"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Digital",
+          "disciplinas": [
+            "Marketing Digital",
+            "Mídias Sociais",
+            "E-commerce",
+            "Gestão de Produtos",
+            "Análise de Dados de Marketing"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Canais",
+          "disciplinas": [
+            "Marketing de Conteúdo",
+            "Gestão de Vendas",
+            "Mídia e Planejamento",
+            "Marketing Internacional",
+            "Neuromarketing"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Especialização",
+          "disciplinas": [
+            "Gestão de Relacionamento com o Cliente",
+            "Branded Content",
+            "Growth Marketing",
+            "Optativa I",
+            "Trabalho de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Conclusão",
+          "disciplinas": [
+            "Planejamento Estratégico de Marketing",
+            "Marketing Social e Sustentabilidade",
+            "Optativa II",
+            "Atividades Complementares",
+            "Estágio Supervisionado",
+            "Trabalho de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "biologia",
+      "titulo": "Ciências Biológicas",
+      "area": "saude",
+      "pastaArea": "saude",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 8,
+      "cargaHoraria": 3200,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Biologia Celular",
+            "Química Geral",
+            "Bioestatística",
+            "Metodologia Científica",
+            "Histologia e Embriologia"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Diversidade I",
+          "disciplinas": [
+            "Zoologia de Invertebrados I",
+            "Botânica I — Criptógamas",
+            "Bioquímica",
+            "Química Orgânica",
+            "Biofísica"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Diversidade II",
+          "disciplinas": [
+            "Zoologia de Invertebrados II",
+            "Botânica II — Fanerógamas",
+            "Genética",
+            "Microbiologia",
+            "Anatomia Comparada"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Fisiologia",
+          "disciplinas": [
+            "Zoologia de Vertebrados",
+            "Fisiologia Vegetal",
+            "Fisiologia Animal Comparada",
+            "Parasitologia",
+            "Ecologia Geral"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Ecologia",
+          "disciplinas": [
+            "Ecologia de Populações e Comunidades",
+            "Biologia Molecular",
+            "Evolução",
+            "Imunologia",
+            "Sistemática Filogenética"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Ambiente",
+          "disciplinas": [
+            "Paleontologia",
+            "Biogeografia",
+            "Educação Ambiental",
+            "Legislação Ambiental",
+            "Biologia da Conservação"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Aplicações",
+          "disciplinas": [
+            "Biotecnologia",
+            "Ecotoxicologia",
+            "Avaliação de Impacto Ambiental",
+            "Estágio Supervisionado I",
+            "Trabalho de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Conclusão",
+          "disciplinas": [
+            "Bioética e Biossegurança",
+            "Gestão de Projetos Ambientais",
+            "Atividades Complementares",
+            "Estágio Supervisionado II",
+            "Trabalho de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "biomedicina",
+      "titulo": "Biomedicina",
+      "area": "saude",
+      "pastaArea": "saude",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 8,
+      "cargaHoraria": 3200,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos da vida",
+          "disciplinas": [
+            "Biologia Celular",
+            "Anatomia Humana",
+            "Química Geral",
+            "Histologia e Embriologia",
+            "Metodologia Científica"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Bases bioquímicas",
+          "disciplinas": [
+            "Bioquímica I",
+            "Fisiologia Humana",
+            "Biofísica",
+            "Genética",
+            "Bioestatística"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Agentes e defesas",
+          "disciplinas": [
+            "Bioquímica II",
+            "Microbiologia",
+            "Imunologia",
+            "Parasitologia",
+            "Bioética e Biossegurança"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Mecanismos da doença",
+          "disciplinas": [
+            "Patologia Geral",
+            "Farmacologia",
+            "Biologia Molecular",
+            "Citologia Clínica",
+            "Epidemiologia"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Diagnóstico laboratorial",
+          "disciplinas": [
+            "Hematologia Clínica",
+            "Bioquímica Clínica",
+            "Microbiologia Clínica",
+            "Imunologia Clínica",
+            "Urinálise e Fluidos Corporais"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Imagem e toxicologia",
+          "disciplinas": [
+            "Imagenologia",
+            "Toxicologia",
+            "Genética Molecular Humana",
+            "Micologia e Virologia",
+            "Controle de Qualidade Laboratorial"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Biotecnologia e gestão",
+          "disciplinas": [
+            "Biotecnologia",
+            "Gestão de Laboratório",
+            "Banco de Sangue e Hemoterapia",
+            "Reprodução Humana Assistida",
+            "Trabalho de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Prática profissional",
+          "disciplinas": [
+            "Estágio Supervisionado",
+            "Perícia Criminal e Biomedicina Forense",
+            "Saúde Pública",
+            "Atividades Complementares",
+            "Trabalho de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "educacao-fisica",
+      "titulo": "Educação Física",
+      "area": "saude",
+      "pastaArea": "saude",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 8,
+      "cargaHoraria": 3200,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Anatomia Humana I",
+            "Biologia Celular",
+            "História da Educação Física",
+            "Introdução à Educação Física",
+            "Ginástica"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Bases biológicas",
+          "disciplinas": [
+            "Anatomia Humana II",
+            "Fisiologia Humana",
+            "Cinesiologia",
+            "Atletismo",
+            "Esportes Individuais"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Movimento humano",
+          "disciplinas": [
+            "Biomecânica",
+            "Fisiologia do Exercício I",
+            "Desenvolvimento Motor",
+            "Natação",
+            "Esportes Coletivos I"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Aprendizagem e prática",
+          "disciplinas": [
+            "Fisiologia do Exercício II",
+            "Aprendizagem Motora",
+            "Esportes Coletivos II",
+            "Dança e Expressão Corporal",
+            "Primeiros Socorros"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Treinamento",
+          "disciplinas": [
+            "Musculação e Treinamento de Força",
+            "Avaliação Física",
+            "Lutas",
+            "Nutrição Aplicada ao Exercício",
+            "Psicologia do Esporte"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Prescrição",
+          "disciplinas": [
+            "Prescrição de Exercício",
+            "Treinamento Esportivo",
+            "Exercício para Grupos Especiais",
+            "Metodologia da Pesquisa",
+            "Estágio Supervisionado I"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Aplicação profissional",
+          "disciplinas": [
+            "Gestão do Esporte",
+            "Exercício e Reabilitação",
+            "Esporte, Lazer e Sociedade",
+            "Estágio Supervisionado II",
+            "Trabalho de Conclusão de Curso I"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Conclusão",
+          "disciplinas": [
+            "Consultoria e Personal Training",
+            "Ética e Legislação Profissional",
+            "Atividades Complementares",
+            "Estágio Supervisionado III",
+            "Trabalho de Conclusão de Curso II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "farmacia",
+      "titulo": "Farmácia",
+      "area": "saude",
+      "pastaArea": "saude",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 10,
+      "cargaHoraria": 4000,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Química Geral",
+            "Biologia Celular",
+            "Anatomia Humana",
+            "Histologia",
+            "Introdução às Ciências Farmacêuticas"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Bases biológicas",
+          "disciplinas": [
+            "Química Orgânica I",
+            "Bioquímica I",
+            "Fisiologia Humana",
+            "Biofísica",
+            "Genética"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Microbiologia",
+          "disciplinas": [
+            "Química Orgânica II",
+            "Bioquímica II",
+            "Microbiologia",
+            "Imunologia",
+            "Parasitologia"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Análise química",
+          "disciplinas": [
+            "Química Analítica",
+            "Fisiopatologia",
+            "Patologia Geral",
+            "Bioestatística",
+            "Saúde Pública e Epidemiologia"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · O medicamento",
+          "disciplinas": [
+            "Química Farmacêutica",
+            "Farmacognosia",
+            "Farmacotécnica I",
+            "Farmacologia I",
+            "Métodos Instrumentais de Análise"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Farmacotécnica",
+          "disciplinas": [
+            "Farmacotécnica II",
+            "Farmacologia II",
+            "Tecnologia Farmacêutica",
+            "Bromatologia",
+            "Cosmetologia"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Análises clínicas",
+          "disciplinas": [
+            "Hematologia Clínica",
+            "Bioquímica Clínica",
+            "Citologia Clínica",
+            "Microbiologia Clínica",
+            "Controle de Qualidade"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Clínica e toxicologia",
+          "disciplinas": [
+            "Toxicologia",
+            "Farmácia Hospitalar",
+            "Farmacotécnica Magistral Avançada",
+            "Deontologia e Legislação Farmacêutica",
+            "Metodologia Científica"
+          ]
+        },
+        {
+          "semestre": 9,
+          "titulo": "9º semestre · Atenção farmacêutica",
+          "disciplinas": [
+            "Atenção Farmacêutica",
+            "Farmácia Clínica",
+            "Farmacoepidemiologia e Farmacovigilância",
+            "Estágio Supervisionado I",
+            "Trabalho de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 10,
+          "titulo": "10º semestre · Conclusão",
+          "disciplinas": [
+            "Gestão Farmacêutica e Assistência à Saúde",
+            "Optativa",
+            "Atividades Complementares",
+            "Estágio Supervisionado II",
+            "Trabalho de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "fisioterapia",
+      "titulo": "Fisioterapia",
+      "area": "saude",
+      "pastaArea": "saude",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 10,
+      "cargaHoraria": 4000,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Bases morfofuncionais",
+          "disciplinas": [
+            "Anatomia Humana I",
+            "Biologia Celular",
+            "Histologia",
+            "Bioquímica",
+            "Introdução à Fisioterapia"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Fisiologia e movimento",
+          "disciplinas": [
+            "Anatomia Humana II",
+            "Fisiologia Humana I",
+            "Biofísica",
+            "Cinesiologia",
+            "Saúde Coletiva"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Biomecânica",
+          "disciplinas": [
+            "Fisiologia Humana II",
+            "Biomecânica",
+            "Patologia Geral",
+            "Fisiologia do Exercício",
+            "Metodologia Científica"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Avaliação clínica",
+          "disciplinas": [
+            "Semiologia",
+            "Avaliação Cinético-Funcional",
+            "Farmacologia",
+            "Recursos Terapêuticos Manuais",
+            "Ética e Deontologia Profissional"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Recursos terapêuticos",
+          "disciplinas": [
+            "Eletrotermofototerapia",
+            "Cinesioterapia",
+            "Fisioterapia Ortopédica I",
+            "Traumatologia e Ortopedia",
+            "Bioestatística Aplicada"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Áreas clínicas",
+          "disciplinas": [
+            "Fisioterapia Ortopédica II",
+            "Fisioterapia Neurofuncional I",
+            "Fisioterapia Cardiorrespiratória I",
+            "Neuroanatomia Funcional",
+            "Hidroterapia"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Especialidades",
+          "disciplinas": [
+            "Fisioterapia Neurofuncional II",
+            "Fisioterapia Cardiorrespiratória II",
+            "Fisioterapia na Saúde da Mulher",
+            "Fisioterapia Pediátrica",
+            "Órteses e Próteses"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Esporte e intensivismo",
+          "disciplinas": [
+            "Fisioterapia Esportiva",
+            "Fisioterapia em UTI",
+            "Fisioterapia Dermatofuncional",
+            "Fisioterapia Gerontológica",
+            "Trabalho de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 9,
+          "titulo": "9º semestre · Prática supervisionada",
+          "disciplinas": [
+            "Estágio Supervisionado I",
+            "Fisioterapia do Trabalho e Ergonomia",
+            "Fisioterapia na Atenção Básica",
+            "Optativa I",
+            "Trabalho de Conclusão II"
+          ]
+        },
+        {
+          "semestre": 10,
+          "titulo": "10º semestre · Conclusão",
+          "disciplinas": [
+            "Estágio Supervisionado II",
+            "Gestão em Serviços de Saúde",
+            "Optativa II",
+            "Atividades Complementares",
+            "Prática Baseada em Evidências"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "fonoaudiologia",
+      "titulo": "Fonoaudiologia",
+      "area": "saude",
+      "pastaArea": "saude",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 8,
+      "cargaHoraria": 3200,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Anatomia Humana",
+            "Biologia Celular",
+            "Introdução à Fonoaudiologia",
+            "Linguística",
+            "Psicologia do Desenvolvimento"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Bases biológicas",
+          "disciplinas": [
+            "Fisiologia Humana",
+            "Neuroanatomia",
+            "Fonética e Fonologia",
+            "Física Acústica",
+            "Saúde Coletiva"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Audição e linguagem",
+          "disciplinas": [
+            "Audiologia I",
+            "Aquisição da Linguagem",
+            "Voz I",
+            "Patologia Aplicada à Fonoaudiologia",
+            "Metodologia Científica"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Voz e motricidade",
+          "disciplinas": [
+            "Audiologia II",
+            "Voz II",
+            "Motricidade Orofacial I",
+            "Linguagem Oral e Escrita",
+            "Neurolinguagem"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Clínica fonoaudiológica",
+          "disciplinas": [
+            "Audiologia III",
+            "Motricidade Orofacial II",
+            "Disfagia",
+            "Próteses Auditivas",
+            "Avaliação e Diagnóstico Fonoaudiológico"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Saúde e reabilitação",
+          "disciplinas": [
+            "Audiologia Ocupacional",
+            "Fonoaudiologia Hospitalar",
+            "Fonoaudiologia Educacional",
+            "Reabilitação Auditiva",
+            "Ética Profissional"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Prática supervisionada",
+          "disciplinas": [
+            "Estágio Supervisionado I",
+            "Audiologia Infantil",
+            "Fonoaudiologia em Saúde Pública",
+            "Saúde Auditiva e Prevenção",
+            "Trabalho de Conclusão de Curso I"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Conclusão",
+          "disciplinas": [
+            "Estágio Supervisionado II",
+            "Fonoaudiologia Gerontológica",
+            "Gestão e Empreendedorismo em Saúde",
+            "Atividades Complementares",
+            "Trabalho de Conclusão de Curso II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "medicina-veterinaria",
+      "titulo": "Medicina Veterinária",
+      "area": "saude",
+      "pastaArea": "saude",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 10,
+      "cargaHoraria": 4000,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Anatomia Veterinária I",
+            "Biologia Celular",
+            "Histologia e Embriologia",
+            "Bioquímica",
+            "Introdução à Medicina Veterinária"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Morfofisiologia",
+          "disciplinas": [
+            "Anatomia Veterinária II",
+            "Fisiologia Veterinária I",
+            "Genética Animal",
+            "Microbiologia",
+            "Bem-Estar Animal"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Agentes e defesa",
+          "disciplinas": [
+            "Fisiologia Veterinária II",
+            "Imunologia",
+            "Parasitologia Veterinária",
+            "Zootecnia Geral",
+            "Epidemiologia e Bioestatística"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Patologia",
+          "disciplinas": [
+            "Patologia Geral",
+            "Farmacologia Veterinária",
+            "Nutrição Animal",
+            "Patologia Clínica Veterinária",
+            "Deontologia e Legislação Veterinária"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Semiologia",
+          "disciplinas": [
+            "Semiologia Veterinária",
+            "Patologia Especial",
+            "Técnica Cirúrgica Veterinária",
+            "Bovinocultura de Corte e de Leite",
+            "Diagnóstico por Imagem"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Clínica",
+          "disciplinas": [
+            "Clínica Médica de Pequenos Animais I",
+            "Anestesiologia Veterinária",
+            "Doenças Infecciosas dos Animais",
+            "Avicultura e Suinocultura",
+            "Reprodução Animal"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Cirurgia",
+          "disciplinas": [
+            "Clínica Médica de Pequenos Animais II",
+            "Cirurgia Veterinária",
+            "Obstetrícia Veterinária",
+            "Clínica de Grandes Animais",
+            "Toxicologia Veterinária"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Saúde pública",
+          "disciplinas": [
+            "Inspeção de Produtos de Origem Animal",
+            "Saúde Pública e Zoonoses",
+            "Tecnologia de Alimentos",
+            "Animais Silvestres e Exóticos",
+            "Emergência e Terapia Intensiva Veterinária"
+          ]
+        },
+        {
+          "semestre": 9,
+          "titulo": "9º semestre · Prática hospitalar",
+          "disciplinas": [
+            "Clínica Cirúrgica Aplicada",
+            "Sanidade e Manejo de Rebanhos",
+            "Optativa I",
+            "Estágio Curricular Supervisionado I",
+            "Trabalho de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 10,
+          "titulo": "10º semestre · Conclusão",
+          "disciplinas": [
+            "Gestão de Clínicas e Empreendedorismo",
+            "Optativa II",
+            "Atividades Complementares",
+            "Estágio Curricular Supervisionado II",
+            "Trabalho de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "medicina",
+      "titulo": "Medicina",
+      "area": "saude",
+      "pastaArea": "saude",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 12,
+      "cargaHoraria": 7200,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Ciclo básico",
+          "disciplinas": [
+            "Anatomia Humana I",
+            "Biologia Celular",
+            "Histologia",
+            "Bioquímica",
+            "Introdução à Medicina e Saúde"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Morfologia",
+          "disciplinas": [
+            "Anatomia Humana II",
+            "Embriologia",
+            "Fisiologia I",
+            "Genética Médica",
+            "Bioestatística e Epidemiologia"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Agentes e defesa",
+          "disciplinas": [
+            "Fisiologia II",
+            "Imunologia",
+            "Microbiologia",
+            "Parasitologia",
+            "Saúde Coletiva"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Mecanismos da doença",
+          "disciplinas": [
+            "Patologia Geral",
+            "Farmacologia",
+            "Fisiopatologia",
+            "Semiologia Médica I",
+            "Habilidades e Atitudes Médicas"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Semiologia",
+          "disciplinas": [
+            "Semiologia Médica II",
+            "Patologia Especial",
+            "Farmacologia Clínica",
+            "Diagnóstico por Imagem",
+            "Medicina Baseada em Evidências"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Atenção primária",
+          "disciplinas": [
+            "Clínica Médica I",
+            "Atenção Primária à Saúde",
+            "Psicologia Médica",
+            "Nutrição Clínica",
+            "Métodos Diagnósticos Laboratoriais"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Clínica e cirurgia",
+          "disciplinas": [
+            "Clínica Médica II",
+            "Cirurgia I",
+            "Pediatria",
+            "Psiquiatria",
+            "Terapêutica Clínica"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Ciclo da vida",
+          "disciplinas": [
+            "Clínica Médica III",
+            "Cirurgia II",
+            "Ginecologia e Obstetrícia",
+            "Urgência e Emergência",
+            "Medicina Legal e Bioética"
+          ]
+        },
+        {
+          "semestre": 9,
+          "titulo": "9º semestre · Especialidades",
+          "disciplinas": [
+            "Cardiologia",
+            "Neurologia Clínica",
+            "Ortopedia e Traumatologia",
+            "Dermatologia",
+            "Oftalmologia e Otorrinolaringologia"
+          ]
+        },
+        {
+          "semestre": 10,
+          "titulo": "10º semestre · Pré-internato",
+          "disciplinas": [
+            "Infectologia",
+            "Geriatria",
+            "Oncologia",
+            "Medicina do Trabalho",
+            "Trabalho de Conclusão de Curso I"
+          ]
+        },
+        {
+          "semestre": 11,
+          "titulo": "11º semestre · Internato I",
+          "disciplinas": [
+            "Internato em Clínica Médica",
+            "Internato em Cirurgia",
+            "Internato em Pediatria",
+            "Internato em Urgência e Emergência",
+            "Estágio em Saúde Mental"
+          ]
+        },
+        {
+          "semestre": 12,
+          "titulo": "12º semestre · Internato II",
+          "disciplinas": [
+            "Internato em Ginecologia e Obstetrícia",
+            "Internato em Saúde da Família",
+            "Internato em Terapia Intensiva",
+            "Estágio Eletivo Supervisionado",
+            "Trabalho de Conclusão de Curso II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "nutricao",
+      "titulo": "Nutrição",
+      "area": "saude",
+      "pastaArea": "saude",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 8,
+      "cargaHoraria": 3200,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Anatomia Humana",
+            "Biologia Celular",
+            "Química Geral",
+            "Introdução à Nutrição",
+            "Metodologia Científica"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Bases biológicas",
+          "disciplinas": [
+            "Fisiologia Humana",
+            "Bioquímica I",
+            "Histologia e Embriologia",
+            "Química dos Alimentos",
+            "Psicologia Aplicada à Saúde"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Ciência dos alimentos",
+          "disciplinas": [
+            "Bioquímica II",
+            "Microbiologia de Alimentos",
+            "Bromatologia",
+            "Técnica Dietética I",
+            "Bioestatística"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Avaliação",
+          "disciplinas": [
+            "Avaliação Nutricional",
+            "Técnica Dietética II",
+            "Nutrição nos Ciclos da Vida",
+            "Higiene e Vigilância Sanitária",
+            "Patologia Geral"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Dietoterapia",
+          "disciplinas": [
+            "Dietoterapia I",
+            "Nutrição Materno-Infantil",
+            "Farmacologia e Interação Fármaco-Nutriente",
+            "Educação Alimentar e Nutricional",
+            "Imunologia"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Clínica",
+          "disciplinas": [
+            "Dietoterapia II",
+            "Nutrição Clínica",
+            "Nutrição Esportiva",
+            "Administração de UAN",
+            "Saúde Coletiva"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Prática supervisionada",
+          "disciplinas": [
+            "Estágio Supervisionado em Nutrição Clínica",
+            "Nutrição e Saúde Pública",
+            "Ética e Legislação Profissional",
+            "Marketing e Consultoria em Nutrição",
+            "Trabalho de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Conclusão",
+          "disciplinas": [
+            "Estágio Supervisionado em Saúde Coletiva",
+            "Estágio Supervisionado em Alimentação Coletiva",
+            "Empreendedorismo em Nutrição",
+            "Atividades Complementares",
+            "Trabalho de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "odontologia",
+      "titulo": "Odontologia",
+      "area": "saude",
+      "pastaArea": "saude",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 8,
+      "cargaHoraria": 4000,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Bases biológicas",
+          "disciplinas": [
+            "Anatomia Humana",
+            "Histologia e Embriologia",
+            "Bioquímica",
+            "Citologia e Biologia Celular",
+            "Introdução à Odontologia"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Morfologia dental",
+          "disciplinas": [
+            "Anatomia Dental",
+            "Oclusão",
+            "Fisiologia",
+            "Microbiologia e Imunologia",
+            "Bioética e Deontologia"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Diagnóstico",
+          "disciplinas": [
+            "Patologia Geral",
+            "Materiais Dentários",
+            "Radiologia Odontológica",
+            "Semiologia e Estomatologia",
+            "Farmacologia e Terapêutica"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Primeiras clínicas",
+          "disciplinas": [
+            "Dentística I",
+            "Periodontia I",
+            "Anestesiologia Odontológica",
+            "Cariologia e Prevenção",
+            "Biossegurança e Ergonomia"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Endodontia",
+          "disciplinas": [
+            "Dentística II",
+            "Endodontia I",
+            "Periodontia II",
+            "Cirurgia Oral I",
+            "Prótese Parcial Removível"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Reabilitação",
+          "disciplinas": [
+            "Endodontia II",
+            "Cirurgia Oral II",
+            "Prótese Fixa",
+            "Odontopediatria",
+            "Ortodontia Preventiva"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Clínica integrada",
+          "disciplinas": [
+            "Clínica Integrada I",
+            "Prótese Total",
+            "Urgências Odontológicas",
+            "Odontologia em Saúde Coletiva",
+            "Trabalho de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Conclusão",
+          "disciplinas": [
+            "Clínica Integrada II",
+            "Estágio Supervisionado",
+            "Implantodontia",
+            "Odontologia Legal",
+            "Trabalho de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "terapia-ocupacional",
+      "titulo": "Terapia Ocupacional",
+      "area": "saude",
+      "pastaArea": "saude",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 8,
+      "cargaHoraria": 3200,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Bases da saúde",
+          "disciplinas": [
+            "Anatomia Humana",
+            "Fundamentos da Terapia Ocupacional",
+            "Psicologia do Desenvolvimento",
+            "Sociologia da Saúde",
+            "Saúde Coletiva"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Corpo e movimento",
+          "disciplinas": [
+            "Fisiologia Humana",
+            "Cinesiologia",
+            "Neuroanatomia",
+            "Análise da Atividade",
+            "Psicologia Aplicada à Saúde"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Recursos terapêuticos",
+          "disciplinas": [
+            "Atividades e Recursos Terapêuticos I",
+            "Patologia",
+            "Neurologia Aplicada",
+            "Metodologia Científica",
+            "Ética Profissional"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Reabilitação física",
+          "disciplinas": [
+            "Terapia Ocupacional em Reabilitação Física I",
+            "Atividades e Recursos Terapêuticos II",
+            "Órteses e Adaptações",
+            "Avaliação Funcional",
+            "Bioestatística"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Saúde mental",
+          "disciplinas": [
+            "Terapia Ocupacional em Saúde Mental I",
+            "Terapia Ocupacional em Reabilitação Física II",
+            "Psicopatologia",
+            "Grupos e Processos Terapêuticos",
+            "Políticas Públicas de Saúde"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Ciclos de vida",
+          "disciplinas": [
+            "Terapia Ocupacional Pediátrica",
+            "Terapia Ocupacional em Gerontologia",
+            "Terapia Ocupacional em Saúde Mental II",
+            "Tecnologia Assistiva",
+            "Acessibilidade e Desenho Universal"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Prática supervisionada",
+          "disciplinas": [
+            "Estágio Supervisionado I",
+            "Terapia Ocupacional Social",
+            "Saúde do Trabalhador",
+            "Gestão de Serviços de Saúde",
+            "Trabalho de Conclusão de Curso I"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Conclusão",
+          "disciplinas": [
+            "Estágio Supervisionado II",
+            "Terapia Ocupacional em Contextos Comunitários",
+            "Empreendedorismo em Saúde",
+            "Atividades Complementares",
+            "Trabalho de Conclusão de Curso II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "analise-e-desenvolvimento-de-sistemas",
+      "titulo": "Análise e Desenvolvimento de Sistemas",
+      "area": "ti",
+      "pastaArea": "tecnologia",
+      "nivel": "Tecnólogo",
+      "modalidade": "Presencial",
+      "semestres": 5,
+      "cargaHoraria": 2400,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Lógica de Programação",
+            "Introdução à Computação",
+            "Matemática Aplicada",
+            "Comunicação e Expressão",
+            "Fundamentos de Sistemas"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Programação",
+          "disciplinas": [
+            "Programação Orientada a Objetos",
+            "Estruturas de Dados",
+            "Banco de Dados I",
+            "Engenharia de Software I",
+            "Estatística"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Desenvolvimento Web",
+          "disciplinas": [
+            "Desenvolvimento Web Front-end",
+            "Desenvolvimento Web Back-end",
+            "Banco de Dados II",
+            "Redes de Computadores",
+            "Engenharia de Software II"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Mobile e Integração",
+          "disciplinas": [
+            "Desenvolvimento Mobile",
+            "Integração de Sistemas",
+            "Segurança da Informação",
+            "DevOps",
+            "Testes de Software",
+            "Projeto Integrador I"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Arquitetura e Conclusão",
+          "disciplinas": [
+            "Arquitetura de Software",
+            "Computação em Nuvem",
+            "Gestão de Projetos",
+            "Empreendedorismo",
+            "Estágio Supervisionado",
+            "Trabalho de Conclusão de Curso",
+            "Atividades Complementares"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "ciencia-da-computacao",
+      "titulo": "Ciência da Computação",
+      "area": "ti",
+      "pastaArea": "tecnologia",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 8,
+      "cargaHoraria": 3200,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Algoritmos e Programação I",
+            "Matemática Discreta",
+            "Introdução à Computação",
+            "Cálculo Diferencial e Integral I",
+            "Comunicação e Expressão"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Programação",
+          "disciplinas": [
+            "Algoritmos e Programação II",
+            "Estruturas de Dados I",
+            "Álgebra Linear",
+            "Arquitetura de Computadores",
+            "Cálculo Diferencial e Integral II"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Sistemas",
+          "disciplinas": [
+            "Programação Orientada a Objetos",
+            "Estruturas de Dados II",
+            "Sistemas Operacionais",
+            "Banco de Dados I",
+            "Probabilidade e Estatística"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Engenharia",
+          "disciplinas": [
+            "Engenharia de Software I",
+            "Banco de Dados II",
+            "Redes de Computadores",
+            "Desenvolvimento Web",
+            "Análise e Projeto de Sistemas"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Desenvolvimento",
+          "disciplinas": [
+            "Engenharia de Software II",
+            "Desenvolvimento de Aplicações",
+            "Computação em Nuvem",
+            "Segurança da Informação",
+            "Interação Humano-Computador"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Inteligência",
+          "disciplinas": [
+            "Inteligência Artificial",
+            "Aprendizado de Máquina",
+            "Computação Distribuída",
+            "DevOps e Integração Contínua",
+            "Empreendedorismo e Inovação"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Especialização",
+          "disciplinas": [
+            "Computação Gráfica",
+            "Sistemas Inteligentes",
+            "Tópicos Avançados em Computação",
+            "Auditoria e Governança de TI",
+            "Optativa I",
+            "Projeto de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Conclusão",
+          "disciplinas": [
+            "Arquitetura de Software",
+            "Segurança de Sistemas",
+            "Optativa II",
+            "Atividades Complementares",
+            "Estágio Supervisionado",
+            "Projeto de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "ciencia-de-dados",
+      "titulo": "Ciência de Dados",
+      "area": "ti",
+      "pastaArea": "tecnologia",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 8,
+      "cargaHoraria": 3200,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Algoritmos e Programação I",
+            "Cálculo Diferencial e Integral I",
+            "Introdução à Ciência de Dados",
+            "Matemática Discreta",
+            "Comunicação e Expressão"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Programação e Álgebra",
+          "disciplinas": [
+            "Algoritmos e Programação II",
+            "Estruturas de Dados",
+            "Álgebra Linear",
+            "Cálculo Diferencial e Integral II",
+            "Probabilidade"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Bases de Dados",
+          "disciplinas": [
+            "Banco de Dados I",
+            "Inferência Estatística",
+            "Programação para Análise de Dados",
+            "Sistemas Operacionais",
+            "Métodos Numéricos"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Modelagem",
+          "disciplinas": [
+            "Banco de Dados II",
+            "Modelos de Regressão",
+            "Visualização de Dados",
+            "Redes de Computadores",
+            "Séries Temporais"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Aprendizado de Máquina",
+          "disciplinas": [
+            "Aprendizado de Máquina I",
+            "Mineração de Dados",
+            "Engenharia de Dados",
+            "Computação em Nuvem",
+            "Otimização"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Big Data",
+          "disciplinas": [
+            "Aprendizado de Máquina II",
+            "Big Data e Processamento Distribuído",
+            "Processamento de Linguagem Natural",
+            "Ética, Privacidade e LGPD",
+            "Business Intelligence"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Especialização",
+          "disciplinas": [
+            "Aprendizado Profundo",
+            "MLOps e Modelos em Produção",
+            "Tópicos Avançados em Ciência de Dados",
+            "Optativa I",
+            "Projeto de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Conclusão",
+          "disciplinas": [
+            "Ciência de Dados Aplicada",
+            "Empreendedorismo e Inovação",
+            "Optativa II",
+            "Atividades Complementares",
+            "Estágio Supervisionado",
+            "Projeto de Conclusão II"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "engenharia-de-software",
+      "titulo": "Engenharia de Software",
+      "area": "ti",
+      "pastaArea": "tecnologia",
+      "nivel": "Bacharelado",
+      "modalidade": "Presencial",
+      "semestres": 8,
+      "cargaHoraria": 3200,
+      "matriz": [
+        {
+          "semestre": 1,
+          "titulo": "1º semestre · Fundamentos",
+          "disciplinas": [
+            "Algoritmos e Programação I",
+            "Matemática Discreta",
+            "Introdução à Engenharia de Software",
+            "Cálculo Diferencial e Integral I",
+            "Comunicação e Expressão"
+          ]
+        },
+        {
+          "semestre": 2,
+          "titulo": "2º semestre · Programação",
+          "disciplinas": [
+            "Algoritmos e Programação II",
+            "Estruturas de Dados",
+            "Programação Orientada a Objetos",
+            "Álgebra Linear",
+            "Arquitetura de Computadores"
+          ]
+        },
+        {
+          "semestre": 3,
+          "titulo": "3º semestre · Modelagem",
+          "disciplinas": [
+            "Engenharia de Requisitos",
+            "Modelagem de Sistemas",
+            "Banco de Dados I",
+            "Sistemas Operacionais",
+            "Probabilidade e Estatística"
+          ]
+        },
+        {
+          "semestre": 4,
+          "titulo": "4º semestre · Projeto",
+          "disciplinas": [
+            "Projeto de Software",
+            "Banco de Dados II",
+            "Redes de Computadores",
+            "Desenvolvimento Web",
+            "Interação Humano-Computador"
+          ]
+        },
+        {
+          "semestre": 5,
+          "titulo": "5º semestre · Qualidade",
+          "disciplinas": [
+            "Testes e Qualidade de Software",
+            "Desenvolvimento Mobile",
+            "Métodos Ágeis",
+            "Segurança de Software",
+            "Verificação e Validação"
+          ]
+        },
+        {
+          "semestre": 6,
+          "titulo": "6º semestre · Arquitetura",
+          "disciplinas": [
+            "Arquitetura de Software",
+            "Computação Distribuída",
+            "DevOps e Integração Contínua",
+            "Computação em Nuvem",
+            "Gerência de Configuração"
+          ]
+        },
+        {
+          "semestre": 7,
+          "titulo": "7º semestre · Especialização",
+          "disciplinas": [
+            "Manutenção e Evolução de Software",
+            "Gestão de Projetos de Software",
+            "Tópicos Avançados em Engenharia de Software",
+            "Optativa I",
+            "Projeto de Conclusão I"
+          ]
+        },
+        {
+          "semestre": 8,
+          "titulo": "8º semestre · Conclusão",
+          "disciplinas": [
+            "Governança e Processos de Software",
+            "Empreendedorismo e Inovação",
+            "Optativa II",
+            "Atividades Complementares",
+            "Estágio Supervisionado",
+            "Projeto de Conclusão II"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -6,14 +6,14 @@ import Link                                                                     
 import { Button }                                                                                           from "primereact/button";
 import { Avatar }                                                                                           from "primereact/avatar";
 import { obterUsuario, possuiPerfil, dashboardDoPerfil, loginDoPerfil, estaAutenticado, encerrarSessao }    from "@/lib/auth";
-import { alternarTemaComOnda }                                                                              from "@/lib/tema";
+import { alternarTemaComOnda, aplicarTema, temaSalvo }                                                      from "@/lib/tema";
 import { notificar }                                                                                        from "@/lib/notificar";
 import { GRUPOS_MENU }                                                                                      from "./menu";
 
 const CHAVE_TEMA = "theme";
 
-// --- SHELL DA ÁREA INTERNA, COM GUARDA DE AUTENTICAÇÃO E PERFIL ---
-export default function AppShell({ titulo, perfis, semMenuLateral = false, topoEsquerda, topoDireita, children }) {
+// --- SHELL DA ÁREA INTERNA ---
+export default function AppShell({ titulo, perfis, semMenuLateral = false, topoEsquerda, topoDireita, antesDoTema, rodape, children }) {
     const router = useRouter();
     const pathname = usePathname();
     const [usuario,     setUsuario]     = useState(null);
@@ -22,8 +22,8 @@ export default function AppShell({ titulo, perfis, semMenuLateral = false, topoE
     const [temaEscuro,  setTemaEscuro]  = useState(false);
 
     useEffect(() => {
-        const tema = localStorage.getItem(CHAVE_TEMA) || "light";
-        document.documentElement.setAttribute("data-theme", tema);
+        const tema = temaSalvo();
+        aplicarTema(tema, { salvar: false });
         setTemaEscuro(tema === "dark");
 
         if (!estaAutenticado()) {
@@ -78,8 +78,8 @@ export default function AppShell({ titulo, perfis, semMenuLateral = false, topoE
                             <div key={`${grupo.secao || "dash"}-${indice}`}>
                                 {grupo.secao && <span className="nav-section">{grupo.secao}</span>}
                                 {itens.map((item) => (
-                                    <Link key={item.rota} href={item.rota} 
-                                            className={`nav-link${pathname === item.rota ? " active" : ""}`} onClick={() => setMenuAberto(false)}>
+                                    <Link key={item.rota} href={item.rota} className={`nav-link${pathname === item.rota ? " active" : ""}`} 
+                                            onClick={() => setMenuAberto(false)}>
                                         {item.label}
                                     </Link>
                                 ))}
@@ -97,11 +97,12 @@ export default function AppShell({ titulo, perfis, semMenuLateral = false, topoE
                             rounded
                             text
                             aria-label="Abrir menu"
-                            onClick={() => setMenuAberto((v) => !v)}
+                            onClick={() => setMenuAberto((abertoAntes) => !abertoAntes)}
                         />
                     )}
                     {topoEsquerda ? topoEsquerda(usuario) : <div className="topbar-title">{titulo}</div>}
                     <div className="topbar-actions">
+                        {antesDoTema}
                         <Button
                             icon={temaEscuro ? "pi pi-sun" : "pi pi-moon"}
                             rounded
@@ -126,6 +127,7 @@ export default function AppShell({ titulo, perfis, semMenuLateral = false, topoE
                     </div>
                 </header>
                 <main className="content">{children}</main>
+                {rodape}
             </div>
         </div>
     );

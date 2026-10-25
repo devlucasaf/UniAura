@@ -71,12 +71,30 @@ const CAMPOS = [
 
 // --- COLUNAS DA TABELA DE PROFESSORES ---
 const COLUNAS = [
-    { header: "Nome", render: (item) => item.usuario?.nome || "-" },
-    { header: "E-mail", render: (item) => item.usuario?.email || "-" },
-    { header: "Formação", render: (item) => item.formacao || "-" },
-    { header: "Área", render: (item) => item.areaAtuacao || "-" },
-    { header: "Admissão", render: (item) => formatarData(item.dataAdmissao) },
-    { header: "Ativo", render: (item) => (item.ativo ? "Sim" : "Não") }
+    {
+        header: "Nome",
+        render: (item) => item.usuario?.nome || "-"
+    },
+    {
+        header: "E-mail",
+        render: (item) => item.usuario?.email || "-"
+    },
+    {
+        header: "Formação",
+        render: (item) => item.formacao || "-"
+    },
+    {
+        header: "Área",
+        render: (item) => item.areaAtuacao || "-"
+    },
+    {
+        header: "Admissão",
+        render: (item) => formatarData(item.dataAdmissao)
+    },
+    {
+        header: "Ativo",
+        render: (item) => (item.ativo ? "Sim" : "Não")
+    }
 ];
 
 // --- PÁGINA DE LISTAGEM DE PROFESSORES ---

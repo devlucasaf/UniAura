@@ -1,43 +1,43 @@
 "use client";
 
-import { useState }             from "react";
-import { Calendar }             from "primereact/calendar";
-import { EVENTOS, chaveDoDia }  from "./dados";
+import { useMemo, useState }            from "react";
+import { Calendar }                     from "primereact/calendar";
+import PainelAluno                      from "./PainelAluno";
+import { chaveDoDia, montarEventos }    from "./dados";
+import useDisciplinasDoSemestre         from "./useDisciplinasDoSemestre";
 import "@/lib/localePt";
 
-// --- CHAVES DOS DIAS QUE TÊM EVENTO, PARA MARCAR NO CALENDÁRIO ---
-const DIAS_COM_EVENTO = new Set(EVENTOS.map((evento) => chaveDoDia(evento.data)));
-
-// --- CALENDÁRIO ACADÊMICO: DIAS COM EVENTO FICAM MARCADOS E A LISTA MOSTRA OS EVENTOS DO DIA ESCOLHIDO ---
+// --- CALENDÁRIO ACADÊMICO ---
 export default function CalendarioAluno() {
     const [diaEscolhido, setDiaEscolhido] = useState(new Date());
+    const { disciplinas } = useDisciplinasDoSemestre();
+    const eventosDoSemestre = useMemo(() => montarEventos(disciplinas), [disciplinas]);
+
+    // --- CHAVES DOS DIAS QUE TÊM EVENTO ---
+    const diasComEvento = useMemo(() => new Set(eventosDoSemestre.map((evento) => chaveDoDia(evento.data))), [eventosDoSemestre]);
 
     // --- DESENHA CADA DIA, COM UM PONTO NOS DIAS QUE TÊM EVENTO ---
     const modeloDoDia = (dia) => {
         const chave = chaveDoDia(new Date(dia.year, dia.month, dia.day));
         return (
-            <span className={DIAS_COM_EVENTO.has(chave) ? "ua-aluno-dia-evento" : undefined}>
+            <span className={diasComEvento.has(chave) ? "ua-aluno-dia-evento" : undefined}>
                 {dia.day}
             </span>
         );
     };
 
-    const eventosDoDia = EVENTOS.filter((evento) => chaveDoDia(evento.data) === chaveDoDia(diaEscolhido));
-    const proximos = EVENTOS.filter((evento) => evento.data >= new Date(new Date().setHours(0, 0, 0, 0))).slice(0, 3);
+    const eventosDoDia = eventosDoSemestre.filter((evento) => chaveDoDia(evento.data) === chaveDoDia(diaEscolhido));
+    const proximos = eventosDoSemestre.filter((evento) => evento.data >= new Date(new Date().setHours(0, 0, 0, 0))).slice(0, 3);
     const listaAMostrar = eventosDoDia.length > 0 ? eventosDoDia : proximos;
 
     return (
-        <section aria-labelledby="tituloCalendario">
-            <div className="ua-aluno-secao-cabecalho">
-                <h2 id="tituloCalendario">Calendário acadêmico</h2>
-            </div>
-
-            <div className="ua-card ua-aluno-calendario">
+        <PainelAluno id="tituloCalendario" titulo="Calendário acadêmico" icone="pi pi-calendar">
+            <div className="ua-aluno-calendario">
                 <Calendar
                     inline
                     locale="pt"
                     value={diaEscolhido}
-                    onChange={(e) => e.value && setDiaEscolhido(e.value)}
+                    onChange={(evento) => evento.value && setDiaEscolhido(evento.value)}
                     dateTemplate={modeloDoDia}
                 />
 
@@ -54,6 +54,6 @@ export default function CalendarioAluno() {
                     {listaAMostrar.length === 0 && <li className="muted">Nenhum evento neste período.</li>}
                 </ul>
             </div>
-        </section>
+        </PainelAluno>
     );
 }

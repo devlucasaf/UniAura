@@ -7,11 +7,11 @@ import { useEfeitosDePagina }       from "@/hooks/useEfeitosDePagina";
 
 // --- ESTRUTURA COMPARTILHADA DE UMA PAGINA DE CURSO ---
 export default function CursoTemplate({ curso }) {
-    const raizRef = useEfeitosDePagina();
+    const raizReferencia = useEfeitosDePagina();
     const router = useRouter();
 
     return (
-        <div className="grad-page" ref={raizRef}>
+        <div className="grad-page" ref={raizReferencia}>
             <nav className="grad-subnav" aria-label="Seções do curso">
                 <div className="grad-container grad-subnav-inner">
                     <span className="grad-subnav-curso">
@@ -90,12 +90,12 @@ export default function CursoTemplate({ curso }) {
                 <section className="grad-section" id="grad-sobre">
                     <div className="grad-container">
                         <div className="grad-stats" data-revelar>
-                            {curso.stats.map((stat) => (
-                                <div className="grad-stat" key={stat.label}>
-                                    {stat.contador
-                                        ? <strong data-contador={stat.valor} data-sufixo={stat.sufixo}>0</strong>
-                                        : <strong>{stat.valor}</strong>}
-                                    <span>{stat.label}</span>
+                            {curso.stats.map((estatistica) => (
+                                <div className="grad-stat" key={estatistica.label}>
+                                    {estatistica.contador
+                                        ? <strong data-contador={estatistica.valor} data-sufixo={estatistica.sufixo}>0</strong>
+                                        : <strong>{estatistica.valor}</strong>}
+                                    <span>{estatistica.label}</span>
                                 </div>
                             ))}
                         </div>
