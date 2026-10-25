@@ -6,7 +6,8 @@ import { Button }                       from "primereact/button";
 import { Menu }                         from "primereact/menu";
 import { Dialog }                       from "primereact/dialog";
 import CampoSenha                       from "@/components/web/CampoSenha";
-import { api }                          from "@/lib/api";
+import { consultarMeuPerfilDeAluno }    from "@/app/remotes/uniaura/aluno/consultarMeuPerfilDeAlunoRemote";
+import { alterarMinhaSenha }            from "@/app/remotes/uniaura/autenticacao/alterarMinhaSenhaRemote";
 import { notificar }                    from "@/lib/notificar";
 
 const TURNOS = { MANHA: "Manhã", TARDE: "Tarde", NOITE: "Noite" };
@@ -20,16 +21,16 @@ const LinhaInfo = ({ icone, rotulo, valor }) => (
     </div>
 );
 
-// --- BOTÃO DE PERFIL DO CABEÇALHO: MENU COM OS DADOS DO ALUNO, ATALHOS, ALTERAR SENHA E SAIR ---
+// --- BOTÃO DE PERFIL DO CABEÇALHO ---
 export default function MenuPerfilAluno({ usuario, sair }) {
     const router = useRouter();
-    const menuRef = useRef(null);
-    const [perfil, setPerfil] = useState(null);
+    const menuReferencia = useRef(null);
+    const [perfil,      setPerfil]      = useState(null);
     const [senhaAberta, setSenhaAberta] = useState(false);
 
     // --- BUSCA NO BACKEND OS DADOS DO ALUNO LOGADO ---
     useEffect(() => {
-        api("/alunos/me").then(setPerfil).catch(() => setPerfil(null));
+        consultarMeuPerfilDeAluno().then(setPerfil).catch(() => setPerfil(null));
     }, []);
 
     const itens = [
@@ -65,28 +66,33 @@ export default function MenuPerfilAluno({ usuario, sair }) {
         },
         { 
             label: "Meu perfil", 
-            icon: "pi pi-chart-bar", command: () => router.push("/portal-do-aluno/perfil") 
+            icon: "pi pi-chart-bar", 
+            command: () => router.push("/portal-do-aluno/perfil") 
         },
         { 
             label: "Dados pessoais", 
-            icon: "pi pi-id-card", command: () => router.push("/portal-do-aluno/cadastro?editar=1") 
+            icon: "pi pi-id-card", 
+            command: () => router.push("/portal-do-aluno/cadastro?editar=1") 
         },
         { 
             label: "Alterar senha", 
-            icon: "pi pi-key", command: () => setSenhaAberta(true) 
+            icon: "pi pi-key", 
+            command: () => setSenhaAberta(true) 
         },
         { 
             separator: true 
         },
         { 
             label: "Sair", 
-            icon: "pi pi-sign-out", className: "ua-menu-item-sair", command: sair 
+            icon: "pi pi-sign-out", 
+            className: "ua-menu-item-sair", 
+            command: sair 
         }
     ];
 
     return (
         <>
-            <Menu model={itens} popup ref={menuRef} id="menuPerfil" popupAlignment="right" />
+            <Menu model={itens} popup ref={menuReferencia} id="menuPerfil" popupAlignment="right" />
             <Button
                 icon="pi pi-user"
                 rounded
@@ -94,7 +100,7 @@ export default function MenuPerfilAluno({ usuario, sair }) {
                 aria-label="Abrir menu do perfil"
                 aria-haspopup="menu"
                 aria-controls="menuPerfil"
-                onClick={(evento) => menuRef.current?.toggle(evento)}
+                onClick={(evento) => menuReferencia.current?.toggle(evento)}
             />
             <DialogAlterarSenha visivel={senhaAberta} aoFechar={() => setSenhaAberta(false)} />
         </>
@@ -152,7 +158,7 @@ function DialogAlterarSenha({ visivel, aoFechar }) {
 
         setSalvando(true);
         try {
-            await api("/auth/senha", { metodo: "PUT", corpo: { senhaAtual: atual, novaSenha: nova } });
+            await alterarMinhaSenha(atual, nova);
             notificar("Senha alterada com sucesso!", "success");
             fechar();
         } catch (excecao) {
@@ -174,7 +180,7 @@ function DialogAlterarSenha({ visivel, aoFechar }) {
                         autoComplete="current-password"
                         value={atual}
                         className={erros.atual ? "p-invalid" : ""}
-                        onChange={(e) => setAtual(e.target.value)}
+                        onChange={(evento) => setAtual(evento.target.value)}
                     />
                     {erroDe("atual")}
                 </div>
@@ -189,7 +195,7 @@ function DialogAlterarSenha({ visivel, aoFechar }) {
                         autoComplete="new-password"
                         value={nova}
                         className={erros.nova ? "p-invalid" : ""}
-                        onChange={(e) => setNova(e.target.value)}
+                        onChange={(evento) => setNova(evento.target.value)}
                     />
                     {erroDe("nova")}
                 </div>
@@ -204,14 +210,20 @@ function DialogAlterarSenha({ visivel, aoFechar }) {
                         autoComplete="new-password"
                         value={confirmar}
                         className={erros.confirmar ? "p-invalid" : ""}
-                        onChange={(e) => setConfirmar(e.target.value)}
+                        onChange={(evento) => setConfirmar(evento.target.value)}
                     />
                     {erroDe("confirmar")}
                 </div>
 
                 {erro && <small className="ua-erro-campo ua-erro-login" role="alert">{erro}</small>}
 
-                <Button type="submit" label={salvando ? "Salvando..." : "Salvar nova senha"} icon="pi pi-check" loading={salvando} className="ua-botao-entrar" />
+                <Button 
+                    type="submit" 
+                    label={salvando ? "Salvando..." : "Salvar nova senha"} 
+                    icon="pi pi-check" 
+                    loading={salvando} 
+                    className="ua-botao-entrar" 
+                />
             </form>
         </Dialog>
     );

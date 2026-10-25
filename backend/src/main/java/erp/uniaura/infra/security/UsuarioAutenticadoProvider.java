@@ -1,7 +1,7 @@
 package erp.uniaura.infra.security;
 
-import erp.uniaura.modules.usuario.model.Usuario;
-import erp.uniaura.modules.usuario.repository.UsuarioRepository;
+import erp.uniaura.persistence.entities.Usuario;
+import erp.uniaura.services.common.usuario.ConsultarUsuarioComponent;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,7 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UsuarioAutenticadoProvider {
 
-    private final UsuarioRepository usuarioRepository;
+    private final ConsultarUsuarioComponent consultarUsuarioComponent;
 
     public Optional<Usuario> obter() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -29,6 +29,6 @@ public class UsuarioAutenticadoProvider {
             return Optional.empty();
         }
 
-        return usuarioRepository.findById(Long.valueOf(id));
+        return consultarUsuarioComponent.porId(Long.valueOf(id));
     }
 }

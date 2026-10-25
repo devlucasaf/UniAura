@@ -1,7 +1,7 @@
 package erp.uniaura.infra.security;
 
-import erp.uniaura.modules.usuario.model.Usuario;
-import erp.uniaura.modules.usuario.repository.UsuarioRepository;
+import erp.uniaura.persistence.entities.Usuario;
+import erp.uniaura.services.common.usuario.ConsultarUsuarioComponent;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,12 +14,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UsuarioDetailsService implements UserDetailsService {
 
-    private final UsuarioRepository usuarioRepository;
+    private final ConsultarUsuarioComponent consultarUsuarioComponent;
 
     // --- BUSCA O USUÁRIO PELO E-MAIL E RETORNA SEUS DADOS PARA O PROCESSO DE AUTENTICAÇÃO ---
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Usuario usuario = usuarioRepository.findByEmail(email)
+        Usuario usuario = consultarUsuarioComponent.porEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email));
         return new UsuarioDetails(usuario);
     }

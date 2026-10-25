@@ -1,4 +1,4 @@
-import { api } from "./api";
+import { autenticarUsuario } from "@/app/remotes/uniaura/autenticacao/autenticarUsuarioRemote";
 
 const CHAVE_TOKEN = "token";
 const CHAVE_REFRESH = "refreshToken";
@@ -6,7 +6,7 @@ const CHAVE_USUARIO = "user";
 
 // --- ROTA DE DASHBOARD DE CADA PERFIL ---
 export const DASHBOARD_POR_PERFIL = {
-    ALUNO: "/portal-do-aluno/dashboard",
+    ALUNO: "/portal-do-aluno/home",
     PROFESSOR: "/professor/dashboard",
     COORDENADOR: "/coordenacao/dashboard",
     SECRETARIA: "/secretaria/dashboard",
@@ -38,22 +38,17 @@ export function dashboardDoPerfil(perfil) {
     return DASHBOARD_POR_PERFIL[perfil] || "/login";
 }
 
-// --- AUTENTICA NO BACKEND (POST /auth/login) E GRAVA A SESSÃO ---
+// --- AUTENTICA NO BACKEND E GRAVA A SESSÃO ---
 export async function autenticar(email, senha) {
-    const resposta = await api("/auth/login", {
-        metodo: "POST",
-        corpo: {
-            email,
-            senha
-        }
-    });
-    if (!resposta?.token || !resposta?.usuarioDTO) {
+    const resposta = await autenticarUsuario(email, senha);
+
+    if (!resposta?.token || !resposta?.usuario) {
         throw new Error("Resposta de login inválida do servidor.");
     }
 
-    // --- O BACKEND DEVOLVE O USUÁRIO NO CAMPO usuarioDTO ---
-    gravarSessao({ token: resposta.token, refreshToken: resposta.refreshToken, usuario: resposta.usuarioDTO });
-    return resposta.usuarioDTO;
+    // --- O BACKEND DEVOLVE O USUÁRIO NO CAMPO usuario ---
+    gravarSessao({ token: resposta.token, refreshToken: resposta.refreshToken, usuario: resposta.usuario });
+    return resposta.usuario;
 }
 
 // --- GRAVA TOKENS E DADOS DO USUÁRIO ---
@@ -65,8 +60,8 @@ export function gravarSessao({ token, refreshToken, usuario }) {
 
     if (usuario) {
         localStorage.setItem(CHAVE_USUARIO, JSON.stringify(usuario));
-        if (usuario.id) {
-            localStorage.setItem("usuarioId", usuario.id);
+        if (usuario.uid) {
+            localStorage.setItem("usuarioId", usuario.uid);
         }
     }
 }
@@ -89,6 +84,7 @@ export function obterUsuario() {
     if (typeof window === "undefined") {
         return null;
     }
+
     try {
         const bruto = localStorage.getItem(CHAVE_USUARIO);
         return bruto ? JSON.parse(bruto) : null;
@@ -116,6 +112,7 @@ export function possuiPerfil(perfis) {
     if (!usuario) {
         return false;
     }
+
     const lista = Array.isArray(perfis) ? perfis : [perfis];
     return lista.includes(usuario.role);
 }

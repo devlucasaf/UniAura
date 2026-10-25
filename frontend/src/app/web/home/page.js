@@ -58,15 +58,27 @@ const SLIDES = [
     }
 ];
 
-// --- INDICADORES DE CONFIANÇA (FAIXA ABAIXO DO CARROSSEL) ---
+// --- INDICADORES DE CONFIANÇA ---
 const INDICADORES = [
-    { valor: "35+", rotulo: "anos de excelência acadêmica" },
-    { valor: "30", rotulo: "cursos de graduação" },
-    { valor: "2.000+", rotulo: "vagas no vestibular 2027" },
-    { valor: "1º", rotulo: "em inovação no ranking nacional" }
+    {
+        valor: "35+",
+        rotulo: "anos de excelência acadêmica"
+    },
+    {
+        valor: "30",
+        rotulo: "cursos de graduação"
+    },
+    {
+        valor: "2.000+",
+        rotulo: "vagas no vestibular 2027"
+    },
+    {
+        valor: "1º",
+        rotulo: "em inovação no ranking nacional"
+    }
 ];
 
-// --- CANAIS DE CONTATO DA SEÇÃO "FALE CONOSCO" (href = null: informação sem link) ---
+// --- CANAIS DE CONTATO DA SEÇÃO "FALE CONOSCO" ---
 const CANAIS_CONTATO = [
     {
         rotulo: "Telefone",
@@ -78,34 +90,60 @@ const CANAIS_CONTATO = [
         rotulo: "E-mail",
         valor: "contato@uniaura.edu.br",
         href: "mailto:contato@uniaura.edu.br",
-        icone: (<><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m2 7 10 6 10-6"></path></>)
+        icone: (
+            <>
+                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                <path d="m2 7 10 6 10-6"></path>
+            </>
+        )
     },
     {
         rotulo: "Instagram",
         valor: "@uniaura",
         href: "https://www.instagram.com/__.fr3it4s.__/",
         externo: true,
-        icone: (<><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><path d="M17.5 6.5h.01"></path></>)
+        icone: (
+            <>
+                <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M17.5 6.5h.01"></path>
+            </>
+        )
     },
     {
         rotulo: "Threads",
         valor: "@uniaura",
         href: "https://www.threads.net/@__.fr3it4s.__",
         externo: true,
-        icone: (<><circle cx="12" cy="12" r="4"></circle><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"></path></>)
+        icone: (
+            <>
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"></path>
+            </>
+        )
     },
     {
         rotulo: "Endereço",
         valor: "SGAS 000, Bloco A, Brasília - DF",
         href: "https://www.google.com/maps/search/?api=1&query=SGAS+000+Bloco+A+Bras%C3%ADlia+DF",
         externo: true,
-        icone: (<><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></>)
+        icone: (
+            <>
+                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+            </>
+        )
     },
     {
         rotulo: "Horário",
         valor: "Segunda a sexta, das 8h às 20h",
         href: null,
-        icone: (<><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></>)
+        icone: (
+            <>
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 6v6l4 2"></path>
+            </>
+        )
     }
 ];
 
@@ -113,8 +151,8 @@ const CANAIS_CONTATO = [
 export default function HomeInstitucionalPage() {
     const router = useRouter();
     const [mensagemEnviada, setMensagemEnviada] = useState(false);
-    const [telefone, setTelefone] = useState("");
-    const [erros, setErros] = useState({});
+    const [telefone,        setTelefone]        = useState("");
+    const [erros,           setErros]           = useState({});
 
     // --- REMOVE O ERRO DE UM CAMPO ASSIM QUE O USUÁRIO MEXE NELE ---
     const limparErro = (nome) => {
@@ -187,8 +225,17 @@ export default function HomeInstitucionalPage() {
                 <h2>{slide.titulo}</h2>
                 <p>{slide.texto}</p>
                 <div className="site-noticia-acoes">
-                    <Button label="Fale com a secretaria" size="large" onClick={rolarPara("contato")} />
-                    <Button label="Conheça os cursos" size="large" outlined onClick={rolarPara("ensino")} />
+                    <Button
+                        label="Fale com a secretaria"
+                        size="large"
+                        onClick={rolarPara("contato")}
+                    />
+                    <Button
+                        label="Conheça os cursos"
+                        size="large"
+                        outlined
+                        onClick={rolarPara("ensino")}
+                    />
                 </div>
             </div>
             <div className="site-noticia-arte">
@@ -348,7 +395,11 @@ export default function HomeInstitucionalPage() {
                     </div>
 
                     <div className="site-cards-acao">
-                        <Button label="Ver cursos" size="large" onClick={() => router.push("/web/graduacao/cursos")} />
+                        <Button 
+                            label="Ver cursos" 
+                            size="large" 
+                            onClick={() => router.push("/web/graduacao/cursos")} 
+                        />
                     </div>
                 </div>
             </section>
@@ -369,7 +420,11 @@ export default function HomeInstitucionalPage() {
                                 <li>Calendário de provas e eventos</li>
                             </ul>
 
-                            <Button label="Acessar o Portal" size="large" onClick={irParaPortal} />
+                            <Button 
+                                label="Acessar o Portal" 
+                                size="large" 
+                                onClick={irParaPortal} 
+                            />
                         </div>
 
                         <div className="site-split-art">
@@ -404,7 +459,8 @@ export default function HomeInstitucionalPage() {
                                     const conteudo = (
                                         <>
                                             <span className="ua-contato-link__icone" aria-hidden="true">
-                                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                                        strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                                                     {canal.icone}
                                                 </svg>
                                             </span>
@@ -419,13 +475,8 @@ export default function HomeInstitucionalPage() {
                                     return (
                                         <li key={canal.rotulo}>
                                             {canal.href ? (
-                                                <a
-                                                    className="ua-contato-link"
-                                                    href={canal.href}
-                                                    target={canal.externo ? "_blank" : undefined}
-                                                    rel={canal.externo ? "noopener noreferrer" : undefined}
-                                                    aria-label={`${canal.rotulo}: ${canal.valor}`}
-                                                >
+                                                <a className="ua-contato-link" href={canal.href} target={canal.externo ? "_blank" : undefined}
+                                                        rel={canal.externo ? "noopener noreferrer" : undefined} aria-label={`${canal.rotulo}: ${canal.valor}`}>
                                                     {conteudo}
                                                 </a>
                                             ) : (
@@ -439,14 +490,31 @@ export default function HomeInstitucionalPage() {
 
                         <form id="siteForm" className="site-form" noValidate onSubmit={enviarContato}>
                             <div className="field">
-                                <label htmlFor="siteNome">Nome completo <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
-                                <InputText id="siteNome" name="nome" autoComplete="name" className={classeErro("nome")} onInput={() => limparErro("nome")} />
+                                <label htmlFor="siteNome">
+                                    Nome completo <span className="ua-obrigatorio" aria-hidden="true">*</span>
+                                </label>
+                                <InputText
+                                    id="siteNome"
+                                    name="nome"
+                                    autoComplete="name"
+                                    className={classeErro("nome")}
+                                    onInput={() => limparErro("nome")}
+                                />
                                 {erroDe("nome")}
                             </div>
 
                             <div className="field">
-                                <label htmlFor="siteEmail">E-mail <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
-                                <InputText type="email" id="siteEmail" name="email" autoComplete="email" className={classeErro("email")} onInput={() => limparErro("email")} />
+                                <label htmlFor="siteEmail">
+                                    E-mail <span className="ua-obrigatorio" aria-hidden="true">*</span>
+                                </label>
+                                <InputText
+                                    type="email"
+                                    id="siteEmail"
+                                    name="email"
+                                    autoComplete="email"
+                                    className={classeErro("email")}
+                                    onInput={() => limparErro("email")}
+                                />
                                 {erroDe("email")}
                             </div>
 
@@ -460,17 +528,27 @@ export default function HomeInstitucionalPage() {
                                     placeholder="(00) 00000-0000"
                                     autoComplete="tel"
                                     value={telefone}
-                                    onChange={(e) => setTelefone(mascararTelefone(e.target.value))}
+                                    onChange={(evento) => setTelefone(mascararTelefone(evento.target.value))}
                                 />
                             </div>
 
                             <div className="field">
                                 <label htmlFor="siteMsg">Mensagem <span className="ua-obrigatorio" aria-hidden="true">*</span></label>
-                                <InputTextarea id="siteMsg" name="mensagem" rows={4} className={classeErro("mensagem")} onInput={() => limparErro("mensagem")} />
+                                <InputTextarea
+                                    id="siteMsg"
+                                    name="mensagem"
+                                    rows={4}
+                                    className={classeErro("mensagem")}
+                                    onInput={() => limparErro("mensagem")}
+                                />
                                 {erroDe("mensagem")}
                             </div>
 
-                            <Button type="submit" label="Enviar mensagem" size="large" />
+                            <Button
+                                type="submit"
+                                label="Enviar mensagem"
+                                size="large"
+                            />
                             {mensagemEnviada && <Message severity="success" text="Mensagem enviada! Em breve entraremos em contato." />}
                         </form>
                     </div>

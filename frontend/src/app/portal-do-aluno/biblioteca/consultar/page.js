@@ -8,7 +8,8 @@ import { Column }               from "primereact/column";
 import { Paginator }            from "primereact/paginator";
 import { Tag }                  from "primereact/tag";
 import AppShell                 from "@/components/interno/AppShell";
-import { livroApi, reservaApi } from "@/lib/api/biblioteca";
+import { pesquisarLivros }      from "@/app/remotes/uniaura/biblioteca/pesquisarLivrosRemote";
+import { reservarLivro }        from "@/app/remotes/uniaura/biblioteca/reservarLivroRemote";
 
 const FILTRO_VAZIO = { 
     titulo: "", 
@@ -28,17 +29,17 @@ export default function AlunoBibliotecaConsultarPage() {
 
     // --- BUSCA DE LIVROS COM FILTRO E PAGINAÇÃO ---
     async function buscar(paginaAlvo = pagina, filtroAlvo = filtroAtivo) {
-        const resultado = await livroApi.buscar({ ...filtroAlvo, page: paginaAlvo, size: TAMANHO_PAGINA });
+        const resultado = await pesquisarLivros({ ...filtroAlvo, de: paginaAlvo * TAMANHO_PAGINA, qtd: TAMANHO_PAGINA });
         setPage(resultado);
     }
 
     useEffect(() => { buscar(0, {}); }, []);
 
     // --- RESERVA DE LIVRO ---
-    async function reservar(livroId) {
+    async function reservar(livroUid) {
         try {
-            const r = await reservaApi.reservar({ livroId });
-            alert(`Reservado! Posição na fila: ${r.posicaoFila}`);
+            const reserva = await reservarLivro(livroUid);
+            alert(`Reservado! Posição na fila: ${reserva.posicaoFila}`);
         } catch (erro) {
             alert(erro.message);
         }
@@ -54,7 +55,7 @@ export default function AlunoBibliotecaConsultarPage() {
         buscar(0, proximo);
     }
 
-    const livros = page?.content || [];
+    const livros = page?.lista || [];
 
     return (
         <AppShell titulo="Portal do Aluno — Biblioteca" perfis={["ALUNO"]}>
@@ -65,28 +66,28 @@ export default function AlunoBibliotecaConsultarPage() {
                         Título
                         <InputText
                             value={filtro.titulo}
-                            onChange={(e) => setFiltro({ ...filtro, titulo: e.target.value })}
+                            onChange={(evento) => setFiltro({ ...filtro, titulo: evento.target.value })}
                         />
                     </label>
                     <label className="field">
                         Autor
                         <InputText
                             value={filtro.autor}
-                            onChange={(e) => setFiltro({ ...filtro, autor: e.target.value })}
+                            onChange={(evento) => setFiltro({ ...filtro, autor: evento.target.value })}
                         />
                     </label>
                     <label className="field">
                         Categoria
                         <InputText
                             value={filtro.categoria}
-                            onChange={(e) => setFiltro({ ...filtro, categoria: e.target.value })}
+                            onChange={(evento) => setFiltro({ ...filtro, categoria: evento.target.value })}
                         />
                     </label>
                     <label className="field">
                         ISBN
                         <InputText
                             value={filtro.isbn}
-                            onChange={(e) => setFiltro({ ...filtro, isbn: e.target.value })}
+                            onChange={(evento) => setFiltro({ ...filtro, isbn: evento.target.value })}
                         />
                     </label>
                     <Button type="submit" label="Buscar" />
@@ -94,7 +95,7 @@ export default function AlunoBibliotecaConsultarPage() {
             </section>
 
             <section className="card">
-                <DataTable value={livros} emptyMessage="Nada encontrado." dataKey="id">
+                <DataTable value={livros} emptyMessage="Nada encontrado." dataKey="uid">
                     <Column header="Título" body={(livro) => livro.titulo} />
                     <Column header="Autor" body={(livro) => livro.autor} />
                     <Column header="Categoria" body={(livro) => livro.categoria || "-"} />
@@ -104,7 +105,7 @@ export default function AlunoBibliotecaConsultarPage() {
                         body={(livro) => (
                             livro.exemplaresDisponiveis > 0
                                 ? <Tag value="Disponível" severity="success" />
-                                : <Button label="Reservar" size="small" onClick={() => reservar(livro.id)} />
+                                : <Button label="Reservar" size="small" onClick={() => reservar(livro.uid)} />
                         )}
                     />
                 </DataTable>
@@ -112,8 +113,8 @@ export default function AlunoBibliotecaConsultarPage() {
                     <Paginator
                         first={pagina * TAMANHO_PAGINA}
                         rows={TAMANHO_PAGINA}
-                        totalRecords={page.totalElements}
-                        onPageChange={(e) => { setPagina(e.page); buscar(e.page); }}
+                        totalRecords={page.total}
+                        onPageChange={(evento) => { setPagina(evento.page); buscar(evento.page); }}
                     />
                 )}
             </section>

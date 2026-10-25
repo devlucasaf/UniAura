@@ -6,12 +6,12 @@ import { cursosPorSlug, areaUrlDoCurso }    from "@/data/cursos";
 export function generateStaticParams() {
     return Object.keys(cursosPorSlug)
         .map((curso) => ({ area: areaUrlDoCurso(curso), curso }))
-        .filter((params) => params.area);
+        .filter((parametros) => parametros.area);
 }
 
 // --- GERA OS METADADOS DA PÁGINA DE ACORDO COM O CURSO ---
-export async function generateMetadata({ params }) {
-    const { area, curso: slug } = await params;
+export async function generateMetadata({ params: parametros }) {
+    const { area, curso: slug } = await parametros;
     const curso = cursosPorSlug[slug];
     if (!curso || areaUrlDoCurso(slug) !== area) {
         return {};
@@ -20,8 +20,8 @@ export async function generateMetadata({ params }) {
 }
 
 // --- COMPONENTE DE PÁGINA DO CURSO ---
-export default async function CursoPage({ params }) {
-    const { area, curso: slug } = await params;
+export default async function CursoPage({ params: parametros }) {
+    const { area, curso: slug } = await parametros;
     const curso = cursosPorSlug[slug];
 
     if (!curso || areaUrlDoCurso(slug) !== area) {

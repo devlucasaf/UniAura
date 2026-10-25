@@ -1,6 +1,6 @@
 package erp.uniaura.infra.security;
 
-import erp.uniaura.exception.BusinessException;
+import cloudsupport.services.BusinessException;
 
 import org.springframework.stereotype.Component;
 

@@ -1210,6 +1210,36 @@
     color: var(--color-primary);
 }
 
+/* --- A SETA ANDA PARA A ESQUERDA AO PASSAR O MOUSE E BALANÇA SUAVEMENTE ENQUANTO O LINK ESTÁ EM FOCO --- */
+.auth-back-seta {
+    display: inline-block;
+    transition: transform 0.25s ease;
+}
+
+.auth-back a:hover .auth-back-seta,
+.auth-back a:focus-visible .auth-back-seta {
+    animation: auth-back-seta-balanco 0.9s ease-in-out infinite;
+}
+
+@keyframes auth-back-seta-balanco {
+    0%, 
+    100% { 
+        transform: translateX(0); 
+    }
+
+    50% { 
+        transform: translateX(-6px); 
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .auth-back a:hover .auth-back-seta,
+    .auth-back a:focus-visible .auth-back-seta {
+        animation: none;
+        transform: translateX(-4px);
+    }
+}
+
 /* --- RESPONSIVO --- */
 @media (max-width: 900px) {
     .site-hero-inner,

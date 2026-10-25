@@ -1,32 +1,28 @@
 "use client";
 
-import { Tag }      from "primereact/tag";
-import { NOTICIAS } from "./dados";
+import PainelAluno      from "./PainelAluno";
+import { NOTICIAS }     from "./dados";
 
 // --- FORMATA A DATA DE PUBLICAÇÃO DA NOTÍCIA ---
-const formatarData = (data) => data.toLocaleDateString("pt-BR", { day: "2-digit", month: "short" });
+const formatarData = (data) => data.toLocaleDateString("pt-BR");
 
-// --- MURAL COM AS NOTÍCIAS E AVISOS PARA O ALUNO ---
+// --- TIMELINE ---
 export default function MuralNoticias() {
     return (
-        <section aria-labelledby="tituloMural">
-            <div className="ua-aluno-secao-cabecalho">
-                <h2 id="tituloMural">Mural de notícias</h2>
-                <span className="muted">Avisos da universidade</span>
-            </div>
-
-            <div className="ua-aluno-mural">
+        <PainelAluno id="tituloMural" titulo="Timeline" icone="pi pi-list">
+            <ul className="ua-timeline">
                 {NOTICIAS.map((noticia) => (
-                    <article key={noticia.id} className="ua-card ua-aluno-noticia">
-                        <div className="ua-aluno-noticia__topo">
-                            <Tag value={noticia.categoria} rounded />
-                            <time dateTime={noticia.data.toISOString()}>{formatarData(noticia.data)}</time>
-                        </div>
-                        <h3>{noticia.titulo}</h3>
-                        <p className="muted">{noticia.resumo}</p>
-                    </article>
+                    <li key={noticia.id} className="ua-timeline__linha">
+                        <span className="ua-timeline__origem">{noticia.categoria}</span>
+                        <span className="ua-timeline__texto">
+                            <strong>{noticia.titulo}</strong>
+                            <small>{noticia.resumo}</small>
+                        </span>
+                        <i className="pi pi-envelope ua-timeline__icone" aria-hidden="true" />
+                        <time className="ua-timeline__data" dateTime={noticia.data.toISOString()}>{formatarData(noticia.data)}</time>
+                    </li>
                 ))}
-            </div>
-        </section>
+            </ul>
+        </PainelAluno>
     );
 }

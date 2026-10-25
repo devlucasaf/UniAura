@@ -24,8 +24,8 @@ export default function CursosPage() {
                     <div className="cursos-filtros" role="tablist" aria-label="Filtrar cursos por área de atuação">
                         <SelectButton
                             value={filtroAtivo}
-                            onChange={(e) => e.value && setFiltroAtivo(e.value)}
-                            options={filtros.map((f) => ({ label: f.label, value: f.valor }))}
+                            onChange={(evento) => evento.value && setFiltroAtivo(evento.value)}
+                            options={filtros.map((filtro) => ({ label: filtro.label, value: filtro.valor }))}
                         />
                     </div>
 

@@ -1,19 +1,31 @@
 "use client";
 
-import { GRADE, HORARIOS } from "./dados";
+import { useMemo }                  from "react";
+import { HORARIOS, montarGrade }    from "./dados";
+import useDisciplinasDoSemestre     from "./useDisciplinasDoSemestre";
 
-// --- NOMES DOS DIAS NA ORDEM DE Date.getDay(), PARA DESTACAR O DIA DE HOJE ---
-const DIAS_DA_SEMANA = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
+// --- NOMES DOS DIAS NA ORDEM DE Date.getDay() ---
+const DIAS_DA_SEMANA = [
+    "Domingo", 
+    "Segunda-feira", 
+    "Terça-feira", 
+    "Quarta-feira", 
+    "Quinta-feira", 
+    "Sexta-feira", 
+    "Sábado"
+];
 
-// --- TABELA DE AULAS DA SEMANA: O DIA DA SEMANA FICA NA PRIMEIRA COLUNA, À ESQUERDA ---
+// --- TABELA DE AULAS DA SEMANA ---
 export default function GradeHoraria() {
+    const { disciplinas } = useDisciplinasDoSemestre();
+    const grade = useMemo(() => montarGrade(disciplinas), [disciplinas]);
     const hoje = DIAS_DA_SEMANA[new Date().getDay()];
 
     return (
         <section aria-labelledby="tituloGrade">
             <div className="ua-aluno-secao-cabecalho">
                 <h2 id="tituloGrade">Meus cursos e horários</h2>
-                <span className="muted">Grade da semana</span>
+                <span className="muted">Grade da semana (exemplo)</span>
             </div>
 
             <div className="ua-card ua-aluno-tabela-caixa">
@@ -28,7 +40,7 @@ export default function GradeHoraria() {
                         </tr>
                     </thead>
                     <tbody>
-                        {GRADE.map((linha) => (
+                        {grade.map((linha) => (
                             <tr key={linha.dia} className={linha.dia === hoje ? "ua-aluno-hoje" : undefined}>
                                 <th scope="row">
                                     {linha.dia}

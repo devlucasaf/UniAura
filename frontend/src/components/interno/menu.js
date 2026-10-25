@@ -9,7 +9,7 @@ export const GRUPOS_MENU = [
                 perfis: ["ADMIN"]
             },
             {
-                rota: "/portal-do-aluno/dashboard",
+                rota: "/portal-do-aluno/home",
                 label: "Dashboard",
                 perfis: ["ALUNO"]
             },
@@ -68,6 +68,17 @@ export const GRUPOS_MENU = [
                 rota: "/secretaria/funcionarios",
                 label: "Funcionários",
                 perfis: ["SECRETARIA", "COORDENADOR", "ADMIN"]
+            }
+        ]
+    },
+    {
+        secao: "Sistemas",
+        perfis: ["ADMIN"],
+        itens: [
+            {
+                rota: "/sistemas/permissoes",
+                label: "Permissões",
+                perfis: ["ADMIN"]
             }
         ]
     },

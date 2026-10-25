@@ -1,11 +1,9 @@
-import { api, query } from "@/lib/api";
+import { criarApiDeCadastro } from "@/lib/api/cadastroUniaura";
 
-const BASE = "/professores";
-
-export const professoresApi = {
-    listar: (parametros)    => api(`${BASE}${query(parametros)}`),
-    buscarPorId: (id)       => api(`${BASE}/${id}`),
-    criar: (dados)          => api(BASE, { metodo: "POST", corpo: dados }),
-    atualizar: (id, dados)  => api(`${BASE}/${id}`, { metodo: "PUT", corpo: dados }),
-    excluir: (id)           => api(`${BASE}/${id}`, { metodo: "DELETE" })
-};
+export const professoresApi = criarApiDeCadastro({
+    pesquisar: "pesquisarProfessores",
+    detalhar: "detalharProfessor",
+    cadastrar: "cadastrarProfessor",
+    alterar: "alterarProfessor",
+    remover: "removerProfessor"
+});

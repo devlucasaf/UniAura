@@ -16,10 +16,23 @@ import Paginacao                from "./Paginacao";
 // --- LÊ O VALOR INICIAL DE UM CAMPO A PARTIR DO ITEM ---
 function valorInicial(campo, item) {
     if (!item) {
-        return campo.type === "checkbox" ? campo.default ?? false : campo.default ?? "";
+        if (campo.default !== undefined && campo.default !== null) {
+            return campo.default;
+        }
+        
+        if (campo.type === "checkbox") {
+            return false;
+        }
+        return "";
     }
 
-    const bruto = campo.origem === "usuario" ? item.usuario?.[campo.name] : item[campo.name];
+    let bruto;
+    if (campo.origem === "usuario") {
+        bruto = item.usuario?.[campo.name];
+    } else {
+        bruto = item[campo.name];
+    }
+
     if (campo.type === "checkbox") {
         return bruto !== false;
     }
@@ -85,11 +98,23 @@ export default function CrudEntityPage({titulo, tituloSingular, api, sort,
     }
 
     // --- ABRE O MODAL PARA EDITAR UM ITEM EXISTENTE ---
-    function abrirEdicao(item) {
-        setEditando(item);
+    async function abrirEdicao(item) {
         setErroModal("");
+
+        // --- BUSCA O CADASTRO COMPLETO PARA NÃO APAGAR OS CAMPOS QUE ELA NÃO TRAZ ---
+        let completo = item;
+        if (api.buscarPorId) {
+            try {
+                completo = await api.buscarPorId(item.id);
+            } catch (erro) {
+                notificar(erro.message, "error");
+                return;
+            }
+        }
+
+        setEditando(completo);
         const iniciais = {};
-        campos.forEach((campo) => { iniciais[campo.name] = valorInicial(campo, item); });
+        campos.forEach((campo) => { iniciais[campo.name] = valorInicial(campo, completo); });
         setValores(iniciais);
         setModalAberto(true);
     }
@@ -173,8 +198,8 @@ export default function CrudEntityPage({titulo, tituloSingular, api, sort,
                             {filtroSelect.label}
                             <Dropdown
                                 value={filtroValor}
-                                onChange={(e) => setFiltroValor(e.value)}
-                                options={[{ label: "Todos", value: "" }, ...filtroSelect.options.map((o) => ({ label: o, value: o }))]}
+                                onChange={(evento) => setFiltroValor(evento.value)}
+                                options={[{ label: "Todos", value: "" }, ...filtroSelect.options.map((opcao) => ({ label: opcao, value: opcao }))]}
                             />
                         </label>
                     )}
@@ -182,7 +207,7 @@ export default function CrudEntityPage({titulo, tituloSingular, api, sort,
                         Filtrar na página
                         <InputText
                             value={busca}
-                            onChange={(e) => setBusca(e.target.value)}
+                            onChange={(evento) => setBusca(evento.target.value)}
                             placeholder="nome, e-mail..."
                         />
                     </label>
@@ -237,7 +262,7 @@ export default function CrudEntityPage({titulo, tituloSingular, api, sort,
                                 <label key={campo.name} className="field field-inline">
                                     <Checkbox
                                         checked={!!valores[campo.name]}
-                                        onChange={(e) => atualizarValor(campo.name, e.checked)}
+                                        onChange={(evento) => atualizarValor(campo.name, evento.checked)}
                                     />
                                     {campo.label}
                                 </label>
@@ -251,18 +276,18 @@ export default function CrudEntityPage({titulo, tituloSingular, api, sort,
                                     <Dropdown
                                         value={valores[campo.name] ?? ""}
                                         required={campo.required}
-                                        onChange={(e) => atualizarValor(campo.name, e.value)}
-                                        options={campo.options.map((o) => ({ label: o, value: o }))}
+                                        onChange={(evento) => atualizarValor(campo.name, evento.value)}
+                                        options={campo.options.map((opcao) => ({ label: opcao, value: opcao }))}
                                     />
                                 )}
                                 {campo.type === "textarea" && (
-                                    <textarea value={valores[campo.name] ?? ""} onChange={(e) => atualizarValor(campo.name, e.target.value)}/>
+                                    <textarea value={valores[campo.name] ?? ""} onChange={(evento) => atualizarValor(campo.name, evento.target.value)}/>
                                 )}
                                 {campo.type === "number" && (
                                     <InputNumber
                                         value={valores[campo.name] === "" || valores[campo.name] == null ? null : Number(valores[campo.name])}
                                         min={campo.min}
-                                        onValueChange={(e) => atualizarValor(campo.name, e.value)}
+                                        onValueChange={(evento) => atualizarValor(campo.name, evento.value)}
                                     />
                                 )}
                                 {(!campo.type || ["text", "email", "date"].includes(campo.type)) && (
@@ -270,7 +295,7 @@ export default function CrudEntityPage({titulo, tituloSingular, api, sort,
                                         type={campo.type || "text"}
                                         required={campo.required}
                                         value={valores[campo.name] ?? ""}
-                                        onChange={(e) => atualizarValor(campo.name, e.target.value)}
+                                        onChange={(evento) => atualizarValor(campo.name, evento.target.value)}
                                     />
                                 )}
                             </div>

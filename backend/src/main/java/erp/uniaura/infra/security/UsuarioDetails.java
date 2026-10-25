@@ -1,6 +1,6 @@
 package erp.uniaura.infra.security;
 
-import erp.uniaura.modules.usuario.model.Usuario;
+import erp.uniaura.persistence.entities.Usuario;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

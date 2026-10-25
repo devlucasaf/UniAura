@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState }  from "react";
-import Link                     from "next/link";
-import { useRouter }            from "next/navigation";
-import { Button }               from "primereact/button";
+import { useEffect, useState }              from "react";
+import Link                                 from "next/link";
+import { useRouter }                        from "next/navigation";
+import { Button }                           from "primereact/button";
 import { INSTITUCIONAL, rotaInstitucional } from "@/data/institucional";
 
 // --- CURSOS DE GRADUAÇÃO PRESENCIAL AGRUPADOS POR ÁREA ---
@@ -188,7 +188,8 @@ const AREAS_CURSOS = [
 const TOPICOS_CURSOS = [
     {
         id: "presencial",
-        titulo: "Graduação presencial", areas: AREAS_CURSOS
+        titulo: "Graduação presencial",
+        areas: AREAS_CURSOS
     },
     {
         id: "ead",
@@ -326,13 +327,19 @@ function PainelCursos({ fechar }) {
     );
 }
 
-// --- TÓPICOS DO MENU "A UNIVERSIDADE" (à esquerda do painel) ---
+// --- TÓPICOS DO MENU "A UNIVERSIDADE" ---
 const TOPICOS_UNIVERSIDADE = [
-    { id: "sobre", titulo: "Sobre a UniAura" },
-    { id: "institucional", titulo: "Institucional" }
+    {
+        id: "sobre",
+        titulo: "Sobre a UniAura"
+    },
+    {
+        id: "institucional",
+        titulo: "Institucional"
+    }
 ];
 
-// --- PAINEL DE "A UNIVERSIDADE": TÓPICOS À ESQUERDA E OS LINKS DO TÓPICO ESCOLHIDO À DIREITA ---
+// --- PAINEL DE "A UNIVERSIDADE" ---
 function PainelUniversidade({ fechar }) {
     const [topicoId, setTopicoId] = useState("sobre");
     const topico = TOPICOS_UNIVERSIDADE.find((item) => item.id === topicoId);
@@ -429,7 +436,7 @@ export default function SiteHeader() {
     };
 
     const logo = (
-        <a href="/web/home" className="site-brand" aria-label="UniAura - Página inicial" onClick={(e) => { e.preventDefault(); router.push("/web/home"); }}>
+        <a href="/web/home" className="site-brand" aria-label="UniAura - Página inicial" onClick={(evento) => { evento.preventDefault(); router.push("/web/home"); }}>
             <img
                 src="/uniaura/app/img/uniaura.png"
                 alt=""

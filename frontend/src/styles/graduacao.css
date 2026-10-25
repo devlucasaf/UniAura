@@ -115,6 +115,43 @@
     color: var(--color-primary);
 }
 
+/* --- TÍTULO "CRIE SUA MATRÍCULA" --- */
+.ua-titulo-matricula {
+    --ua-matricula-a: #1e40af;
+    --ua-matricula-b: #38bdf8;
+    --ua-matricula-c: #7c3aed;
+}
+
+:root[data-theme="dark"] .ua-titulo-matricula {
+    --ua-matricula-a: #3b82f6;
+    --ua-matricula-b: #7dd3fc;
+    --ua-matricula-c: #a78bfa;
+}
+
+.grad-hero .ua-titulo-matricula span {
+    position: relative;
+    display: inline-block;
+    padding-bottom: .12em;
+    background-image: linear-gradient(90deg, var(--ua-matricula-a), var(--ua-matricula-b), var(--ua-matricula-c));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+.grad-hero .ua-titulo-matricula span::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: .09em;
+    border-radius: 999px;
+    background-image: inherit;
+    -webkit-text-fill-color: initial;
+    opacity: .85;
+}
+
 .grad-hero p {
     max-width: 650px;
     color: var(--text-muted);

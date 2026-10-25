@@ -20,11 +20,11 @@ export default function Dropdown({id, name, value, onChange, options, placeholde
     required = false, invalid = false, disabled = false}) {
     const [aberto,      setAberto]      = useState(false);
     const [indiceAtivo, setIndiceAtivo] = useState(0);
-    const caixaRef = useRef(null);
+    const caixaReferencia = useRef(null);
     const listaId = useId();
 
     const planas = achatarOpcoes(options);
-    const escolhida = planas.find((o) => o.value === value);
+    const escolhida = planas.find((opcao) => opcao.value === value);
     
     // --- FECHA O DROPDOWN AO CLICAR FORA ---
     useEffect(() => {
@@ -34,7 +34,7 @@ export default function Dropdown({id, name, value, onChange, options, placeholde
         
         // --- FECHA O DROPDOWN AO CLICAR FORA ---
         const aoClicarFora = (evento) => {
-            if (caixaRef.current && !caixaRef.current.contains(evento.target)) {
+            if (caixaReferencia.current && !caixaReferencia.current.contains(evento.target)) {
                 setAberto(false);
             }
         };
@@ -44,7 +44,7 @@ export default function Dropdown({id, name, value, onChange, options, placeholde
 
     // --- ABRE O DROPDOWN E SELECIONA O ÍNDICE ATIVO ---
     const abrir = () => {
-        const indiceSelecionado = planas.findIndex((o) => o.value === value);
+        const indiceSelecionado = planas.findIndex((opcao) => opcao.value === value);
         setIndiceAtivo(Math.max(0, indiceSelecionado));
         setAberto(true);
     };
@@ -72,11 +72,11 @@ export default function Dropdown({id, name, value, onChange, options, placeholde
         switch (evento.key) {
             case "ArrowDown":
                 evento.preventDefault();
-                setIndiceAtivo((i) => Math.min(i + 1, planas.length - 1));
+                setIndiceAtivo((indiceAtual) => Math.min(indiceAtual + 1, planas.length - 1));
                 break;
             case "ArrowUp":
                 evento.preventDefault();
-                setIndiceAtivo((i) => Math.max(i - 1, 0));
+                setIndiceAtivo((indiceAtual) => Math.max(indiceAtual - 1, 0));
                 break;
             case "Home":
                 evento.preventDefault();
@@ -106,7 +106,7 @@ export default function Dropdown({id, name, value, onChange, options, placeholde
     };
 
     return (
-        <div ref={caixaRef} className={`site-select${aberto ? " aberto" : ""}${invalid ? " invalido" : ""}`}>
+        <div ref={caixaReferencia} className={`site-select${aberto ? " aberto" : ""}${invalid ? " invalido" : ""}`}>
             <select id={id} name={name} value={value || ""} required={required} hidden tabIndex={-1} onChange={() => {}} aria-hidden="true">
                 <option value="">{placeholder}</option>
                 {options.map((item) =>

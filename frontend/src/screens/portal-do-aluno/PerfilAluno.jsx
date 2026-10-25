@@ -1,27 +1,31 @@
 "use client";
 
-import { Tag }                      from "primereact/tag";
-import { ProgressBar }              from "primereact/progressbar";
-import { DASHBOARDS, DESEMPENHO }   from "./dados";
-
-// --- MÉDIA DAS DUAS NOTAS, FREQUÊNCIA EM % E FORMATAÇÃO COM VÍRGULA ---
-const media = (disciplina) => (disciplina.nota1 + disciplina.nota2) / 2;
-const frequencia = (disciplina) => Math.round(((disciplina.aulas - disciplina.faltas) / disciplina.aulas) * 100);
-const formatar = (numero) => numero.toFixed(1).replace(".", ",");
+import { Tag }                  from "primereact/tag";
+import { ProgressBar }          from "primereact/progressbar";
+import { DASHBOARDS }           from "./dados";
+import useDisciplinasDoSemestre from "./useDisciplinasDoSemestre";
 
 // --- ESTATÍSTICAS DO ALUNO COM INDICADORES, NOTAS E PRESENÇA POR DISCIPLINA ---
 export default function PerfilAluno() {
+    const { disciplinas } = useDisciplinasDoSemestre();
     const resumo = DASHBOARDS.find((item) => item.id === "academico");
+
+    // --- A QUANTIDADE DE DISCIPLINAS VEM DO CURSO DO ALUNO; NOTAS E FALTAS SÃO LANÇADAS PELO PROFESSOR ---
+    const indicadores = resumo.indicadores.map((indicador) => (
+        indicador.rotulo === "Disciplinas em curso" && disciplinas.length > 0
+            ? { ...indicador, valor: String(disciplinas.length) }
+            : indicador
+    ));
 
     return (
         <div className="ua-aluno-home">
             <div className="ua-aluno-secao-cabecalho">
                 <h1>Meu perfil</h1>
-                <span className="muted">Notas e presença do semestre (dados de exemplo)</span>
+                <span className="muted">Notas e faltas serão lançadas pelo professor de cada disciplina</span>
             </div>
 
             <div className="ua-aluno-indicadores ua-aluno-indicadores--linha">
-                {resumo.indicadores.map((indicador) => (
+                {indicadores.map((indicador) => (
                     <div key={indicador.rotulo} className="ua-card ua-indicador">
                         <span className="ua-indicador__valor">{indicador.valor}</span>
                         <span className="ua-indicador__rotulo">{indicador.rotulo}</span>
@@ -52,20 +56,14 @@ export default function PerfilAluno() {
                             </tr>
                         </thead>
                         <tbody>
-                            {DESEMPENHO.map((disciplina) => (
-                                <tr key={disciplina.disciplina}>
-                                    <th scope="row">{disciplina.disciplina}</th>
-                                    <td>{formatar(disciplina.nota1)}</td>
-                                    <td>{formatar(disciplina.nota2)}</td>
+                            {disciplinas.map((disciplina) => (
+                                <tr key={disciplina}>
+                                    <th scope="row">{disciplina}</th>
+                                    <td>—</td>
+                                    <td>—</td>
+                                    <td>—</td>
                                     <td>
-                                        <strong>{formatar(media(disciplina))}</strong>
-                                    </td>
-                                    <td>
-                                        <Tag
-                                            value={media(disciplina) >= 7 ? "Aprovado" : "Em recuperação"}
-                                            severity={media(disciplina) >= 7 ? "success" : "warning"}
-                                            rounded
-                                        />
+                                        <Tag value="Aguardando lançamento" severity="info" rounded />
                                     </td>
                                 </tr>
                             ))}
@@ -89,19 +87,12 @@ export default function PerfilAluno() {
                             </tr>
                         </thead>
                         <tbody>
-                            {DESEMPENHO.map((disciplina) => (
-                                <tr key={disciplina.disciplina}>
-                                    <th scope="row">{disciplina.disciplina}</th>
-                                    <td>{disciplina.aulas}</td>
-                                    <td>{disciplina.faltas}</td>
-                                    <td className="ua-aluno-freq">
-                                        <ProgressBar 
-                                            value={frequencia(disciplina)} 
-                                            showValue={false} 
-                                            style={{ height: "8px" }} 
-                                        />
-                                        <span>{frequencia(disciplina)}%</span>
-                                    </td>
+                            {disciplinas.map((disciplina) => (
+                                <tr key={disciplina}>
+                                    <th scope="row">{disciplina}</th>
+                                    <td>—</td>
+                                    <td>—</td>
+                                    <td>—</td>
                                 </tr>
                             ))}
                         </tbody>

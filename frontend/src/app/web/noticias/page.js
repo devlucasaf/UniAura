@@ -38,8 +38,8 @@ const CATEGORIAS = [
 ];
 
 // --- FORMATA A DATA DE PUBLICAÇÃO ---
-function formatarData(iso) {
-    return new Date(`${iso}T12:00:00`).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
+function formatarData(dataIso) {
+    return new Date(`${dataIso}T12:00:00`).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
 }
 
 // --- COMPONENTE DA PÁGINA DE NOTÍCIAS ---
@@ -48,7 +48,7 @@ export default function NoticiasPage() {
 
     const filtradas = NOTICIAS
         .filter((noticia) => categoria === "Todas" || noticia.categoria === categoria)
-        .sort((a, b) => b.data.localeCompare(a.data));
+        .sort((primeira, segunda) => segunda.data.localeCompare(primeira.data));
 
     return (
         <>
@@ -76,7 +76,7 @@ export default function NoticiasPage() {
                         <SelectButton
                             value={categoria}
                             options={CATEGORIAS}
-                            onChange={(e) => e.value && setCategoria(e.value)}
+                            onChange={(evento) => evento.value && setCategoria(evento.value)}
                             allowEmpty={false}
                             aria-label="Filtrar notícias por categoria"
                         />

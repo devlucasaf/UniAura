@@ -9,7 +9,11 @@ import { InputTextarea }        from "primereact/inputtextarea";
 import { Button }               from "primereact/button";
 import { Message }              from "primereact/message";
 import AppShell                 from "@/components/interno/AppShell";
-import { livroApi }             from "@/lib/api/biblioteca";
+import { pesquisarLivros }      from "@/app/remotes/uniaura/biblioteca/pesquisarLivrosRemote";
+import { detalharLivro }        from "@/app/remotes/uniaura/biblioteca/detalharLivroRemote";
+import { cadastrarLivro }       from "@/app/remotes/uniaura/biblioteca/cadastrarLivroRemote";
+import { alterarLivro }         from "@/app/remotes/uniaura/biblioteca/alterarLivroRemote";
+import { removerLivro }         from "@/app/remotes/uniaura/biblioteca/removerLivroRemote";
 import { formatarData }         from "@/lib/formato";
 
 // --- CAMPOS DO LIVRO ---
@@ -25,7 +29,7 @@ const CAMPOS_LIVRO = [
     "sinopse"
 ];
 
-const FORM_VAZIO = {
+const FORMULARIO_VAZIO = {
     titulo: "",
     autor: "",
     isbn: "",
@@ -37,24 +41,29 @@ const FORM_VAZIO = {
     sinopse: ""
 };
 
-const BUSCA_VAZIA = { titulo: "", autor: "", categoria: "", isbn: "" };
+const BUSCA_VAZIA = {
+    titulo: "",
+    autor: "",
+    categoria: "",
+    isbn: ""
+};
 
 // --- PÁGINA DE CONSULTA E CADASTRO DE LIVROS ---
 export default function BibliotecaAcervoPage() {
-    const [livros,          setLivros]          = useState([]);
-    const [erroLista,       setErroLista]       = useState("");
-    const [form,            setForm]            = useState(FORM_VAZIO);
-    const [capa,            setCapa]            = useState(null);
-    const [mensagemForm,    setMensagemForm]    = useState({ texto: "", tipo: "" });
-    const [busca,           setBusca]           = useState(BUSCA_VAZIA);
-    const [livroEmEdicao,   setLivroEmEdicao]   = useState(null);
+    const [livros,              setLivros]              = useState([]);
+    const [erroLista,           setErroLista]           = useState("");
+    const [formulario,          setFormulario]          = useState(FORMULARIO_VAZIO);
+    const [capa,                setCapa]                = useState(null);
+    const [mensagemFormulario,  setMensagemFormulario]  = useState({ texto: "", tipo: "" });
+    const [busca,               setBusca]               = useState(BUSCA_VAZIA);
+    const [livroEmEdicao,       setLivroEmEdicao]       = useState(null);
 
     // --- LISTAGEM DE LIVROS ---
     async function listar(parametros = {}) {
         try {
             setErroLista("");
-            const page = await livroApi.buscar({ size: 20, ...parametros });
-            setLivros(page.content || page || []);
+            const resultado = await pesquisarLivros({ qtd: 20, ...parametros });
+            setLivros(resultado.lista || []);
         } catch (erro) {
             setLivros([]);
             setErroLista(erro.message);
@@ -64,27 +73,32 @@ export default function BibliotecaAcervoPage() {
     useEffect(() => { listar(); }, []);
 
     // --- PREENCHIMENTO DO FORMULÁRIO COM OS DADOS DO LIVRO ---
-    function preencherForm(livro) {
-        const novo = { ...FORM_VAZIO };
+    function preencherFormulario(livro) {
+        const novo = { ...FORMULARIO_VAZIO };
         CAMPOS_LIVRO.forEach((campo) => { novo[campo] = livro[campo] ?? ""; });
-        setForm(novo);
+        setFormulario(novo);
     }
 
-    // --- EDIÇÃO DE LIVRO ---
-    function editar(livro) {
-        setLivroEmEdicao(livro);
-        preencherForm(livro);
-        window.scrollTo(0, 0);
+    // --- EDIÇÃO DE LIVRO: ---
+    async function editar(livro) {
+        try {
+            const completo = await detalharLivro(livro.uid);
+            setLivroEmEdicao(completo);
+            preencherFormulario(completo);
+            window.scrollTo(0, 0);
+        } catch (erro) {
+            alert(erro.message);
+        }
     }
 
     // --- EXCLUSÃO DE LIVRO ---
-    async function excluir(id) {
+    async function excluir(uid) {
         if (!confirm("Confirmar exclusão do livro?")) {
             return;
         }
 
         try {
-            await livroApi.deletar(id);
+            await removerLivro(uid);
             setLivroEmEdicao(null);
             listar();
         } catch (erro) {
@@ -96,38 +110,47 @@ export default function BibliotecaAcervoPage() {
     async function salvar(evento) {
         evento.preventDefault();
         const dados = {
-            titulo: form.titulo,
-            autor: form.autor,
-            isbn: form.isbn || null,
-            editora: form.editora || null,
-            anoPublicacao: form.anoPublicacao ? Number(form.anoPublicacao) : null,
-            edicao: form.edicao || null,
-            paginas: form.paginas ? Number(form.paginas) : null,
-            categoria: form.categoria || null,
-            sinopse: form.sinopse || null
+            titulo: formulario.titulo,
+            autor: formulario.autor,
+            isbn: formulario.isbn || null,
+            editora: formulario.editora || null,
+            anoPublicacao: formulario.anoPublicacao ? Number(formulario.anoPublicacao) : null,
+            edicao: formulario.edicao || null,
+            paginas: formulario.paginas ? Number(formulario.paginas) : null,
+            categoria: formulario.categoria || null,
+            sinopse: formulario.sinopse || null
         };
 
         try {
             if (livroEmEdicao) {
-                await livroApi.atualizar(livroEmEdicao.id, dados, capa);
-                setMensagemForm({ texto: "Atualizado.", tipo: "ok" });
+                await alterarLivro(livroEmEdicao.uid, dados, capa);
+                setMensagemFormulario({
+                    texto: "Atualizado.",
+                    tipo: "ok"
+                });
             } else {
-                await livroApi.criar(dados, capa);
-                setMensagemForm({ texto: "Cadastrado.", tipo: "ok" });
+                await cadastrarLivro(dados, capa);
+                setMensagemFormulario({
+                    texto: "Cadastrado.",
+                    tipo: "ok"
+                });
             }
             setLivroEmEdicao(null);
-            setForm(FORM_VAZIO);
+            setFormulario(FORMULARIO_VAZIO);
             setCapa(null);
             listar();
         } catch (erro) {
-            setMensagemForm({ texto: erro.message, tipo: "error" });
+            setMensagemFormulario({
+                texto: erro.message,
+                tipo: "error"
+            });
         }
     }
 
     // --- LIMPEZA DO FORMULÁRIO ---
-    function limparForm() {
+    function limparFormulario() {
         setLivroEmEdicao(null);
-        setForm(FORM_VAZIO);
+        setFormulario(FORMULARIO_VAZIO);
         setCapa(null);
     }
 
@@ -146,72 +169,78 @@ export default function BibliotecaAcervoPage() {
                 <form className="form-grid" onSubmit={salvar}>
                     <div className="field">Título
                         <InputText
-                            value={form.titulo}
+                            value={formulario.titulo}
                             required
-                            onChange={(e) => setForm({ ...form, titulo: e.target.value })}
+                            onChange={(evento) => setFormulario({ ...formulario, titulo: evento.target.value })}
                         />
                     </div>
                     <div className="field">Autor
                         <InputText
-                            value={form.autor}
+                            value={formulario.autor}
                             required
-                            onChange={(e) => setForm({ ...form, autor: e.target.value })}
+                            onChange={(evento) => setFormulario({ ...formulario, autor: evento.target.value })}
                         />
                     </div>
                     <div className="field">ISBN
                         <InputText
-                            value={form.isbn}
-                            onChange={(e) => setForm({ ...form, isbn: e.target.value })}
+                            value={formulario.isbn}
+                            onChange={(evento) => setFormulario({ ...formulario, isbn: evento.target.value })}
                         />
                     </div>
                     <div className="field">Editora
                         <InputText
-                            value={form.editora}
-                            onChange={(e) => setForm({ ...form, editora: e.target.value })}
+                            value={formulario.editora}
+                            onChange={(evento) => setFormulario({ ...formulario, editora: evento.target.value })}
                         />
                     </div>
                     <div className="field">Ano
                         <InputNumber
-                            value={form.anoPublicacao === "" ? null : Number(form.anoPublicacao)}
+                            value={formulario.anoPublicacao === "" ? null : Number(formulario.anoPublicacao)}
                             useGrouping={false}
-                            onValueChange={(e) => setForm({ ...form, anoPublicacao: e.value ?? "" })}
+                            onValueChange={(evento) => setFormulario({ ...formulario, anoPublicacao: evento.value ?? "" })}
                         />
                     </div>
                     <div className="field">Edição
                         <InputText
-                            value={form.edicao}
-                            onChange={(e) => setForm({ ...form, edicao: e.target.value })}
+                            value={formulario.edicao}
+                            onChange={(evento) => setFormulario({ ...formulario, edicao: evento.target.value })}
                         />
                     </div>
                     <div className="field">Páginas
                         <InputNumber
-                            value={form.paginas === "" ? null : Number(form.paginas)}
-                            onValueChange={(e) => setForm({ ...form, paginas: e.value ?? "" })}
+                            value={formulario.paginas === "" ? null : Number(formulario.paginas)}
+                            onValueChange={(evento) => setFormulario({ ...formulario, paginas: evento.value ?? "" })}
                         />
                     </div>
                     <div className="field">Categoria
                         <InputText
-                            value={form.categoria}
-                            onChange={(e) => setForm({ ...form, categoria: e.target.value })}
+                            value={formulario.categoria}
+                            onChange={(evento) => setFormulario({ ...formulario, categoria: evento.target.value })}
                         />
                     </div>
                     <div className="field">Capa (imagem)
                         <input
                             type="file"
                             accept="image/*"
-                            onChange={(e) => setCapa(e.target.files[0] || null)}
+                            onChange={(evento) => setCapa(evento.target.files[0] || null)}
                         />
                     </div>
                     <div className="field field-full">Sinopse
                         <InputTextarea
-                            value={form.sinopse}
-                            onChange={(e) => setForm({ ...form, sinopse: e.target.value })}
+                            value={formulario.sinopse}
+                            onChange={(evento) => setFormulario({ ...formulario, sinopse: evento.target.value })}
                         />
                     </div>
                     <div className="toolbar field-full">
                         <Button type="submit" label="Salvar" />
-                        <Button type="button" label="Limpar" severity="secondary" outlined onClick={limparForm} />
-                        {mensagemForm.texto && <Message severity={mensagemForm.tipo === "error" ? "error" : "success"} text={mensagemForm.texto} />}
+                        <Button
+                            type="button"
+                            label="Limpar"
+                            severity="secondary"
+                            outlined
+                            onClick={limparFormulario}
+                        />
+                        {mensagemFormulario.texto && <Message severity={mensagemFormulario.tipo === "error" ? "error" : "success"} text={mensagemFormulario.texto} />}
                     </div>
                 </form>
             </section>
@@ -223,39 +252,45 @@ export default function BibliotecaAcervoPage() {
                         Título
                         <InputText
                             value={busca.titulo}
-                            onChange={(e) => setBusca({ ...busca, titulo: e.target.value })}
+                            onChange={(evento) => setBusca({ ...busca, titulo: evento.target.value })}
                         />
                     </label>
                     <label className="field">
                         Autor
                         <InputText
                             value={busca.autor}
-                            onChange={(e) => setBusca({ ...busca, autor: e.target.value })}
+                            onChange={(evento) => setBusca({ ...busca, autor: evento.target.value })}
                         />
                     </label>
                     <label className="field">
                         Categoria
                         <InputText
                             value={busca.categoria}
-                            onChange={(e) => setBusca({ ...busca, categoria: e.target.value })}
+                            onChange={(evento) => setBusca({ ...busca, categoria: evento.target.value })}
                         />
                     </label>
                     <label className="field">
                         ISBN
                         <InputText
                             value={busca.isbn}
-                            onChange={(e) => setBusca({ ...busca, isbn: e.target.value })}
+                            onChange={(evento) => setBusca({ ...busca, isbn: evento.target.value })}
                         />
                     </label>
                     <Button type="submit" label="Filtrar" />
-                    <Button type="button" label="Limpar" severity="secondary" outlined onClick={() => { setBusca(BUSCA_VAZIA); listar(); }} />
+                    <Button
+                        type="button"
+                        label="Limpar"
+                        severity="secondary"
+                        outlined
+                        onClick={() => { setBusca(BUSCA_VAZIA); listar(); }}
+                    />
                 </form>
             </section>
 
             <section className="card">
                 <h2>Resultados</h2>
                 {erroLista && <Message severity="error" text={erroLista} />}
-                <DataTable value={livros} emptyMessage="Nenhum livro encontrado." dataKey="id">
+                <DataTable value={livros} emptyMessage="Nenhum livro encontrado." dataKey="uid">
                     <Column header="Título" body={(livro) => livro.titulo} />
                     <Column header="Autor" body={(livro) => livro.autor} />
                     <Column header="Categoria" body={(livro) => livro.categoria || "-"} />
@@ -266,8 +301,20 @@ export default function BibliotecaAcervoPage() {
                         header=""
                         body={(livro) => (
                             <div className="acoes">
-                                <Button label="Editar" size="small" severity="secondary" outlined onClick={() => editar(livro)} />
-                                <Button label="Excluir" size="small" severity="danger" outlined onClick={() => excluir(livro.id)} />
+                                <Button
+                                    label="Editar"
+                                    size="small"
+                                    severity="secondary"
+                                    outlined
+                                    onClick={() => editar(livro)}
+                                />
+                                <Button
+                                    label="Excluir"
+                                    size="small"
+                                    severity="danger"
+                                    outlined
+                                    onClick={() => excluir(livro.uid)}
+                                />
                             </div>
                         )}
                     />

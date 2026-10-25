@@ -13,7 +13,7 @@ const SeletorMes = (opcoes) => (
         options={opcoes.options}
         optionLabel="label"
         optionValue="value"
-        onChange={(e) => opcoes.onChange(e.originalEvent ?? e, e.value)}
+        onChange={(evento) => opcoes.onChange(evento.originalEvent ?? evento, evento.value)}
         appendTo="self"
         className="ua-datepicker-select"
     />
@@ -25,7 +25,7 @@ const SeletorAno = (opcoes) => (
         options={opcoes.options}
         optionLabel="label"
         optionValue="value"
-        onChange={(e) => opcoes.onChange(e.originalEvent ?? e, e.value)}
+        onChange={(evento) => opcoes.onChange(evento.originalEvent ?? evento, evento.value)}
         appendTo="self"
         className="ua-datepicker-select"
     />
@@ -45,11 +45,11 @@ const paraIso = (data) => {
 };
 
 // --- CONVERTE aaaa-mm-dd EM Date NO FUSO LOCAL ---
-const deIso = (iso) => {
-    if (!iso) {
+const deIso = (dataIso) => {
+    if (!dataIso) {
         return null;
     }
-    const [ano, mes, dia] = iso.split("-").map(Number);
+    const [ano, mes, dia] = dataIso.split("-").map(Number);
     return new Date(ano, mes - 1, dia);
 };
 

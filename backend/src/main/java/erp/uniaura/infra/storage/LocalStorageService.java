@@ -1,6 +1,6 @@
 package erp.uniaura.infra.storage;
 
-import erp.uniaura.exception.BusinessException;
+import cloudsupport.services.BusinessException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

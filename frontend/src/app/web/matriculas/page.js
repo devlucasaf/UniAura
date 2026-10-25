@@ -119,7 +119,7 @@ const DOCUMENTOS = [
 // --- GERA O NÚMERO DE PROTOCOLO DA INSCRIÇÃO ---
 function gerarProtocolo() {
     let sufixo = "";
-    for (let i = 0; i < TAMANHO_SUFIXO; i++) {
+    for (let posicao = 0; posicao < TAMANHO_SUFIXO; posicao++) {
         sufixo += ALFABETO_PROTOCOLO.charAt(Math.floor(Math.random() * ALFABETO_PROTOCOLO.length));
     }
     return `MAT-${new Date().getFullYear()}-${sufixo}`;
@@ -141,7 +141,7 @@ function idadeValida(valor) {
 
 // --- COMPONENTE DA PÁGINA DE MATRÍCULAS ---
 export default function MatriculasPage() {
-    const raizRef = useEfeitosDePagina();
+    const raizReferencia = useEfeitosDePagina();
     const [cpf,             setCpf]             = useState("");
     const [telefone,        setTelefone]        = useState("");
     const [curso,           setCurso]           = useState("");
@@ -261,7 +261,7 @@ export default function MatriculasPage() {
 
     return (
         <>
-            <div className="grad-page" ref={raizRef}>
+            <div className="grad-page" ref={raizReferencia}>
                 <main>
                     <section className="grad-hero">
                         <span className="grad-hero-brilho grad-hero-brilho-a" aria-hidden="true"></span>
@@ -287,7 +287,10 @@ export default function MatriculasPage() {
                                 </p>
 
                                 <div className="grad-actions" data-entrada style={{ "--atraso": "360ms" }}>
-                                    <Button label="Iniciar inscrição" onClick={() => document.getElementById("grad-inscricao")?.scrollIntoView({ behavior: "smooth" })} />
+                                    <Button
+                                        label="Iniciar inscrição"
+                                        onClick={() => document.getElementById("grad-inscricao")?.scrollIntoView({ behavior: "smooth" })}
+                                    />
                                     <Button
                                         label="Ver documentos exigidos"
                                         outlined
@@ -380,8 +383,8 @@ export default function MatriculasPage() {
                                 <div className="grad-card" data-revelar style={{ "--atraso": "120ms" }}>
                                     <strong>Documentos exigidos</strong>
                                     <div className="grad-semester-list">
-                                        {DOCUMENTOS.map((doc) => (
-                                            <span key={doc} className="grad-subject">{doc}</span>
+                                        {DOCUMENTOS.map((documento) => (
+                                            <span key={documento} className="grad-subject">{documento}</span>
                                         ))}
                                     </div>
                                 </div>
@@ -433,7 +436,7 @@ export default function MatriculasPage() {
                                             maxLength={14}
                                             placeholder="000.000.000-00"
                                             value={cpf}
-                                            onChange={(e) => { setCpf(mascararCpf(e.target.value)); limparErro("cpf"); }}
+                                            onChange={(evento) => { setCpf(mascararCpf(evento.target.value)); limparErro("cpf"); }}
                                             className={classeErro("cpf")}
                                         />
                                         {erroDe("cpf")}
@@ -449,7 +452,7 @@ export default function MatriculasPage() {
                                             placeholder="(00) 00000-0000"
                                             autoComplete="tel"
                                             value={telefone}
-                                            onChange={(e) => { setTelefone(mascararTelefone(e.target.value)); limparErro("telefone"); }}
+                                            onChange={(evento) => { setTelefone(mascararTelefone(evento.target.value)); limparErro("telefone"); }}
                                             className={classeErro("telefone")}
                                         />
                                         {erroDe("telefone")}
@@ -462,7 +465,7 @@ export default function MatriculasPage() {
                                             name="dataNascimento"
                                             yearRange="1920:2010"
                                             invalido={!!erros.nascimento}
-                                            onChange={(iso) => { setNascimento(iso); limparErro("nascimento"); }}
+                                            onChange={(dataIso) => { setNascimento(dataIso); limparErro("nascimento"); }}
                                         />
                                         {erroDe("nascimento")}
                                     </div>
@@ -474,7 +477,7 @@ export default function MatriculasPage() {
                                             name="curso"
                                             options={CURSOS}
                                             value={curso}
-                                            onChange={(e) => { setCurso(e.value); limparErro("curso"); }}
+                                            onChange={(evento) => { setCurso(evento.value); limparErro("curso"); }}
                                             placeholder="Selecione o curso"
                                             className={classeErro("curso")}
                                         />
@@ -488,7 +491,7 @@ export default function MatriculasPage() {
                                             name="turno"
                                             options={TURNOS}
                                             value={turno}
-                                            onChange={(e) => { setTurno(e.value); limparErro("turno"); }}
+                                            onChange={(evento) => { setTurno(evento.value); limparErro("turno"); }}
                                             placeholder="Selecione o turno"
                                             className={classeErro("turno")}
                                         />
@@ -502,7 +505,7 @@ export default function MatriculasPage() {
                                             name="formaIngresso"
                                             options={FORMAS_INGRESSO}
                                             value={formaIngresso}
-                                            onChange={(e) => { setFormaIngresso(e.value); limparErro("formaIngresso"); }}
+                                            onChange={(evento) => { setFormaIngresso(evento.value); limparErro("formaIngresso"); }}
                                             placeholder="Selecione a forma de ingresso"
                                             className={classeErro("formaIngresso")}
                                         />
@@ -527,7 +530,7 @@ export default function MatriculasPage() {
                                             name="termos"
                                             checked={termos}
                                             className={classeErro("termos")}
-                                            onChange={(e) => { setTermos(e.checked); limparErro("termos"); }}
+                                            onChange={(evento) => { setTermos(evento.checked); limparErro("termos"); }}
                                         />
                                         <label htmlFor="matTermos">
                                             Li e aceito os{" "}

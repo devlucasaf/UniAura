@@ -15,7 +15,7 @@ public class CacheConfig {
     public static final String CACHE_CURSOS = "cursos";
     public static final String CACHE_CONFIGURACAO_BIBLIOTECA = "configuracaoBiblioteca";
 
-    // --- PERSONALIZA O CACHE MANAGER PADRÃO DO SPRING COM EXPIRAÇÃO CURTA (DADOS MUDAM RARO, MAS NÃO SÃO ESTÁTICOS) ---
+    // --- PERSONALIZA O CACHE MANAGER PADRÃO DO SPRING COM EXPIRAÇÃO CURTA ---
     @Bean
     public CacheManagerCustomizer<CaffeineCacheManager> cacheManagerCustomizer() {
         return cacheManager -> cacheManager.setCaffeine(
