@@ -1150,13 +1150,14 @@
 .topbar .ua-botao-perfil.p-button {
     width: 40px;
     height: 40px;
-    background: var(--color-primary);
+    background: transparent;
     border: 0;
-    color: #fff;
+    color: var(--text-primary);
 }
 
 .topbar .ua-botao-perfil.p-button:hover {
-    background: var(--color-primary-hover);
+    background: var(--ua-item-ativo);
+    color: var(--color-primary);
 }
 
 /* --- MENU DO BOTÃO DE PERFIL NOS DOIS MODOS --- */
@@ -1166,7 +1167,6 @@
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-lg);
-    /* LARGURA AUTOMÁTICA: O PRIMEREACT FIXA 12,5rem E OS DADOS DO ALUNO SAÍAM PELA BORDA DIREITA */
     width: auto;
     min-width: 290px;
     max-width: calc(100vw - 16px);
@@ -1904,8 +1904,8 @@ html[data-area="aluno"] * {
     }
 }
 
-/* --- CONTRASTE CLARO --- */
-html:root[data-contraste="claro"] {
+/* --- CONTRASTE CLARO (SELETOR MAIS ESPECÍFICO QUE O DO MODO ESCURO, PARA VALER NOS DOIS MODOS) --- */
+html:root[data-area="aluno"][data-contraste="claro"] {
     --cor-fundo: #ffffff;
     --cor-superficie: #ffffff;
     --cor-texto: #000000;
@@ -1923,7 +1923,7 @@ html:root[data-contraste="claro"] {
 }
 
 /* --- CONTRASTE ESCURO --- */
-html:root[data-contraste="escuro"] {
+html:root[data-area="aluno"][data-contraste="escuro"] {
     --cor-fundo: #000000;
     --cor-superficie: #000000;
     --cor-texto: #ffffff;
@@ -1961,6 +1961,62 @@ html[data-contraste] a {
 html[data-contraste="escuro"] .p-button:not(.p-button-text):not(.p-button-outlined) {
     background: var(--color-primary);
     color: #000;
+}
+
+/* --- ÍCONES NO CONTRASTE ESCURO --- */
+html[data-contraste="escuro"] .pi,
+html[data-contraste="escuro"] .p-button .p-button-icon,
+html[data-contraste="escuro"] .p-menu .p-menuitem-icon,
+html[data-contraste="escuro"] .p-datepicker .pi {
+    color: var(--color-primary);
+}
+
+html[data-contraste="escuro"] .p-button:not(.p-button-text):not(.p-button-outlined) .pi,
+html[data-contraste="escuro"] .p-button:not(.p-button-text):not(.p-button-outlined) .p-button-icon {
+    color: #000000;
+}
+
+/* --- OUTROS ELEMENTOS COM FUNDO AMARELO --- */
+html[data-contraste="escuro"] .ua-aluno-hoje-rotulo,
+html[data-contraste="escuro"] .ua-aulas__dias button.ativo,
+html[data-contraste="escuro"] .ua-trilha__etapa.feito .ua-trilha__botao,
+html[data-contraste="escuro"] .ua-trilha__etapa.feito .ua-trilha__botao .pi,
+html[data-contraste="escuro"] .ua-painel__seta:focus-visible,
+html[data-contraste="escuro"] .ua-painel__seta:focus-visible .pi,
+html[data-contraste="escuro"] .ua-skip-link {
+    color: #000000;
+}
+
+/* --- REDES DO RODAPÉ --- */
+html[data-contraste="escuro"] .ua-rodape-aluno__redes a:hover,
+html[data-contraste="escuro"] .ua-rodape-aluno__redes a:focus-visible {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #000000;
+}
+
+html[data-contraste="escuro"] .ua-rodape-aluno__redes a:hover .pi,
+html[data-contraste="escuro"] .ua-rodape-aluno__redes a:focus-visible .pi {
+    color: #000000;
+}
+
+html[data-contraste="escuro"] .p-menu .ua-menu-item-sair .p-menuitem-icon {
+    color: var(--color-danger);
+}
+
+html[data-contraste="escuro"] .ua-painel__icone,
+html[data-contraste="escuro"] .ua-aluno-carreira__icone,
+html[data-contraste="escuro"] .ua-timeline__icone {
+    background: #000000;
+    border: 2px solid var(--color-primary);
+    color: var(--color-primary);
+}
+
+html[data-contraste="escuro"] .topbar .p-button.p-button-text,
+html[data-contraste="escuro"] .topbar .ua-botao-perfil.p-button,
+html[data-contraste="escuro"] .topbar .ua-botao-tema-topo.p-button {
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
 }
 
 /* --- CURSOR GRANDE --- */
@@ -2151,4 +2207,265 @@ html[data-sem-animacao="sim"] *::after {
 
 .ua-notificacoes__quando {
     color: var(--text-muted);
+}
+
+/* --- ATIVIDADES COMPLEMENTARES --- */
+.ua-complementares__resumo {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 2rem;
+    padding: 1.5rem 2rem;
+}
+
+.ua-complementares__grafico {
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.ua-complementares__grafico svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.ua-complementares__trilho,
+.ua-complementares__barra {
+    fill: none;
+    stroke-width: 18;
+}
+
+.ua-complementares__trilho {
+    stroke: var(--border-color);
+}
+
+.ua-complementares__barra {
+    stroke: var(--color-primary);
+    stroke-linecap: round;
+    transition: stroke-dashoffset 700ms var(--ease-saida);
+}
+
+.ua-complementares__centro {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    text-align: center;
+}
+
+.ua-complementares__centro strong {
+    font-size: 2.4rem;
+    line-height: 1;
+}
+
+.ua-complementares__centro span {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+}
+
+.ua-complementares__numeros h2 {
+    margin: 0 0 4px;
+}
+
+.ua-complementares__numeros dl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin: 1rem 0;
+}
+
+.ua-complementares__numeros dt {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+}
+
+.ua-complementares__numeros dd {
+    margin: 2px 0 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.ua-complementares__numeros .falta dd {
+    color: var(--color-accent);
+}
+
+.ua-complementares__parabens {
+    color: var(--color-success);
+    font-weight: 600;
+}
+
+.ua-complementares__titulo {
+    margin: 0 0 1rem;
+    font-size: var(--fs-lg);
+}
+
+.ua-complementares__categorias,
+.ua-complementares__lista {
+    display: grid;
+    gap: .75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ua-complementares__categorias li {
+    display: grid;
+    grid-template-columns: 110px 1fr 48px;
+    align-items: center;
+    gap: .75rem;
+    font-size: var(--fs-sm);
+}
+
+.ua-complementares__categorias .trilho {
+    height: 10px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--border-color);
+}
+
+.ua-complementares__categorias .preenchimento {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+    transition: width 500ms var(--ease-saida);
+}
+
+.ua-complementares__categorias .valor {
+    text-align: right;
+    font-weight: 600;
+}
+
+.ua-complementares__lista li {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: .75rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: .6rem;
+}
+
+.ua-complementares__lista small {
+    display: block;
+    color: var(--text-muted);
+}
+
+.ua-complementares__lista .horas {
+    font-weight: 700;
+}
+
+.ua-complementares__nota {
+    margin-top: 1rem;
+    font-size: var(--fs-sm);
+}
+
+@media (max-width: 640px) {
+    .ua-complementares__resumo {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+    }
+
+    .ua-complementares__numeros dl {
+        justify-content: center;
+    }
+}
+
+/* --- CALENDÁRIO ACADÊMICO --- */
+.ua-calendario__acoes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.ua-calendario__acoes p {
+    margin: 0;
+}
+
+.ua-calendario__grande .p-datepicker {
+    width: 100%;
+    border: 0;
+}
+
+.ua-calendario__grande .p-datepicker table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.ua-calendario__grande .p-datepicker table td {
+    padding: 4px 0;
+}
+
+.ua-calendario__grande .p-datepicker table td > span {
+    width: 2.6rem;
+    height: 2.6rem;
+    margin: 0 auto;
+}
+
+.ua-calendario__legenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ua-calendario__lista {
+    display: grid;
+    gap: .75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ua-calendario__evento {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: .75rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: .6rem;
+}
+
+.ua-calendario__evento small {
+    display: block;
+    color: var(--text-muted);
+}
+
+/* --- CALENDÁRIO GIGANTE --- */
+.ua-calendario__colunas {
+    grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr);
+}
+
+.ua-calendario__grande {
+    padding: 1.5rem;
+}
+
+.ua-calendario__grande .p-datepicker-header {
+    padding-bottom: 1rem;
+    font-size: 1.15rem;
+}
+
+.ua-calendario__grande .p-datepicker table td > span {
+    width: 3.6rem;
+    height: 3.6rem;
+    font-size: 1.05rem;
+}
+
+.ua-calendario__grande .p-datepicker table th {
+    padding: .75rem 0;
+}
+
+@media (max-width: 960px) {
+    .ua-calendario__colunas {
+        grid-template-columns: 1fr;
+    }
+
+    .ua-calendario__grande .p-datepicker table td > span {
+        width: 2.8rem;
+        height: 2.8rem;
+    }
 }
