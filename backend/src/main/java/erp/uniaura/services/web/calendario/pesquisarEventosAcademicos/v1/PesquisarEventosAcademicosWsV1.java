@@ -19,9 +19,9 @@ public class PesquisarEventosAcademicosWsV1 extends BaseWs {
 
     private final PesquisarEventosAcademicosServiceV1 pesquisarEventosAcademicosServiceV1;
 
-    // --- ENDPOINT QUE LISTA OS EVENTOS ACADÊMICOS DE FORMA PAGINADA ---
+    // --- A EQUIPE, OS PROFESSORES, OS ALUNOS E OS RESPONSÁVEIS CONSULTAM O CALENDÁRIO ACADÊMICO ---
     @GetMapping
-    @HasAnyAuthority({"ROLE_ADMIN", "ROLE_COORDENADOR", "ROLE_SECRETARIA", "ROLE_PROFESSOR"})
+    @HasAnyAuthority({"ROLE_ADMIN", "ROLE_COORDENADOR", "ROLE_SECRETARIA", "ROLE_PROFESSOR", "ROLE_ALUNO", "ROLE_RESPONSAVEL"})
     @Operation(summary = "Pesquisa eventos do calendário acadêmico de forma paginada",
             description = "Lista os eventos (provas, feriados, matrícula, recessos e eventos institucionais), opcionalmente filtrando por tipo. "
                     + "A paginação usa 'de' e 'qtd'; a ordenação usa 'ordem' (+campo ou -campo). Para o calendário do site, sem login, use pesquisarEventosPublicos.")
